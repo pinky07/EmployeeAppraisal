@@ -1,0 +1,27 @@
+spring:
+  datasource:
+    url: jdbc:h2:mem:employees
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+management:
+  security:
+    enabled: false
+security:
+  basic:
+    enabled: false
+logging:
+  level:
+    com:
+      gft: TRACE
+      netflix:
+        discovery: ERROR
+        eureka: ERROR
+eureka:
+  instance:
+    ipAddress: 10.200.202.122
+    preferIpAddress: true
+  client:
+    serviceUrl:
+      defaultZone: http://10.200.202.122:11000/eureka

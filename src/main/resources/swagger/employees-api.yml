@@ -1,0 +1,712 @@
+
+# Swagger version
+swagger: '2.0'
+
+# API Information
+info:
+  title: |
+    GFT Employees API
+  description: |
+    GFT Employees API specification
+  version: 1.0.0
+
+# URL Information
+host: example.com
+schemes:
+  - https
+
+# Security Definition
+securityDefinitions:
+  OAuth2:
+    type: oauth2
+    flow: accessCode
+    authorizationUrl: http://localhost:8888/uaa/oauth/authorize
+    tokenUrl: http:/localhost:8888/uaa/oauth/token
+    scopes:
+      employee: Employee access
+      appraisal: Appraisal access
+security:
+  - OAuth2: [employee, appraisal]
+
+# Endpoints
+paths:
+
+###################################################################################################
+# /me #############################################################################################
+###################################################################################################
+
+  '/me':
+    get:
+      tags:
+      - Employee
+      summary: |
+        Provides information about the authenticated user.
+      description: >
+        Returns an `Employee` with information about the authenticated user.
+      operationId: meGet
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: |
+            Successful request.
+          schema:
+            $ref: '#/definitions/EmployeeDTO'
+        '403':
+          description: |
+            The user isn't authenticated.
+        '404':
+          description: |
+            The user is authenticated, but is not yet registered in the system.
+
+###################################################################################################
+# /me/mentor ######################################################################################
+###################################################################################################
+
+  '/me/mentor':
+    get:
+      tags:
+      - Employee
+      summary: |
+        Provides the mentor associated to the authenticated user.
+      description: |
+        Returns an `Employee`, which is the mentor of the authenticated user.
+      operationId: meMentorGet
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: |
+            Successful request.
+          schema:
+            $ref: '#/definitions/EmployeeDTO'
+        '403':
+          description: |
+            The user isn't authenticated.
+        '404':
+          description: |
+            The user is authenticated, but is not yet registered in the system.
+
+###################################################################################################
+# /me/mentees #####################################################################################
+###################################################################################################
+
+  '/me/mentees':
+    get:
+      tags:
+      - Employee
+      summary: |
+        Provides the mentees associated to the authenticated user.
+      description: |
+        Returns an `Employee` list who are mentees of the authenticated user.
+      operationId: meMenteesGet
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: |
+            Successful request.
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/EmployeeDTO'
+        '403':
+          description: |
+            The user isn't authenticated.
+        '404':
+          description: |
+            The user is authenticated, but is not yet registered in the system.
+
+###################################################################################################
+# /me/peers #######################################################################################
+###################################################################################################
+
+  '/me/peers':
+    get:
+      tags:
+      - Employee
+      summary: |
+        Provides the peers associated to the authenticated user.
+      description: |
+        Returns a list of `Employee`, meaning the list of peers associated to the authenticated user.
+      operationId: mePeersGet
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: |
+            Successful request.
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/EmployeeDTO'
+        '403':
+          description: |
+            The user isn't authenticated.
+        '404':
+          description: |
+            The user is authenticated, but is not yet registered in the system.
+
+###################################################################################################
+# /employees ######################################################################################
+###################################################################################################
+
+  '/employees':
+    get:
+      tags:
+      - Employee
+      summary: |
+        Returns a list of all employees.
+      description: |
+        Returns an `Employee` list only if the user has the **Admin** application role.
+      operationId: employeesGet
+      produces:
+        - application/json
+      parameters:
+        - in: query
+          name: page
+          type: integer
+          required: false
+          default: 1
+          description: |
+            Page number. Defaults to 1.
+        - in: query
+          name: size
+          type: integer
+          required: false
+          description: |
+            Number of elements in each page. Defaults to 10.
+          default: 10
+      responses:
+        '200':
+          description: |
+            Successful request.
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/EmployeeDTO'
+        '403':
+          description: |
+            The user isn't authenticated or doesn't have the **Admin** applicationRole.
+    post:
+      tags:
+      - Employee
+      summary: |
+        Registers a new employee.
+      description: >
+        Registers a new `Employee`. Users with the **Admin** applicationRole, can
+        register any users. Otherwise they can only register themselves and will get
+        an error if they try to register any other users.
+      operationId: employeesPost
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: employee
+          schema:
+            $ref: '#/definitions/EmployeeDTO'
+          required: true
+          description: |
+            `Employee` GFT Login.
+      responses:
+        '201':
+          description: |
+            New `Employee` registered.
+          schema:
+            $ref: '#/definitions/OperationResultDTO'
+          headers:
+            Location:
+              type: string
+              description: |
+                URL of the new employee.
+        '400':
+          description: |
+            Input was malformed or did not comply with business rules.
+          schema:
+            $ref: '#/definitions/OperationResultDTO'
+        '403':
+          description: |
+            The user isn't authenticated or doesn't have the **Admin** applicationRole.
+        '422':
+          description: |
+            A user with the same GFT Identifier already exists.
+          schema:
+            $ref: '#/definitions/OperationResultDTO'
+    put:
+      tags:
+      - Employee
+      summary: |
+        Registers or updates an employee.
+      description: >
+        Registers or updates an `Employee`. If the user has the **Admin** applicationRole,
+        they can create or update any users. Otherwise they can only create or
+        update themselves and will get an error if they try to create or update
+        any other users.
+      operationId: employeesPut
+      consumes:
+        - application/json
+      parameters:
+        - in: body
+          name: employee
+          schema:
+            $ref: '#/definitions/EmployeeDTO'
+          required: true
+          description: |
+            `Employee` to create or update.
+      responses:
+        '200':
+          description: |
+            Successful request.
+        '403':
+          description: >
+            The user isn't authenticated or doesn't have the **Admin** applicationRole and is trying
+            to register or update an user other than himself.
+
+###################################################################################################
+# /employees/{employeeId} #########################################################################
+###################################################################################################
+
+  '/employees/{employeeId}':
+    get:
+      tags:
+      - Employee
+      summary: |
+        Returns an employee.
+      description: >
+        Returns an `Employee` with the specified Id. If the user has the
+        **Admin** applicationRole, they can retrieve information from any `Employee`.
+        Otherwise they can only retrieve information on themselves.
+      operationId: employeesEmployeeIdGet
+      produces:
+        - application/json
+      parameters:
+        - in: path
+          name: employeeId
+          type: integer
+          required: true
+          description: |
+            `Employee` Id.
+      responses:
+        '200':
+          description: |
+            OK
+          schema:
+            $ref: '#/definitions/EmployeeDTO'
+        '403':
+          description: >
+            The user isn't authenticated or doesn't have the **Admin** applicationRole and is trying
+            to get information of an user other than themself.
+        '404':
+          description: |
+            An `Employee` with the specified Id was not found.
+    put:
+      tags:
+      - Employee
+      summary: |
+        Updates a specific employee.
+      description: >
+        Updates an `Employee`. If the user has the **Admin** applicationRole, they can update any users.
+        Otherwise they can only update themselves and will get an error if they try to update
+        any other users.
+      operationId: employeesEmployeeIdPut
+      consumes:
+        - application/json
+      parameters:
+        - in: body
+          name: employee
+          schema:
+            $ref: '#/definitions/EmployeeDTO'
+          required: true
+          description: |
+            `Employee` to update.
+      responses:
+        '200':
+          description: |
+            Successful request.
+        '403':
+          description: >
+            The user isn't authenticated or doesn't have the **Admin** applicationRole and is trying
+            to register or update an user other than themself.
+        '404':
+          description: |
+            An `Employee` with the specified Id was not found.
+    delete:
+      tags:
+      - Employee
+      summary: |
+        Deletes a specific employee.
+      description: >
+        Deletes an `Employee`. If the user has the **Admin** applicationRole, they can delete any users.
+        Other users can't delete themselves.
+      operationId: employeesEmployeeIdDelete
+      responses:
+        '200':
+          description: |
+            Successful request.
+        '403':
+          description: >
+            The user isn't authenticated or doesn't have the **Admin** applicationRole.
+        '404':
+          description: |
+            An `Employee` with the specified Id was not found.
+
+###################################################################################################
+# /employees/{employeeId}/mentees #################################################################
+###################################################################################################
+
+  '/employees/{employeeId}/mentees':
+    get:
+      tags:
+      - Employee
+      summary: |
+        Returns the employee mentees.
+      description: >
+        Returns the mentees associated to an specified `Employee`. An user with the **Admin** applicationRole
+        can see the mentees of any `Employee`. An user with the **Mentor** applicationRole can only see their
+        own mentees. Any other user can't access this endpoint.
+      operationId: employeesEmployeeIdMenteesGet
+      produces:
+        - application/json
+      parameters:
+        - in: path
+          name: employeeId
+          type: integer
+          required: true
+          description: |
+            `Employee` Id.
+      responses:
+        '200':
+          description: |
+            Successful request.
+        '403':
+          description: |
+            The user isn't authenticated or is trying to access resources not authorized to.
+        '404':
+          description: |
+            An `Employee` with the specified Id was not found.
+    post:
+      tags:
+      - Employee
+      summary: |
+        Add a mentee to an employee.
+      description: |
+        Adds a mentee to an `Employee`. Only users with the **Admin** can perform this action.
+      operationId: employeesEmployeeIdMenteesPost
+      parameters:
+        - in: path
+          name: employeeId
+          type: integer
+          required: true
+          description: |
+            `Employee` Id.
+      responses:
+        '200':
+          description: |
+            Successful request.
+        '403':
+          description: |
+            The user isn't authenticated or doesn't have the **Admin** applicationRole.
+        '404':
+          description: |
+            An `Employee` with the specified Id was not found.
+
+##################################################################################################
+# /employees/{employeeId}/mentor #################################################################
+##################################################################################################
+
+  '/employees/{employeeId}/mentor':
+    get:
+      tags:
+      - Employee
+      summary: |
+        Returns the mentor associated to the employee.
+      description: >
+        Returns the mentor associated to an specified `Employee`. An user with the **Admin**
+        applicationRole can see the mentor of any `Employee`. Any other user can only obtain his own mentor.
+      operationId: employeesEmployeeIdMentorGet
+      produces:
+        - application/json
+      parameters:
+        - in: path
+          name: employeeId
+          type: integer
+          required: true
+          description: |
+            `Employee` Id.
+      responses:
+        '200':
+          description: |
+            Successful request.
+          schema:
+            $ref: '#/definitions/EmployeeDTO'
+        '403':
+          description: |
+            The user isn't authenticated or is trying to access resources not authorized to.
+        '404':
+          description: |
+            An `Employee` with the specified Id was not found.
+    put:
+      tags:
+      - Employee
+      summary: |
+        Associates a mentor to the employee.
+      description: >
+        Associates a mentor to an specified `Employee`. Can only be used by an user with the
+        **Admin** applicationRole.
+      operationId: employeesEmployeeIdMentorPut
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: path
+          name: employeeId
+          type: integer
+          required: true
+          description: |
+            `Employee` Id.
+        - in: body
+          name: mentor
+          schema:
+            $ref: '#/definitions/EmployeeDTO'
+          required: true
+          description: |
+            `Employee` Mentor.
+      responses:
+        '200':
+          description: |
+            Successful request.
+          schema:
+            $ref: '#/definitions/OperationResultDTO'
+        '400':
+          description: |
+            Input was malformed.
+          schema:
+            $ref: '#/definitions/OperationResultDTO'
+        '403':
+          description: |
+            The user isn't authenticated or is trying to access resources not authorized to.
+        '404':
+          description: |
+            An `Employee` with the specified Id was not found.
+
+##################################################################################################
+# /employees/{employeeId}/relationships ##########################################################
+##################################################################################################
+
+  '/employees/{employeeId}/relationships':
+    get:
+      tags:
+      - Employee
+      summary: |
+        Returns the relationships with other employees
+      description: >
+        Returns an `EmployeeRelationship` list of all employees who have relationships
+        with the current employee
+      operationId: employeesEmployeeIdRelationshipsGet
+      produces:
+        - application/json
+      parameters:
+        - in: path
+          name: employeeId
+          required: true
+          type: integer
+          description: |
+            `Employee` Id.
+        - in: query
+          name: exclude
+          required: false
+          type: array
+          collectionFormat: csv
+          items:
+            type: string
+          description: |
+            Filters out the specified relationship types. Separated by coma values.
+        - in: query
+          name: startDate
+          required: false
+          type: string
+          format: datetime
+          description: |
+            Filters out relationships prior to the specified start date.
+        - in: query
+          name: endDate
+          required: false
+          type: string
+          format: datetime
+          description: |
+            Filters out relationships subsequent to the specified end date.
+        - in: query
+          name: current
+          required: false
+          type: boolean
+          allowEmptyValue: true
+          description: |
+            Filters out historic relationships. StartDate and EndDate have precedence over this parameter.
+      responses:
+        '200':
+          description: |
+            Successful request.
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/EmployeeRelationshipDTO'
+        '403':
+          description: |
+            The user isn't authenticated or is trying to access resources not authorized to.
+        '404':
+          description: |
+            An `Employee` with the specified Id was not found.
+
+##################################################################################################
+# Definitions ####################################################################################
+##################################################################################################
+
+definitions:
+
+  EmployeeDTO:
+    type: object
+    properties:
+      id:
+        type: integer
+      email:
+        type: string
+      firstName:
+        type: string
+      lastName:
+        type: string
+      gftIdentifier:
+        type: string
+      isAdmin:
+        type: boolean
+      isMentor:
+        type: boolean
+      isPeer:
+        type: boolean
+      applicationRole:
+        $ref: '#/definitions/ApplicationRoleDTO'
+      jobLevel:
+        $ref: '#/definitions/JobLevelDTO'
+
+  ApplicationRoleDTO:
+    type: object
+    properties:
+      id:
+        type: integer
+      name:
+        type: string
+      description:
+        type: string
+    required:
+      - id
+
+  JobLevelDTO:
+    type: object
+    properties:
+      id:
+        type: integer
+      jobFamily:
+        $ref: '#/definitions/JobFamilyDTO'
+      name:
+        type: string
+      description:
+        type: string
+      expertise:
+        type: string
+    required:
+      - id
+
+  JobFamilyDTO:
+    type: object
+    properties:
+      id:
+        type: integer
+      name:
+        type: string
+      description:
+        type: string
+    required:
+      - id
+
+  RelationshipDTO:
+    type: object
+    properties:
+      id:
+        type: integer
+      name:
+        type: string
+      description:
+        type: string
+
+  EmployeeRelationshipDTO:
+    type: object
+    properties:
+      id:
+        type: integer
+      reference:
+        $ref: '#/definitions/EmployeeDTO'
+      relationship:
+        $ref: '#/definitions/RelationshipDTO'
+      startDate:
+        type: string
+        format: datetime
+      endDate:
+        type: string
+        format: datetime
+    required:
+      - id
+
+  Pagination:
+    type: array
+    items:
+      $ref: '#/definitions/Link'
+    example:
+      - rel: next
+        href: 'http://example.com/some/url?page=2'
+      - rel: prev
+        href: 'http://example.com/some/url?page=1'
+      - rel: first
+        href: 'http://example.com/some/url?page=1'
+      - rel: last
+        href: 'http://example.com/some/url?page=100'
+
+  Link:
+    type: object
+    properties:
+      rel:
+        type: string
+      href:
+        type: string
+    example:
+      rel: self
+      href: 'http://example.com/some/url/'
+
+  FieldErrorDTO:
+    type: object
+    properties:
+      field:
+        type: string
+      message:
+        type: string
+
+  OperationResultDTO:
+    type: object
+    properties:
+      message:
+        type: string
+      data:
+        type: object
+      errors:
+        type: array
+        items:
+          $ref: '#/definitions/FieldErrorDTO'
+
+tags:
+  - name: Login
+    description: Part of the Authentication service
+  - name: Employee
+    description: Part of the Employee microservice
+  - name: Appraisal
+    description: Part of the Appraisal microservice

@@ -1,0 +1,19 @@
+spring:
+  jpa:
+    hibernate:
+      naming:
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+      ddl-auto: validate
+  profiles:
+    active: default,dev,oauth2,local
+  application:
+    name: employees-v1
+server:
+  port: 11003
+logging:
+  level:
+    com:
+      gft: TRACE
+      netflix:
+        discovery: ERROR
+        eureka: ERROR
