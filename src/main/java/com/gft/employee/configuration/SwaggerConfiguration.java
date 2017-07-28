@@ -24,8 +24,8 @@ public class SwaggerConfiguration {
 
     ApiInfo apiInfo() {
         return new ApiInfoBuilder()
-                .title("GFT Employees API ")
-                .description("GFT Employees API specification ")
+                .title("GFT Employee Appraisals API ")
+                .description("GFT Employee Appraisals API specification ")
                 .license("")
                 .licenseUrl("http://unlicense.org")
                 .termsOfServiceUrl("")
