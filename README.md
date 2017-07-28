@@ -1,15 +1,17 @@
 
 # Employee
 
-Employee microservice documentation.
+EmployeeAppraisal microservice documentation.
 
 ## Spring profiles
 
-This project includes 3 different profiles that can be set in the property `spring.profiles.active` in the file 
+This project includes 4 different profiles that can be set in the property `spring.profiles.active` in the file 
 `src/main/resources/application.yml`.
 
 - `default` Default Spring profile. Remember to include it when you any extra profiles in the configuration.
-- `dev` Development profile. Includes an in memory database, self signed certificates and other useful configurations 
+- `dev` Development server profile. Includes an in memory database, self signed certificates and other useful configurations 
+when developing.
+- `local` Development profile. Includes an in memory database, self signed certificates and other useful configurations 
 when developing.
 - `oauth2` Enables the applications oauth2 security. Disable this proflie when you want to test the endpoints without 
 providing an access token.

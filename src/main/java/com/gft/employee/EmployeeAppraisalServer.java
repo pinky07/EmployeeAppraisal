@@ -4,14 +4,15 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 /**
- * Spring Boot Application class runner for the Employee microservice.
+ * Spring Boot Application class runner for the EmployeeAppraisal microservice.
  *
  * @author Ruben Jimenez
+ * @author Manuel Yepez
  */
 @SpringBootApplication
-public class EmployeeServer {
+public class EmployeeAppraisalServer {
 
     public static void main(String[] args) {
-        SpringApplication.run(EmployeeServer.class, args);
+        SpringApplication.run(EmployeeAppraisalServer.class, args);
     }
 }

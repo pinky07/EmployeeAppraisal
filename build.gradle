@@ -19,7 +19,7 @@ apply plugin: 'eclipse'
 apply plugin: 'docker'
 
 swagger {
-    inputSpec = "${project.projectDir}/src/main/resources/swagger/employees-api.yml"
+    inputSpec = "${project.projectDir}/src/main/resources/swagger/employeeAppraisals-api.yml"
     outputDir = "${project.projectDir}/src/main/swagger"
     addDynamicProperty 'sourceFolder', 'generated'
     lang = 'spring'

@@ -1,6 +1,6 @@
 spring:
   datasource:
-    url: jdbc:h2:mem:employees
+    url: jdbc:h2:mem:employeeAppraisals
   h2:
     console:
       enabled: true

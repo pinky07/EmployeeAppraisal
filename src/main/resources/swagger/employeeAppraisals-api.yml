@@ -5,9 +5,9 @@ swagger: '2.0'
 # API Information
 info:
   title: |
-    GFT Employees API
+    GFT Employee Appraisals API
   description: |
-    GFT Employees API specification
+    GFT Employee Appraisals API specification
   version: 1.0.0
 
 # URL Information
