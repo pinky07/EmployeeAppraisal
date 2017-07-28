@@ -43,7 +43,7 @@ sourceSets {
 
 group = 'com.gft'
 version = '0.0.1-SNAPSHOT'
-description = 'GFT-Employee'
+description = 'GFT-EmployeeAppraisal'
 
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
