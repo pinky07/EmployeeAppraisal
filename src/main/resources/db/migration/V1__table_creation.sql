@@ -1,11 +1,11 @@
 create table JobFamily (
-    id int NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    id SERIAL PRIMARY KEY,
     name VARCHAR(40),
     description VARCHAR(500)
 );
 
 create table JobLevel (
-    id int NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    id SERIAL PRIMARY KEY,
     jobFamilyId int,
     name VARCHAR(2),
     description VARCHAR(500),
@@ -14,13 +14,13 @@ create table JobLevel (
 );
 
 create table ApplicationRole (
-    id int NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    id SERIAL PRIMARY KEY,
     name VARCHAR(40) UNIQUE,
     description VARCHAR(500)
 );
 
 create table Employee(
-    id int NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    id SERIAL PRIMARY KEY,
     jobLevelId int,
     applicationRoleId int,
     email VARCHAR(40),
@@ -32,13 +32,13 @@ create table Employee(
 );
 
 create table Relationship (
-    id int NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    id SERIAL PRIMARY KEY,
     name VARCHAR(20) UNIQUE,
     description VARCHAR(500)
 );
 
 create table EmployeeRelationship (
-    id int NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    id SERIAL PRIMARY KEY,
     sourceEmployeeId int,
     targetEmployeeId int,
     relationshipId int,

@@ -85,7 +85,10 @@ dependencies {
     compile("org.hibernate:hibernate-core:${hibernateVersion}")
     compile("org.hibernate:hibernate-entitymanager:${hibernateVersion}")
     compile('org.flywaydb:flyway-core:4.2.0')
+    // Local
     compile('com.h2database:h2')
+    // CI DEV database
+    compile group: 'org.postgresql', name: 'postgresql', version: '42.1.3'
 
     // Swagger
     swaggerCompile('org.springframework.boot:spring-boot-starter-web')

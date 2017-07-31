@@ -16,8 +16,9 @@ import java.util.Set;
 		@UniqueConstraint(columnNames = "name")
 })
 public class ApplicationRole {
+
 	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private int id;
 
 	@OneToMany(mappedBy = "applicationRole", fetch = FetchType.LAZY)

@@ -17,7 +17,7 @@ import java.util.Set;
 public class JobLevel {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
 
 	@NotEmpty
