@@ -114,7 +114,8 @@ dependencyManagement {
 tasks.compileJava.dependsOn 'swagger'
 
 task buildDocker(type: Docker, dependsOn: build) {
-    tag = "com.gft.employee-appraisal:latest"
+    tag = "com.gft.employee-appraisal"
+    tagVersion = 'latest'
     baseImage = 'java:8'
     push = false // Would push to a Docker Hub account
     applicationName = jar.baseName
