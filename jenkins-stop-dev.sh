@@ -1,7 +1,7 @@
 #!/bin/sh
 #
 
-IMAGE_NAME='com.gft/employeeAppraisal:0.0.1-SNAPSHOT'
+IMAGE_NAME='com.gft.employee-appraisal:latest'
 echo 'Stopping containers based on' $IMAGE_NAME
 
 echo 'Searching for previously running containers...'
