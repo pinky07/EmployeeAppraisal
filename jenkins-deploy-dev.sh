@@ -1,7 +1,7 @@
 #!/bin/sh
 #
 
-IMAGE_NAME='com.gft/employeeAppraisal:0.0.1-SNAPSHOT'
+IMAGE_NAME='com.gft.employee-appraisal:latest'
 echo 'Launching new container based on image' $IMAGE_NAME
 
 CONTAINER_ID=`docker run -e 'SPRING_PROFILES_ACTIVE=default,dev,oauth2' -d -p 11004:11004 $IMAGE_NAME`
