@@ -8,6 +8,7 @@ echo 'Launch new DB container based on' $IMAGE_DB
 docker run \
     -e POSTGRES_USER='postgres' \
     -e POSTGRES_PASSWORD='postgres' \
+    -e POSTGRES_DB='employeeappraisals' \
     -d \
     -p 5432:5432 \
     $IMAGE_DB

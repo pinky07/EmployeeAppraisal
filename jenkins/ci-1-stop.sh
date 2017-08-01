@@ -7,24 +7,33 @@
 
 cleanUpDocker() {
 	echo 'Looking for dangling images...' 
-	DANGLING_IMAGES=`docker images -f dangling=true`
+	DANGLING_IMAGES=`docker images -f dangling=true -q`
 	
 	if test -n "$DANGLING_IMAGES";
 	then
-		echo 'Dangling images found'
 
 		echo 'Attempting to remove dangling images...'
-		docker rmi $DANGLING_IMAGES
-		echo 'Successfully removed dangling images'
+		DANGLING_REMOVED=`docker rmi $DANGLING_IMAGES`
 
+		if test -n "$DANGLING_REMOVED";
+		then 
+			echo 'Successful'
+		else 
+			echo "ERROR: Couldn't remove dangling images!"
+		fi
 	else
 		echo 'No dangling images were found'
 	fi
 }
 
 removeContainerAndImage() {
-	echo 'Looking for containers running based on' $1 '...'
-	CONTAINERS_RUNNING=`docker ps -a | grep "$1" | awk '{print $1}'`
+
+	NAME=$1
+	VERSION=$2
+	NAME_VERSION="$NAME:$VERSION"
+
+	echo 'Looking for containers running based on' $NAME_VERSION '...'
+	CONTAINERS_RUNNING=`docker ps -a | grep "$NAME_VERSION" | awk '{print $1}'`
 
 	if test -n "$CONTAINERS_RUNNING";
 	then
@@ -51,8 +60,8 @@ removeContainerAndImage() {
 		echo 'No containers were found'
 	fi
 
-	echo 'Looking for an image named' $1 '...'	
-	IMAGE=`docker images | grep "$1" | awk '{print $3}'`
+	echo 'Looking for an image named' $NAME_VERSION '...'	
+	IMAGE=`docker images | grep -E "$NAME\s$VERSION" | awk '{print $3}'`
 
 	if test -n "$IMAGE";
 	then
@@ -80,11 +89,11 @@ cleanUpDocker
 echo 'Successful'
 
 echo 'Removing previous image and containers'
-removeContainerAndImage 'com.gft.employee-appraisal:latest' # Stop application
+removeContainerAndImage 'com.gft.employee-appraisal' 'latest' # Stop application
 echo 'Successful'
 
 echo 'Removing previous image and containers'
-removeContainerAndImage 'postgres:alpine' #  Stop db
+removeContainerAndImage 'postgres' 'alpine' #  Stop db
 echo 'Successful'
 
 #
