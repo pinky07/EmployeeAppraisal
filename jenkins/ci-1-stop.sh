@@ -26,8 +26,7 @@ cleanUpDocker() {
 	fi
 }
 
-removeContainerAndImage() {
-
+removeContainer() {
 	NAME=$1
 	VERSION=$2
 	NAME_VERSION="$NAME:$VERSION"
@@ -59,9 +58,15 @@ removeContainerAndImage() {
 	else
 		echo 'No containers were found'
 	fi
+}
+
+removeImage() {
+	NAME=$1
+	VERSION=$2
+	NAME_VERSION="$NAME:$VERSION"
 
 	echo 'Looking for an image named' $NAME_VERSION '...'	
-	IMAGE=`docker images | grep -E "$NAME\s$VERSION" | awk '{print $3}'`
+	IMAGE=`docker images | grep -E "$NAME\s+$VERSION" | awk '{print $3}'`
 
 	if test -n "$IMAGE";
 	then
@@ -86,14 +91,17 @@ removeContainerAndImage() {
 
 echo 'Cleaning up Docker...'
 cleanUpDocker
+
+# Stop application
+echo 'Removing previous image and containers'
+removeContainer 'com.gft.employee-appraisal' 'latest' 
+removeImage 'com.gft.employee-appraisal' 'latest' 
 echo 'Successful'
 
+# Stop db
 echo 'Removing previous image and containers'
-removeContainerAndImage 'com.gft.employee-appraisal' 'latest' # Stop application
-echo 'Successful'
-
-echo 'Removing previous image and containers'
-removeContainerAndImage 'postgres' 'alpine' #  Stop db
+removeContainer 'postgres' 'alpine' 
+removeImage 'postgres' 'alpine'
 echo 'Successful'
 
 #
