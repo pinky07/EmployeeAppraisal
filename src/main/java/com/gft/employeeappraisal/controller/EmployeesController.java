@@ -109,7 +109,7 @@ public class EmployeesController implements EmployeesApi {
     }
 
     /**
-     * Given an employeeId, returns the current Mentor associated to that employeeappraisal.
+     * Given an employeeId, returns the current Mentor associated to that employee.
      *
      * @param employeeId ID of the Employee to look up.
      * @return {@link EmployeeDTO} Mentor in the form on an EmployeeDTO object.
@@ -134,10 +134,10 @@ public class EmployeesController implements EmployeesApi {
     }
 
     /**
-     * Updates the mentor associated to an employeeappraisal.
+     * Updates the mentor associated to an employee.
      *
-     * @param employeeId   ID of the employeeappraisal to be updated.
-     * @param newMentorDTO Mentor entity {@link EmployeeDTO} to associate to the employeeappraisal.
+     * @param employeeId   ID of the employee to be updated.
+     * @param newMentorDTO Mentor entity {@link EmployeeDTO} to associate to the employee.
      * @return {@link OperationResultDTO} Entity with any possible validation error messages, or success.
      */
     @Override
@@ -218,9 +218,9 @@ public class EmployeesController implements EmployeesApi {
 	}
 
     /**
-     * Creates a new employeeappraisal into the system.
+     * Creates a new employee into the system.
      *
-     * @param employee {@link EmployeeDTO} entity with the new employeeappraisal's information (refer to Swagger documentation for syntaxis).
+     * @param employee {@link EmployeeDTO} entity with the new employee's information (refer to Swagger documentation for syntaxis).
      * @return {@link OperationResultDTO} Entity with any possible validation error messages, or success.
      */
     @Override

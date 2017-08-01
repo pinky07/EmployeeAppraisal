@@ -11,7 +11,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
 
 /**
- * Container class that keeps track of bean instantiations necessary for the Employee microservice.
+ * Container class that keeps track of bean instantiations necessary for the EmployeeAppraisal microservice.
  *
  * @author Ruben Jimenez
  * @author Manuel Yepez

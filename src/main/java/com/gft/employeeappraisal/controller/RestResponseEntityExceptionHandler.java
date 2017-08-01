@@ -14,7 +14,7 @@ import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 /**
- * Class that will handle exceptions thrown by the controller classes belonging to the Employee microservice.
+ * Class that will handle exceptions thrown by the controller classes belonging to the EmployeeAppraisal microservice.
  *
  * @author Ruben Jimenez
  * @author Manuel Yepez

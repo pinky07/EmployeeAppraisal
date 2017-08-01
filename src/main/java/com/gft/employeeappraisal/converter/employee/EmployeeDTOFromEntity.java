@@ -18,7 +18,7 @@ public class EmployeeDTOFromEntity implements Mapper<Employee, EmployeeDTO> {
 	public EmployeeDTOFromEntity(MapperFactory mapperFactory) {
 		this.mapperFactory = mapperFactory;
 		this.mapperFactory.classMap(Employee.class, EmployeeDTO.class)
-				.exclude("applicationRole.employeeappraisal")
+				.exclude("applicationRole.employee")
 				.byDefault()
 				.register();
 	}

@@ -39,7 +39,7 @@ public class MeController implements MeApi {
     private EmployeeDTOFromEntity employeeDTOFromEntity;
 
     /**
-     * Obtains all the employeeappraisal info (delimited on the Employee microservice) for the authenticated user.
+     * Obtains all the employee info (delimited on the EmployeeAppraisal microservice) for the authenticated user.
      *
      * @return {@link EmployeeDTO} Entity with all the information pertinent to the authenticated user.
      */
