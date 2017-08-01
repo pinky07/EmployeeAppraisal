@@ -20,8 +20,6 @@ docker run \
     -p 11004:11004 \
     $IMAGE_APP
 
-echo 'Created container with ID' $CONTAINER_ID
-
 echo 'Waiting 20s for DB and APP containers to start'
 sleep 20s
 

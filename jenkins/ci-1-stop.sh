@@ -96,13 +96,11 @@ cleanUpDocker
 echo 'Removing previous image and containers'
 removeContainer 'com.gft.employee-appraisal' 'latest' 
 removeImage 'com.gft.employee-appraisal' 'latest' 
-echo 'Successful'
 
 # Stop db
 echo 'Removing previous image and containers'
 removeContainer 'postgres' 'alpine' 
-removeImage 'postgres' 'alpine'
-echo 'Successful'
+# removeImage 'postgres' 'alpine'
 
 #
 # References:
