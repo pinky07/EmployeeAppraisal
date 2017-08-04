@@ -27,7 +27,7 @@ create table ScoreValue (
     id SERIAL PRIMARY KEY,
     scoreTypeId int,
     value VARCHAR(40),
-    definition VARCHAR(40),
+    description VARCHAR(500),
     FOREIGN KEY (scoreTypeId) REFERENCES ScoreType(id)
 );
 

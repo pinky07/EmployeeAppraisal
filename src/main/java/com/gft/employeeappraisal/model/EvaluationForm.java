@@ -5,6 +5,11 @@ import org.hibernate.validator.constraints.NotEmpty;
 import javax.persistence.*;
 import javax.validation.constraints.Size;
 
+/**
+ * Entity persistent class that describes an EvaluationForm table.
+ *
+ * @author Ruben Jimenez
+ */
 @Entity
 @Table(name = "EvaluationForm")
 public class EvaluationForm {

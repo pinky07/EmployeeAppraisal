@@ -3,31 +3,37 @@ package com.gft.employeeappraisal.model;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 /**
- * Entity persistent class that describes an EvaluationFormSection table.
+ * Entity persistent class that describes an ScoreValue table.
  *
  * @author Ruben Jimenez
  */
 @Entity
-@Table(name = "EvaluationFormSection")
-public class EvaluationFormSection {
+@Table(name = "ScoreValue")
+public class ScoreValue {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
+    @NotNull
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "scoreTypeId", nullable = false)
+    private ScoreType sourceEmployee;
+
     @NotEmpty
     @Size(max = 40)
-    @Column(name = "name", nullable = false, length = 40)
-    private String name;
+    @Column(name = "value", nullable = false, length = 40)
+    private String value;
 
     @NotEmpty
     @Size(max = 500)
-    @Column(name = "description", nullable = false, length = 500)
+    @Column(name = "description", nullable = false, length = 40)
     private String description;
-
+    
     public int getId() {
         return id;
     }
@@ -36,12 +42,20 @@ public class EvaluationFormSection {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
+    public ScoreType getSourceEmployee() {
+        return sourceEmployee;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setSourceEmployee(ScoreType sourceEmployee) {
+        this.sourceEmployee = sourceEmployee;
+    }
+
+    public String getValue() {
+        return value;
+    }
+
+    public void setValue(String value) {
+        this.value = value;
     }
 
     public String getDescription() {
@@ -57,7 +71,7 @@ public class EvaluationFormSection {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        EvaluationFormSection that = (EvaluationFormSection) o;
+        ScoreValue that = (ScoreValue) o;
 
         return id == that.id;
     }
@@ -69,9 +83,10 @@ public class EvaluationFormSection {
 
     @Override
     public String toString() {
-        return "EvaluationFormSection{" +
+        return "ScoreValue{" +
                 "id=" + id +
-                ", name='" + name + '\'' +
+                ", sourceEmployee=" + sourceEmployee +
+                ", value='" + value + '\'' +
                 ", description='" + description + '\'' +
                 '}';
     }
