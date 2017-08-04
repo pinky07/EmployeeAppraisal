@@ -93,7 +93,7 @@ VALUES
 
         -- Actual employees
         (2, 45, 2, 'ruben.jimenez@gft.com', 'Ruben', 'Jimenez', 'RNJZ'),
-        --(3, 45, 2, 'manuel.yepez@gft.com', 'Manuel', 'Yepez', 'MLYZ'),
+        (3, 45, 2, 'manuel.yepez@gft.com', 'Manuel', 'Yepez', 'MLYZ'),
         (4, 47, 2, 'Mario.Leon@gft.com', 'Mario', 'Leon', 'MOLN'),
         (5, 47, 2, 'Eduardo.Herrera@gft.com', 'Eduardo', 'Herrera', 'EOHA'),
 
@@ -138,7 +138,7 @@ VALUES
         -- Self relationships
         (1, 1, 1, '2017-01-01 00:00:00', null),
         (2, 2, 1, '2017-01-01 00:00:00', null),
-        --(3, 3, 1, '2017-01-01 00:00:00', null),
+        (3, 3, 1, '2017-01-01 00:00:00', null),
         (4, 4, 1, '2017-01-01 00:00:00', null),
         (5, 5, 1, '2017-01-01 00:00:00', null),
         (6, 6, 1, '2017-01-01 00:00:00', null),
@@ -152,7 +152,7 @@ VALUES
         (6, 2, 3, '2017-01-01 00:00:00', null),
 
         -- Mentor: Mentor 1 / Mentee: Manuel Yepez
-        --(6, 3, 3, '2017-01-01 00:00:00', null),
+        (6, 3, 3, '2017-01-01 00:00:00', null),
 
         -- Mentor: Mentor 1 / Mentee: Mario Leon
         (6, 4, 3, '2017-01-01 00:00:00', null),
@@ -185,23 +185,23 @@ VALUES
         -- All the mentees reference each other
 
         -- Rubén Jiménez References
-        --(2, 3, 2, '2017-01-01 00:00:00', null),
+        (2, 3, 2, '2017-01-01 00:00:00', null),
         (2, 4, 2, '2017-01-01 00:00:00', null),
         (2, 5, 2, '2017-01-01 00:00:00', null),
 
         -- Manuel Yepez References
-        --(3, 2, 2, '2017-01-01 00:00:00', null),
-        --(3, 4, 2, '2017-01-01 00:00:00', null),
-        --(3, 5, 2, '2017-01-01 00:00:00', null),
+        (3, 2, 2, '2017-01-01 00:00:00', null),
+        (3, 4, 2, '2017-01-01 00:00:00', null),
+        (3, 5, 2, '2017-01-01 00:00:00', null),
 
         -- Mario Leon References
         (4, 2, 2, '2017-01-01 00:00:00', null),
-        --(4, 3, 2, '2017-01-01 00:00:00', null),
+        (4, 3, 2, '2017-01-01 00:00:00', null),
         (4, 5, 2, '2017-01-01 00:00:00', null),
 
         -- Eduardo Herrera References
         (5, 2, 2, '2017-01-01 00:00:00', null),
-        --(5, 3, 2, '2017-01-01 00:00:00', null),
+        (5, 3, 2, '2017-01-01 00:00:00', null),
         (5, 4, 2, '2017-01-01 00:00:00', null),
 
         -- Mentee 1 References
