@@ -13,6 +13,9 @@ docker run \
     -p 5432:5432 \
     $IMAGE_DB
 
+echo 'Allowing DB container to start by waiting 20s...'
+sleep 20s
+
 echo 'Launching new APP container based on image' $IMAGE_APP
 docker run \
     -e SPRING_PROFILES_ACTIVE='default,dev,oauth2' \
