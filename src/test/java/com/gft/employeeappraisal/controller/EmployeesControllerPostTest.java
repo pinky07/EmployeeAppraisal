@@ -103,7 +103,7 @@ public class EmployeesControllerPostTest {
 		EmployeeDTO resultEmployeeDTO = mapper.convertValue(resultDTO.getData(), EmployeeDTO.class);
 		assertEquals(Constants.SUCCESS, resultDTO.getMessage());
 		assertEquals(resultEmployeeDTO.getFirstName(), mockEmployeeDTO.getFirstName());
-		assertTrue(resultDTO.getErrors().isEmpty());
+		assertNull(resultDTO.getErrors());
 	}
 
 	@Test

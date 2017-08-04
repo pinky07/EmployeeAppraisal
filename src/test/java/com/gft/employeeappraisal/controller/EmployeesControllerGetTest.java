@@ -286,7 +286,7 @@ public class EmployeesControllerGetTest {
 		assertNotNull(resultDTO);
 		assertEquals(Constants.ERROR, resultDTO.getMessage());
 		assertNull(resultDTO.getData());
-		assertTrue(resultDTO.getErrors().isEmpty());
+		assertNull(resultDTO.getErrors());
 
 		verify(employeeService, times(1)).getLoggedInUser();
 		verify(employeeService, times(1)).checkAccess(anyInt(), anyInt());

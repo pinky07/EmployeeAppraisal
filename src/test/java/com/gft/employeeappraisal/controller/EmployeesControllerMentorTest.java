@@ -182,7 +182,7 @@ public class EmployeesControllerMentorTest {
 		assertNotNull(resultDTO);
 		assertEquals(Constants.SUCCESS, resultDTO.getMessage());
 		assertNull(resultDTO.getData());
-		assertTrue(resultDTO.getErrors().isEmpty());
+		assertNull(resultDTO.getErrors());
 	}
 
 	@Test
@@ -203,7 +203,7 @@ public class EmployeesControllerMentorTest {
 		assertNotNull(resultDTO);
 		assertEquals(Constants.ERROR, resultDTO.getMessage());
 		assertEquals("Employee with Id -1 couldn't be found", resultDTO.getData());
-		assertTrue(resultDTO.getErrors().isEmpty());
+		assertNull(resultDTO.getErrors());
 	}
 
 	@Test
@@ -225,7 +225,7 @@ public class EmployeesControllerMentorTest {
 		assertNotNull(resultDTO);
 		assertEquals(Constants.ERROR, resultDTO.getMessage());
 		assertEquals("Employee with Id -1 couldn't be found therefore it cannot be put as Mentor", resultDTO.getData());
-		assertTrue(resultDTO.getErrors().isEmpty());
+		assertNull(resultDTO.getErrors());
 	}
 
 	@Test
