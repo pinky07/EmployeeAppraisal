@@ -7,13 +7,13 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 /**
- * Entity persistent class that describes an ScoreValue table.
+ * Entity persistent class that describes an EvaluationFormQuestion table.
  *
  * @author Ruben Jimenez
  */
 @Entity
-@Table(name = "ScoreValue")
-public class ScoreValue {
+@Table(name = "EvaluationFormQuestion")
+public class EvaluationFormQuestion {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,12 +26,12 @@ public class ScoreValue {
 
     @NotEmpty
     @Size(max = 40)
-    @Column(name = "value", nullable = false, length = 40)
-    private String value;
+    @Column(name = "name", nullable = false, length = 40)
+    private String name;
 
     @NotEmpty
     @Size(max = 500)
-    @Column(name = "description", nullable = false, length = 40)
+    @Column(name = "description", nullable = false, length = 500)
     private String description;
 
     public int getId() {
@@ -50,12 +50,12 @@ public class ScoreValue {
         this.scoreType = scoreType;
     }
 
-    public String getValue() {
-        return value;
+    public String getName() {
+        return name;
     }
 
-    public void setValue(String value) {
-        this.value = value;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getDescription() {
@@ -71,7 +71,7 @@ public class ScoreValue {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        ScoreValue that = (ScoreValue) o;
+        EvaluationFormQuestion that = (EvaluationFormQuestion) o;
 
         return id == that.id;
     }
@@ -83,10 +83,10 @@ public class ScoreValue {
 
     @Override
     public String toString() {
-        return "ScoreValue{" +
+        return "EvaluationFormQuestion{" +
                 "id=" + id +
                 ", scoreType=" + scoreType +
-                ", value='" + value + '\'' +
+                ", name='" + name + '\'' +
                 ", description='" + description + '\'' +
                 '}';
     }
