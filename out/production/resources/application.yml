@@ -1,6 +1,6 @@
 spring:
   profiles:
-    active: default,oauth2,local
+    active: default,dev,oauth2,local
   application:
     name: employeeAppraisals-v1
   jpa:

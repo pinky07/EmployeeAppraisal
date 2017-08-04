@@ -11,6 +11,13 @@ management:
 security:
   basic:
     enabled: false
+logging:
+  level:
+    com:
+      gft: TRACE
+      netflix:
+        discovery: ERROR
+        eureka: ERROR
 eureka:
   instance:
     ipAddress: 10.200.202.122

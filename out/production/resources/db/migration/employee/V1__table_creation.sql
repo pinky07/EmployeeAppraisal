@@ -19,7 +19,7 @@ create table ApplicationRole (
     description VARCHAR(500)
 );
 
-create table Employee(
+create table Employee (
     id SERIAL PRIMARY KEY,
     jobLevelId int,
     applicationRoleId int,
