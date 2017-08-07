@@ -6,6 +6,7 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
+import java.util.Set;
 
 /**
  * Entity persistent class that describes an Appraisal table.
@@ -34,8 +35,12 @@ public class Appraisal {
     @Column(name = "startDate", columnDefinition = "TIMESTAMP", nullable = false)
     private LocalDateTime startDate;
 
+    @NotNull
     @Column(name = "endDate", columnDefinition = "TIMESTAMP", nullable = false)
     private LocalDateTime endDate;
+
+    @OneToMany(mappedBy = "appraisal", fetch = FetchType.LAZY)
+	private Set<AppraisalXEvaluationForm> appraisalXEvaluationForms;
 
     public int getId() {
         return id;
@@ -77,22 +82,39 @@ public class Appraisal {
         this.endDate = endDate;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+	public Set<AppraisalXEvaluationForm> getAppraisalXEvaluationForms() {
+		return appraisalXEvaluationForms;
+	}
 
-        Appraisal appraisal = (Appraisal) o;
+	public void setAppraisalXEvaluationForms(Set<AppraisalXEvaluationForm> appraisalXEvaluationForms) {
+		this.appraisalXEvaluationForms = appraisalXEvaluationForms;
+	}
 
-        return id == appraisal.id;
-    }
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
 
-    @Override
-    public int hashCode() {
-        return id;
-    }
+		Appraisal appraisal = (Appraisal) o;
 
-    @Override
+		return getId() == appraisal.getId() &&
+				getName().equals(appraisal.getName()) &&
+				getDescription().equals(appraisal.getDescription()) &&
+				getStartDate().equals(appraisal.getStartDate()) &&
+				getEndDate().equals(appraisal.getEndDate());
+	}
+
+	@Override
+	public int hashCode() {
+		int result = getId();
+		result = 31 * result + getName().hashCode();
+		result = 31 * result + getDescription().hashCode();
+		result = 31 * result + getStartDate().hashCode();
+		result = 31 * result + getEndDate().hashCode();
+		return result;
+	}
+
+	@Override
     public String toString() {
         return "Appraisal{" +
                 "id=" + id +

@@ -2,6 +2,7 @@ package com.gft.employeeappraisal.model;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.util.Set;
 
 /**
  * Entity persistent class that describes an AppraisalXEvaluationForm table.
@@ -25,6 +26,9 @@ public class AppraisalXEvaluationForm {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "evaluationFormId", nullable = false)
     private EvaluationForm evaluationForm;
+
+    @OneToMany(mappedBy = "appraisalXEvaluationForm", fetch = FetchType.LAZY)
+	private Set<AppraisalXEvaluationFormXEmployeeRelationship> appraisalXEvaluationFormXEmployeeRelationships;
 
     public int getId() {
         return id;
@@ -50,7 +54,16 @@ public class AppraisalXEvaluationForm {
         this.evaluationForm = evaluationForm;
     }
 
-    @Override
+	public Set<AppraisalXEvaluationFormXEmployeeRelationship> getAppraisalXEvaluationFormXEmployeeRelationships() {
+		return appraisalXEvaluationFormXEmployeeRelationships;
+	}
+
+	public void setAppraisalXEvaluationFormXEmployeeRelationships(Set<AppraisalXEvaluationFormXEmployeeRelationship>
+																		  appraisalXEvaluationFormXEmployeeRelationships) {
+		this.appraisalXEvaluationFormXEmployeeRelationships = appraisalXEvaluationFormXEmployeeRelationships;
+	}
+
+	@Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
@@ -69,8 +82,6 @@ public class AppraisalXEvaluationForm {
     public String toString() {
         return "AppraisalXEvaluationForm{" +
                 "id=" + id +
-                ", appraisal=" + appraisal +
-                ", evaluationForm=" + evaluationForm +
                 '}';
     }
 }

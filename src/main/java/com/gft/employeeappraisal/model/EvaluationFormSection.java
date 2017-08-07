@@ -4,6 +4,7 @@ import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.persistence.*;
 import javax.validation.constraints.Size;
+import java.util.Set;
 
 /**
  * Entity persistent class that describes an EvaluationFormSection table.
@@ -27,6 +28,9 @@ public class EvaluationFormSection {
     @Size(max = 500)
     @Column(name = "description", nullable = false, length = 500)
     private String description;
+
+    @OneToMany(mappedBy = "evaluationFormSection", fetch = FetchType.LAZY)
+    private Set<EvaluationFormXSectionXQuestion> evaluationFormXSectionXQuestions;
 
     public int getId() {
         return id;
@@ -52,19 +56,32 @@ public class EvaluationFormSection {
         this.description = description;
     }
 
-    @Override
+	public Set<EvaluationFormXSectionXQuestion> getEvaluationFormXSectionXQuestions() {
+		return evaluationFormXSectionXQuestions;
+	}
+
+	public void setEvaluationFormXSectionXQuestions(Set<EvaluationFormXSectionXQuestion> evaluationFormXSectionXQuestions) {
+		this.evaluationFormXSectionXQuestions = evaluationFormXSectionXQuestions;
+	}
+
+	@Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
         EvaluationFormSection that = (EvaluationFormSection) o;
 
-        return id == that.id;
+        return getId() == that.getId() &&
+                getName().equals(that.getName()) &&
+                getDescription().equals(that.getDescription());
     }
 
     @Override
     public int hashCode() {
-        return id;
+        int result = getId();
+        result = 31 * result + getName().hashCode();
+        result = 31 * result + getDescription().hashCode();
+        return result;
     }
 
     @Override

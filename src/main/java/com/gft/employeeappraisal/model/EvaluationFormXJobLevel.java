@@ -69,8 +69,6 @@ public class EvaluationFormXJobLevel {
     public String toString() {
         return "EvaluationFormXJobLevel{" +
                 "id=" + id +
-                ", evaluationForm=" + evaluationForm +
-                ", jobLevel=" + jobLevel +
                 '}';
     }
 }

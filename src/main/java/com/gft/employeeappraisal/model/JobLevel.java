@@ -43,6 +43,9 @@ public class JobLevel {
 	@OneToMany(mappedBy = "jobLevel", fetch = FetchType.LAZY, cascade = CascadeType.REFRESH)
 	private Set<Employee> employees;
 
+	@OneToMany(mappedBy = "jobLevel", fetch = FetchType.LAZY)
+	private Set<EvaluationFormXJobLevel> evaluationFormXJobLevels;
+
 	public int getId() {
 		return id;
 	}
@@ -91,6 +94,14 @@ public class JobLevel {
 		this.employees = employees;
 	}
 
+	public Set<EvaluationFormXJobLevel> getEvaluationFormXJobLevels() {
+		return evaluationFormXJobLevels;
+	}
+
+	public void setEvaluationFormXJobLevels(Set<EvaluationFormXJobLevel> evaluationFormXJobLevels) {
+		this.evaluationFormXJobLevels = evaluationFormXJobLevels;
+	}
+
 	@Override
 	public boolean equals(Object o) {
 		if (this == o) return true;
@@ -101,8 +112,7 @@ public class JobLevel {
 		return getId() == jobLevel.getId() &&
 				(getName() != null ? getName().equals(jobLevel.getName()) : jobLevel.getName() == null) &&
 				(getDescription() != null ? getDescription().equals(jobLevel.getDescription()) : jobLevel.getDescription() == null) &&
-				(getExpertise() != null ? getExpertise().equals(jobLevel.getExpertise()) : jobLevel.getExpertise() == null) &&
-				(getJobFamily() != null ? getJobFamily().equals(jobLevel.getJobFamily()) : jobLevel.getJobFamily() == null);
+				(getExpertise() != null ? getExpertise().equals(jobLevel.getExpertise()) : jobLevel.getExpertise() == null);
 	}
 
 	@Override
@@ -111,7 +121,6 @@ public class JobLevel {
 		result = 31 * result + (getName() != null ? getName().hashCode() : 0);
 		result = 31 * result + (getDescription() != null ? getDescription().hashCode() : 0);
 		result = 31 * result + (getExpertise() != null ? getExpertise().hashCode() : 0);
-		result = 31 * result + (getJobFamily() != null ? getJobFamily().hashCode() : 0);
 		return result;
 	}
 
@@ -122,7 +131,6 @@ public class JobLevel {
 				", name='" + name + '\'' +
 				", description='" + description + '\'' +
 				", expertise='" + expertise + '\'' +
-				", jobFamily=" + jobFamily +
 				'}';
 	}
 }

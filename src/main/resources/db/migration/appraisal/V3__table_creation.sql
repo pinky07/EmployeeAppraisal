@@ -8,34 +8,34 @@ create table Appraisal (
 
 create table EvaluationForm (
     id SERIAL PRIMARY KEY,
-    name VARCHAR(40),
-    description VARCHAR(500)
+    name VARCHAR(40) NOT NULL,
+    description VARCHAR(500) NOT NULL
 );
 
 create table EvaluationFormSection (
     id SERIAL PRIMARY KEY,
-    name VARCHAR(40),
-    description VARCHAR(500)
+    name VARCHAR(40) NOT NULL,
+    description VARCHAR(500) NOT NULL
 );
 
 create table ScoreType (
     id SERIAL PRIMARY KEY,
-    definition VARCHAR(40)
+    definition VARCHAR(40) NOT NULL
 );
 
 create table ScoreValue (
     id SERIAL PRIMARY KEY,
     scoreTypeId int,
     value VARCHAR(40),
-    description VARCHAR(500),
+    description VARCHAR(500) NOT NULL,
     FOREIGN KEY (scoreTypeId) REFERENCES ScoreType(id)
 );
 
 create table EvaluationFormQuestion (
     id SERIAL PRIMARY KEY,
     scoreTypeId int,
-    name VARCHAR(40),
-    description VARCHAR(500),
+    name VARCHAR(40) NOT NULL,
+    description VARCHAR(500) NOT NULL,
     FOREIGN KEY (scoreTypeId) REFERENCES ScoreType(id)
 );
 
@@ -59,7 +59,7 @@ create table AppraisalXEvaluationFormXEmployeeRelationship (
     id SERIAL PRIMARY KEY,
     appraisalXEvaluationFormId int,
     employeeRelationshipId int,
-    status VARCHAR(40),
+    evaluationStatus VARCHAR(40),
     FOREIGN KEY (appraisalXEvaluationFormId) REFERENCES AppraisalXEvaluationForm(id),
     FOREIGN KEY (employeeRelationshipId) REFERENCES EmployeeRelationship(id)
 );
@@ -79,7 +79,7 @@ create table EvaluationFormXSectionXQuestionXAnswer (
     evaluationFormXSectionXQuestionId int,
     appraisalXEvaluationFormXEmployeeRelationshipId int,
     scoreValueId int,
-    comment varchar(3000),
+    comment varchar(1000),
     FOREIGN KEY (evaluationFormXSectionXQuestionId) REFERENCES EvaluationFormXSectionXQuestion(id),
     FOREIGN KEY (appraisalXEvaluationFormXEmployeeRelationshipId) REFERENCES AppraisalXEvaluationFormXEmployeeRelationship(id),
     FOREIGN KEY (scoreValueId) REFERENCES ScoreValue(id)

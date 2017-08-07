@@ -4,6 +4,7 @@ import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.persistence.*;
 import javax.validation.constraints.Size;
+import java.util.Set;
 
 /**
  * Entity persistent class that describes an ScoreType table.
@@ -23,6 +24,12 @@ public class ScoreType {
     @Column(name = "definition", nullable = false, length = 40)
     private String definition;
 
+	@OneToMany(mappedBy = "scoreType", fetch = FetchType.LAZY)
+	private Set<ScoreValue> scoreValues;
+
+	@OneToMany(mappedBy = "scoreType", fetch = FetchType.LAZY)
+	private Set<EvaluationFormQuestion> evaluationFormQuestions;
+
     public int getId() {
         return id;
     }
@@ -39,22 +46,41 @@ public class ScoreType {
         this.definition = definition;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+	public Set<ScoreValue> getScoreValues() {
+		return scoreValues;
+	}
 
-        ScoreType scoreType = (ScoreType) o;
+	public void setScoreValues(Set<ScoreValue> scoreValues) {
+		this.scoreValues = scoreValues;
+	}
 
-        return id == scoreType.id;
-    }
+	public Set<EvaluationFormQuestion> getEvaluationFormQuestions() {
+		return evaluationFormQuestions;
+	}
 
-    @Override
-    public int hashCode() {
-        return id;
-    }
+	public void setEvaluationFormQuestions(Set<EvaluationFormQuestion> evaluationFormQuestions) {
+		this.evaluationFormQuestions = evaluationFormQuestions;
+	}
 
-    @Override
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+
+		ScoreType scoreType = (ScoreType) o;
+
+		return getId() == scoreType.getId() &&
+				getDefinition().equals(scoreType.getDefinition());
+	}
+
+	@Override
+	public int hashCode() {
+		int result = getId();
+		result = 31 * result + getDefinition().hashCode();
+		return result;
+	}
+
+	@Override
     public String toString() {
         return "ScoreType{" +
                 "id=" + id +
