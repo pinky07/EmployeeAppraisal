@@ -20,8 +20,8 @@ public class EvaluationForm {
     private int id;
 
     @NotEmpty
-    @Size(max = 40)
-    @Column(name = "name", nullable = false, length = 40)
+    @Size(max = 100)
+    @Column(name = "name", nullable = false, length = 100)
     private String name;
 
     @NotEmpty
