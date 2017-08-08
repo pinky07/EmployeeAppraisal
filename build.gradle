@@ -28,7 +28,8 @@ swagger {
             'modelPackage'  : 'com.gft.swagger.employees.model',
             'apiPackage'    : 'com.gft.swagger.employees.api',
             'dateLibrary'   : 'java8',
-            'interfaceOnly' : true
+            'interfaceOnly' : true,
+            'useTags'       : true
     ]
 }
 

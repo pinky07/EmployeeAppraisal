@@ -12,7 +12,7 @@ import com.gft.employeeappraisal.model.RelationshipName;
 import com.gft.employeeappraisal.service.DTOService;
 import com.gft.employeeappraisal.service.EmployeeRelationshipService;
 import com.gft.employeeappraisal.service.EmployeeService;
-import com.gft.swagger.employees.api.EmployeesApi;
+import com.gft.swagger.employees.api.EmployeeApi;
 import com.gft.swagger.employees.model.EmployeeDTO;
 import com.gft.swagger.employees.model.EmployeeRelationshipDTO;
 import com.gft.swagger.employees.model.FieldErrorDTO;
@@ -43,7 +43,7 @@ import java.util.Optional;
  * @author Manuel Yepez
  */
 @Controller
-public class EmployeesController implements EmployeesApi {
+public class EmployeesController implements EmployeeApi {
 
     private Logger logger = LoggerFactory.getLogger(EmployeesController.class);
 

@@ -38,7 +38,7 @@ paths:
   '/me':
     get:
       tags:
-      - Employee
+      - Me
       summary: |
         Provides information about the authenticated user.
       description: >
@@ -60,13 +60,156 @@ paths:
             The user is authenticated, but is not yet registered in the system.
 
 ###################################################################################################
+# /me/appraisals ##################################################################################
+###################################################################################################
+
+  '/me/appraisals':
+    get:
+      tags:
+      - Appraisal
+      summary: |
+        Provides a list of appraisals for the authenticated user.
+      description: >
+        Returns a list of `Appraisal` belonging to the authenticated user.
+      operationId: meAppraisalsGet
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: |
+            Successful request.
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/AppraisalDTO'
+        '403':
+          description: |
+            The user isn't authenticated.
+        '404':
+          description: |
+            The user is authenticated, but is not yet registered in the system.
+
+###################################################################################################
+# /me/appraisals/:id ##############################################################################
+###################################################################################################
+
+  '/me/appraisals/{appraisalId}':
+    get:
+      tags:
+      - Appraisal
+      summary: |
+        Provides a specific appraisal for the authenticated user.
+      description: >
+        Returns an `Appraisal` belonging to the authenticated user.
+      operationId: meAppraisalsAppraisalIdGet
+      produces:
+        - application/json
+      parameters:
+        - in: path
+          name: appraisalId
+          type: integer
+          required: true
+          description: |
+            `Appraisal` Id.
+      responses:
+        '200':
+          description: |
+            Successful request.
+          schema:
+            $ref: '#/definitions/AppraisalDTO'
+        '403':
+          description: |
+            The user isn't authenticated or tried to retrieve an appraisal to which he does not have permission.
+        '404':
+          description: |
+            Appraisal not found in the system.
+
+###################################################################################################
+# /me/appraisals/:id/forms ########################################################################
+###################################################################################################
+
+  '/me/appraisals/{appraisalId}/forms':
+    get:
+      tags:
+      - Appraisal
+      summary: |
+        Provides a list of `EvaluationForm` of a specific appraisal for the authenticated user.
+      description: >
+        Returns a list of `EvaluationForm` belonging to the authenticated user.
+      operationId: meAppraisalsAppraisalIdFormsGet
+      produces:
+        - application/json
+      parameters:
+        - in: path
+          name: appraisalId
+          type: integer
+          required: true
+          description: |
+            `Appraisal` Id.
+      responses:
+        '200':
+          description: |
+            Successful request.
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/EvaluationFormDTO'
+        '403':
+          description: |
+            The user isn't authenticated or tried to retrieve an appraisal to which he does not have permission.
+        '404':
+          description: |
+            Appraisal not found in the system.
+
+###################################################################################################
+# /me/appraisals/:id/forms/:id ####################################################################
+###################################################################################################
+
+  '/me/appraisals/{appraisalId}/forms/{formId}':
+    get:
+      tags:
+      - Appraisal
+      summary: |
+        Provides a specific `EvaluationForm` of a specific appraisal for the authenticated user.
+      description: >
+        Returns a particular `EvaluationForm` belonging to the authenticated user.
+      operationId: meAppraisalsAppraisalIdFormsFormIdGet
+      produces:
+        - application/json
+      parameters:
+        - in: path
+          name: appraisalId
+          type: integer
+          required: true
+          description: |
+            `Appraisal` Id.
+        - in: path
+          name: formId
+          type: integer
+          required: true
+          description: |
+            `Form` Id.
+      responses:
+        '200':
+          description: |
+            Successful request.
+          schema:
+            $ref: '#/definitions/EvaluationFormDTO'
+        '403':
+          description: |
+            The user isn't authenticated or tried to retrieve an EvaluationForm to which he does not have permission.
+        '404':
+          description: |
+            Appraisal or EvaluationForm not found in the system.
+
+###################################################################################################
 # /me/mentor ######################################################################################
 ###################################################################################################
 
   '/me/mentor':
     get:
       tags:
-      - Employee
+      - Me
       summary: |
         Provides the mentor associated to the authenticated user.
       description: |
@@ -94,7 +237,7 @@ paths:
   '/me/mentees':
     get:
       tags:
-      - Employee
+      - Me
       summary: |
         Provides the mentees associated to the authenticated user.
       description: |
@@ -124,7 +267,7 @@ paths:
   '/me/peers':
     get:
       tags:
-      - Employee
+      - Me
       summary: |
         Provides the peers associated to the authenticated user.
       description: |
@@ -504,7 +647,7 @@ paths:
         Returns the relationships with other employees
       description: >
         Returns an `EmployeeRelationship` list of all employees who have relationships
-        with the current employee
+        with the specified employee
       operationId: employeesEmployeeIdRelationshipsGet
       produces:
         - application/json
@@ -561,10 +704,196 @@ paths:
             An `Employee` with the specified Id was not found.
 
 ##################################################################################################
+# /employees/{employeeId}/appraisals #############################################################
+##################################################################################################
+
+  '/employees/{employeeId}/appraisals':
+    get:
+      tags:
+      - Appraisal
+      summary: |
+        Returns the appraisals of the specified employee.
+      description: >
+        Returns an `Appraisal` list belonging to the specified employee
+      operationId: employeesEmployeeIdAppraisalsGet
+      produces:
+        - application/json
+      parameters:
+        - in: path
+          name: employeeId
+          required: true
+          type: integer
+          description: |
+            `Employee` Id.
+      responses:
+        '200':
+          description: |
+            Successful request.
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/AppraisalDTO'
+        '403':
+          description: |
+            The user isn't authenticated or is trying to access resources not authorized to.
+        '404':
+          description: |
+            An `Employee` with the specified Id was not found.
+
+##################################################################################################
+# /employees/{employeeId}/appraisals/{appraisalId} ###############################################
+##################################################################################################
+
+  '/employees/{employeeId}/appraisals/{appraisalId}':
+    get:
+      tags:
+      - Appraisal
+      summary: |
+        Returns a certain appraisal of the specified employee.
+      description: >
+        Returns a single `Appraisal` belonging to the specified employee
+      operationId: employeesEmployeeIdAppraisalsAppraisalIdGet
+      produces:
+        - application/json
+      parameters:
+        - in: path
+          name: employeeId
+          required: true
+          type: integer
+          description: |
+            `Employee` Id.
+        - in: path
+          name: appraisalId
+          required: true
+          type: integer
+          description: |
+            `Appraisal` Id.
+      responses:
+        '200':
+          description: |
+            Successful request.
+          schema:
+            $ref: '#/definitions/AppraisalDTO'
+        '403':
+          description: |
+            The user isn't authenticated or is trying to access resources not authorized to.
+        '404':
+          description: |
+            An `Employee` or `Appraisal` with the specified Id was not found.
+
+###################################################################################################
+# /employees/:id/appraisals/:id/forms #############################################################
+###################################################################################################
+
+  '/employees/{employeeId}/appraisals/{appraisalId}/forms':
+    get:
+      tags:
+      - Appraisal
+      summary: |
+        Provides a list of `EvaluationForm` of a specific appraisal for the specified user.
+      description: >
+        Returns a list of `EvaluationForm` belonging to the specified user.
+      operationId: employeesEmployeeIdAppraisalsAppraisalIdFormsGet
+      produces:
+        - application/json
+      parameters:
+        - in: path
+          name: employeeId
+          type: integer
+          required: true
+          description: |
+            `Employee` Id.
+        - in: path
+          name: appraisalId
+          type: integer
+          required: true
+          description: |
+            `Appraisal` Id.
+      responses:
+        '200':
+          description: |
+            Successful request.
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/EvaluationFormDTO'
+        '403':
+          description: |
+            The user isn't authenticated or tried to retrieve an appraisal to which he does not have permission.
+        '404':
+          description: |
+            Employee or Appraisal not found in the system.
+
+###################################################################################################
+# /employees/:id/appraisals/:id/forms/:id ####################################################################
+###################################################################################################
+
+  '/employees/{employeeId}/appraisals/{appraisalId}/forms/{formId}':
+    get:
+      tags:
+      - Appraisal
+      summary: |
+        Provides a specific `EvaluationForm` of a specific appraisal for the specified user.
+      description: >
+        Returns a particular `EvaluationForm` belonging to the specified user.
+      operationId: employeesEmployeeIdAppraisalsAppraisalIdFormsFormIdGet
+      produces:
+        - application/json
+      parameters:
+        - in: path
+          name: employeeId
+          type: integer
+          required: true
+          description: |
+            `Employee` Id.
+        - in: path
+          name: appraisalId
+          type: integer
+          required: true
+          description: |
+            `Appraisal` Id.
+        - in: path
+          name: formId
+          type: integer
+          required: true
+          description: |
+            `Form` Id.
+      responses:
+        '200':
+          description: |
+            Successful request.
+          schema:
+            $ref: '#/definitions/EvaluationFormDTO'
+        '403':
+          description: |
+            The user isn't authenticated or tried to retrieve an EvaluationForm to which he does not have permission.
+        '404':
+          description: |
+            Employee, Appraisal or EvaluationForm not found in the system.
+
+##################################################################################################
 # Definitions ####################################################################################
 ##################################################################################################
 
 definitions:
+
+  AppraisalDTO:
+    type: object
+    required:
+      - name
+    properties:
+      id:
+        type: integer
+      name:
+        type: string
+      description:
+        type: string
+      startDate:
+        type: string
+        format: datetime
+      endDate:
+        type: string
+        format: datetime
 
   EmployeeDTO:
     type: object
@@ -658,6 +987,16 @@ definitions:
     required:
       - id
 
+  EvaluationFormDTO:
+    type: object
+    properties:
+      id:
+        type: integer
+      name:
+        type: string
+      description:
+        type: string
+
   Pagination:
     type: array
     items:
@@ -704,8 +1043,8 @@ definitions:
           $ref: '#/definitions/FieldErrorDTO'
 
 tags:
-  - name: Login
-    description: Part of the Authentication service
+  - name: Me
+    description: Part of the Me controller
   - name: Employee
     description: Part of the Employee microservice
   - name: Appraisal
