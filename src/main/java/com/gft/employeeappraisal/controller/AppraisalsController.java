@@ -2,8 +2,6 @@ package com.gft.employeeappraisal.controller;
 
 import com.gft.swagger.employees.api.AppraisalApi;
 import com.gft.swagger.employees.model.AppraisalDTO;
-import com.gft.swagger.employees.model.EmployeeAppraisalDTO;
-import com.gft.swagger.employees.model.EmployeeEvaluationFormDTO;
 import com.gft.swagger.employees.model.EvaluationFormDTO;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -20,26 +18,26 @@ import java.util.List;
 public class AppraisalsController implements AppraisalApi {
 
 	@Override
-	public ResponseEntity<EmployeeEvaluationFormDTO> employeesEmployeeIdAppraisalsAppraisalIdFormsFormIdGet(Integer employeeId,
-																											Integer appraisalId,
-																											Integer formId) {
+	public ResponseEntity<EvaluationFormDTO> employeesEmployeeIdAppraisalsAppraisalIdFormsFormIdGet(Integer employeeId,
+																									Integer appraisalId,
+																									Integer formId) {
 		return null;
 	}
 
 	@Override
-	public ResponseEntity<EmployeeEvaluationFormDTO> employeesEmployeeIdAppraisalsAppraisalIdFormsGet(Integer employeeId,
+	public ResponseEntity<List<EvaluationFormDTO>> employeesEmployeeIdAppraisalsAppraisalIdFormsGet(Integer employeeId,
 																									Integer appraisalId) {
 		return null;
 	}
 
 	@Override
-	public ResponseEntity<EmployeeAppraisalDTO> employeesEmployeeIdAppraisalsAppraisalIdGet(Integer employeeId,
-																							Integer appraisalId) {
+	public ResponseEntity<AppraisalDTO> employeesEmployeeIdAppraisalsAppraisalIdGet(Integer employeeId,
+																					Integer appraisalId) {
 		return null;
 	}
 
 	@Override
-	public ResponseEntity<EmployeeAppraisalDTO> employeesEmployeeIdAppraisalsGet(Integer employeeId) {
+	public ResponseEntity<List<AppraisalDTO>> employeesEmployeeIdAppraisalsGet(Integer employeeId) {
 		return null;
 	}
 
