@@ -714,7 +714,7 @@ paths:
       summary: |
         Returns the appraisals of the specified employee.
       description: >
-        Returns an `Appraisal` list belonging to the specified employee
+        Returns an `EmployeeAppraisal` list belonging to the specified employee
       operationId: employeesEmployeeIdAppraisalsGet
       produces:
         - application/json
@@ -730,9 +730,7 @@ paths:
           description: |
             Successful request.
           schema:
-            type: array
-            items:
-              $ref: '#/definitions/AppraisalDTO'
+            $ref: '#/definitions/EmployeeAppraisalDTO'
         '403':
           description: |
             The user isn't authenticated or is trying to access resources not authorized to.
@@ -773,7 +771,7 @@ paths:
           description: |
             Successful request.
           schema:
-            $ref: '#/definitions/AppraisalDTO'
+            $ref: '#/definitions/EmployeeAppraisalDTO'
         '403':
           description: |
             The user isn't authenticated or is trying to access resources not authorized to.
@@ -814,9 +812,7 @@ paths:
           description: |
             Successful request.
           schema:
-            type: array
-            items:
-              $ref: '#/definitions/EvaluationFormDTO'
+            $ref: '#/definitions/EmployeeEvaluationFormDTO'
         '403':
           description: |
             The user isn't authenticated or tried to retrieve an appraisal to which he does not have permission.
@@ -863,7 +859,7 @@ paths:
           description: |
             Successful request.
           schema:
-            $ref: '#/definitions/EvaluationFormDTO'
+            $ref: '#/definitions/EmployeeEvaluationFormDTO'
         '403':
           description: |
             The user isn't authenticated or tried to retrieve an EvaluationForm to which he does not have permission.
@@ -879,8 +875,6 @@ definitions:
 
   AppraisalDTO:
     type: object
-    required:
-      - name
     properties:
       id:
         type: integer
@@ -894,6 +888,21 @@ definitions:
       endDate:
         type: string
         format: datetime
+    required:
+      - name
+
+  EmployeeAppraisalDTO:
+    type: object
+    properties:
+      employee:
+        $ref: '#/definitions/EmployeeDTO'
+      appraisals:
+        type: array
+        items:
+          $ref: '#/definitions/AppraisalDTO'
+    required:
+      - employee
+      - appraisals
 
   EmployeeDTO:
     type: object
@@ -986,6 +995,19 @@ definitions:
         format: datetime
     required:
       - id
+
+  EmployeeEvaluationFormDTO:
+    type: object
+    properties:
+      employee:
+        $ref: '#/definitions/EmployeeDTO'
+      evaluationForms:
+        type: array
+        items:
+          $ref: '#/definitions/EvaluationFormDTO'
+    required:
+      - employee
+      - evaluationForms
 
   EvaluationFormDTO:
     type: object
