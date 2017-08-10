@@ -12,7 +12,7 @@ import static org.mockito.Mockito.when;
  *
  * @author Ruben Jimenez
  */
-public class EvaluationFormBuilder implements ObjectBuilder<EvaluationForm, Number> {
+public class EvaluationFormBuilder implements ObjectBuilder<EvaluationForm> {
 
     private int id;
     private String name;

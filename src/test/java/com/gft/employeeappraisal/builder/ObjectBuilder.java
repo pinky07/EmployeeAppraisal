@@ -6,7 +6,7 @@ package com.gft.employeeappraisal.builder;
  *
  * @author Manuel Yepez
  */
-public interface ObjectBuilder<T, I extends Number> {
+public interface ObjectBuilder<T> {
 
     /**
      * Returns an instance of the Object according to the setter methods called.

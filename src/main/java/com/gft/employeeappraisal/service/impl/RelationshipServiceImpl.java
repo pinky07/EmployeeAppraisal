@@ -24,9 +24,7 @@ public class RelationshipServiceImpl implements RelationshipService {
     private RelationshipRepository relationshipRepository;
 
     /**
-     * @param relationshipId Internal lookup ID for the relationship
-     * @return Relationship entity found, or {@code null} if the relationship does not exist.
-     * @see RelationshipService#findById(int)
+     * @inheritDoc
      */
     @Override
     public Optional<Relationship> findById(int relationshipId) {

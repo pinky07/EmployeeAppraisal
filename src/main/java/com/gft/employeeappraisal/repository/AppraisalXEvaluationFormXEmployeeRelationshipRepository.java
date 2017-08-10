@@ -1,9 +1,6 @@
 package com.gft.employeeappraisal.repository;
 
-import com.gft.employeeappraisal.model.Appraisal;
-import com.gft.employeeappraisal.model.AppraisalXEvaluationFormXEmployeeRelationship;
-import com.gft.employeeappraisal.model.Employee;
-import com.gft.employeeappraisal.model.Relationship;
+import com.gft.employeeappraisal.model.*;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -17,6 +14,7 @@ import java.util.Set;
  * Repository for the EvaluationFormXSectionXQuestion database table. See class hierarchy for methods already existing.
  *
  * @author Rubén Jiménez
+ * @author Manuel Yepez
  */
 @Repository
 @Transactional
@@ -58,4 +56,10 @@ public interface AppraisalXEvaluationFormXEmployeeRelationshipRepository extends
             @Param("appraisal") Appraisal appraisal,
             @Param("employee") Employee employeeSourceAndTarget,
             @Param("relationships") Set<Relationship> relationships);
+
+    List<AppraisalXEvaluationFormXEmployeeRelationship> findByEmployeeRelationshipIn
+			(Set<EmployeeRelationship> employeeRelationships);
+
+	List<AppraisalXEvaluationFormXEmployeeRelationship> findByEmployeeRelationshipInAndEvaluationStatus
+			(Set<EmployeeRelationship> employeeRelationships, EvaluationStatus evaluationStatus);
 }

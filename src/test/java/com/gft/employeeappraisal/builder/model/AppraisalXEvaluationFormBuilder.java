@@ -8,7 +8,12 @@ import org.mockito.Mockito;
 
 import static org.mockito.Mockito.when;
 
-public class AppraisalXEvaluationFormBuilder implements ObjectBuilder<AppraisalXEvaluationForm, Number> {
+/**
+ * TODO: Document this!
+ *
+ * @author Rubén Jiménez
+ */
+public class AppraisalXEvaluationFormBuilder implements ObjectBuilder<AppraisalXEvaluationForm> {
 
     private int id;
     private Appraisal appraisal;

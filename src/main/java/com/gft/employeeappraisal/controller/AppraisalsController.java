@@ -1,5 +1,6 @@
 package com.gft.employeeappraisal.controller;
 
+import com.gft.employeeappraisal.converter.appraisal.AppraisalDTOMapper;
 import com.gft.employeeappraisal.model.Employee;
 import com.gft.employeeappraisal.service.AppraisalService;
 import com.gft.employeeappraisal.service.EmployeeService;
@@ -9,9 +10,13 @@ import com.gft.swagger.employees.model.EvaluationFormDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -23,20 +28,23 @@ import java.util.List;
 @Controller
 public class AppraisalsController implements AppraisalApi {
 
-    private Logger logger = LoggerFactory.getLogger(AppraisalsController.class);
+	private Logger logger = LoggerFactory.getLogger(AppraisalsController.class);
 
-    @Autowired
-    private EmployeeService employeeService;
+	@Autowired
+	private AppraisalService appraisalService;
 
-    @Autowired
-    private AppraisalService appraisalService;
+	@Autowired
+	private EmployeeService employeeService;
 
-    @Override
-    public ResponseEntity<EvaluationFormDTO> employeesEmployeeIdAppraisalsAppraisalIdFormsFormIdGet(Integer employeeId,
-                                                                                                    Integer appraisalId,
-                                                                                                    Integer formId) {
-        return null;
-    }
+	@Autowired
+	private AppraisalDTOMapper appraisalDTOMapper;
+
+	@Override
+	public ResponseEntity<EvaluationFormDTO> employeesEmployeeIdAppraisalsAppraisalIdFormsFormIdGet(Integer employeeId,
+																									Integer appraisalId,
+																									Integer formId) {
+		return null;
+	}
 
     @Override
     public ResponseEntity<AppraisalDTO> employeesEmployeeIdAppraisalsAppraisalIdGet(Integer employeeId,
@@ -55,17 +63,30 @@ public class AppraisalsController implements AppraisalApi {
         return null;
     }
 
+	@Override
+	public ResponseEntity<AppraisalDTO> meAppraisalsAppraisalIdGet(@PathVariable Integer appraisalId) {
 
-    @Override
-    public ResponseEntity<AppraisalDTO> meAppraisalsAppraisalIdGet(Integer appraisalId) {
-        return null;
-    }
+		// Get logged in user
+		Employee user = this.employeeService.getLoggedInUser();
+		logger.debug("{} called endpoint: GET /me/appraisals/:id", user.getEmail());
 
-    @Override
-    public ResponseEntity<List<AppraisalDTO>> meAppraisalsGet() {
-        return null;
-    }
+		return null;
+	}
 
+	@Override
+	public ResponseEntity<List<AppraisalDTO>> meAppraisalsGet(@RequestParam(value = "status", required = false)
+																		  List<String> statusList) {
+		// Get logged in user
+		Employee user = this.employeeService.getLoggedInUser();
+		logger.debug("{} called endpoint: GET /me/appraisals", user.getEmail());
+
+		List<AppraisalDTO> result = new ArrayList<>();
+		appraisalService
+				.findEmployeeAppraisals(user, null)
+				.forEach(ea -> result.add(appraisalDTOMapper.map(ea)));
+
+		return new ResponseEntity<>(result, HttpStatus.OK);
+	}
 
     /**
      * Returns a list of EvaluationForm for an specific appraisal of the authenticated user.
@@ -105,8 +126,4 @@ public class AppraisalsController implements AppraisalApi {
 
         return null;
     }
-
-
-
-
 }

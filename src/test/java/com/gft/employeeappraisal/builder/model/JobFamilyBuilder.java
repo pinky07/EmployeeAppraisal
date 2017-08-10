@@ -12,7 +12,7 @@ import static org.mockito.Mockito.when;
  * @author Manuel Yepez
  * @author Ruben Jimenez
  */
-public class JobFamilyBuilder implements ObjectBuilder<JobFamily, Number> {
+public class JobFamilyBuilder implements ObjectBuilder<JobFamily> {
 
     private int id;
     private String name;

@@ -141,6 +141,15 @@ public interface EmployeeRelationshipService {
     Stream<EmployeeRelationship> findCurrentBySourceEmployeeAndRelationship(Employee sourceEmployee, Relationship relationship);
 
     /**
+     * Finds a list of relationships, all of which should be the valid relationships that source Employee has.
+     *
+     * @param sourceEmployee Source Employee in the Relationship
+     * @param relationships   List of Relationships to look for
+     * @return A stream of all EmployeeRelationships belonging to the employee
+     */
+    Stream<EmployeeRelationship> findBySourceEmployeeAndRelationships(Employee sourceEmployee, RelationshipName... relationships);
+
+    /**
      * Finds a list of relationships, all of which should be the current valid relationships that source Employee has.
      *
      * @param sourceEmployee Source Employee in the Relationship

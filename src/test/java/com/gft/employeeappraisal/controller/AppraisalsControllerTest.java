@@ -1,15 +1,40 @@
 package com.gft.employeeappraisal.controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.gft.employeeappraisal.builder.model.*;
 import com.gft.employeeappraisal.configuration.BeanConfiguration;
 import com.gft.employeeappraisal.configuration.ControllerConfiguration;
+import com.gft.employeeappraisal.converter.appraisal.AppraisalDTOMapper;
+import com.gft.employeeappraisal.model.*;
 import com.gft.employeeappraisal.service.AppraisalService;
 import com.gft.employeeappraisal.service.EmployeeService;
+import com.gft.swagger.employees.model.AppraisalDTO;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.boot.test.mock.mockito.MockReset;
 import org.springframework.context.annotation.Import;
+import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
+
+import java.time.LocalDateTime;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Stream;
+
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.*;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 /**
  * Integration test class for the {@link AppraisalsController} controller class, GET endpoints.
@@ -21,15 +46,69 @@ import org.springframework.test.context.junit4.SpringRunner;
 @Import({ControllerConfiguration.class, BeanConfiguration.class})
 public class AppraisalsControllerTest {
 
-    @MockBean
-    private EmployeeService employeeService;
+	private static final String APPRAISAL_URL = "/appraisals";
 
-    @MockBean
-    private AppraisalService appraisalService;
+	private static final String USER_EMAIL = "user@gft.com";
 
-    @Test
-    public void employeesEmployeeIdAppraisalsAppraisalIdFormsFormIdGet() throws Exception {
-    }
+	@Autowired
+	private MockMvc mockMvc;
+
+	@MockBean(reset = MockReset.AFTER)
+	private AppraisalService appraisalService;
+
+	@MockBean(reset = MockReset.AFTER)
+	private EmployeeService employeeService;
+
+	@Autowired
+	private AppraisalDTOMapper appraisalDTOMapper;
+
+	@Autowired
+	private ObjectMapper mapper;
+
+	private Employee userMock;
+	private JobLevel jobLevelMock;
+	private ApplicationRole applicationRoleMock;
+
+	@Before
+	public void sharedSetUp() {
+		// Mock the user
+
+		JobFamily jobFamilyMock = new JobFamilyBuilder()
+				.id(1)
+				.name("Job Family")
+				.description("Job Family Description")
+				.buildMock();
+
+		jobLevelMock = new JobLevelBuilder()
+				.id(1)
+				.name("Job Level")
+				.description("Job Level Description")
+				.expertise("Expertise")
+				.jobFamily(jobFamilyMock)
+				.buildMock();
+
+		applicationRoleMock = new ApplicationRoleBuilder()
+				.id(1)
+				.name("Application Role")
+				.description("Application Role Description")
+				.buildMock();
+
+		userMock = new EmployeeBuilder()
+				.id(1)
+				.email("user@gft.com")
+				.firstName("John")
+				.lastName("Doe")
+				.gftIdentifier("JODO")
+				.jobLevel(jobLevelMock)
+				.applicationRole(applicationRoleMock)
+				.buildMock();
+
+		when(employeeService.getLoggedInUser()).thenReturn(userMock);
+	}
+
+	@Test
+	public void employeesEmployeeIdAppraisalsAppraisalIdFormsFormIdGet() throws Exception {
+	}
 
     @Test
     public void employeesEmployeeIdAppraisalsAppraisalIdFormsGet() throws Exception {
@@ -55,8 +134,34 @@ public class AppraisalsControllerTest {
     public void meAppraisalsAppraisalIdGet() throws Exception {
     }
 
-    @Test
-    public void meAppraisalsGet() throws Exception {
-    }
+	@Test
+	@WithMockUser(USER_EMAIL)
+	public void meAppraisalsGet() throws Exception {
+		doReturn(Stream.of(mockAppraisal())).when(appraisalService)
+				.findEmployeeAppraisals(any(Employee.class), any(EvaluationStatus.class));
 
+		MvcResult result = mockMvc.perform(get(String.format("/me/%s", APPRAISAL_URL))
+				.with(csrf())
+				.contentType(MediaType.APPLICATION_JSON))
+				.andExpect(status().isOk())
+				.andReturn();
+
+		List<AppraisalDTO> appraisalDTOList = Arrays.asList(mapper.readValue(result
+				.getResponse().getContentAsString(), AppraisalDTO[].class));
+
+		assertNotNull(appraisalDTOList);
+		assertFalse(appraisalDTOList.isEmpty());
+
+		verify(employeeService, times(1)).getLoggedInUser();
+		verify(appraisalService, times(1)).findEmployeeAppraisals(any(Employee.class),
+				any(EvaluationStatus.class));
+	}
+
+	private Appraisal mockAppraisal() {
+		return new AppraisalBuilder()
+				.name("Mock Appraisal")
+				.description("Mock Appraisal")
+				.startDate(LocalDateTime.now())
+				.buildMock();
+	}
 }

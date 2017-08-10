@@ -194,6 +194,20 @@ public class EmployeeRelationshipServiceImpl implements EmployeeRelationshipServ
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
+	public Stream<EmployeeRelationship> findBySourceEmployeeAndRelationships(Employee sourceEmployee, RelationshipName... relationshipNames) {
+		List<Relationship> relationships = relationshipService.findRelationshipsByNames(relationshipNames).collect(Collectors.toList());
+
+		return employeeRelationshipRepository
+				.findAllBySourceEmployeeAndRelationshipIn(
+						sourceEmployee,
+						new HashSet<>(relationships))
+				.stream();
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
     @Override
 	public Stream<EmployeeRelationship> findCurrentBySourceEmployeeAndRelationships(Employee sourceEmployee, RelationshipName... relationshipNames) {
     	List<Relationship> relationships = relationshipService.findRelationshipsByNames(relationshipNames).collect(Collectors.toList());

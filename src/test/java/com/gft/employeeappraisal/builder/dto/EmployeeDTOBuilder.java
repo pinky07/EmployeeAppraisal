@@ -14,7 +14,7 @@ import static org.mockito.Mockito.when;
  * @author Manuel Yepez
  * @author Ruben Jimenez
  */
-public class EmployeeDTOBuilder implements ObjectBuilder<EmployeeDTO, Number> {
+public class EmployeeDTOBuilder implements ObjectBuilder<EmployeeDTO> {
 
     private int id;
     private String firstName;

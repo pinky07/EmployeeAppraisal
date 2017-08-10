@@ -9,7 +9,12 @@ import org.mockito.Mockito;
 
 import static org.mockito.Mockito.when;
 
-public class AppraisalXEvaluationFormXEmployeeRelationshipBuilder implements ObjectBuilder<AppraisalXEvaluationFormXEmployeeRelationship, Integer> {
+/**
+ * TODO: Document this!
+ *
+ * @author Rubén Jiménez
+ */
+public class AppraisalXEvaluationFormXEmployeeRelationshipBuilder implements ObjectBuilder<AppraisalXEvaluationFormXEmployeeRelationship> {
 
     private int id;
     private AppraisalXEvaluationForm appraisalXEvaluationForm;
