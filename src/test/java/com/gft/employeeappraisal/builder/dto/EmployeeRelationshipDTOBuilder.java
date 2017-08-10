@@ -12,7 +12,7 @@ import java.time.OffsetDateTime;
  * @author Manuel Yepez
  * @author Ruben Jimenez
  */
-public class EmployeeRelationshipDTOBuilder implements ObjectBuilder<EmployeeRelationshipDTO> {
+public class EmployeeRelationshipDTOBuilder implements ObjectBuilder<EmployeeRelationshipDTO, Number> {
 
     private int id;
     private int peerId;

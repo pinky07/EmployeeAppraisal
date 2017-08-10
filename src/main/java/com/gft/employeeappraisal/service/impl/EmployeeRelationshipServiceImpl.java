@@ -167,7 +167,7 @@ public class EmployeeRelationshipServiceImpl implements EmployeeRelationshipServ
         employeeRelationship.setRelationship(relationship);
         employeeRelationship.setStartDate(LocalDateTime.now());
         employeeRelationship.setEndDate(null);
-        this.save(employeeRelationship);
+        this.saveAndFlush(employeeRelationship);
     }
 
     /**
@@ -176,7 +176,7 @@ public class EmployeeRelationshipServiceImpl implements EmployeeRelationshipServ
     @Override
     public void endEmployeeRelationship(EmployeeRelationship employeeRelationship) {
         employeeRelationship.setEndDate(LocalDateTime.now());
-        this.save(employeeRelationship);
+        this.saveAndFlush(employeeRelationship);
     }
 
     /**
@@ -234,7 +234,7 @@ public class EmployeeRelationshipServiceImpl implements EmployeeRelationshipServ
      * {@inheritDoc}
      */
     @Override
-    public void save(EmployeeRelationship employeeRelationship) {
+    public void saveAndFlush(EmployeeRelationship employeeRelationship) {
         employeeRelationshipRepository.saveAndFlush(employeeRelationship);
     }
 }

@@ -12,7 +12,7 @@ import static org.mockito.Mockito.when;
  * @author Manuel Yepez
  * @author Ruben Jimenez
  */
-public class ApplicationRoleBuilder implements ObjectBuilder<ApplicationRole> {
+public class ApplicationRoleBuilder implements ObjectBuilder<ApplicationRole, Number> {
 
     private int id;
     private String name;

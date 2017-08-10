@@ -87,7 +87,7 @@ public class EmployeesControllerPostTest {
 	@Test
 	public void employeesPost() throws Exception {
 		when(employeeService.findByEmail(anyString())).thenReturn(Optional.empty());
-		when(employeeService.save(any(Employee.class))).thenReturn(Optional.of(mockEmployee()));
+		when(employeeService.saveAndFlush(any(Employee.class))).thenReturn(Optional.of(mockEmployee()));
 
 		MvcResult result = mockMvc.perform(post(EMPLOYEES_URL)
 				.with(csrf())
@@ -98,7 +98,7 @@ public class EmployeesControllerPostTest {
 		OperationResultDTO resultDTO = mapper.readValue(result.getResponse().getContentAsString(), OperationResultDTO.class);
 
 		verify(employeeService, times(1)).findByEmail(anyString());
-		verify(employeeService, times(1)).save(any(Employee.class));
+		verify(employeeService, times(1)).saveAndFlush(any(Employee.class));
 
 		EmployeeDTO resultEmployeeDTO = mapper.convertValue(resultDTO.getData(), EmployeeDTO.class);
 		assertEquals(Constants.SUCCESS, resultDTO.getMessage());
@@ -117,7 +117,7 @@ public class EmployeesControllerPostTest {
 		).andExpect(status().isUnprocessableEntity()).andReturn();
 
 		verify(employeeService, times(1)).findByEmail(anyString());
-		verify(employeeService, never()).save(any(Employee.class));
+		verify(employeeService, never()).saveAndFlush(any(Employee.class));
 
 		OperationResultDTO resultDTO = mapper.readValue(result.getResponse().getContentAsString(), OperationResultDTO.class);
 		assertEquals(Constants.ERROR, resultDTO.getMessage());
@@ -134,7 +134,7 @@ public class EmployeesControllerPostTest {
 		).andExpect(status().isBadRequest()).andReturn();
 
 		verify(employeeService, never()).findByEmail(anyString());
-		verify(employeeService, never()).save(any(Employee.class));
+		verify(employeeService, never()).saveAndFlush(any(Employee.class));
 
 		OperationResultDTO resultDTO = mapper.readValue(result.getResponse().getContentAsString(), OperationResultDTO.class);
 		assertNull(resultDTO.getData());

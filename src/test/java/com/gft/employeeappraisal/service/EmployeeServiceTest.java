@@ -62,7 +62,7 @@ public class EmployeeServiceTest extends ServiceSpringBootUnitTest {
         applicationRole = applicationRoleService.save(mockApplicationRole().get());
         jobFamily = jobFamilyService.save(mockJobFamily());
         jobLevel = jobLevelService.save(mockJobLevel().get());
-        employee = employeeService.save(mockEmployee(0, "----")).get();
+        employee = employeeService.saveAndFlush(mockEmployee(0, "----")).get();
     }
 
     @Test
@@ -73,7 +73,7 @@ public class EmployeeServiceTest extends ServiceSpringBootUnitTest {
 
 	@Test
 	public void checkAccess_mentor() throws Exception {
-		Employee mentor = employeeService.save(mockAdmin(-2)).get();
+		Employee mentor = employeeService.saveAndFlush(mockAdmin(-2)).get();
 		employeeRelationshipService.changeMentor(mentor, employee);
 		// no exception is thrown in this case and test passes
 		employeeService.checkAccess(mentor.getId(), employee.getId());
@@ -89,7 +89,7 @@ public class EmployeeServiceTest extends ServiceSpringBootUnitTest {
 
 	@Test
 	public void checkAccess_forbidden() throws Exception {
-		Employee mentor = employeeService.save(mockAdmin(-2)).get();
+		Employee mentor = employeeService.saveAndFlush(mockAdmin(-2)).get();
 		exception.expect(AccessDeniedException.class);
 		employeeService.checkAccess(mentor.getId(), employee.getId());
 	}
@@ -116,7 +116,7 @@ public class EmployeeServiceTest extends ServiceSpringBootUnitTest {
 
     @Test
     public void findCurrentMentorById() throws Exception {
-    	Employee mentor = employeeService.save(mockAdmin(-2)).get();
+    	Employee mentor = employeeService.saveAndFlush(mockAdmin(-2)).get();
     	employeeRelationshipService.changeMentor(mentor, employee);
 
     	assertEquals(mentor, employeeService.findCurrentMentorById(employee.getId()).get());
@@ -124,7 +124,7 @@ public class EmployeeServiceTest extends ServiceSpringBootUnitTest {
 
 	@Test
 	public void findCurrentMenteesById() throws Exception {
-		Employee mentor = employeeService.save(mockAdmin(-2)).get();
+		Employee mentor = employeeService.saveAndFlush(mockAdmin(-2)).get();
 		employeeRelationshipService.changeMentor(mentor, employee);
 
 		assertEquals(employee, employeeService.findCurrentMenteesById(mentor.getId()).findFirst().get());
@@ -132,7 +132,7 @@ public class EmployeeServiceTest extends ServiceSpringBootUnitTest {
 
 	@Test
 	public void findCurrentPeersById() throws Exception {
-		Employee anotherEmployee = employeeService.save(mockEmployee(-3, "....")).get();
+		Employee anotherEmployee = employeeService.saveAndFlush(mockEmployee(-3, "....")).get();
     	employeeRelationshipService.addPeer(employee, anotherEmployee);
 
 		List<Employee> currentPeersById = employeeService.findCurrentPeersById(employee.getId()).collect(Collectors.toList());
@@ -141,7 +141,7 @@ public class EmployeeServiceTest extends ServiceSpringBootUnitTest {
 
 	@Test
 	public void findCurrentRelationshipsById() throws Exception {
-		Employee mentor = employeeService.save(mockAdmin(-2)).get();
+		Employee mentor = employeeService.saveAndFlush(mockAdmin(-2)).get();
 		employeeRelationshipService.changeMentor(mentor, employee);
 
 		Optional<EmployeeRelationship> employeeRelationshipOpt =
@@ -155,7 +155,7 @@ public class EmployeeServiceTest extends ServiceSpringBootUnitTest {
 
 	@Test
 	public void findCurrentRelationshipsBySourceEmployee() throws Exception {
-		Employee mentor = employeeService.save(mockAdmin(-2)).get();
+		Employee mentor = employeeService.saveAndFlush(mockAdmin(-2)).get();
 		employeeRelationshipService.changeMentor(mentor, employee);
 
 		Optional<EmployeeRelationship> employeeRelationshipOpt =
@@ -187,7 +187,7 @@ public class EmployeeServiceTest extends ServiceSpringBootUnitTest {
         assertEquals(Optional.empty(), employeeService.findByEmail(newEmployee.getEmail()));
 
         long beforeCount = employeeRepository.count();
-        newEmployee = employeeService.save(newEmployee).get();
+        newEmployee = employeeService.saveAndFlush(newEmployee).get();
         long afterCount = employeeRepository.count();
 
         assertTrue(beforeCount + 1 == afterCount);
@@ -209,7 +209,7 @@ public class EmployeeServiceTest extends ServiceSpringBootUnitTest {
         assertEquals(Optional.empty(), employeeService.findByEmail(newEmployee.getEmail()));
 
         long beforeCount = employeeRepository.count();
-        Optional<Employee> result = employeeService.save(newEmployee);
+        Optional<Employee> result = employeeService.saveAndFlush(newEmployee);
         long afterCount = employeeRepository.count();
 
         assertTrue(beforeCount == afterCount);

@@ -11,7 +11,7 @@ import static org.mockito.Mockito.when;
  * @author Manuel Yepez
  * @author Ruben Jimenez
  */
-public class RelationshipBuilder implements ObjectBuilder<Relationship> {
+public class RelationshipBuilder implements ObjectBuilder<Relationship, Number> {
 
     private int id;
     private String name;

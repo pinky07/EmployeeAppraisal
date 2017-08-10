@@ -5,7 +5,7 @@ package com.gft.employeeappraisal.exception;
  *
  * @author Ruben Jimenez
  */
-public class AccessDeniedException extends EmployeeMicroserviceException {
+public class AccessDeniedException extends EmployeeAppraisalMicroserviceException {
 
     /**
      * Creates an instance of AccessDeniedException.

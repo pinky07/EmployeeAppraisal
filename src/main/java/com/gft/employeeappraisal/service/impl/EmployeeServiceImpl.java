@@ -191,7 +191,7 @@ public class EmployeeServiceImpl implements EmployeeService {
      * {@inheritDoc}
      */
     @Override
-    public Optional<Employee> save(Employee employee) {
+    public Optional<Employee> saveAndFlush(Employee employee) {
         Employee savedEmployee = null;
         Optional<ApplicationRole> applicationRole = applicationRoleService.findById(employee.getApplicationRole().getId());
         Optional<JobLevel> jobLevel = jobLevelService.findById(employee.getJobLevel().getId());

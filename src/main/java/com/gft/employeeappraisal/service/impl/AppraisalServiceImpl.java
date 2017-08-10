@@ -16,14 +16,22 @@ import java.util.Optional;
 @Service
 public class AppraisalServiceImpl implements AppraisalService {
 
-	@Autowired
-	private AppraisalRepository appraisalRepository;
+    @Autowired
+    private AppraisalRepository appraisalRepository;
 
-	/**
-	 * @inheritDoc
-	 */
-	@Override
-	public Optional<Appraisal> findById(int appraisalId) {
-		return Optional.ofNullable(appraisalRepository.findOne(appraisalId));
-	}
+    /**
+     * @inheritDoc
+     */
+    @Override
+    public Optional<Appraisal> findById(int appraisalId) {
+        return Optional.ofNullable(appraisalRepository.findOne(appraisalId));
+    }
+
+    /**
+     * @inheritDoc
+     */
+    @Override
+    public void saveAndFlush(Appraisal appraisal) {
+        appraisalRepository.saveAndFlush(appraisal);
+    }
 }

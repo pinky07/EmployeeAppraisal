@@ -52,7 +52,6 @@ public class RelationshipServiceImpl implements RelationshipService {
 		for (RelationshipName rn : relationshipNames) {
 			relationships.add(rn.name());
 		}
-
-        return relationshipRepository.findRelationshipsByNames(relationships).stream();
+        return relationshipRepository.findByNames(relationships).stream();
     }
 }

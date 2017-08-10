@@ -58,8 +58,8 @@ public class EmployeeRelationshipServiceTest extends ServiceSpringBootUnitTest {
         applicationRole = applicationRoleService.save(mockApplicationRole().get());
         jobFamily = jobFamilyService.save(mockJobFamily());
         jobLevel = jobLevelService.save(mockJobLevel().get());
-        employee = employeeService.save(mockEmployee()).get();
-        mentor = employeeService.save(mockMentor()).get();
+        employee = employeeService.saveAndFlush(mockEmployee()).get();
+        mentor = employeeService.saveAndFlush(mockMentor()).get();
     }
 
     @Test
@@ -252,8 +252,8 @@ public class EmployeeRelationshipServiceTest extends ServiceSpringBootUnitTest {
          .jobLevel(jobLevel)
          .build();
 
-         newPeer = employeeService.save(newPeer).get();
-         newPeer2 = employeeService.save(newPeer2).get();
+         newPeer = employeeService.saveAndFlush(newPeer).get();
+         newPeer2 = employeeService.saveAndFlush(newPeer2).get();
 
          Relationship relationship = relationshipService.findById(RelationshipName.PEER.getId()).get();
 
@@ -265,7 +265,7 @@ public class EmployeeRelationshipServiceTest extends ServiceSpringBootUnitTest {
          .build();
 
          long beforeCount = employeeRelationshipRepository.count();
-         employeeRelationshipService.save(employeeRelationship);
+         employeeRelationshipService.saveAndFlush(employeeRelationship);
          long afterCount = employeeRelationshipRepository.count();
 
          assertTrue(beforeCount + 1 == afterCount);

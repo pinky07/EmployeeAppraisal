@@ -107,5 +107,5 @@ public interface EmployeeService {
      * @param employee Employee entity to be persisted.
      * @return An Optional object containing the persisted entity.
      */
-    Optional<Employee> save(Employee employee);
+    Optional<Employee> saveAndFlush(Employee employee);
 }

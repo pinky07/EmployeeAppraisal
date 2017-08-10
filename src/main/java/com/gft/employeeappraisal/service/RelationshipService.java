@@ -22,7 +22,9 @@ public interface RelationshipService {
     Optional<Relationship> findById(int relationshipId);
 
     /**
-     * Given a relationship name, returns a Relationship entity.
+     * Given a relationship name, returns a Relationship entity. Notice this method doesn't return an Optional.
+     * Be careful when modifying the database to ensure all names in the RelationshipName enum actually exist in
+     * the database.
      *
 	 * @param relationshipName Specific enum value to query from the database
      * @return A Relationship entity

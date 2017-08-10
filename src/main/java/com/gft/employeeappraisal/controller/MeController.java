@@ -48,7 +48,7 @@ public class MeController implements MeApi {
 
         // Get logged in user
         Employee user = this.employeeService.getLoggedInUser();
-        logger.debug("{} called endpoint: GET /me ", user.getEmail());
+        logger.debug("{} called endpoint: GET /me", user.getEmail());
 
         // Set Result DTO
         EmployeeDTO result;
@@ -68,7 +68,7 @@ public class MeController implements MeApi {
 
         // Get logged in user
         Employee user = this.employeeService.getLoggedInUser();
-        logger.debug("{} called endpoint: GET /me/mentor ", user.getEmail());
+        logger.debug("{} called endpoint: GET /me/mentor", user.getEmail());
 
         // Find Mentor
         Employee mentor = employeeService.findCurrentMentorById(user.getId())
@@ -92,7 +92,7 @@ public class MeController implements MeApi {
     public ResponseEntity<List<EmployeeDTO>> mePeersGet() {
 		// Get logged in user
 		Employee user = this.employeeService.getLoggedInUser();
-        logger.debug("Endpoint called: me/peers({})", user.getEmail());
+        logger.debug("{} called endpoint called: GET /me/peers", user.getEmail());
         List<EmployeeDTO> result = new ArrayList<>();
 
         HttpStatus status;

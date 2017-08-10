@@ -239,7 +239,7 @@ public class EmployeesController implements EmployeeApi {
             return new ResponseEntity<>(response, status);
         }
 
-        Optional<Employee> createdEmployee = employeeService.save(employeeDTOToEntity.map(employee));
+        Optional<Employee> createdEmployee = employeeService.saveAndFlush(employeeDTOToEntity.map(employee));
         EmployeeDTO employeeDTO = null;
 
         if (createdEmployee.isPresent()) {

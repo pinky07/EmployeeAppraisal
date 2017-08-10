@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 /**
@@ -23,6 +24,8 @@ import java.util.Set;
 @Transactional
 public interface RelationshipRepository extends JpaRepository<Relationship, Integer> {
 
-	@Query("SELECT r from Relationship r WHERE r.name IN :names")
-	List<Relationship> findRelationshipsByNames(@Param("names")Set<String> names);
+    Optional<Relationship> findByName(String name);
+
+    @Query("SELECT r from Relationship r WHERE r.name IN :names")
+    List<Relationship> findByNames(@Param("names") Set<String> names);
 }

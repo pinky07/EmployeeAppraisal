@@ -13,7 +13,7 @@ import static org.mockito.Mockito.when;
  * @author Manuel Yepez
  * @author Ruben Jimenez
  */
-public class JobLevelBuilder implements ObjectBuilder<JobLevel> {
+public class JobLevelBuilder implements ObjectBuilder<JobLevel, Number> {
 
     private int id;
     private JobFamily jobFamily;

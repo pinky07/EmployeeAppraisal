@@ -14,7 +14,7 @@ import static org.mockito.Mockito.when;
  * @author Manuel Yepez
  * @author Ruben Jimenez
  */
-public class EmployeeBuilder implements ObjectBuilder<Employee> {
+public class EmployeeBuilder implements ObjectBuilder<Employee, Number> {
 
     private int id;
     private ApplicationRole applicationRole;

@@ -174,5 +174,5 @@ public interface EmployeeRelationshipService {
      *
      * @param employeeRelationship Entity to be persisted onto the database.
      */
-    void save(EmployeeRelationship employeeRelationship);
+    void saveAndFlush(EmployeeRelationship employeeRelationship);
 }

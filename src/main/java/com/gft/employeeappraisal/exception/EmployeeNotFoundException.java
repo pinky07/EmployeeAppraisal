@@ -5,7 +5,7 @@ package com.gft.employeeappraisal.exception;
  *
  * @author Ruben Jimenez
  */
-public class EmployeeNotFoundException extends EmployeeMicroserviceException {
+public class EmployeeNotFoundException extends EmployeeAppraisalMicroserviceException {
 
     /**
      * Creates an instance of EmployeeNotFoundException.
