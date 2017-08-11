@@ -11,11 +11,11 @@ import com.gft.employeeappraisal.builder.model.JobFamilyBuilder;
 import com.gft.employeeappraisal.builder.model.JobLevelBuilder;
 import com.gft.employeeappraisal.configuration.BeanConfiguration;
 import com.gft.employeeappraisal.configuration.ControllerConfiguration;
+import com.gft.employeeappraisal.converter.employee.EmployeeDTOConverter;
 import com.gft.employeeappraisal.model.ApplicationRole;
 import com.gft.employeeappraisal.model.Constants;
 import com.gft.employeeappraisal.model.Employee;
 import com.gft.employeeappraisal.model.JobLevel;
-import com.gft.employeeappraisal.service.DTOService;
 import com.gft.employeeappraisal.service.EmployeeRelationshipService;
 import com.gft.employeeappraisal.service.EmployeeService;
 import com.gft.swagger.employees.model.ApplicationRoleDTO;
@@ -57,15 +57,14 @@ public class EmployeesControllerPostTest {
 	private ObjectMapper mapper;
 
 	@MockBean(reset = MockReset.AFTER)
+	private EmployeeDTOConverter employeeDTOConverter;
+
+	@MockBean(reset = MockReset.AFTER)
 	private EmployeeService employeeService;
 
 	@MockBean(reset = MockReset.AFTER)
 	@SuppressWarnings("unused")
 	private EmployeeRelationshipService employeeRelationshipService;
-
-	@MockBean
-	@SuppressWarnings("unused")
-	private DTOService dtoService;
 
 	private static EmployeeDTO mockEmployeeDTO;
 
@@ -88,6 +87,7 @@ public class EmployeesControllerPostTest {
 	public void employeesPost() throws Exception {
 		when(employeeService.findByEmail(anyString())).thenReturn(Optional.empty());
 		when(employeeService.saveAndFlush(any(Employee.class))).thenReturn(Optional.of(mockEmployee()));
+		doReturn(mockEmployeeDTO).when(employeeDTOConverter).convert(any(Employee.class));
 
 		MvcResult result = mockMvc.perform(post(EMPLOYEES_URL)
 				.with(csrf())
@@ -99,6 +99,7 @@ public class EmployeesControllerPostTest {
 
 		verify(employeeService, times(1)).findByEmail(anyString());
 		verify(employeeService, times(1)).saveAndFlush(any(Employee.class));
+		verify(employeeDTOConverter, times(1)).convert(any(Employee.class));
 
 		EmployeeDTO resultEmployeeDTO = mapper.convertValue(resultDTO.getData(), EmployeeDTO.class);
 		assertEquals(Constants.SUCCESS, resultDTO.getMessage());
@@ -118,6 +119,7 @@ public class EmployeesControllerPostTest {
 
 		verify(employeeService, times(1)).findByEmail(anyString());
 		verify(employeeService, never()).saveAndFlush(any(Employee.class));
+		verify(employeeDTOConverter, never()).convert(any(Employee.class));
 
 		OperationResultDTO resultDTO = mapper.readValue(result.getResponse().getContentAsString(), OperationResultDTO.class);
 		assertEquals(Constants.ERROR, resultDTO.getMessage());
@@ -135,6 +137,7 @@ public class EmployeesControllerPostTest {
 
 		verify(employeeService, never()).findByEmail(anyString());
 		verify(employeeService, never()).saveAndFlush(any(Employee.class));
+		verify(employeeDTOConverter, never()).convert(any(Employee.class));
 
 		OperationResultDTO resultDTO = mapper.readValue(result.getResponse().getContentAsString(), OperationResultDTO.class);
 		assertNull(resultDTO.getData());

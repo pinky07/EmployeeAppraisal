@@ -11,11 +11,11 @@ import com.gft.employeeappraisal.builder.model.JobFamilyBuilder;
 import com.gft.employeeappraisal.builder.model.JobLevelBuilder;
 import com.gft.employeeappraisal.configuration.BeanConfiguration;
 import com.gft.employeeappraisal.configuration.ControllerConfiguration;
+import com.gft.employeeappraisal.converter.employee.EmployeeDTOConverter;
 import com.gft.employeeappraisal.model.ApplicationRole;
 import com.gft.employeeappraisal.model.Constants;
 import com.gft.employeeappraisal.model.Employee;
 import com.gft.employeeappraisal.model.JobLevel;
-import com.gft.employeeappraisal.service.DTOService;
 import com.gft.employeeappraisal.service.EmployeeRelationshipService;
 import com.gft.employeeappraisal.service.EmployeeService;
 import com.gft.swagger.employees.model.ApplicationRoleDTO;
@@ -72,14 +72,13 @@ public class EmployeesControllerMentorTest {
 	private ObjectMapper mapper;
 
 	@MockBean(reset = MockReset.AFTER)
+	private EmployeeDTOConverter employeeDTOConverter;
+
+	@MockBean(reset = MockReset.AFTER)
 	private EmployeeService employeeService;
 
 	@MockBean(reset = MockReset.AFTER)
 	private EmployeeRelationshipService employeeRelationshipService;
-
-	@MockBean
-	@SuppressWarnings("unused")
-	private DTOService dtoService;
 
 	@Rule
 	public final ExpectedException exception = ExpectedException.none();
@@ -115,6 +114,7 @@ public class EmployeesControllerMentorTest {
 		//mentor lookup
 		Employee mockMentor = mockMentor();
 		when(employeeService.findCurrentMentorById(anyInt())).thenReturn(Optional.of(mockMentor));
+		doReturn(mockMentorDTO).when(employeeDTOConverter).convert(any(Employee.class));
 
 		MvcResult result = mockMvc.perform(get(String.format("%s/%d/mentor", EMPLOYEES_URL, mockEmployeeDTO.getId()))
 				.with(csrf())
@@ -122,6 +122,7 @@ public class EmployeesControllerMentorTest {
 		).andExpect(status().isOk()).andReturn();
 
 		verify(employeeService, times(1)).findCurrentMentorById(anyInt());
+		verify(employeeDTOConverter, times(1)).convert(any(Employee.class));
 
 		EmployeeDTO resultDTO = mapper.readValue(result.getResponse().getContentAsString(),
 				EmployeeDTO.class);
@@ -139,6 +140,7 @@ public class EmployeesControllerMentorTest {
 		).andExpect(status().isNotFound()).andReturn();
 
 		verify(employeeService, times(1)).findCurrentMentorById(anyInt());
+		verify(employeeDTOConverter, never()).convert(any(Employee.class));
 
 		EmployeeDTO resultDTO = mapper.readValue(result.getResponse().getContentAsString(), EmployeeDTO.class);
 
@@ -159,6 +161,8 @@ public class EmployeesControllerMentorTest {
 		).andExpect(status().isBadRequest()).andReturn();
 
 		verify(employeeService, never()).findCurrentMentorById(anyInt());
+		verify(employeeDTOConverter, never()).convert(any(Employee.class));
+
 		assertTrue(StringUtils.isEmpty(result.getResponse().getContentAsString()));
 	}
 

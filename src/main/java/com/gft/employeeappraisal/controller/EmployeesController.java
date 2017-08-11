@@ -1,15 +1,13 @@
 package com.gft.employeeappraisal.controller;
 
-import com.gft.employeeappraisal.converter.employee.EmployeeDTOFromEntity;
-import com.gft.employeeappraisal.converter.employee.EmployeeDTOToEntity;
-import com.gft.employeeappraisal.converter.employeerelationship.EmployeeRelationshipDTOFromEntity;
+import com.gft.employeeappraisal.converter.employee.EmployeeDTOConverter;
+import com.gft.employeeappraisal.converter.employeerelationship.EmployeeRelationshipDTOConverter;
 import com.gft.employeeappraisal.converter.validator.DTOValidator;
 import com.gft.employeeappraisal.converter.validator.EmployeeDTOToEntityCreateValidator;
 import com.gft.employeeappraisal.exception.EmployeeNotFoundException;
 import com.gft.employeeappraisal.model.Constants;
 import com.gft.employeeappraisal.model.Employee;
 import com.gft.employeeappraisal.model.RelationshipName;
-import com.gft.employeeappraisal.service.DTOService;
 import com.gft.employeeappraisal.service.EmployeeRelationshipService;
 import com.gft.employeeappraisal.service.EmployeeService;
 import com.gft.swagger.employees.api.EmployeeApi;
@@ -51,19 +49,13 @@ public class EmployeesController implements EmployeeApi {
     private EmployeeService employeeService;
 
     @Autowired
+    private EmployeeDTOConverter employeeDTOConverter;
+
+    @Autowired
+	private EmployeeRelationshipDTOConverter employeeRelationshipDTOConverter;
+
+    @Autowired
     private EmployeeRelationshipService employeeRelationshipService;
-
-    @Autowired
-    private DTOService dtoService;
-
-    @Autowired
-    private EmployeeDTOFromEntity employeeDTOFromEntity;
-
-    @Autowired
-    private EmployeeDTOToEntity employeeDTOToEntity;
-
-    @Autowired
-	private EmployeeRelationshipDTOFromEntity employeeRelationshipDTOFromEntity;
 
     @Autowired
     private EmployeeDTOToEntityCreateValidator employeeDTOToEntityCreateValidator;
@@ -91,7 +83,7 @@ public class EmployeesController implements EmployeeApi {
                         String.format("Employee with id %d was not found",
                                 employeeId)));
 
-        EmployeeDTO response = employeeDTOFromEntity.map(employee);
+        EmployeeDTO response = employeeDTOConverter.convert(employee);
 
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
@@ -127,8 +119,7 @@ public class EmployeesController implements EmployeeApi {
                         employeeId)));
 
         // Set the response
-        EmployeeDTO response = employeeDTOFromEntity.map(mentor);
-        dtoService.setEmployeeDTOFlags(response, mentor);
+        EmployeeDTO response = employeeDTOConverter.convert(mentor);
 
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
@@ -212,7 +203,7 @@ public class EmployeesController implements EmployeeApi {
 		List<EmployeeRelationshipDTO> employeeRelationshipDTOList = new ArrayList<>();
 		employeeService.findCurrentRelationshipsBySourceEmployee(employee,
 				RelationshipName.PEER, RelationshipName.LEAD, RelationshipName.OTHER)
-				.forEach(er -> employeeRelationshipDTOList.add(employeeRelationshipDTOFromEntity.map(er)));
+				.forEach(er -> employeeRelationshipDTOList.add(employeeRelationshipDTOConverter.convert(er)));
 
 		return new ResponseEntity<>(employeeRelationshipDTOList, HttpStatus.OK);
 	}
@@ -239,14 +230,13 @@ public class EmployeesController implements EmployeeApi {
             return new ResponseEntity<>(response, status);
         }
 
-        Optional<Employee> createdEmployee = employeeService.saveAndFlush(employeeDTOToEntity.map(employee));
+        Optional<Employee> createdEmployee = employeeService.saveAndFlush(employeeDTOConverter.convertBack(employee));
         EmployeeDTO employeeDTO = null;
 
         if (createdEmployee.isPresent()) {
             response.setMessage(Constants.SUCCESS);
 
-            employeeDTO = employeeDTOFromEntity.map(createdEmployee.get());
-            dtoService.setEmployeeDTOFlags(employeeDTO, createdEmployee.get());
+            employeeDTO = employeeDTOConverter.convert(createdEmployee.get());
 
             status = HttpStatus.CREATED;
         } else {

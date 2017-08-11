@@ -1,9 +1,8 @@
 package com.gft.employeeappraisal.controller;
 
-import com.gft.employeeappraisal.converter.employee.EmployeeDTOFromEntity;
+import com.gft.employeeappraisal.converter.employee.EmployeeDTOConverter;
 import com.gft.employeeappraisal.exception.EmployeeNotFoundException;
 import com.gft.employeeappraisal.model.Employee;
-import com.gft.employeeappraisal.service.DTOService;
 import com.gft.employeeappraisal.service.EmployeeService;
 import com.gft.swagger.employees.api.MeApi;
 import com.gft.swagger.employees.model.EmployeeDTO;
@@ -33,10 +32,7 @@ public class MeController implements MeApi {
     private EmployeeService employeeService;
 
     @Autowired
-    private DTOService dtoService;
-
-    @Autowired
-    private EmployeeDTOFromEntity employeeDTOFromEntity;
+    private EmployeeDTOConverter employeeDTOConverter;
 
     /**
      * Obtains all the employee info (delimited on the EmployeeAppraisal microservice) for the authenticated user.
@@ -52,8 +48,7 @@ public class MeController implements MeApi {
 
         // Set Result DTO
         EmployeeDTO result;
-        result = employeeDTOFromEntity.map(user);
-        dtoService.setEmployeeDTOFlags(result, user);
+        result = employeeDTOConverter.convert(user);
 
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
@@ -77,8 +72,7 @@ public class MeController implements MeApi {
                         user.getId())));
 
         // Set Result DTO
-        EmployeeDTO result = employeeDTOFromEntity.map(mentor);
-        dtoService.setEmployeeDTOFlags(result, mentor);
+        EmployeeDTO result = employeeDTOConverter.convert(mentor);
 
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
@@ -98,7 +92,7 @@ public class MeController implements MeApi {
         HttpStatus status;
 
 		employeeService.findCurrentPeersById(user.getId())
-				.forEach(peer -> result.add(employeeDTOFromEntity.map(peer)));
+				.forEach(peer -> result.add(employeeDTOConverter.convert(peer)));
 		status = result.isEmpty() ? HttpStatus.NOT_FOUND : HttpStatus.OK;
 
         return new ResponseEntity<>(result, status);
@@ -114,11 +108,7 @@ public class MeController implements MeApi {
         // Find Mentees and set result
         List<EmployeeDTO> result = employeeService
                 .findCurrentMenteesById(user.getId())
-                .map(mentee -> {
-                    EmployeeDTO menteeDTO = employeeDTOFromEntity.map(mentee);
-                    dtoService.setEmployeeDTOFlags(menteeDTO, mentee);
-                    return menteeDTO;
-                })
+                .map(mentee -> employeeDTOConverter.convert(mentee))
                 .collect(Collectors.toList());
 
         return new ResponseEntity<>(result, HttpStatus.OK);

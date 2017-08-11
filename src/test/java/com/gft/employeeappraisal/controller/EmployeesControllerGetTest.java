@@ -1,17 +1,17 @@
 package com.gft.employeeappraisal.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.gft.employeeappraisal.builder.dto.*;
 import com.gft.employeeappraisal.builder.model.*;
 import com.gft.employeeappraisal.configuration.BeanConfiguration;
 import com.gft.employeeappraisal.configuration.ControllerConfiguration;
+import com.gft.employeeappraisal.converter.employee.EmployeeDTOConverter;
+import com.gft.employeeappraisal.converter.employeerelationship.EmployeeRelationshipDTOConverter;
 import com.gft.employeeappraisal.exception.EmployeeNotFoundException;
 import com.gft.employeeappraisal.model.*;
-import com.gft.employeeappraisal.service.DTOService;
 import com.gft.employeeappraisal.service.EmployeeRelationshipService;
 import com.gft.employeeappraisal.service.EmployeeService;
-import com.gft.swagger.employees.model.EmployeeDTO;
-import com.gft.swagger.employees.model.EmployeeRelationshipDTO;
-import com.gft.swagger.employees.model.OperationResultDTO;
+import com.gft.swagger.employees.model.*;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -28,6 +28,7 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.util.StringUtils;
 
 import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -60,18 +61,21 @@ public class EmployeesControllerGetTest {
     @Autowired
     private EntityDTOComparator entityDTOComparator;
 
+	@MockBean(reset = MockReset.AFTER)
+	private EmployeeService employeeService;
+
+	@MockBean(reset = MockReset.AFTER)
+	@SuppressWarnings("unused")
+	private EmployeeRelationshipService employeeRelationshipService;
+
+	@MockBean(reset = MockReset.AFTER)
+	private EmployeeDTOConverter employeeDTOConverter;
+
+    @MockBean(reset = MockReset.AFTER)
+	private EmployeeRelationshipDTOConverter employeeRelationshipDTOConverter;
+
     @Autowired
     private ObjectMapper mapper;
-
-    @MockBean(reset = MockReset.AFTER)
-    private EmployeeService employeeService;
-
-    @MockBean(reset = MockReset.AFTER)
-    @SuppressWarnings("unused")
-    private EmployeeRelationshipService employeeRelationshipService;
-
-    @MockBean(reset = MockReset.AFTER)
-    private DTOService dtoService;
 
     private Employee userMock;
 	private JobLevel jobLevelMock;
@@ -103,7 +107,6 @@ public class EmployeesControllerGetTest {
                 .buildMock();
 
         userMock = new EmployeeBuilder()
-                .id(1)
                 .email("user@gft.com")
                 .firstName("John")
                 .lastName("Doe")
@@ -123,6 +126,7 @@ public class EmployeesControllerGetTest {
         // Set-up
 
         when(employeeService.findById(userMock.getId())).thenReturn(Optional.of(userMock));
+        doReturn(mockEmployeeDTO()).when(employeeDTOConverter).convert(any(Employee.class));
 
         // Execution
 
@@ -142,6 +146,7 @@ public class EmployeesControllerGetTest {
 
         verify(employeeService, times(1)).checkAccess(anyInt(), anyInt());
         verify(employeeService, times(1)).findById(userMock.getId());
+        verify(employeeDTOConverter, times(1)).convert(any(Employee.class));
 
         entityDTOComparator.assertEqualsEmployee(userMock, employeeDTO);
     }
@@ -173,6 +178,7 @@ public class EmployeesControllerGetTest {
 
         verify(employeeService, times(1)).checkAccess(anyInt(), anyInt());
         verify(employeeService, times(1)).findById(userMock.getId());
+        verify(employeeDTOConverter, never()).convert(any(Employee.class));
 
         assertEquals(operationResultDTO.getMessage(), Constants.ERROR);
     }
@@ -196,6 +202,7 @@ public class EmployeesControllerGetTest {
 
         verify(employeeService, never()).checkAccess(anyInt(), anyInt());
         verify(employeeService, never()).findById(userMock.getId());
+		verify(employeeDTOConverter, never()).convert(any(Employee.class));
 
         assertTrue(StringUtils.isEmpty(resultString));
     }
@@ -203,6 +210,8 @@ public class EmployeesControllerGetTest {
 	@Test
 	public void employeesEmployeeIdRelationshipsGet() throws Exception {
 		when(employeeService.findById(userMock.getId())).thenReturn(Optional.of(userMock));
+		doReturn(mockEmployeeRelationshipDTO()).when(employeeRelationshipDTOConverter)
+				.convert(any(EmployeeRelationship.class));
     	doReturn(Stream.of(mockEmployeeRelationship()))
 				.when(employeeService).findCurrentRelationshipsBySourceEmployee(userMock,
 				RelationshipName.PEER, RelationshipName.LEAD, RelationshipName.OTHER);
@@ -227,12 +236,13 @@ public class EmployeesControllerGetTest {
 		verify(employeeService, times(1)).findById(anyInt());
 		verify(employeeService, times(1)).findCurrentRelationshipsBySourceEmployee(userMock,
 				RelationshipName.PEER, RelationshipName.LEAD, RelationshipName.OTHER);
+		verify(employeeRelationshipDTOConverter, times(1)).convert(any(EmployeeRelationship.class));
 
 		EmployeeRelationshipDTO employeeRelationshipDTO = employeeRelationshipDTOList.get(0);
 		assertNotNull(employeeRelationshipDTO.getReference());
 		assertNotNull(employeeRelationshipDTO.getRelationship());
 		assertNotNull(employeeRelationshipDTO.getStartDate());
-		assertNull(employeeRelationshipDTO.getEndDate());
+		assertNotNull(employeeRelationshipDTO.getEndDate());
 
 		EmployeeDTO reference = employeeRelationshipDTO.getReference();
 		entityDTOComparator.assertEqualsEmployee(mockMentor(), reference);
@@ -265,6 +275,7 @@ public class EmployeesControllerGetTest {
 		verify(employeeService, times(1)).findById(anyInt());
 		verify(employeeService, times(1)).findCurrentRelationshipsBySourceEmployee(userMock,
 				RelationshipName.PEER, RelationshipName.LEAD, RelationshipName.OTHER);
+		verify(employeeRelationshipDTOConverter, never()).convert(any(EmployeeRelationship.class));
 	}
 
 	@Test
@@ -293,6 +304,7 @@ public class EmployeesControllerGetTest {
 		verify(employeeService, times(1)).findById(anyInt());
 		verify(employeeService, never()).findCurrentRelationshipsBySourceEmployee(userMock,
 				RelationshipName.PEER, RelationshipName.LEAD, RelationshipName.OTHER);
+		verify(employeeRelationshipDTOConverter, never()).convert(any(EmployeeRelationship.class));
 	}
 
 	@Test
@@ -313,6 +325,7 @@ public class EmployeesControllerGetTest {
 		verify(employeeService, never()).findById(anyInt());
 		verify(employeeService, never()).findCurrentRelationshipsBySourceEmployee(userMock,
 				RelationshipName.PEER, RelationshipName.LEAD, RelationshipName.OTHER);
+		verify(employeeRelationshipDTOConverter, never()).convert(any(EmployeeRelationship.class));
 	}
 
 	private EmployeeRelationship mockEmployeeRelationship() {
@@ -321,6 +334,78 @@ public class EmployeesControllerGetTest {
 				.targetEmployee(mockMentor())
 				.relationship(mockRelationship())
 				.startDate(LocalDateTime.now()).build();
+	}
+
+	private EmployeeDTO mockEmployeeDTO() {
+		return new EmployeeDTOBuilder()
+				.id(userMock.getId())
+				.firstName(userMock.getFirstName())
+				.lastName(userMock.getLastName())
+				.gftIdentifier(userMock.getGftIdentifier())
+				.email(userMock.getEmail())
+				.applicationRole(mockApplicationRoleDTO())
+				.jobLevel(mockJobLevelDTO())
+				.isAdmin(false)
+				.isMentor(false)
+				.isPeer(false)
+				.build();
+	}
+
+	private EmployeeDTO mockMentorDTO() {
+    	return new EmployeeDTOBuilder()
+				.id(mockMentor().getId())
+				.firstName(mockMentor().getFirstName())
+				.lastName(mockMentor().getLastName())
+				.gftIdentifier(mockMentor().getGftIdentifier())
+				.email(mockMentor().getEmail())
+				.applicationRole(mockApplicationRoleDTO())
+				.jobLevel(mockJobLevelDTO())
+				.isAdmin(false)
+				.isMentor(true)
+				.isPeer(false)
+				.build();
+	}
+
+	private EmployeeRelationshipDTO mockEmployeeRelationshipDTO() {
+		return new EmployeeRelationshipDTOBuilder()
+				.reference(mockMentorDTO())
+				.relationship(mockRelationshipDTO())
+				.startDate(OffsetDateTime.now())
+				.endDate(OffsetDateTime.now())
+				.build();
+	}
+
+	private ApplicationRoleDTO mockApplicationRoleDTO() {
+    	return new ApplicationRoleDTOBuilder()
+				.id(1)
+				.name("Application Role")
+				.description("Application Role Description")
+				.build();
+	}
+
+	private JobLevelDTO mockJobLevelDTO() {
+    	return new JobLevelDTOBuilder()
+				.id(1)
+				.name("Job Level")
+				.description("Job Level Description")
+				.expertise("Expertise")
+				.jobFamily(mockJobFamilyDTO())
+				.build();
+	}
+
+	private JobFamilyDTO mockJobFamilyDTO() {
+    	return new JobFamilyDTOBuilder()
+				.id(1)
+				.name("Job Family")
+				.description("Job Family Description")
+				.build();
+	}
+
+	private RelationshipDTO mockRelationshipDTO() {
+    	return new RelationshipDTOBuilder()
+				.name(RelationshipName.OTHER.name())
+				.description("Mock Relationship")
+				.build();
 	}
 
 	private Relationship mockRelationship() {

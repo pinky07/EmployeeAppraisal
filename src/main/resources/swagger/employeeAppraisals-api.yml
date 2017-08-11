@@ -901,10 +901,10 @@ definitions:
         type: string
       startDate:
         type: string
-        format: datetime
+        format: 'date-time'
       endDate:
         type: string
-        format: datetime
+        format: 'date-time'
 
   EmployeeDTO:
     type: object
@@ -991,10 +991,10 @@ definitions:
         $ref: '#/definitions/RelationshipDTO'
       startDate:
         type: string
-        format: datetime
+        format: 'date-time'
       endDate:
         type: string
-        format: datetime
+        format: 'date-time'
     required:
       - id
 

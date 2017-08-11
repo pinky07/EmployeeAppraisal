@@ -4,7 +4,7 @@ import com.gft.employeeappraisal.builder.ObjectBuilder;
 import com.gft.swagger.employees.model.AppraisalDTO;
 import org.mockito.Mockito;
 
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 
 import static org.mockito.Mockito.when;
 
@@ -18,8 +18,8 @@ public class AppraisalDTOBuilder implements ObjectBuilder<AppraisalDTO> {
 	private int id;
 	private String name;
 	private String description;
-	private String startDate;
-	private String endDate;
+	private OffsetDateTime startDate;
+	private OffsetDateTime endDate;
 
 	public AppraisalDTOBuilder(){ }
 
@@ -38,17 +38,13 @@ public class AppraisalDTOBuilder implements ObjectBuilder<AppraisalDTO> {
 		return this;
 	}
 
-	public AppraisalDTOBuilder startDate(LocalDateTime startDate) {
-		if (startDate != null) {
-			this.startDate = startDate.toString();
-		}
+	public AppraisalDTOBuilder startDate(OffsetDateTime startDate) {
+		this.startDate = startDate;
 		return this;
 	}
 
-	public AppraisalDTOBuilder endDate(LocalDateTime endDate) {
-		if (endDate != null) {
-			this.endDate = endDate.toString();
-		}
+	public AppraisalDTOBuilder endDate(OffsetDateTime endDate) {
+		this.endDate = endDate;
 		return this;
 	}
 

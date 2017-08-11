@@ -6,7 +6,8 @@ import ma.glasnost.orika.MappingContext;
 import ma.glasnost.orika.converter.BidirectionalConverter;
 import ma.glasnost.orika.metadata.Type;
 
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
 
 /**
  * Converter logic for bidirectional transformation between Appraisal and AppraisalDTO.
@@ -22,9 +23,9 @@ public class AppraisalDTOConverter extends BidirectionalConverter<Appraisal, App
 		result.setId(source.getId());
 		result.setName(source.getName());
 		result.setDescription(source.getDescription());
-		result.setStartDate(source.getStartDate().toString());
+		result.setStartDate(OffsetDateTime.of(source.getStartDate(), ZoneOffset.UTC));
 		if (source.getEndDate() != null) {
-			result.setEndDate(source.getEndDate().toString());
+			result.setEndDate(OffsetDateTime.of(source.getEndDate(), ZoneOffset.UTC));
 		}
 		return result;
 	}
@@ -36,9 +37,9 @@ public class AppraisalDTOConverter extends BidirectionalConverter<Appraisal, App
 		result.setId(source.getId());
 		result.setName(source.getName());
 		result.setDescription(source.getDescription());
-		result.setStartDate(LocalDateTime.parse(source.getStartDate()));
+		result.setStartDate(source.getStartDate().toLocalDateTime());
 		if (source.getEndDate() != null) {
-			result.setEndDate(LocalDateTime.parse(source.getEndDate()));
+			result.setEndDate(source.getEndDate().toLocalDateTime());
 		}
 		return result;
 	}
