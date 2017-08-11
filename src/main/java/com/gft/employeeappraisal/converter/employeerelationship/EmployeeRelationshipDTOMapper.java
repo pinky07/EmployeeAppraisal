@@ -8,6 +8,7 @@ import com.gft.swagger.employees.model.EmployeeRelationshipDTO;
 import com.gft.swagger.employees.model.RelationshipDTO;
 import ma.glasnost.orika.CustomMapper;
 import ma.glasnost.orika.MappingContext;
+import org.springframework.stereotype.Component;
 
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
@@ -15,6 +16,7 @@ import java.time.ZoneOffset;
 /**
  * @author Manuel Yepez
  */
+@Component
 public class EmployeeRelationshipDTOMapper extends CustomMapper<EmployeeRelationship, EmployeeRelationshipDTO> {
 
 	@Override
@@ -24,7 +26,7 @@ public class EmployeeRelationshipDTOMapper extends CustomMapper<EmployeeRelation
 			employeeRelationshipDTO.setEndDate(OffsetDateTime.of(employeeRelationship.getEndDate(), ZoneOffset.UTC));
 		}
 
-		employeeRelationshipDTO.setReference(mapperFacade.map(employeeRelationship.getSourceEmployee(),
+		employeeRelationshipDTO.setReference(mapperFacade.map(employeeRelationship.getTargetEmployee(),
 				EmployeeDTO.class));
 		employeeRelationshipDTO.setRelationship(mapperFacade.map(employeeRelationship.getRelationship(),
 				RelationshipDTO.class));
@@ -37,7 +39,7 @@ public class EmployeeRelationshipDTOMapper extends CustomMapper<EmployeeRelation
 		if (employeeRelationshipDTO.getEndDate() != null) {
 			employeeRelationship.setStartDate(employeeRelationshipDTO.getEndDate().toLocalDateTime());
 		}
-		employeeRelationship.setSourceEmployee(mapperFacade.map(employeeRelationshipDTO.getReference(),
+		employeeRelationship.setTargetEmployee(mapperFacade.map(employeeRelationshipDTO.getReference(),
 				Employee.class));
 		employeeRelationship.setRelationship(mapperFacade.map(employeeRelationshipDTO.getRelationship(),
 				Relationship.class));

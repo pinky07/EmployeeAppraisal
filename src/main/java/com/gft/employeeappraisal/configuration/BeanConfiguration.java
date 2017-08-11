@@ -7,6 +7,8 @@ import com.gft.employeeappraisal.converter.employee.EmployeeDTOMapper;
 import com.gft.employeeappraisal.converter.employeerelationship.EmployeeRelationshipDTOConverter;
 import com.gft.employeeappraisal.converter.employeerelationship.EmployeeRelationshipDTOMapper;
 import com.gft.employeeappraisal.converter.validator.EmployeeDTOToEntityCreateValidator;
+import com.gft.employeeappraisal.service.EmployeeRelationshipService;
+import com.gft.employeeappraisal.service.EmployeeService;
 import ma.glasnost.orika.MapperFactory;
 import ma.glasnost.orika.converter.ConverterFactory;
 import ma.glasnost.orika.impl.DefaultMapperFactory;
@@ -28,23 +30,30 @@ public class BeanConfiguration {
 	 * @return Mapper Factory instance.
 	 */
     @Bean
-    public MapperFactory mapperFactory() {
+    public MapperFactory mapperFactory(EmployeeDTOMapper employeeDTOMapper,
+									   EmployeeRelationshipDTOMapper employeeRelationshipDTOMapper) {
 		DefaultMapperFactory mapperFactory = new DefaultMapperFactory.Builder().build();
-		mapperFactory.registerMapper(new EmployeeDTOMapper());
-		mapperFactory.registerMapper(new EmployeeRelationshipDTOMapper());
+		mapperFactory.registerMapper(employeeDTOMapper);
+		mapperFactory.registerMapper(employeeRelationshipDTOMapper);
 		ConverterFactory converterFactory = mapperFactory.getConverterFactory();
 		converterFactory.registerConverter(new AppraisalDTOConverter());
 		return mapperFactory;
 	}
 
 	@Bean
-	public EmployeeDTOConverter employeeDTOConverter() {
-    	return new EmployeeDTOConverter(mapperFactory());
+	public EmployeeDTOMapper employeeDTOMapper(EmployeeService employeeService,
+											   EmployeeRelationshipService employeeRelationshipService) {
+    	return new EmployeeDTOMapper(employeeService, employeeRelationshipService);
 	}
 
 	@Bean
-	public EmployeeRelationshipDTOConverter employeeRelationshipDTOConverter() {
-    	return new EmployeeRelationshipDTOConverter(mapperFactory());
+	public EmployeeDTOConverter employeeDTOConverter(MapperFactory mapperFactory) {
+    	return new EmployeeDTOConverter(mapperFactory);
+	}
+
+	@Bean
+	public EmployeeRelationshipDTOConverter employeeRelationshipDTOConverter(MapperFactory mapperFactory) {
+    	return new EmployeeRelationshipDTOConverter(mapperFactory);
 	}
 
 	/**
@@ -52,8 +61,8 @@ public class BeanConfiguration {
 	 * @return AppraisalDTOMapper instance.
 	 */
 	@Bean
-	public AppraisalDTOMapper appraisalDTOMapper() {
-    	return new AppraisalDTOMapper(mapperFactory());
+	public AppraisalDTOMapper appraisalDTOMapper(MapperFactory mapperFactory) {
+    	return new AppraisalDTOMapper(mapperFactory);
 	}
 
 	/**

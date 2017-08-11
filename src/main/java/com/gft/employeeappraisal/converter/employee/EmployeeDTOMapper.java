@@ -22,14 +22,23 @@ import org.springframework.stereotype.Component;
 @Component
 public class EmployeeDTOMapper extends CustomMapper<Employee, EmployeeDTO> {
 
-	@Autowired
 	private EmployeeService employeeService;
+	private EmployeeRelationshipService employeeRelationshipService;
 
 	@Autowired
-	private EmployeeRelationshipService employeeRelationshipService;
+	public EmployeeDTOMapper(EmployeeService employeeService, EmployeeRelationshipService employeeRelationshipService) {
+		this.employeeService = employeeService;
+		this.employeeRelationshipService = employeeRelationshipService;
+	}
 
 	@Override
 	public void mapAtoB(Employee employee, EmployeeDTO employeeDTO, MappingContext context) {
+		employeeDTO.setId(employee.getId());
+		employeeDTO.setFirstName(employee.getFirstName());
+		employeeDTO.setLastName(employee.getLastName());
+		employeeDTO.setEmail(employee.getEmail());
+		employeeDTO.setGftIdentifier(employee.getGftIdentifier());
+
 		employeeDTO.setApplicationRole(mapperFacade.map(employee.getApplicationRole(), ApplicationRoleDTO.class));
 		employeeDTO.setJobLevel(mapperFacade.map(employee.getJobLevel(), JobLevelDTO.class));
 
@@ -40,6 +49,12 @@ public class EmployeeDTOMapper extends CustomMapper<Employee, EmployeeDTO> {
 
 	@Override
 	public void mapBtoA(EmployeeDTO employeeDTO, Employee employee, MappingContext context) {
+		employee.setId(employeeDTO.getId());
+		employee.setFirstName(employeeDTO.getFirstName());
+		employee.setLastName(employeeDTO.getLastName());
+		employee.setEmail(employeeDTO.getEmail());
+		employee.setGftIdentifier(employeeDTO.getGftIdentifier());
+
 		employee.setApplicationRole(mapperFacade.map(employeeDTO.getApplicationRole(), ApplicationRole.class));
 		employee.setJobLevel(mapperFacade.map(employeeDTO.getJobLevel(), JobLevel.class));
 	}

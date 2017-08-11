@@ -3,8 +3,6 @@ package com.gft.employeeappraisal.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.gft.employeeappraisal.builder.dto.*;
 import com.gft.employeeappraisal.builder.model.*;
-import com.gft.employeeappraisal.configuration.BeanConfiguration;
-import com.gft.employeeappraisal.configuration.ControllerConfiguration;
 import com.gft.employeeappraisal.converter.employee.EmployeeDTOConverter;
 import com.gft.employeeappraisal.converter.employeerelationship.EmployeeRelationshipDTOConverter;
 import com.gft.employeeappraisal.exception.EmployeeNotFoundException;
@@ -16,12 +14,13 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.mock.mockito.MockReset;
-import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
@@ -47,8 +46,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  * @author Manuel Yepez
  */
 @RunWith(SpringRunner.class)
-@WebMvcTest(EmployeesController.class)
-@Import({ControllerConfiguration.class, BeanConfiguration.class})
+@AutoConfigureMockMvc
+@SpringBootTest
+@ActiveProfiles({ "default", "local", "test" })
 public class EmployeesControllerGetTest {
 
     private static final String EMPLOYEES_URL = "/employees";
