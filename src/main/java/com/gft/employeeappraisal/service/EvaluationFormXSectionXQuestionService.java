@@ -16,7 +16,7 @@ public interface EvaluationFormXSectionXQuestionService {
      * @param employee Employee that's being evaluated
      * @return
      */
-    Stream<EvaluationForm> findEvaluationFormsByAppraisalAndEmployee(Appraisal appraisal, Employee employee);
+    Stream<EvaluationForm> findByAppraisalAndEmployee(Appraisal appraisal, Employee employee);
 
     /**
      * Returns the Self Evaluation Form of an Employee for a given Appraisal process.

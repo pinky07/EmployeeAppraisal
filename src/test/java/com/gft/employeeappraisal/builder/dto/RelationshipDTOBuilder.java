@@ -2,6 +2,7 @@ package com.gft.employeeappraisal.builder.dto;
 
 import com.gft.employeeappraisal.builder.ObjectBuilder;
 import com.gft.swagger.employees.model.RelationshipDTO;
+import org.apache.commons.lang.NotImplementedException;
 
 import static org.mockito.Mockito.when;
 
@@ -42,6 +43,11 @@ public class RelationshipDTOBuilder implements ObjectBuilder<RelationshipDTO> {
         dto.setName(this.name);
         dto.setDescription(this.description);
         return dto;
+    }
+
+    @Override
+    public RelationshipDTO buildWithDefaults() {
+        throw new NotImplementedException();
     }
 
     @Override

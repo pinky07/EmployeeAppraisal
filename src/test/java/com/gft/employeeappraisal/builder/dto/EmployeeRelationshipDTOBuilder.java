@@ -3,6 +3,7 @@ package com.gft.employeeappraisal.builder.dto;
 import com.gft.employeeappraisal.builder.ObjectBuilder;
 import com.gft.swagger.employees.model.EmployeeRelationshipDTO;
 import com.gft.swagger.employees.model.RelationshipDTO;
+import org.apache.commons.lang.NotImplementedException;
 
 import java.time.OffsetDateTime;
 
@@ -23,11 +24,16 @@ public class EmployeeRelationshipDTOBuilder implements ObjectBuilder<EmployeeRel
 
     @Override
     public EmployeeRelationshipDTO build() {
-        throw new UnsupportedOperationException();
+        throw new NotImplementedException();
+    }
+
+    @Override
+    public EmployeeRelationshipDTO buildWithDefaults() {
+        throw new NotImplementedException();
     }
 
     @Override
     public EmployeeRelationshipDTO buildMock() {
-        throw new UnsupportedOperationException();
+        throw new NotImplementedException();
     }
 }

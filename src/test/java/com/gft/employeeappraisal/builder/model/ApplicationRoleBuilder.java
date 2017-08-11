@@ -14,25 +14,34 @@ import static org.mockito.Mockito.when;
  */
 public class ApplicationRoleBuilder implements ObjectBuilder<ApplicationRole> {
 
+    private static int currentId = 1_000_000;
+
     private int id;
     private String name;
     private String description;
+
+    private boolean idSet;
+    private boolean nameSet;
+    private boolean descriptionSet;
 
     public ApplicationRoleBuilder() {
     }
 
     public ApplicationRoleBuilder id(int id) {
         this.id = id;
+        this.idSet = true;
         return this;
     }
 
     public ApplicationRoleBuilder name(String name) {
         this.name = name;
+        this.nameSet = true;
         return this;
     }
 
     public ApplicationRoleBuilder description(String description) {
         this.description = description;
+        this.descriptionSet = true;
         return this;
     }
 
@@ -42,6 +51,15 @@ public class ApplicationRoleBuilder implements ObjectBuilder<ApplicationRole> {
         applicationRole.setId(this.id);
         applicationRole.setName(this.name);
         applicationRole.setDescription(this.description);
+        return applicationRole;
+    }
+
+    @Override
+    public ApplicationRole buildWithDefaults() {
+        ApplicationRole applicationRole = new ApplicationRole();
+        applicationRole.setId(this.idSet ? this.id : this.currentId++);
+        applicationRole.setName(this.nameSet ? this.name : "Name");
+        applicationRole.setDescription(this.descriptionSet ? this.description : "Description");
         return applicationRole;
     }
 
