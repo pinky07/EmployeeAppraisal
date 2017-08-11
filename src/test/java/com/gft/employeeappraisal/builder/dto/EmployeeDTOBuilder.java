@@ -4,6 +4,7 @@ import com.gft.employeeappraisal.builder.ObjectBuilder;
 import com.gft.swagger.employees.model.ApplicationRoleDTO;
 import com.gft.swagger.employees.model.EmployeeDTO;
 import com.gft.swagger.employees.model.JobLevelDTO;
+import org.apache.commons.lang.NotImplementedException;
 import org.mockito.Mockito;
 
 import static org.mockito.Mockito.when;
@@ -94,6 +95,11 @@ public class EmployeeDTOBuilder implements ObjectBuilder<EmployeeDTO> {
         dto.setApplicationRole(this.applicationRoleDTO);
         dto.setJobLevel(this.jobLevelDTO);
         return dto;
+    }
+
+    @Override
+    public EmployeeDTO buildWithDefaults() {
+        throw new NotImplementedException();
     }
 
     @Override

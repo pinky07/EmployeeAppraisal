@@ -9,38 +9,56 @@ import org.mockito.Mockito;
 import static org.mockito.Mockito.when;
 
 /**
- * TODO: Document this!
+ * Builder object for the {@link AppraisalXEvaluationForm} object.
  *
  * @author Rubén Jiménez
  */
 public class AppraisalXEvaluationFormBuilder implements ObjectBuilder<AppraisalXEvaluationForm> {
 
+    private static int currentId = 1_000_000;
+
     private int id;
     private Appraisal appraisal;
     private EvaluationForm evaluationForm;
 
+    private boolean idSet;
+    private boolean appraisalSet;
+    private boolean evaluationFormSet;
+
     public AppraisalXEvaluationFormBuilder id(int id) {
         this.id = id;
+        this.idSet = true;
         return this;
     }
 
     public AppraisalXEvaluationFormBuilder appraisal(Appraisal appraisal) {
         this.appraisal = appraisal;
+        this.appraisalSet = true;
         return this;
     }
 
     public AppraisalXEvaluationFormBuilder evaluationForm(EvaluationForm evaluationForm) {
         this.evaluationForm = evaluationForm;
+        this.evaluationFormSet = true;
         return this;
     }
 
     @Override
     public AppraisalXEvaluationForm build() {
-        AppraisalXEvaluationForm appraisalXEvaluationForm = new AppraisalXEvaluationForm();
-        appraisalXEvaluationForm.setId(this.id);
-        appraisalXEvaluationForm.setAppraisal(this.appraisal);
-        appraisalXEvaluationForm.setEvaluationForm(this.evaluationForm);
-        return appraisalXEvaluationForm;
+        AppraisalXEvaluationForm obj = new AppraisalXEvaluationForm();
+        obj.setId(this.id);
+        obj.setAppraisal(this.appraisal);
+        obj.setEvaluationForm(this.evaluationForm);
+        return obj;
+    }
+
+    @Override
+    public AppraisalXEvaluationForm buildWithDefaults() {
+        AppraisalXEvaluationForm obj = new AppraisalXEvaluationForm();
+        obj.setId(this.idSet ? this.id : this.currentId++);
+        obj.setAppraisal(this.appraisalSet ? this.appraisal : new AppraisalBuilder().buildWithDefaults());
+        obj.setEvaluationForm(this.evaluationFormSet ? this.evaluationForm : new EvaluationFormBuilder().buildWithDefaults());
+        return obj;
     }
 
     @Override

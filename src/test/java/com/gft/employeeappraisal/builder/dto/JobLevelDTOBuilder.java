@@ -3,6 +3,7 @@ package com.gft.employeeappraisal.builder.dto;
 import com.gft.employeeappraisal.builder.ObjectBuilder;
 import com.gft.swagger.employees.model.JobFamilyDTO;
 import com.gft.swagger.employees.model.JobLevelDTO;
+import org.apache.commons.lang.NotImplementedException;
 import org.mockito.Mockito;
 
 import static org.mockito.Mockito.when;
@@ -58,6 +59,11 @@ public class JobLevelDTOBuilder implements ObjectBuilder<JobLevelDTO> {
         dto.setDescription(this.description);
         dto.setExpertise(this.expertise);
         return dto;
+    }
+
+    @Override
+    public JobLevelDTO buildWithDefaults() {
+        throw new NotImplementedException();
     }
 
     @Override

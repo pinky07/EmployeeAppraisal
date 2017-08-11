@@ -4,6 +4,7 @@ import com.gft.employeeappraisal.builder.ObjectBuilder;
 import com.gft.swagger.employees.model.EmployeeDTO;
 import com.gft.swagger.employees.model.EmployeeRelationshipDTO;
 import com.gft.swagger.employees.model.RelationshipDTO;
+import org.apache.commons.lang.NotImplementedException;
 import org.mockito.Mockito;
 
 import java.time.OffsetDateTime;
@@ -60,6 +61,11 @@ public class EmployeeRelationshipDTOBuilder implements ObjectBuilder<EmployeeRel
         dto.setReference(this.reference);
         dto.setRelationship(this.relationshipDTO);
         return dto;
+    }
+
+    @Override
+    public EmployeeRelationshipDTO buildWithDefaults() {
+        throw new NotImplementedException();
     }
 
     @Override

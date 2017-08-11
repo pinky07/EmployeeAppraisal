@@ -5,6 +5,7 @@ package com.gft.employeeappraisal.builder;
  * in accordance to the Builder Pattern.
  *
  * @author Manuel Yepez
+ * @author Rubén Jiménez
  */
 public interface ObjectBuilder<T> {
 
@@ -16,9 +17,17 @@ public interface ObjectBuilder<T> {
     T build();
 
     /**
+     * Returns an instance of the Object and sets default values for fields, if the field wasn't set.
+     *
+     * @return New Object
+     */
+    T buildWithDefaults();
+
+    /**
      * Returns a mock of the Object that returns the values according to the setter methods called.
      *
      * @return New Mock
      */
+    @Deprecated
     T buildMock();
 }

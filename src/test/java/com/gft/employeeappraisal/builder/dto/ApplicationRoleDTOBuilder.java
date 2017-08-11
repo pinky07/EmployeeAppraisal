@@ -2,6 +2,7 @@ package com.gft.employeeappraisal.builder.dto;
 
 import com.gft.employeeappraisal.builder.ObjectBuilder;
 import com.gft.swagger.employees.model.ApplicationRoleDTO;
+import org.apache.commons.lang.NotImplementedException;
 import org.mockito.Mockito;
 
 import static org.mockito.Mockito.when;
@@ -43,6 +44,11 @@ public class ApplicationRoleDTOBuilder implements ObjectBuilder<ApplicationRoleD
         dto.setName(this.name);
         dto.setDescription(this.description);
         return dto;
+    }
+
+    @Override
+    public ApplicationRoleDTO buildWithDefaults() {
+        throw new NotImplementedException();
     }
 
     @Override

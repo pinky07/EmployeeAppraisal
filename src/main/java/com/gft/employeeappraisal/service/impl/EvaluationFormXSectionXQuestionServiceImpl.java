@@ -28,7 +28,7 @@ public class EvaluationFormXSectionXQuestionServiceImpl implements EvaluationFor
     private AppraisalXEvaluationFormXEmployeeRelationshipRepository appraisalXEvaluationFormXEmployeeRelationshipRepository;
 
     @Override
-    public Stream<EvaluationForm> findEvaluationFormsByAppraisalAndEmployee(Appraisal appraisal, Employee employee) {
+    public Stream<EvaluationForm> findByAppraisalAndEmployee(Appraisal appraisal, Employee employee) {
 //        Stream<EvaluationForm> selfEvaluationForm = Stream.of(this.findSelfEvaluationFormByAppraisalAndEmployee(appraisal, employee));
 //        Stream<EvaluationForm> referenceEvaluationForms = this.findReferenceEvaluationFormsByAppraisalAndEmployee(appraisal, employee);
 //        Stream<EvaluationForm> mentorEvaluationForm = Stream.of(this.findMentorEvaluationFormByAppraisalAndEmployee());
