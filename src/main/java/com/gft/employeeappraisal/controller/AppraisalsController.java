@@ -1,6 +1,6 @@
 package com.gft.employeeappraisal.controller;
 
-import com.gft.employeeappraisal.converter.appraisal.AppraisalDTOMapper;
+import com.gft.employeeappraisal.converter.appraisal.AppraisalDTOConverter;
 import com.gft.employeeappraisal.model.Employee;
 import com.gft.employeeappraisal.service.AppraisalService;
 import com.gft.employeeappraisal.service.EmployeeService;
@@ -37,7 +37,7 @@ public class AppraisalsController implements AppraisalApi {
 	private EmployeeService employeeService;
 
 	@Autowired
-	private AppraisalDTOMapper appraisalDTOMapper;
+	private AppraisalDTOConverter appraisalDTOConverter;
 
 	@Override
 	public ResponseEntity<EvaluationFormDTO> employeesEmployeeIdAppraisalsAppraisalIdFormsFormIdGet(Integer employeeId,
@@ -83,7 +83,7 @@ public class AppraisalsController implements AppraisalApi {
 		List<AppraisalDTO> result = new ArrayList<>();
 		appraisalService
 				.findEmployeeAppraisals(user, null)
-				.forEach(ea -> result.add(appraisalDTOMapper.map(ea)));
+				.forEach(ea -> result.add(appraisalDTOConverter.convert(ea)));
 
 		return new ResponseEntity<>(result, HttpStatus.OK);
 	}

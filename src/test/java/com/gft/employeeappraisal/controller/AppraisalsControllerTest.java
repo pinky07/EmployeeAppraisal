@@ -2,7 +2,7 @@ package com.gft.employeeappraisal.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.gft.employeeappraisal.builder.model.*;
-import com.gft.employeeappraisal.converter.appraisal.AppraisalDTOMapper;
+import com.gft.employeeappraisal.converter.appraisal.AppraisalDTOConverter;
 import com.gft.employeeappraisal.model.*;
 import com.gft.employeeappraisal.service.AppraisalService;
 import com.gft.employeeappraisal.service.EmployeeService;
@@ -60,7 +60,8 @@ public class AppraisalsControllerTest {
 	private EmployeeService employeeService;
 
 	@Autowired
-	private AppraisalDTOMapper appraisalDTOMapper;
+	@SuppressWarnings("unused")
+	private AppraisalDTOConverter appraisalDTOConverter;
 
 	@Autowired
 	private ObjectMapper mapper;
@@ -138,7 +139,7 @@ public class AppraisalsControllerTest {
 	@WithMockUser(USER_EMAIL)
 	public void meAppraisalsGet() throws Exception {
 		doReturn(Stream.of(mockAppraisal())).when(appraisalService)
-				.findEmployeeAppraisals(any(Employee.class), any(EvaluationStatus.class));
+				.findEmployeeAppraisals(any(Employee.class), isNull(EvaluationStatus.class));
 
 		MvcResult result = mockMvc.perform(get(String.format("/me/%s", APPRAISAL_URL))
 				.with(csrf())
@@ -154,7 +155,7 @@ public class AppraisalsControllerTest {
 
 		verify(employeeService, times(1)).getLoggedInUser();
 		verify(appraisalService, times(1)).findEmployeeAppraisals(any(Employee.class),
-				any(EvaluationStatus.class));
+				isNull(EvaluationStatus.class));
 	}
 
 	private Appraisal mockAppraisal() {
@@ -162,6 +163,6 @@ public class AppraisalsControllerTest {
 				.name("Mock Appraisal")
 				.description("Mock Appraisal")
 				.startDate(LocalDateTime.now())
-				.buildMock();
+				.build();
 	}
 }

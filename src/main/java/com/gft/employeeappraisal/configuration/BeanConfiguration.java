@@ -10,7 +10,6 @@ import com.gft.employeeappraisal.converter.validator.EmployeeDTOToEntityCreateVa
 import com.gft.employeeappraisal.service.EmployeeRelationshipService;
 import com.gft.employeeappraisal.service.EmployeeService;
 import ma.glasnost.orika.MapperFactory;
-import ma.glasnost.orika.converter.ConverterFactory;
 import ma.glasnost.orika.impl.DefaultMapperFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -30,13 +29,13 @@ public class BeanConfiguration {
 	 * @return Mapper Factory instance.
 	 */
     @Bean
-    public MapperFactory mapperFactory(EmployeeDTOMapper employeeDTOMapper,
+    public MapperFactory mapperFactory(AppraisalDTOMapper appraisalDTOMapper,
+									   EmployeeDTOMapper employeeDTOMapper,
 									   EmployeeRelationshipDTOMapper employeeRelationshipDTOMapper) {
 		DefaultMapperFactory mapperFactory = new DefaultMapperFactory.Builder().build();
 		mapperFactory.registerMapper(employeeDTOMapper);
 		mapperFactory.registerMapper(employeeRelationshipDTOMapper);
-		ConverterFactory converterFactory = mapperFactory.getConverterFactory();
-		converterFactory.registerConverter(new AppraisalDTOConverter());
+		mapperFactory.registerMapper(appraisalDTOMapper);
 		return mapperFactory;
 	}
 
@@ -57,12 +56,12 @@ public class BeanConfiguration {
 	}
 
 	/**
-	 * Bean instantiation for the bidirectional AppraisalDTO mapper.
-	 * @return AppraisalDTOMapper instance.
+	 * Bean instantiation for the bidirectional AppraisalDTO converter.
+	 * @return AppraisalDTOConverter instance.
 	 */
 	@Bean
-	public AppraisalDTOMapper appraisalDTOMapper(MapperFactory mapperFactory) {
-    	return new AppraisalDTOMapper(mapperFactory);
+	public AppraisalDTOConverter AppraisalDTOConverter(MapperFactory mapperFactory) {
+    	return new AppraisalDTOConverter(mapperFactory);
 	}
 
 	/**
