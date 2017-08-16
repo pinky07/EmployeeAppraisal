@@ -58,6 +58,7 @@ repositories {
 }
 
 ext {
+    gVersion = '4.1'
     springCloudVersion = 'Dalston.SR2'
     hibernateVersion = '5.2.10.Final'
 }
@@ -91,7 +92,6 @@ dependencies {
     compile group: 'org.postgresql', name: 'postgresql', version: '42.1.3' // CI DEV database
 
     // Swagger
-    compile('org.springframework.boot:spring-boot-starter-web')
     compile('io.springfox:springfox-swagger2:2.7.0')
     compile('io.springfox:springfox-swagger-ui:2.7.0')
     compile('com.fasterxml.jackson.datatype:jackson-datatype-jsr310')
@@ -128,3 +128,7 @@ task buildDocker(type: Docker, dependsOn: build) {
     }
     entryPoint(['java', '-Djava.security.egd=file:/dev/./urandom', '-jar', '/app.jar'])
 }
+
+// Avoids distribution version to be changed from ALL to BIN in gradle-wrapper.properties
+wrapper.gradleVersion = gVersion
+wrapper.distributionType = Wrapper.DistributionType.ALL
