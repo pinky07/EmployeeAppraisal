@@ -1,7 +1,8 @@
-package com.gft.employeeappraisal.converter.validator;
+package com.gft.employeeappraisal.validator;
 
 import com.gft.swagger.employees.model.EmployeeDTO;
 import org.springframework.beans.MutablePropertyValues;
+import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.ValidationUtils;
 
@@ -11,6 +12,7 @@ import org.springframework.validation.ValidationUtils;
  *
  * @author Manuel Yepez
  */
+@Component
 public class EmployeeDTOToEntityCreateValidator implements DTOValidator<EmployeeDTO> {
 
 	private MutablePropertyValues values;

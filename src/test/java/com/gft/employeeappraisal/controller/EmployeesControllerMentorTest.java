@@ -71,7 +71,7 @@ public class EmployeesControllerMentorTest {
 	@Autowired
 	private ObjectMapper mapper;
 
-	@MockBean(reset = MockReset.AFTER)
+	@Autowired
 	private EmployeeDTOConverter employeeDTOConverter;
 
 	@MockBean(reset = MockReset.AFTER)
@@ -114,7 +114,6 @@ public class EmployeesControllerMentorTest {
 		//mentor lookup
 		Employee mockMentor = mockMentor();
 		when(employeeService.findCurrentMentorById(anyInt())).thenReturn(Optional.of(mockMentor));
-		doReturn(mockMentorDTO).when(employeeDTOConverter).convert(any(Employee.class));
 
 		MvcResult result = mockMvc.perform(get(String.format("%s/%d/mentor", EMPLOYEES_URL, mockEmployeeDTO.getId()))
 				.with(csrf())
@@ -122,7 +121,6 @@ public class EmployeesControllerMentorTest {
 		).andExpect(status().isOk()).andReturn();
 
 		verify(employeeService, times(1)).findCurrentMentorById(anyInt());
-		verify(employeeDTOConverter, times(1)).convert(any(Employee.class));
 
 		EmployeeDTO resultDTO = mapper.readValue(result.getResponse().getContentAsString(),
 				EmployeeDTO.class);
@@ -140,7 +138,6 @@ public class EmployeesControllerMentorTest {
 		).andExpect(status().isNotFound()).andReturn();
 
 		verify(employeeService, times(1)).findCurrentMentorById(anyInt());
-		verify(employeeDTOConverter, never()).convert(any(Employee.class));
 
 		EmployeeDTO resultDTO = mapper.readValue(result.getResponse().getContentAsString(), EmployeeDTO.class);
 
@@ -161,7 +158,6 @@ public class EmployeesControllerMentorTest {
 		).andExpect(status().isBadRequest()).andReturn();
 
 		verify(employeeService, never()).findCurrentMentorById(anyInt());
-		verify(employeeDTOConverter, never()).convert(any(Employee.class));
 
 		assertTrue(StringUtils.isEmpty(result.getResponse().getContentAsString()));
 	}

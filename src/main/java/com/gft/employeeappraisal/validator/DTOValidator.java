@@ -1,4 +1,4 @@
-package com.gft.employeeappraisal.converter.validator;
+package com.gft.employeeappraisal.validator;
 
 import org.springframework.beans.MutablePropertyValues;
 import org.springframework.validation.Validator;

@@ -1007,6 +1007,58 @@ definitions:
         type: string
       description:
         type: string
+      sections:
+        type: array
+        items:
+          $ref: '#/definitions/EvaluationFormSectionDTO'
+
+  EvaluationFormSectionDTO:
+   type: object
+   properties:
+      id:
+        type: integer
+      name:
+        type: string
+      description:
+        type: string
+      questions:
+        type: array
+        items:
+          $ref: '#/definitions/EvaluationFormQuestionDTO'
+
+  EvaluationFormQuestionDTO:
+    type: object
+    properties:
+      id:
+        type: integer
+      name:
+        type: string
+      description:
+        type: string
+      scoreType:
+        $ref: '#/definitions/ScoreTypeDTO'
+
+  ScoreTypeDTO:
+    type: object
+    properties:
+      id:
+        type: integer
+      definition:
+        type: string
+      values:
+        type: array
+        items:
+          $ref: '#/definitions/ScoreValueDTO'
+
+  ScoreValueDTO:
+    type: object
+    properties:
+      id:
+        type: integer
+      value:
+        type: string
+      description:
+        type: string
 
   Pagination:
     type: array

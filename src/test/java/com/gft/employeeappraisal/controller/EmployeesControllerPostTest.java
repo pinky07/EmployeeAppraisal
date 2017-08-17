@@ -56,7 +56,8 @@ public class EmployeesControllerPostTest {
 	@Autowired
 	private ObjectMapper mapper;
 
-	@MockBean(reset = MockReset.AFTER)
+	@Autowired
+	@SuppressWarnings("unused")
 	private EmployeeDTOConverter employeeDTOConverter;
 
 	@MockBean(reset = MockReset.AFTER)
@@ -87,7 +88,6 @@ public class EmployeesControllerPostTest {
 	public void employeesPost() throws Exception {
 		when(employeeService.findByEmail(anyString())).thenReturn(Optional.empty());
 		when(employeeService.saveAndFlush(any(Employee.class))).thenReturn(Optional.of(mockEmployee()));
-		doReturn(mockEmployeeDTO).when(employeeDTOConverter).convert(any(Employee.class));
 
 		MvcResult result = mockMvc.perform(post(EMPLOYEES_URL)
 				.with(csrf())
@@ -99,7 +99,6 @@ public class EmployeesControllerPostTest {
 
 		verify(employeeService, times(1)).findByEmail(anyString());
 		verify(employeeService, times(1)).saveAndFlush(any(Employee.class));
-		verify(employeeDTOConverter, times(1)).convert(any(Employee.class));
 
 		EmployeeDTO resultEmployeeDTO = mapper.convertValue(resultDTO.getData(), EmployeeDTO.class);
 		assertEquals(Constants.SUCCESS, resultDTO.getMessage());
@@ -119,7 +118,6 @@ public class EmployeesControllerPostTest {
 
 		verify(employeeService, times(1)).findByEmail(anyString());
 		verify(employeeService, never()).saveAndFlush(any(Employee.class));
-		verify(employeeDTOConverter, never()).convert(any(Employee.class));
 
 		OperationResultDTO resultDTO = mapper.readValue(result.getResponse().getContentAsString(), OperationResultDTO.class);
 		assertEquals(Constants.ERROR, resultDTO.getMessage());
@@ -137,7 +135,6 @@ public class EmployeesControllerPostTest {
 
 		verify(employeeService, never()).findByEmail(anyString());
 		verify(employeeService, never()).saveAndFlush(any(Employee.class));
-		verify(employeeDTOConverter, never()).convert(any(Employee.class));
 
 		OperationResultDTO resultDTO = mapper.readValue(result.getResponse().getContentAsString(), OperationResultDTO.class);
 		assertNull(resultDTO.getData());

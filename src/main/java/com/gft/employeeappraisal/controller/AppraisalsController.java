@@ -1,10 +1,12 @@
 package com.gft.employeeappraisal.controller;
 
-import com.gft.employeeappraisal.converter.appraisal.AppraisalDTOMapper;
+import com.gft.employeeappraisal.converter.appraisal.AppraisalDTOConverter;
+import com.gft.employeeappraisal.converter.evaluationform.EvaluationFormDTOConverter;
 import com.gft.employeeappraisal.exception.AppraisalNotFoundException;
 import com.gft.employeeappraisal.model.Appraisal;
+import com.gft.employeeappraisal.model.AppraisalXEvaluationForm;
+import com.gft.employeeappraisal.model.AppraisalXEvaluationFormXEmployeeRelationship;
 import com.gft.employeeappraisal.model.Employee;
-import com.gft.employeeappraisal.model.EvaluationFormXSectionXQuestion;
 import com.gft.employeeappraisal.service.AppraisalService;
 import com.gft.employeeappraisal.service.AppraisalXEvaluationFormXEmployeeRelationshipService;
 import com.gft.employeeappraisal.service.EmployeeService;
@@ -22,7 +24,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -46,7 +47,10 @@ public class AppraisalsController implements AppraisalApi {
     private AppraisalXEvaluationFormXEmployeeRelationshipService appraisalXEvaluationFormXEmployeeRelationshipService;
 
     @Autowired
-    private AppraisalDTOMapper appraisalDTOMapper;
+    private AppraisalDTOConverter appraisalDTOConverter;
+
+    @Autowired
+    private EvaluationFormDTOConverter evaluationFormDTOConverter;
 
     @Override
     public ResponseEntity<EvaluationFormDTO> employeesEmployeeIdAppraisalsAppraisalIdFormsFormIdGet(Integer employeeId,
@@ -92,7 +96,7 @@ public class AppraisalsController implements AppraisalApi {
         List<AppraisalDTO> result = new ArrayList<>();
         appraisalService
                 .findEmployeeAppraisals(user, null)
-                .forEach(ea -> result.add(appraisalDTOMapper.map(ea)));
+                .forEach(ea -> result.add(appraisalDTOConverter.convert(ea)));
 
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
@@ -117,17 +121,15 @@ public class AppraisalsController implements AppraisalApi {
                         "Appraisal with id %d was not found", appraisalId)));
 
         // Get Evaluation Forms
-        List<Set<EvaluationFormXSectionXQuestion>> evaluationForms = this.appraisalXEvaluationFormXEmployeeRelationshipService.findByAppraisalAndEmployee(
+        List<EvaluationFormDTO> result = this.appraisalXEvaluationFormXEmployeeRelationshipService.findByAppraisalAndEmployee(
                 appraisal,
                 user)
-                .map(appraisalXEvaluationFormXEmployeeRelationship -> appraisalXEvaluationFormXEmployeeRelationship.getAppraisalXEvaluationForm())
-                .map(appraisalXEvaluationForm -> appraisalXEvaluationForm.getEvaluationForm())
-                .map(evaluationForm -> evaluationForm.getEvaluationFormXSectionXQuestions())
+                .map(AppraisalXEvaluationFormXEmployeeRelationship::getAppraisalXEvaluationForm)
+                .map(AppraisalXEvaluationForm::getEvaluationForm)
+                .map(evaluationForm -> evaluationFormDTOConverter.convert(evaluationForm))
                 .collect(Collectors.toList());
 
-        // TODO Convert the list to DTOs
-
-        return null;
+        return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
     /**

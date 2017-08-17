@@ -14,6 +14,8 @@ import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 
 /**
+ * Defines a mapping structure to be used by {@link EmployeeRelationshipDTOConverter}.
+ *
  * @author Manuel Yepez
  */
 @Component
@@ -22,6 +24,8 @@ public class EmployeeRelationshipDTOMapper extends CustomMapper<EmployeeRelation
 	@Override
 	public void mapAtoB(EmployeeRelationship employeeRelationship, EmployeeRelationshipDTO employeeRelationshipDTO,
 						MappingContext context) {
+		employeeRelationshipDTO.setId(employeeRelationship.getId());
+		employeeRelationshipDTO.setStartDate(OffsetDateTime.of(employeeRelationship.getStartDate(), ZoneOffset.UTC));
 		if (employeeRelationship.getEndDate() != null) {
 			employeeRelationshipDTO.setEndDate(OffsetDateTime.of(employeeRelationship.getEndDate(), ZoneOffset.UTC));
 		}
@@ -35,6 +39,9 @@ public class EmployeeRelationshipDTOMapper extends CustomMapper<EmployeeRelation
 	@Override
 	public void mapBtoA(EmployeeRelationshipDTO employeeRelationshipDTO, EmployeeRelationship employeeRelationship,
 						MappingContext context) {
+		if (employeeRelationshipDTO.getId() > 0) {
+			employeeRelationship.setId(employeeRelationshipDTO.getId());
+		}
 		employeeRelationship.setStartDate(employeeRelationshipDTO.getStartDate().toLocalDateTime());
 		if (employeeRelationshipDTO.getEndDate() != null) {
 			employeeRelationship.setStartDate(employeeRelationshipDTO.getEndDate().toLocalDateTime());

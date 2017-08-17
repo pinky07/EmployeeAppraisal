@@ -2,8 +2,8 @@ package com.gft.employeeappraisal.controller;
 
 import com.gft.employeeappraisal.converter.employee.EmployeeDTOConverter;
 import com.gft.employeeappraisal.converter.employeerelationship.EmployeeRelationshipDTOConverter;
-import com.gft.employeeappraisal.converter.validator.DTOValidator;
-import com.gft.employeeappraisal.converter.validator.EmployeeDTOToEntityCreateValidator;
+import com.gft.employeeappraisal.validator.DTOValidator;
+import com.gft.employeeappraisal.validator.EmployeeDTOToEntityCreateValidator;
 import com.gft.employeeappraisal.exception.EmployeeNotFoundException;
 import com.gft.employeeappraisal.model.Constants;
 import com.gft.employeeappraisal.model.Employee;

@@ -14,8 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
- * Mapper class for processing the conversion between Employees and their respective DTO.
- * Using a BoundMapper increases performance according to Orika's authors.
+ * Defines a mapping structure to be used by {@link EmployeeDTOConverter}.
  *
  * @author Manuel Yepez
  */
@@ -49,7 +48,9 @@ public class EmployeeDTOMapper extends CustomMapper<Employee, EmployeeDTO> {
 
 	@Override
 	public void mapBtoA(EmployeeDTO employeeDTO, Employee employee, MappingContext context) {
-		employee.setId(employeeDTO.getId());
+		if (employeeDTO.getId() > 0) {
+			employee.setId(employeeDTO.getId());
+		}
 		employee.setFirstName(employeeDTO.getFirstName());
 		employee.setLastName(employeeDTO.getLastName());
 		employee.setEmail(employeeDTO.getEmail());

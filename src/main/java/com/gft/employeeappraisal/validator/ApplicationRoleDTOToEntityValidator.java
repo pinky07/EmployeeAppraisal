@@ -1,4 +1,4 @@
-package com.gft.employeeappraisal.converter.validator;
+package com.gft.employeeappraisal.validator;
 
 import com.gft.swagger.employees.model.ApplicationRoleDTO;
 import org.springframework.beans.MutablePropertyValues;

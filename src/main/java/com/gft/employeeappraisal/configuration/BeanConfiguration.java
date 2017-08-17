@@ -1,20 +1,21 @@
 package com.gft.employeeappraisal.configuration;
 
-import com.gft.employeeappraisal.converter.appraisal.AppraisalDTOConverter;
 import com.gft.employeeappraisal.converter.appraisal.AppraisalDTOMapper;
-import com.gft.employeeappraisal.converter.employee.EmployeeDTOConverter;
 import com.gft.employeeappraisal.converter.employee.EmployeeDTOMapper;
-import com.gft.employeeappraisal.converter.employeerelationship.EmployeeRelationshipDTOConverter;
 import com.gft.employeeappraisal.converter.employeerelationship.EmployeeRelationshipDTOMapper;
-import com.gft.employeeappraisal.converter.validator.EmployeeDTOToEntityCreateValidator;
-import com.gft.employeeappraisal.service.EmployeeRelationshipService;
-import com.gft.employeeappraisal.service.EmployeeService;
+import com.gft.employeeappraisal.converter.evaluationFormQuestion.EvaluationFormQuestionDTOMapper;
+import com.gft.employeeappraisal.converter.evaluationFormSection.EvaluationFormSectionDTOMapper;
+import com.gft.employeeappraisal.converter.evaluationform.EvaluationFormDTOMapper;
+import com.gft.employeeappraisal.converter.scoretype.ScoreTypeDTOMapper;
+import ma.glasnost.orika.CustomMapper;
 import ma.glasnost.orika.MapperFactory;
-import ma.glasnost.orika.converter.ConverterFactory;
 import ma.glasnost.orika.impl.DefaultMapperFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
+
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * Container class that keeps track of bean instantiations necessary for the EmployeeAppraisal microservice.
@@ -25,65 +26,48 @@ import org.springframework.context.support.ReloadableResourceBundleMessageSource
 @Configuration
 public class BeanConfiguration {
 
-	/**
-	 * Bean instantiation for Orika's mapper factory.
-	 * @return Mapper Factory instance.
-	 */
+    /**
+     * Bean instantiation for Orika's mapper factory.
+     *
+     * @return Mapper Factory instance.
+     */
     @Bean
-    public MapperFactory mapperFactory(EmployeeDTOMapper employeeDTOMapper,
-									   EmployeeRelationshipDTOMapper employeeRelationshipDTOMapper) {
-		DefaultMapperFactory mapperFactory = new DefaultMapperFactory.Builder().build();
-		mapperFactory.registerMapper(employeeDTOMapper);
-		mapperFactory.registerMapper(employeeRelationshipDTOMapper);
-		ConverterFactory converterFactory = mapperFactory.getConverterFactory();
-		converterFactory.registerConverter(new AppraisalDTOConverter());
-		return mapperFactory;
-	}
+    public MapperFactory mapperFactory(
+            AppraisalDTOMapper appraisalDTOMapper,
+            EmployeeDTOMapper employeeDTOMapper,
+            EmployeeRelationshipDTOMapper employeeRelationshipDTOMapper,
+            EvaluationFormDTOMapper evaluationFormDTOMapper,
+            EvaluationFormQuestionDTOMapper evaluationFormQuestionDTOMapper,
+            EvaluationFormSectionDTOMapper evaluationFormSectionDTOMapper,
+            ScoreTypeDTOMapper scoreTypeDTOMapper
+    ) {
 
-	@Bean
-	public EmployeeDTOMapper employeeDTOMapper(EmployeeService employeeService,
-											   EmployeeRelationshipService employeeRelationshipService) {
-    	return new EmployeeDTOMapper(employeeService, employeeRelationshipService);
-	}
+        List<CustomMapper<?, ?>> mappers = Arrays.asList(
+                appraisalDTOMapper,
+                employeeDTOMapper,
+                employeeRelationshipDTOMapper,
+                evaluationFormDTOMapper,
+                evaluationFormQuestionDTOMapper,
+                evaluationFormSectionDTOMapper,
+                scoreTypeDTOMapper
+        );
 
-	@Bean
-	public EmployeeDTOConverter employeeDTOConverter(MapperFactory mapperFactory) {
-    	return new EmployeeDTOConverter(mapperFactory);
-	}
+        DefaultMapperFactory mapperFactory = new DefaultMapperFactory.Builder().build();
+        mappers.forEach(mapperFactory::registerMapper);
+        return mapperFactory;
+    }
 
-	@Bean
-	public EmployeeRelationshipDTOConverter employeeRelationshipDTOConverter(MapperFactory mapperFactory) {
-    	return new EmployeeRelationshipDTOConverter(mapperFactory);
-	}
-
-	/**
-	 * Bean instantiation for the bidirectional AppraisalDTO mapper.
-	 * @return AppraisalDTOMapper instance.
-	 */
-	@Bean
-	public AppraisalDTOMapper appraisalDTOMapper(MapperFactory mapperFactory) {
-    	return new AppraisalDTOMapper(mapperFactory);
-	}
-
-	/**
-	 * Bean instantiation for the validator used on Employee creation endpoints.
-	 * @return EmployeeDTOToEntityCreateValidator instance.
-	 */
-	@Bean
-	public EmployeeDTOToEntityCreateValidator employeeDTOToEntityCreateValidator() {
-    	return new EmployeeDTOToEntityCreateValidator();
-	}
-
-	/**
-	 * Bean instantiation for the reloadable message source used for system messages.
-	 * Changes made on the messages.properties file are reloaded without needing to restart the server.
-	 * @return MessageSource instance.
-	 */
-	@Bean
-	public ReloadableResourceBundleMessageSource messageSource() {
-    	ReloadableResourceBundleMessageSource messageSource = new ReloadableResourceBundleMessageSource();
-    	messageSource.setBasename("classpath:i18n/messages");
-    	messageSource.setDefaultEncoding("UTF-8");
-    	return messageSource;
-	}
+    /**
+     * Bean instantiation for the reloadable message source used for system messages.
+     * Changes made on the messages.properties file are reloaded without needing to restart the server.
+     *
+     * @return MessageSource instance.
+     */
+    @Bean
+    public ReloadableResourceBundleMessageSource messageSource() {
+        ReloadableResourceBundleMessageSource messageSource = new ReloadableResourceBundleMessageSource();
+        messageSource.setBasename("classpath:i18n/messages");
+        messageSource.setDefaultEncoding("UTF-8");
+        return messageSource;
+    }
 }
