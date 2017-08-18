@@ -11,7 +11,7 @@ info:
   version: 1.0.0
 
 # URL Information
-host: example.com
+host: example.gft.com
 schemes:
   - https
 
@@ -31,17 +31,22 @@ security:
 # Endpoints
 paths:
 
-###################################################################################################
-# /me #############################################################################################
-###################################################################################################
+########################################################################################################################
+# /me ##################################################################################################################
+########################################################################################################################
 
   '/me':
+
+    ###########
+    # GET #####
+    ###########
+
     get:
       tags:
       - Me
       summary: |
         Provides information about the authenticated user.
-      description: >
+      description: |
         Returns an `Employee` with information about the authenticated user.
       operationId: meGet
       produces:
@@ -49,27 +54,32 @@ paths:
       responses:
         '200':
           description: |
-            Successful request.
+            Successful.
           schema:
             $ref: '#/definitions/EmployeeDTO'
         '403':
           description: |
-            The user isn't authenticated.
+            The user isn't authenticated or authorized to perform this action.
         '404':
           description: |
             The user is authenticated, but is not yet registered in the system.
 
-###################################################################################################
-# /me/appraisals ##################################################################################
-###################################################################################################
+########################################################################################################################
+# /me/appraisals #######################################################################################################
+########################################################################################################################
 
   '/me/appraisals':
+
+    ###########
+    # GET #####
+    ###########
+
     get:
       tags:
       - Appraisal
       summary: |
         Provides a list of appraisals for the authenticated user.
-      description: >
+      description: |
         Returns a list of `Appraisal` belonging to the authenticated user.
       operationId: meAppraisalsGet
       produces:
@@ -83,36 +93,41 @@ paths:
           items:
             type: string
           description: |
-            Filter for obtaining the appraisals in which the employee has participated or pending appraisals.
-            Having no parameter will return all the appraisals, both pending and done.
+            Filter for obtaining the appraisals in which the employee has participated or pending appraisals. Having no
+            parameter will return all the appraisals, both pending and done.
       responses:
         '200':
           description: |
-            Successful request.
+            Successful.
           schema:
             type: array
             items:
               $ref: '#/definitions/AppraisalDTO'
         '403':
           description: |
-            The user isn't authenticated.
+            The user isn't authenticated or authorized to perform this action.
         '404':
           description: |
             The user is authenticated, but is not yet registered in the system.
 
-###################################################################################################
-# /me/appraisals/:id ##############################################################################
-###################################################################################################
+########################################################################################################################
+# /me/appraisals/:id ###################################################################################################
+########################################################################################################################
 
   '/me/appraisals/{appraisalId}':
+
+    ###########
+    # GET #####
+    ###########
+
     get:
       tags:
       - Appraisal
       summary: |
         Provides a specific appraisal for the authenticated user.
-      description: >
+      description: |
         Returns an `Appraisal` belonging to the authenticated user.
-      operationId: meAppraisalsAppraisalIdGet
+      operationId: meAppraisalsIdGet
       produces:
         - application/json
       parameters:
@@ -125,29 +140,34 @@ paths:
       responses:
         '200':
           description: |
-            Successful request.
+            Successful.
           schema:
             $ref: '#/definitions/AppraisalDTO'
         '403':
           description: |
-            The user isn't authenticated or tried to retrieve an appraisal to which he does not have permission.
+            The user isn't authenticated or authorized to perform this action.
         '404':
           description: |
             Appraisal not found in the system.
 
-###################################################################################################
-# /me/appraisals/:id/forms ########################################################################
-###################################################################################################
+########################################################################################################################
+# /me/appraisals/:id/forms #############################################################################################
+########################################################################################################################
 
   '/me/appraisals/{appraisalId}/forms':
+
+    ###########
+    # GET #####
+    ###########
+
     get:
       tags:
       - Appraisal
       summary: |
         Provides a list of `EvaluationForm` of a specific appraisal for the authenticated user.
-      description: >
+      description: |
         Returns a list of `EvaluationForm` belonging to the authenticated user.
-      operationId: meAppraisalsAppraisalIdFormsGet
+      operationId: meAppraisalsIdFormsGet
       produces:
         - application/json
       parameters:
@@ -160,31 +180,36 @@ paths:
       responses:
         '200':
           description: |
-            Successful request.
+            Successful.
           schema:
             type: array
             items:
               $ref: '#/definitions/EvaluationFormDTO'
         '403':
           description: |
-            The user isn't authenticated or tried to retrieve an appraisal to which he does not have permission.
+            The user isn't authenticated or authorized to perform this action.
         '404':
           description: |
             Appraisal not found in the system.
 
-###################################################################################################
-# /me/appraisals/:id/forms/:id ####################################################################
-###################################################################################################
+########################################################################################################################
+# /me/appraisals/:id/forms/:id #########################################################################################
+########################################################################################################################
 
   '/me/appraisals/{appraisalId}/forms/{formId}':
+
+    ###########
+    # GET #####
+    ###########
+
     get:
       tags:
       - Appraisal
       summary: |
         Provides a specific `EvaluationForm` of a specific appraisal for the authenticated user.
-      description: >
+      description: |
         Returns a particular `EvaluationForm` belonging to the authenticated user.
-      operationId: meAppraisalsAppraisalIdFormsFormIdGet
+      operationId: meAppraisalsIdFormsIdGet
       produces:
         - application/json
       parameters:
@@ -203,21 +228,26 @@ paths:
       responses:
         '200':
           description: |
-            Successful request.
+            Successful.
           schema:
             $ref: '#/definitions/EvaluationFormDTO'
         '403':
           description: |
-            The user isn't authenticated or tried to retrieve an EvaluationForm to which he does not have permission.
+            The user isn't authenticated or authorized to perform this action.
         '404':
           description: |
             Appraisal or EvaluationForm not found in the system.
 
-###################################################################################################
-# /me/mentor ######################################################################################
-###################################################################################################
+########################################################################################################################
+# /me/mentor ###########################################################################################################
+########################################################################################################################
 
   '/me/mentor':
+
+    ###########
+    # GET #####
+    ###########
+
     get:
       tags:
       - Me
@@ -231,21 +261,26 @@ paths:
       responses:
         '200':
           description: |
-            Successful request.
+            Successful.
           schema:
             $ref: '#/definitions/EmployeeDTO'
         '403':
           description: |
-            The user isn't authenticated.
+            The user isn't authenticated or authorized to perform this action.
         '404':
           description: |
             The user is authenticated, but is not yet registered in the system.
 
-###################################################################################################
-# /me/mentees #####################################################################################
-###################################################################################################
+########################################################################################################################
+# /me/mentees ##########################################################################################################
+########################################################################################################################
 
   '/me/mentees':
+
+    ###########
+    # GET #####
+    ###########
+
     get:
       tags:
       - Me
@@ -259,23 +294,28 @@ paths:
       responses:
         '200':
           description: |
-            Successful request.
+            Successful.
           schema:
             type: array
             items:
               $ref: '#/definitions/EmployeeDTO'
         '403':
           description: |
-            The user isn't authenticated.
+            The user isn't authenticated or authorized to perform this action.
         '404':
           description: |
             The user is authenticated, but is not yet registered in the system.
 
-###################################################################################################
-# /me/peers #######################################################################################
-###################################################################################################
+########################################################################################################################
+# /me/peers ############################################################################################################
+########################################################################################################################
 
   '/me/peers':
+
+    ###########
+    # GET #####
+    ###########
+
     get:
       tags:
       - Me
@@ -289,23 +329,28 @@ paths:
       responses:
         '200':
           description: |
-            Successful request.
+            Successful.
           schema:
             type: array
             items:
               $ref: '#/definitions/EmployeeDTO'
         '403':
           description: |
-            The user isn't authenticated.
+            The user isn't authenticated or authorized to perform this action.
         '404':
           description: |
             The user is authenticated, but is not yet registered in the system.
 
-###################################################################################################
-# /employees ######################################################################################
-###################################################################################################
+########################################################################################################################
+# /employees ###########################################################################################################
+########################################################################################################################
 
   '/employees':
+
+    ###########
+    # GET #####
+    ###########
+
     get:
       tags:
       - Employee
@@ -334,23 +379,27 @@ paths:
       responses:
         '200':
           description: |
-            Successful request.
+            Successful.
           schema:
             type: array
             items:
               $ref: '#/definitions/EmployeeDTO'
         '403':
           description: |
-            The user isn't authenticated or doesn't have the **Admin** applicationRole.
+            The user isn't authenticated or authorized to perform this action.
+
+    ###########
+    # POST ####
+    ###########
+
     post:
       tags:
       - Employee
       summary: |
         Registers a new employee.
-      description: >
-        Registers a new `Employee`. Users with the **Admin** applicationRole, can
-        register any users. Otherwise they can only register themselves and will get
-        an error if they try to register any other users.
+      description: |
+        Registers a new `Employee`. Users with the **Admin** applicationRole, can register any users. Otherwise they can
+        only register themselves and will get an error if they try to register any other users.
       operationId: employeesPost
       consumes:
         - application/json
@@ -367,7 +416,7 @@ paths:
       responses:
         '201':
           description: |
-            New `Employee` registered.
+            Successful.
           schema:
             $ref: '#/definitions/OperationResultDTO'
           headers:
@@ -382,21 +431,25 @@ paths:
             $ref: '#/definitions/OperationResultDTO'
         '403':
           description: |
-            The user isn't authenticated or doesn't have the **Admin** applicationRole.
+            The user isn't authenticated or authorized to perform this action.
         '422':
           description: |
-            A user with the same GFT Identifier already exists.
+            Entity already exists.
           schema:
             $ref: '#/definitions/OperationResultDTO'
+
+    ###########
+    # PUT #####
+    ###########
+
     put:
       tags:
       - Employee
       summary: |
         Registers or updates an employee.
-      description: >
-        Registers or updates an `Employee`. If the user has the **Admin** applicationRole,
-        they can create or update any users. Otherwise they can only create or
-        update themselves and will get an error if they try to create or update
+      description: |
+        Registers or updates an `Employee`. If the user has the **Admin** applicationRole, they can create or update any
+        users. Otherwise they can only create or update themselves and will get an error if they try to create or update
         any other users.
       operationId: employeesPut
       consumes:
@@ -412,27 +465,30 @@ paths:
       responses:
         '200':
           description: |
-            Successful request.
+            Successful.
         '403':
-          description: >
-            The user isn't authenticated or doesn't have the **Admin** applicationRole and is trying
-            to register or update an user other than himself.
+          description: |
+            The user isn't authenticated or authorized to perform this action.
 
-###################################################################################################
-# /employees/{employeeId} #########################################################################
-###################################################################################################
+########################################################################################################################
+# /employees/{employeeId} ##############################################################################################
+########################################################################################################################
 
   '/employees/{employeeId}':
+
+    ###########
+    # GET #####
+    ###########
+
     get:
       tags:
       - Employee
       summary: |
         Returns an employee.
-      description: >
-        Returns an `Employee` with the specified Id. If the user has the
-        **Admin** applicationRole, they can retrieve information from any `Employee`.
-        Otherwise they can only retrieve information on themselves.
-      operationId: employeesEmployeeIdGet
+      description: |
+        Returns an `Employee` with the specified Id. If the user has the **Admin** applicationRole, they can retrieve
+        information from any `Employee`. Otherwise they can only retrieve information on themselves.
+      operationId: employeesIdGet
       produces:
         - application/json
       parameters:
@@ -445,26 +501,29 @@ paths:
       responses:
         '200':
           description: |
-            OK
+            Successful.
           schema:
             $ref: '#/definitions/EmployeeDTO'
         '403':
-          description: >
-            The user isn't authenticated or doesn't have the **Admin** applicationRole and is trying
-            to get information of an user other than themself.
+          description: |
+            The user isn't authenticated or authorized to perform this action.
         '404':
           description: |
             An `Employee` with the specified Id was not found.
+
+    ###########
+    # PUT #####
+    ###########
+
     put:
       tags:
       - Employee
       summary: |
         Updates a specific employee.
-      description: >
-        Updates an `Employee`. If the user has the **Admin** applicationRole, they can update any users.
-        Otherwise they can only update themselves and will get an error if they try to update
-        any other users.
-      operationId: employeesEmployeeIdPut
+      description: |
+        Updates an `Employee`. If the user has the **Admin** applicationRole, they can update any users. Otherwise they
+        can only update themselves and will get an error if they try to update any other users.
+      operationId: employeesIdPut
       consumes:
         - application/json
       parameters:
@@ -478,49 +537,58 @@ paths:
       responses:
         '200':
           description: |
-            Successful request.
+            Successful.
         '403':
-          description: >
-            The user isn't authenticated or doesn't have the **Admin** applicationRole and is trying
-            to register or update an user other than themself.
+          description: |
+            The user isn't authenticated or authorized to perform this action.
         '404':
           description: |
             An `Employee` with the specified Id was not found.
+
+    ###########
+    # DELETE ##
+    ###########
+
     delete:
       tags:
       - Employee
       summary: |
         Deletes a specific employee.
-      description: >
-        Deletes an `Employee`. If the user has the **Admin** applicationRole, they can delete any users.
-        Other users can't delete themselves.
-      operationId: employeesEmployeeIdDelete
+      description: |
+        Deletes an `Employee`. If the user has the **Admin** applicationRole, they can delete any users. Other users
+        can't delete themselves.
+      operationId: employeesIdDelete
       responses:
         '200':
           description: |
-            Successful request.
+            Successful.
         '403':
-          description: >
-            The user isn't authenticated or doesn't have the **Admin** applicationRole.
+          description: |
+            The user isn't authenticated or authorized to perform this action.
         '404':
           description: |
             An `Employee` with the specified Id was not found.
 
-###################################################################################################
-# /employees/{employeeId}/mentees #################################################################
-###################################################################################################
+########################################################################################################################
+# /employees/{employeeId}/mentees ######################################################################################
+########################################################################################################################
 
   '/employees/{employeeId}/mentees':
+
+    ###########
+    # GET #####
+    ###########
+
     get:
       tags:
       - Employee
       summary: |
         Returns the employee mentees.
-      description: >
-        Returns the mentees associated to an specified `Employee`. An user with the **Admin** applicationRole
-        can see the mentees of any `Employee`. An user with the **Mentor** applicationRole can only see their
-        own mentees. Any other user can't access this endpoint.
-      operationId: employeesEmployeeIdMenteesGet
+      description: |
+        Returns the mentees associated to an specified `Employee`. An user with the **Admin** application role can see
+        the mentees of any `Employee`. An user with the **Mentor** applicationRole can only see their own mentees. Any
+        other user can't access this endpoint.
+      operationId: employeesIdMenteesGet
       produces:
         - application/json
       parameters:
@@ -533,13 +601,18 @@ paths:
       responses:
         '200':
           description: |
-            Successful request.
+            Successful.
         '403':
           description: |
-            The user isn't authenticated or is trying to access resources not authorized to.
+            The user isn't authenticated or authorized to perform this action.
         '404':
           description: |
             An `Employee` with the specified Id was not found.
+
+    ###########
+    # POST #####
+    ###########
+
     post:
       tags:
       - Employee
@@ -547,7 +620,7 @@ paths:
         Add a mentee to an employee.
       description: |
         Adds a mentee to an `Employee`. Only users with the **Admin** can perform this action.
-      operationId: employeesEmployeeIdMenteesPost
+      operationId: employeesIdMenteesPost
       parameters:
         - in: path
           name: employeeId
@@ -558,28 +631,36 @@ paths:
       responses:
         '200':
           description: |
-            Successful request.
+            Successful.
         '403':
           description: |
-            The user isn't authenticated or doesn't have the **Admin** applicationRole.
+            The user isn't authenticated or authorized to perform this action.
         '404':
           description: |
             An `Employee` with the specified Id was not found.
+        '422':
+          description: |
+            Entity already exists.
 
-##################################################################################################
-# /employees/{employeeId}/mentor #################################################################
-##################################################################################################
+########################################################################################################################
+# /employees/{employeeId}/mentor #######################################################################################
+########################################################################################################################
 
   '/employees/{employeeId}/mentor':
+
+    ###########
+    # GET #####
+    ###########
+
     get:
       tags:
       - Employee
       summary: |
         Returns the mentor associated to the employee.
-      description: >
-        Returns the mentor associated to an specified `Employee`. An user with the **Admin**
-        applicationRole can see the mentor of any `Employee`. Any other user can only obtain his own mentor.
-      operationId: employeesEmployeeIdMentorGet
+      description: |
+        Returns the mentor associated to an specified `Employee`. An user with the **Admin** application role can see
+        the mentor of any `Employee`. Any other user can only obtain his own mentor.
+      operationId: employeesIdMentorGet
       produces:
         - application/json
       parameters:
@@ -592,24 +673,28 @@ paths:
       responses:
         '200':
           description: |
-            Successful request.
+            Successful.
           schema:
             $ref: '#/definitions/EmployeeDTO'
         '403':
           description: |
-            The user isn't authenticated or is trying to access resources not authorized to.
+            The user isn't authenticated or authorized to perform this action.
         '404':
           description: |
             An `Employee` with the specified Id was not found.
+
+    ###########
+    # PUT #####
+    ###########
+
     put:
       tags:
       - Employee
       summary: |
         Associates a mentor to the employee.
-      description: >
-        Associates a mentor to an specified `Employee`. Can only be used by an user with the
-        **Admin** applicationRole.
-      operationId: employeesEmployeeIdMentorPut
+      description: |
+        Associates a mentor to an specified `Employee`. Can only be used by an user with the **Admin** applicationRole.
+      operationId: employeesIdMentorPut
       consumes:
         - application/json
       produces:
@@ -631,7 +716,7 @@ paths:
       responses:
         '200':
           description: |
-            Successful request.
+            Successful.
           schema:
             $ref: '#/definitions/OperationResultDTO'
         '400':
@@ -641,25 +726,217 @@ paths:
             $ref: '#/definitions/OperationResultDTO'
         '403':
           description: |
-            The user isn't authenticated or is trying to access resources not authorized to.
+            The user isn't authenticated or authorized to perform this action.
         '404':
           description: |
             An `Employee` with the specified Id was not found.
 
-##################################################################################################
-# /employees/{employeeId}/relationships ##########################################################
-##################################################################################################
+########################################################################################################################
+# /employees/{employeeId}/appraisals ###################################################################################
+########################################################################################################################
+
+  '/employees/{employeeId}/appraisals':
+
+    ###########
+    # GET #####
+    ###########
+
+    get:
+      tags:
+      - Appraisal
+      summary: |
+        Returns the appraisals of the specified employee.
+      description: |
+        Returns an `Appraisal` list belonging to the specified employee
+      operationId: employeesIdAppraisalsGet
+      produces:
+        - application/json
+      parameters:
+        - in: path
+          name: employeeId
+          required: true
+          type: integer
+          description: |
+            `Employee` Id.
+      responses:
+        '200':
+          description: |
+            Successful.
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/AppraisalDTO'
+        '403':
+          description: |
+            The user isn't authenticated or authorized to perform this action.
+        '404':
+          description: |
+            An `Employee` with the specified Id was not found.
+
+########################################################################################################################
+# /employees/{employeeId}/appraisals/{appraisalId} #####################################################################
+########################################################################################################################
+
+  '/employees/{employeeId}/appraisals/{appraisalId}':
+
+    ###########
+    # GET #####
+    ###########
+
+    get:
+      tags:
+      - Appraisal
+      summary: |
+        Returns a certain appraisal of the specified employee.
+      description: |
+        Returns a single `Appraisal` belonging to the specified employee
+      operationId: employeesIdAppraisalsIdGet
+      produces:
+        - application/json
+      parameters:
+        - in: path
+          name: employeeId
+          required: true
+          type: integer
+          description: |
+            `Employee` Id.
+        - in: path
+          name: appraisalId
+          required: true
+          type: integer
+          description: |
+            `Appraisal` Id.
+      responses:
+        '200':
+          description: |
+            Successful.
+          schema:
+            $ref: '#/definitions/AppraisalDTO'
+        '403':
+          description: |
+            The user isn't authenticated or authorized to perform this action.
+        '404':
+          description: |
+            An `Employee` or `Appraisal` with the specified Id was not found.
+
+#########################################################################################################################
+# /employees/:id/appraisals/:id/forms ###################################################################################
+#########################################################################################################################
+
+  '/employees/{employeeId}/appraisals/{appraisalId}/forms':
+
+    ###########
+    # GET #####
+    ###########
+
+    get:
+      tags:
+      - Appraisal
+      summary: |
+        Provides a list of `EvaluationForm` of a specific appraisal for the specified user.
+      description: |
+        Returns a list of `EvaluationForm` belonging to the specified user.
+      operationId: employeesIdAppraisalsIdFormsGet
+      produces:
+        - application/json
+      parameters:
+        - in: path
+          name: employeeId
+          type: integer
+          required: true
+          description: |
+            `Employee` Id.
+        - in: path
+          name: appraisalId
+          type: integer
+          required: true
+          description: |
+            `Appraisal` Id.
+      responses:
+        '200':
+          description: |
+            Successful.
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/EvaluationFormDTO'
+        '403':
+          description: |
+            The user isn't authenticated or authorized to perform this action.
+        '404':
+          description: |
+            Employee or Appraisal not found in the system.
+
+########################################################################################################################
+# /employees/:id/appraisals/:id/forms/:id ##############################################################################
+########################################################################################################################
+
+  '/employees/{employeeId}/appraisals/{appraisalId}/forms/{formId}':
+
+    ###########
+    # GET #####
+    ###########
+
+    get:
+      tags:
+      - Appraisal
+      summary: |
+        Provides a specific `EvaluationForm` of a specific appraisal for the specified user.
+      description: |
+        Returns a particular `EvaluationForm` belonging to the specified user.
+      operationId: employeesIdAppraisalsIdFormsIdGet
+      produces:
+        - application/json
+      parameters:
+        - in: path
+          name: employeeId
+          type: integer
+          required: true
+          description: |
+            `Employee` Id.
+        - in: path
+          name: appraisalId
+          type: integer
+          required: true
+          description: |
+            `Appraisal` Id.
+        - in: path
+          name: formId
+          type: integer
+          required: true
+          description: |
+            `Form` Id.
+      responses:
+        '200':
+          description: |
+            Successful.
+          schema:
+            $ref: '#/definitions/EvaluationFormDTO'
+        '403':
+          description: |
+            The user isn't authenticated or authorized to perform this action.
+        '404':
+          description: |
+            Employee, Appraisal or EvaluationForm not found in the system.
+
+########################################################################################################################
+# /employees/:id/relationships #########################################################################################
+########################################################################################################################
 
   '/employees/{employeeId}/relationships':
+
+    ###########
+    # GET #####
+    ###########
+
     get:
       tags:
       - Employee
       summary: |
         Returns the relationships with other employees
-      description: >
-        Returns an `EmployeeRelationship` list of all employees who have relationships
-        with the specified employee
-      operationId: employeesEmployeeIdRelationshipsGet
+      description: |
+        Returns an `EmployeeRelationship` list of all employees who have relationships with the specified employee
+      operationId: employeesIdRelationshipsGet
       produces:
         - application/json
       parameters:
@@ -702,31 +979,34 @@ paths:
       responses:
         '200':
           description: |
-            Successful request.
+            Successful.
           schema:
             type: array
             items:
               $ref: '#/definitions/EmployeeRelationshipDTO'
         '403':
           description: |
-            The user isn't authenticated or is trying to access resources not authorized to.
+            The user isn't authenticated or authorized to perform this action.
         '404':
           description: |
             An `Employee` with the specified Id was not found.
 
-##################################################################################################
-# /employees/{employeeId}/appraisals #############################################################
-##################################################################################################
+    ###########
+    # POST ####
+    ###########
 
-  '/employees/{employeeId}/appraisals':
-    get:
+    post:
       tags:
-      - Appraisal
+      - Employee
       summary: |
-        Returns the appraisals of the specified employee.
-      description: >
-        Returns an `Appraisal` list belonging to the specified employee
-      operationId: employeesEmployeeIdAppraisalsGet
+        Registers a new Relationship between two employees.
+      description: |
+        Registers a new `Relationship`. Users with the **Mentor** application role, can create relationships for their
+        mentees. Users with the **Admin** application role, can create any relationships. Users with any other 
+        application role will receive an error.
+      operationId: employeesIdRelationshipsPost
+      consumes:
+        - application/json
       produces:
         - application/json
       parameters:
@@ -736,34 +1016,58 @@ paths:
           type: integer
           description: |
             `Employee` Id.
-      responses:
-        '200':
-          description: |
-            Successful request.
+        - in: body
+          name: relationship
           schema:
-            type: array
-            items:
-              $ref: '#/definitions/AppraisalDTO'
+            $ref: '#/definitions/EmployeeRelationshipDTO'
+          required: true
+          description: |
+            New `Relationship`.
+      responses:
+        '201':
+          description: |
+            Successful.
+          schema:
+            $ref: '#/definitions/OperationResultDTO'
+          headers:
+            Location:
+              type: string
+              description: |
+                URL of the new employee.
+        '400':
+          description: |
+            Input was malformed or did not comply with business rules.
+          schema:
+            $ref: '#/definitions/OperationResultDTO'
         '403':
           description: |
-            The user isn't authenticated or is trying to access resources not authorized to.
-        '404':
+            The user isn't authenticated or authorized to perform this action.
+        '422':
           description: |
-            An `Employee` with the specified Id was not found.
+            Entity already exists.
+          schema:
+            $ref: '#/definitions/OperationResultDTO'
 
-##################################################################################################
-# /employees/{employeeId}/appraisals/{appraisalId} ###############################################
-##################################################################################################
+########################################################################################################################
+# /employees/:id/relationships/ ########################################################################################
+########################################################################################################################
 
-  '/employees/{employeeId}/appraisals/{appraisalId}':
-    get:
+  '/employees/{employeeId}/relationships/{relationshipId}':
+
+    ###########
+    # DELETE ##
+    ###########
+
+    delete:
       tags:
-      - Appraisal
+      - Employee
       summary: |
-        Returns a certain appraisal of the specified employee.
-      description: >
-        Returns a single `Appraisal` belonging to the specified employee
-      operationId: employeesEmployeeIdAppraisalsAppraisalIdGet
+        Deletes a Relationship.
+      description: |
+        Deletes a `Relationship`. Users with the **Mentor** application role, can delete relationships of their mentees.
+        Users with the **Admin** application role, can delete any relationships. Users with any other application role
+        will receive an error.
+      operationId: employeesIdRelationshipsIdDelete
       produces:
         - application/json
       parameters:
@@ -774,117 +1078,25 @@ paths:
           description: |
             `Employee` Id.
         - in: path
-          name: appraisalId
+          name: relationshipId
           required: true
           type: integer
           description: |
-            `Appraisal` Id.
+            `Relationship` Id.
       responses:
         '200':
           description: |
-            Successful request.
-          schema:
-            $ref: '#/definitions/AppraisalDTO'
+            Successful.
         '403':
           description: |
-            The user isn't authenticated or is trying to access resources not authorized to.
+            The user isn't authenticated or authorized to perform this action.
         '404':
           description: |
-            An `Employee` or `Appraisal` with the specified Id was not found.
+            An entity with the specified Id wasn't found.
 
-###################################################################################################
-# /employees/:id/appraisals/:id/forms #############################################################
-###################################################################################################
-
-  '/employees/{employeeId}/appraisals/{appraisalId}/forms':
-    get:
-      tags:
-      - Appraisal
-      summary: |
-        Provides a list of `EvaluationForm` of a specific appraisal for the specified user.
-      description: >
-        Returns a list of `EvaluationForm` belonging to the specified user.
-      operationId: employeesEmployeeIdAppraisalsAppraisalIdFormsGet
-      produces:
-        - application/json
-      parameters:
-        - in: path
-          name: employeeId
-          type: integer
-          required: true
-          description: |
-            `Employee` Id.
-        - in: path
-          name: appraisalId
-          type: integer
-          required: true
-          description: |
-            `Appraisal` Id.
-      responses:
-        '200':
-          description: |
-            Successful request.
-          schema:
-            type: array
-            items:
-              $ref: '#/definitions/EvaluationFormDTO'
-        '403':
-          description: |
-            The user isn't authenticated or tried to retrieve an appraisal to which he does not have permission.
-        '404':
-          description: |
-            Employee or Appraisal not found in the system.
-
-###################################################################################################
-# /employees/:id/appraisals/:id/forms/:id ####################################################################
-###################################################################################################
-
-  '/employees/{employeeId}/appraisals/{appraisalId}/forms/{formId}':
-    get:
-      tags:
-      - Appraisal
-      summary: |
-        Provides a specific `EvaluationForm` of a specific appraisal for the specified user.
-      description: >
-        Returns a particular `EvaluationForm` belonging to the specified user.
-      operationId: employeesEmployeeIdAppraisalsAppraisalIdFormsFormIdGet
-      produces:
-        - application/json
-      parameters:
-        - in: path
-          name: employeeId
-          type: integer
-          required: true
-          description: |
-            `Employee` Id.
-        - in: path
-          name: appraisalId
-          type: integer
-          required: true
-          description: |
-            `Appraisal` Id.
-        - in: path
-          name: formId
-          type: integer
-          required: true
-          description: |
-            `Form` Id.
-      responses:
-        '200':
-          description: |
-            Successful request.
-          schema:
-            $ref: '#/definitions/EvaluationFormDTO'
-        '403':
-          description: |
-            The user isn't authenticated or tried to retrieve an EvaluationForm to which he does not have permission.
-        '404':
-          description: |
-            Employee, Appraisal or EvaluationForm not found in the system.
-
-##################################################################################################
-# Definitions ####################################################################################
-##################################################################################################
+########################################################################################################################
+# Definitions ##########################################################################################################
+########################################################################################################################
 
 definitions:
 
@@ -985,7 +1197,7 @@ definitions:
     properties:
       id:
         type: integer
-      reference:
+      referred:
         $ref: '#/definitions/EmployeeDTO'
       relationship:
         $ref: '#/definitions/RelationshipDTO'
@@ -1104,6 +1316,10 @@ definitions:
         type: array
         items:
           $ref: '#/definitions/FieldErrorDTO'
+
+########################################################################################################################
+# Tags #################################################################################################################
+########################################################################################################################
 
 tags:
   - name: Me

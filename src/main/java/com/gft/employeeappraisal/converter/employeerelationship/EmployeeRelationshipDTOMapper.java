@@ -30,7 +30,7 @@ public class EmployeeRelationshipDTOMapper extends CustomMapper<EmployeeRelation
 			employeeRelationshipDTO.setEndDate(OffsetDateTime.of(employeeRelationship.getEndDate(), ZoneOffset.UTC));
 		}
 
-		employeeRelationshipDTO.setReference(mapperFacade.map(employeeRelationship.getTargetEmployee(),
+		employeeRelationshipDTO.setReferred(mapperFacade.map(employeeRelationship.getTargetEmployee(),
 				EmployeeDTO.class));
 		employeeRelationshipDTO.setRelationship(mapperFacade.map(employeeRelationship.getRelationship(),
 				RelationshipDTO.class));
@@ -46,7 +46,7 @@ public class EmployeeRelationshipDTOMapper extends CustomMapper<EmployeeRelation
 		if (employeeRelationshipDTO.getEndDate() != null) {
 			employeeRelationship.setStartDate(employeeRelationshipDTO.getEndDate().toLocalDateTime());
 		}
-		employeeRelationship.setTargetEmployee(mapperFacade.map(employeeRelationshipDTO.getReference(),
+		employeeRelationship.setTargetEmployee(mapperFacade.map(employeeRelationshipDTO.getReferred(),
 				Employee.class));
 		employeeRelationship.setRelationship(mapperFacade.map(employeeRelationshipDTO.getRelationship(),
 				Relationship.class));

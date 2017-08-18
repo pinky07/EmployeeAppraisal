@@ -53,31 +53,31 @@ public class AppraisalsController implements AppraisalApi {
     private EvaluationFormDTOConverter evaluationFormDTOConverter;
 
     @Override
-    public ResponseEntity<EvaluationFormDTO> employeesEmployeeIdAppraisalsAppraisalIdFormsFormIdGet(Integer employeeId,
+    public ResponseEntity<EvaluationFormDTO> employeesIdAppraisalsIdFormsIdGet(Integer employeeId,
                                                                                                     Integer appraisalId,
                                                                                                     Integer formId) {
         return null;
     }
 
     @Override
-    public ResponseEntity<AppraisalDTO> employeesEmployeeIdAppraisalsAppraisalIdGet(Integer employeeId,
+    public ResponseEntity<AppraisalDTO> employeesIdAppraisalsIdGet(Integer employeeId,
                                                                                     Integer appraisalId) {
         return null;
     }
 
     @Override
-    public ResponseEntity<List<AppraisalDTO>> employeesEmployeeIdAppraisalsGet(Integer employeeId) {
+    public ResponseEntity<List<AppraisalDTO>> employeesIdAppraisalsGet(Integer employeeId) {
         return null;
     }
 
     @Override
-    public ResponseEntity<EvaluationFormDTO> meAppraisalsAppraisalIdFormsFormIdGet(Integer appraisalId,
+    public ResponseEntity<EvaluationFormDTO> meAppraisalsIdFormsIdGet(Integer appraisalId,
                                                                                    Integer formId) {
         return null;
     }
 
     @Override
-    public ResponseEntity<AppraisalDTO> meAppraisalsAppraisalIdGet(@PathVariable Integer appraisalId) {
+    public ResponseEntity<AppraisalDTO> meAppraisalsIdGet(@PathVariable Integer appraisalId) {
 
         // Get logged in user
         Employee user = this.employeeService.getLoggedInUser();
@@ -109,7 +109,7 @@ public class AppraisalsController implements AppraisalApi {
      * @return List of desired EvaluationForm
      */
     @Override
-    public ResponseEntity<List<EvaluationFormDTO>> meAppraisalsAppraisalIdFormsGet(@PathVariable("appraisalId") Integer appraisalId) {
+    public ResponseEntity<List<EvaluationFormDTO>> meAppraisalsIdFormsGet(@PathVariable("appraisalId") Integer appraisalId) {
 
         // Get logged in user
         Employee user = this.employeeService.getLoggedInUser();
@@ -141,7 +141,7 @@ public class AppraisalsController implements AppraisalApi {
      * @return List of desired EvaluationForm
      */
     @Override
-    public ResponseEntity<List<EvaluationFormDTO>> employeesEmployeeIdAppraisalsAppraisalIdFormsGet(
+    public ResponseEntity<List<EvaluationFormDTO>> employeesIdAppraisalsIdFormsGet(
             @PathVariable("employeeId") Integer employeeId,
             @PathVariable("appraisalId") Integer appraisalId) {
 
