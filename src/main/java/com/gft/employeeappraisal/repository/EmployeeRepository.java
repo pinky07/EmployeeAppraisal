@@ -19,5 +19,5 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public interface EmployeeRepository extends JpaRepository<Employee, Integer> {
     
-    Employee findByEmail(String email);
+    Employee findByEmailIgnoreCase(String email);
 }

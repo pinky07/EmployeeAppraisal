@@ -69,7 +69,7 @@ public class EmployeeServiceImpl implements EmployeeService {
      */
     @Override
     public Optional<Employee> findByEmail(String email) {
-        return Optional.ofNullable(employeeRepository.findByEmail(email));
+        return Optional.ofNullable(employeeRepository.findByEmailIgnoreCase(email));
     }
 
     /**
