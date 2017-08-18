@@ -10,17 +10,19 @@ import java.util.Optional;
  * @author Manuel Yepez
  */
 public interface ApplicationRoleService {
-	/**
-	 * Lookup method for an ApplicationRole, given an ID.
-	 * @param applicationRoleId ID to look up.
-	 * @return An Optional object that may or may not contain a {@link ApplicationRole} entity.
-	 */
-	Optional<ApplicationRole> findById(int applicationRoleId);
+    /**
+     * Lookup method for an ApplicationRole, given an ID.
+     *
+     * @param applicationRoleId ID to look up.
+     * @return An Optional object that may or may not contain a {@link ApplicationRole} entity.
+     */
+    Optional<ApplicationRole> findById(int applicationRoleId);
 
-	/**
-	 * Given a {@link ApplicationRole} entity, persists such an entity to the database.
-	 * @param entity Entity to be persisted.
-	 * @return The same entity after being persisted.
-	 */
-	ApplicationRole save(ApplicationRole entity);
+    /**
+     * Given a {@link ApplicationRole} entity, persists such an entity to the database.
+     *
+     * @param entity Entity to be persisted.
+     * @return The same entity after being persisted.
+     */
+    ApplicationRole save(ApplicationRole entity);
 }

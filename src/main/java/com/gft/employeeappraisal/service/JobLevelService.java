@@ -11,17 +11,19 @@ import java.util.Optional;
  */
 public interface JobLevelService {
 
-	/**
-	 * Given an ID, returns a JobLevel entity.
-	 * @param jobLevelId Internal lookup ID for the JobLevel.
-	 * @return An Optional object that may or may not contain a JobLevel entity.
-	 */
-	Optional<JobLevel> findById(int jobLevelId);
+    /**
+     * Given an ID, returns a JobLevel entity.
+     *
+     * @param jobLevelId Internal lookup ID for the JobLevel.
+     * @return An Optional object that may or may not contain a JobLevel entity.
+     */
+    Optional<JobLevel> findById(int jobLevelId);
 
-	/**
-	 * Given a {@link JobLevel} entity, persists such an entity to the database.
-	 * @param entity The entity to be persisted.
-	 * @return The same entity after being persisted.
-	 */
-	JobLevel save(JobLevel entity);
+    /**
+     * Given a {@link JobLevel} entity, persists such an entity to the database.
+     *
+     * @param entity The entity to be persisted.
+     * @return The same entity after being persisted.
+     */
+    JobLevel save(JobLevel entity);
 }

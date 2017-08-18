@@ -40,7 +40,7 @@ public class Appraisal {
     private LocalDateTime endDate;
 
     @OneToMany(mappedBy = "appraisal", fetch = FetchType.LAZY)
-	private Set<AppraisalXEvaluationForm> appraisalXEvaluationForms;
+    private Set<AppraisalXEvaluationForm> appraisalXEvaluationForms;
 
     public int getId() {
         return id;
@@ -82,39 +82,39 @@ public class Appraisal {
         this.endDate = endDate;
     }
 
-	public Set<AppraisalXEvaluationForm> getAppraisalXEvaluationForms() {
-		return appraisalXEvaluationForms;
-	}
+    public Set<AppraisalXEvaluationForm> getAppraisalXEvaluationForms() {
+        return appraisalXEvaluationForms;
+    }
 
-	public void setAppraisalXEvaluationForms(Set<AppraisalXEvaluationForm> appraisalXEvaluationForms) {
-		this.appraisalXEvaluationForms = appraisalXEvaluationForms;
-	}
+    public void setAppraisalXEvaluationForms(Set<AppraisalXEvaluationForm> appraisalXEvaluationForms) {
+        this.appraisalXEvaluationForms = appraisalXEvaluationForms;
+    }
 
-	@Override
-	public boolean equals(Object o) {
-		if (this == o) return true;
-		if (o == null || getClass() != o.getClass()) return false;
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
 
-		Appraisal appraisal = (Appraisal) o;
+        Appraisal appraisal = (Appraisal) o;
 
-		return getId() == appraisal.getId() &&
-				getName().equals(appraisal.getName()) &&
-				getDescription().equals(appraisal.getDescription()) &&
-				getStartDate().equals(appraisal.getStartDate()) &&
-				getEndDate().equals(appraisal.getEndDate());
-	}
+        return getId() == appraisal.getId() &&
+                getName().equals(appraisal.getName()) &&
+                getDescription().equals(appraisal.getDescription()) &&
+                getStartDate().equals(appraisal.getStartDate()) &&
+                getEndDate().equals(appraisal.getEndDate());
+    }
 
-	@Override
-	public int hashCode() {
-		int result = getId();
-		result = 31 * result + getName().hashCode();
-		result = 31 * result + getDescription().hashCode();
-		result = 31 * result + getStartDate().hashCode();
-		result = 31 * result + getEndDate().hashCode();
-		return result;
-	}
+    @Override
+    public int hashCode() {
+        int result = getId();
+        result = 31 * result + getName().hashCode();
+        result = 31 * result + getDescription().hashCode();
+        result = 31 * result + getStartDate().hashCode();
+        result = 31 * result + getEndDate().hashCode();
+        return result;
+    }
 
-	@Override
+    @Override
     public String toString() {
         return "Appraisal{" +
                 "id=" + id +

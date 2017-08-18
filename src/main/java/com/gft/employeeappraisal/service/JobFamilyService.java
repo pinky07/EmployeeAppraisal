@@ -8,10 +8,12 @@ import com.gft.employeeappraisal.model.JobFamily;
  * @author Manuel Yepez
  */
 public interface JobFamilyService {
-	/**
-	 * Given a {@link JobFamily} entity, persists said entity into the database.
-	 * @param entity Entity to be persisted.
-	 * @return Entity after being persisted to the DB.
-	 */
-	JobFamily save(JobFamily entity);
+
+    /**
+     * Given a {@link JobFamily} entity, persists said entity into the database.
+     *
+     * @param entity Entity to be persisted.
+     * @return Entity after being persisted to the DB.
+     */
+    JobFamily save(JobFamily entity);
 }

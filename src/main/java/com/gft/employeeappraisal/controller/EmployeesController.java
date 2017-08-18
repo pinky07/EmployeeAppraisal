@@ -45,28 +45,31 @@ public class EmployeesController implements EmployeeApi {
 
     private final Logger logger = LoggerFactory.getLogger(EmployeesController.class);
 
-    @Autowired
     private EmployeeService employeeService;
-
-    @Autowired
     private EmployeeDTOConverter employeeDTOConverter;
-
-    @Autowired
     private EmployeeRelationshipDTOConverter employeeRelationshipDTOConverter;
-
-    @Autowired
     private EmployeeRelationshipService employeeRelationshipService;
-
-    @Autowired
     private EmployeeDTOToEntityCreateValidator employeeDTOToEntityCreateValidator;
-
-    @Autowired
     private SecurityService securityService;
-
-    @Autowired
     private MessageSource messageSource;
 
-
+    @Autowired
+    public EmployeesController(
+            EmployeeService employeeService,
+            EmployeeDTOConverter employeeDTOConverter,
+            EmployeeRelationshipDTOConverter employeeRelationshipDTOConverter,
+            EmployeeRelationshipService employeeRelationshipService,
+            EmployeeDTOToEntityCreateValidator employeeDTOToEntityCreateValidator,
+            SecurityService securityService,
+            MessageSource messageSource) {
+        this.employeeService = employeeService;
+        this.employeeDTOConverter = employeeDTOConverter;
+        this.employeeRelationshipDTOConverter = employeeRelationshipDTOConverter;
+        this.employeeRelationshipService = employeeRelationshipService;
+        this.employeeDTOToEntityCreateValidator = employeeDTOToEntityCreateValidator;
+        this.securityService = securityService;
+        this.messageSource = messageSource;
+    }
 
     @Override
     public ResponseEntity<List<EmployeeDTO>> employeesGet(
@@ -88,7 +91,7 @@ public class EmployeesController implements EmployeeApi {
         Employee user = this.employeeService.getLoggedInUser();
 
         // This method will throw an Exception if the user can't access the Employee information
-        securityService.canReadEmployeeInformation(user.getId(), employeeId);
+        securityService.canReadEmployee(user.getId(), employeeId);
 
         Employee employee = employeeService.findById(employeeId).orElseThrow(
                 () -> new EmployeeNotFoundException(
@@ -196,7 +199,7 @@ public class EmployeesController implements EmployeeApi {
         Employee user = this.employeeService.getLoggedInUser();
 
         // This method will throw an Exception if the user can't access the Employee information
-        securityService.canReadEmployeeInformation(user.getId(), employeeId);
+        securityService.canReadEmployee(user.getId(), employeeId);
 
         Employee employee = employeeService.findById(employeeId).orElseThrow(
                 () -> new EmployeeNotFoundException(
@@ -225,8 +228,6 @@ public class EmployeesController implements EmployeeApi {
     public ResponseEntity<OperationResultDTO> employeesIdRelationshipsPost(
             @PathVariable("employeeId") Integer employeeId,
             @RequestBody EmployeeRelationshipDTO relationship) {
-
-
 
 
         // TODO Implement this!

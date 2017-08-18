@@ -8,6 +8,7 @@ import com.gft.employeeappraisal.exception.EmployeeNotFoundException;
 import com.gft.employeeappraisal.model.*;
 import com.gft.employeeappraisal.service.EmployeeRelationshipService;
 import com.gft.employeeappraisal.service.EmployeeService;
+import com.gft.employeeappraisal.service.SecurityService;
 import com.gft.swagger.employees.model.EmployeeDTO;
 import com.gft.swagger.employees.model.EmployeeRelationshipDTO;
 import com.gft.swagger.employees.model.OperationResultDTO;
@@ -18,7 +19,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.boot.test.mock.mockito.MockReset;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
@@ -51,8 +51,14 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class EmployeesControllerGetTest {
 
     private static final String EMPLOYEES_URL = "/employees";
-
     private static final String USER_EMAIL = "user@gft.com";
+
+    @MockBean
+    private EmployeeService employeeService;
+
+    @MockBean
+    @SuppressWarnings("unused")
+    private EmployeeRelationshipService employeeRelationshipService;
 
     @Autowired
     private MockMvc mockMvc;
@@ -60,12 +66,8 @@ public class EmployeesControllerGetTest {
     @Autowired
     private EntityDTOComparator entityDTOComparator;
 
-    @MockBean(reset = MockReset.AFTER)
-    private EmployeeService employeeService;
-
-    @MockBean(reset = MockReset.AFTER)
-    @SuppressWarnings("unused")
-    private EmployeeRelationshipService employeeRelationshipService;
+    @MockBean
+    private SecurityService securityService;
 
     @Autowired
     @SuppressWarnings("unused")
@@ -78,9 +80,11 @@ public class EmployeesControllerGetTest {
     @Autowired
     private ObjectMapper mapper;
 
+
     private Employee userMock;
     private JobLevel jobLevelMock;
     private ApplicationRole applicationRoleMock;
+
 
     @Before
     public void sharedSetUp() {
@@ -144,7 +148,7 @@ public class EmployeesControllerGetTest {
 
         // Verification
 
-        verify(employeeService, times(1)).checkAccess(anyInt(), anyInt());
+        verify(securityService, times(1)).canReadEmployee(anyInt(), anyInt());
         verify(employeeService, times(1)).findById(userMock.getId());
 
         entityDTOComparator.assertEqualsEmployee(userMock, employeeDTO);
@@ -175,7 +179,8 @@ public class EmployeesControllerGetTest {
 
         // Verification
 
-        verify(employeeService, times(1)).checkAccess(anyInt(), anyInt());
+        verify(securityService, times(1)).canReadEmployee(anyInt(), anyInt());
+
         verify(employeeService, times(1)).findById(userMock.getId());
 
         assertEquals(operationResultDTO.getMessage(), Constants.ERROR);
@@ -196,7 +201,8 @@ public class EmployeesControllerGetTest {
 
         // Verification
 
-        verify(employeeService, never()).checkAccess(anyInt(), anyInt());
+        verify(securityService, never()).canReadEmployee(anyInt(), anyInt());
+
         verify(employeeService, never()).findById(userMock.getId());
 
         assertTrue(StringUtils.isEmpty(resultString));
@@ -224,8 +230,9 @@ public class EmployeesControllerGetTest {
         assertNotNull(employeeRelationshipDTOList);
         assertFalse(employeeRelationshipDTOList.isEmpty());
 
+        verify(securityService, times(1)).canReadEmployee(anyInt(), anyInt());
+
         verify(employeeService, times(1)).getLoggedInUser();
-        verify(employeeService, times(1)).checkAccess(anyInt(), anyInt());
         verify(employeeService, times(1)).findById(anyInt());
         verify(employeeService, times(1)).findCurrentRelationshipsBySourceEmployee(userMock,
                 RelationshipName.PEER, RelationshipName.LEAD, RelationshipName.OTHER);
@@ -262,8 +269,9 @@ public class EmployeesControllerGetTest {
         assertNotNull(employeeRelationshipDTOList);
         assertTrue(employeeRelationshipDTOList.isEmpty());
 
+        verify(securityService, times(1)).canReadEmployee(anyInt(), anyInt());
+
         verify(employeeService, times(1)).getLoggedInUser();
-        verify(employeeService, times(1)).checkAccess(anyInt(), anyInt());
         verify(employeeService, times(1)).findById(anyInt());
         verify(employeeService, times(1)).findCurrentRelationshipsBySourceEmployee(userMock,
                 RelationshipName.PEER, RelationshipName.LEAD, RelationshipName.OTHER);
@@ -290,8 +298,9 @@ public class EmployeesControllerGetTest {
         assertNull(resultDTO.getData());
         assertNull(resultDTO.getErrors());
 
+        verify(securityService, times(1)).canReadEmployee(anyInt(), anyInt());
+
         verify(employeeService, times(1)).getLoggedInUser();
-        verify(employeeService, times(1)).checkAccess(anyInt(), anyInt());
         verify(employeeService, times(1)).findById(anyInt());
         verify(employeeService, never()).findCurrentRelationshipsBySourceEmployee(userMock,
                 RelationshipName.PEER, RelationshipName.LEAD, RelationshipName.OTHER);
@@ -310,8 +319,9 @@ public class EmployeesControllerGetTest {
         String response = result.getResponse().getContentAsString();
         assertTrue(StringUtils.isEmpty(response));
 
+        verify(securityService, never()).canReadEmployee(anyInt(), anyInt());
+
         verify(employeeService, never()).getLoggedInUser();
-        verify(employeeService, never()).checkAccess(anyInt(), anyInt());
         verify(employeeService, never()).findById(anyInt());
         verify(employeeService, never()).findCurrentRelationshipsBySourceEmployee(userMock,
                 RelationshipName.PEER, RelationshipName.LEAD, RelationshipName.OTHER);

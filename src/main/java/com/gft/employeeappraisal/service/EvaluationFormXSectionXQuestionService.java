@@ -13,7 +13,7 @@ public interface EvaluationFormXSectionXQuestionService {
      * Returns all Evaluation Forms of an Employee for a given Appraisal process.
      *
      * @param appraisal Appraisal process to which the Evaluation Forms belong to
-     * @param employee Employee that's being evaluated
+     * @param employee  Employee that's being evaluated
      * @return
      */
     Stream<EvaluationForm> findByAppraisalAndEmployee(Appraisal appraisal, Employee employee);

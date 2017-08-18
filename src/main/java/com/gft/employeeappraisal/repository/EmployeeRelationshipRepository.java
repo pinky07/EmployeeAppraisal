@@ -41,9 +41,9 @@ public interface EmployeeRelationshipRepository extends JpaRepository<EmployeeRe
             @Param("sourceEmployee") Employee sourceEmployee,
             @Param("relationship") Relationship relationship);
 
-	List<EmployeeRelationship> findAllBySourceEmployeeAndRelationshipIn(
-			Employee sourceEmployee,
-			Set<Relationship> relationships);
+    List<EmployeeRelationship> findAllBySourceEmployeeAndRelationshipIn(
+            Employee sourceEmployee,
+            Set<Relationship> relationships);
 
     @Query("SELECT er from EmployeeRelationship er " +
             "WHERE er.sourceEmployee = :sourceEmployee " +

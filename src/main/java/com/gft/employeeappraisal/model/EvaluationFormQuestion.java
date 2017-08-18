@@ -36,7 +36,7 @@ public class EvaluationFormQuestion {
     private String description;
 
     @OneToMany(mappedBy = "evaluationFormQuestion", fetch = FetchType.LAZY)
-	private Set<EvaluationFormXSectionXQuestion> evaluationFormXSectionXQuestions;
+    private Set<EvaluationFormXSectionXQuestion> evaluationFormXSectionXQuestions;
 
     public int getId() {
         return id;
@@ -70,15 +70,15 @@ public class EvaluationFormQuestion {
         this.description = description;
     }
 
-	public Set<EvaluationFormXSectionXQuestion> getEvaluationFormXSectionXQuestions() {
-		return evaluationFormXSectionXQuestions;
-	}
+    public Set<EvaluationFormXSectionXQuestion> getEvaluationFormXSectionXQuestions() {
+        return evaluationFormXSectionXQuestions;
+    }
 
-	public void setEvaluationFormXSectionXQuestions(Set<EvaluationFormXSectionXQuestion> evaluationFormXSectionXQuestions) {
-		this.evaluationFormXSectionXQuestions = evaluationFormXSectionXQuestions;
-	}
+    public void setEvaluationFormXSectionXQuestions(Set<EvaluationFormXSectionXQuestion> evaluationFormXSectionXQuestions) {
+        this.evaluationFormXSectionXQuestions = evaluationFormXSectionXQuestions;
+    }
 
-	@Override
+    @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;

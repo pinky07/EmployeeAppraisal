@@ -20,8 +20,13 @@ import java.util.stream.Stream;
 @Service
 public class RelationshipServiceImpl implements RelationshipService {
 
-    @Autowired
     private RelationshipRepository relationshipRepository;
+
+    @Autowired
+    public RelationshipServiceImpl(
+            RelationshipRepository relationshipRepository) {
+        this.relationshipRepository = relationshipRepository;
+    }
 
     /**
      * @inheritDoc
@@ -31,25 +36,25 @@ public class RelationshipServiceImpl implements RelationshipService {
         return Optional.ofNullable(relationshipRepository.findOne(relationshipId));
     }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
+    /**
+     * {@inheritDoc}
+     */
+    @Override
     public Relationship findByName(RelationshipName relationshipName) {
         // Since RelationshipName enum values are managed by the application,
         // We can assume they always exist
         return this.findById(relationshipName.getId()).get();
     }
 
-	/**
-	 * {@inheritDoc}
-	 */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Stream<Relationship> findRelationshipsByNames(RelationshipName... relationshipNames) {
-		Set<String> relationships = new HashSet<>();
-		for (RelationshipName rn : relationshipNames) {
-			relationships.add(rn.name());
-		}
+        Set<String> relationships = new HashSet<>();
+        for (RelationshipName rn : relationshipNames) {
+            relationships.add(rn.name());
+        }
         return relationshipRepository.findByNames(relationships).stream();
     }
 }

@@ -13,6 +13,7 @@ import java.util.stream.Stream;
  * @author Ruben Jimenez
  */
 public interface RelationshipService {
+
     /**
      * Given a relationship ID, returns a Relationship entity.
      *
@@ -26,14 +27,14 @@ public interface RelationshipService {
      * Be careful when modifying the database to ensure all names in the RelationshipName enum actually exist in
      * the database.
      *
-	 * @param relationshipName Specific enum value to query from the database
+     * @param relationshipName Specific enum value to query from the database
      * @return A Relationship entity
      */
     Relationship findByName(RelationshipName relationshipName);
 
     /**
      * Given several relationship names, returns a stream of Relationship entities associated to them.
-	 *
+     *
      * @param relationshipNames List of lookup relationship names
      * @return A stream of Relationships
      */

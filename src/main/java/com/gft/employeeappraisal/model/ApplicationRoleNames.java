@@ -6,16 +6,16 @@ package com.gft.employeeappraisal.model;
  * @author Manuel Yepez
  */
 public enum ApplicationRoleNames {
-	ADMIN(1),
-	USER(2);
+    ADMIN(1),
+    USER(2);
 
-	private final int id;
+    private final int id;
 
-	ApplicationRoleNames(int i) {
-		this.id = i;
-	}
+    ApplicationRoleNames(int i) {
+        this.id = i;
+    }
 
-	public int getId() {
-		return this.id;
-	}
+    public int getId() {
+        return this.id;
+    }
 }

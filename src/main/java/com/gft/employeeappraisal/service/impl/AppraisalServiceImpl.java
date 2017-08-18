@@ -21,39 +21,44 @@ import java.util.stream.Stream;
 @Service
 public class AppraisalServiceImpl implements AppraisalService {
 
-    @Autowired
     private AppraisalRepository appraisalRepository;
+    private AppraisalXEvaluationFormXEmployeeRelationshipService appraisalXEvaluationFormXEmployeeRelationshipService;
+    private EmployeeRelationshipService employeeRelationshipService;
 
-	@Autowired
-	private AppraisalXEvaluationFormXEmployeeRelationshipService appraisalXEvaluationFormXEmployeeRelationshipService;
+    @Autowired
+    public AppraisalServiceImpl(
+            AppraisalRepository appraisalRepository,
+            AppraisalXEvaluationFormXEmployeeRelationshipService appraisalXEvaluationFormXEmployeeRelationshipService,
+            EmployeeRelationshipService employeeRelationshipService) {
+        this.appraisalRepository = appraisalRepository;
+        this.appraisalXEvaluationFormXEmployeeRelationshipService = appraisalXEvaluationFormXEmployeeRelationshipService;
+        this.employeeRelationshipService = employeeRelationshipService;
+    }
 
-	@Autowired
-	private EmployeeRelationshipService employeeRelationshipService;
+    /**
+     * @inheritDoc
+     */
+    @Override
+    public Optional<Appraisal> findById(int appraisalId) {
+        return Optional.ofNullable(appraisalRepository.findOne(appraisalId));
+    }
 
-	/**
-	 * @inheritDoc
-	 */
-	@Override
-	public Optional<Appraisal> findById(int appraisalId) {
-		return Optional.ofNullable(appraisalRepository.findOne(appraisalId));
-	}
+    /**
+     * @inheritDoc
+     */
+    @Override
+    public Stream<Appraisal> findEmployeeAppraisals(Employee employee, EvaluationStatus evaluationStatus) {
+        // Find SELF relationships
+        List<EmployeeRelationship> employeeRelationships = employeeRelationshipService
+                .findBySourceEmployeeAndRelationships(employee, RelationshipName.SELF).collect(Collectors.toList());
 
-	/**
-	 * @inheritDoc
-	 */
-	@Override
-	public Stream<Appraisal> findEmployeeAppraisals(Employee employee, EvaluationStatus evaluationStatus) {
-		// Find SELF relationships
-		List<EmployeeRelationship> employeeRelationships = employeeRelationshipService
-				.findBySourceEmployeeAndRelationships(employee, RelationshipName.SELF).collect(Collectors.toList());
+        Stream<AppraisalXEvaluationFormXEmployeeRelationship> evaluationFormXEmployeeRelationshipStream =
+                appraisalXEvaluationFormXEmployeeRelationshipService
+                        .findByEmployeeRelationshipsAndEvaluationStatus(employeeRelationships, evaluationStatus);
 
-		Stream<AppraisalXEvaluationFormXEmployeeRelationship> evaluationFormXEmployeeRelationshipStream =
-				appraisalXEvaluationFormXEmployeeRelationshipService
-				.findByEmployeeRelationshipsAndEvaluationStatus(employeeRelationships, evaluationStatus);
-
-		return evaluationFormXEmployeeRelationshipStream
-				.map(ef -> ef.getAppraisalXEvaluationForm().getAppraisal()).distinct();
-	}
+        return evaluationFormXEmployeeRelationshipStream
+                .map(ef -> ef.getAppraisalXEvaluationForm().getAppraisal()).distinct();
+    }
 
     /**
      * @inheritDoc

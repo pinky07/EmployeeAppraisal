@@ -28,11 +28,14 @@ public class MeController implements MeApi {
 
     private final Logger logger = LoggerFactory.getLogger(MeController.class);
 
-    @Autowired
     private EmployeeService employeeService;
+    private EmployeeDTOConverter employeeDTOConverter;
 
     @Autowired
-    private EmployeeDTOConverter employeeDTOConverter;
+    public MeController(EmployeeService employeeService, EmployeeDTOConverter employeeDTOConverter) {
+        this.employeeService = employeeService;
+        this.employeeDTOConverter = employeeDTOConverter;
+    }
 
     /**
      * Obtains all the employee info (delimited on the EmployeeAppraisal microservice) for the authenticated user.
@@ -49,6 +52,22 @@ public class MeController implements MeApi {
         // Set Result DTO
         EmployeeDTO result;
         result = employeeDTOConverter.convert(user);
+
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
+    @Override
+    public ResponseEntity<List<EmployeeDTO>> meMenteesGet() {
+
+        // Get logged in user
+        Employee user = this.employeeService.getLoggedInUser();
+        logger.debug("{} called endpoint: GET /me/mentees ", user.getEmail());
+
+        // Find Mentees and set result
+        List<EmployeeDTO> result = employeeService
+                .findCurrentMenteesById(user.getId())
+                .map(mentee -> employeeDTOConverter.convert(mentee))
+                .collect(Collectors.toList());
 
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
@@ -84,33 +103,17 @@ public class MeController implements MeApi {
      */
     @Override
     public ResponseEntity<List<EmployeeDTO>> mePeersGet() {
-		// Get logged in user
-		Employee user = this.employeeService.getLoggedInUser();
+        // Get logged in user
+        Employee user = this.employeeService.getLoggedInUser();
         logger.debug("{} called endpoint called: GET /me/peers", user.getEmail());
         List<EmployeeDTO> result = new ArrayList<>();
 
         HttpStatus status;
 
-		employeeService.findCurrentPeersById(user.getId())
-				.forEach(peer -> result.add(employeeDTOConverter.convert(peer)));
-		status = result.isEmpty() ? HttpStatus.NOT_FOUND : HttpStatus.OK;
+        employeeService.findCurrentPeersById(user.getId())
+                .forEach(peer -> result.add(employeeDTOConverter.convert(peer)));
+        status = result.isEmpty() ? HttpStatus.NOT_FOUND : HttpStatus.OK;
 
         return new ResponseEntity<>(result, status);
-    }
-
-    @Override
-    public ResponseEntity<List<EmployeeDTO>> meMenteesGet() {
-
-        // Get logged in user
-        Employee user = this.employeeService.getLoggedInUser();
-        logger.debug("{} called endpoint: GET /me/mentees ", user.getEmail());
-
-        // Find Mentees and set result
-        List<EmployeeDTO> result = employeeService
-                .findCurrentMenteesById(user.getId())
-                .map(mentee -> employeeDTOConverter.convert(mentee))
-                .collect(Collectors.toList());
-
-        return new ResponseEntity<>(result, HttpStatus.OK);
     }
 }

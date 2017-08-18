@@ -58,8 +58,8 @@ public interface AppraisalXEvaluationFormXEmployeeRelationshipRepository extends
             @Param("relationships") Set<Relationship> relationships);
 
     List<AppraisalXEvaluationFormXEmployeeRelationship> findByEmployeeRelationshipIn
-			(Set<EmployeeRelationship> employeeRelationships);
+            (Set<EmployeeRelationship> employeeRelationships);
 
-	List<AppraisalXEvaluationFormXEmployeeRelationship> findByEmployeeRelationshipInAndEvaluationStatus
-			(Set<EmployeeRelationship> employeeRelationships, EvaluationStatus evaluationStatus);
+    List<AppraisalXEvaluationFormXEmployeeRelationship> findByEmployeeRelationshipInAndEvaluationStatus
+            (Set<EmployeeRelationship> employeeRelationships, EvaluationStatus evaluationStatus);
 }

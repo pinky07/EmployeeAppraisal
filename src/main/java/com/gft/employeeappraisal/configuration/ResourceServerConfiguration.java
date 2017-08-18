@@ -15,12 +15,14 @@ import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenCo
 @Configuration
 public class ResourceServerConfiguration extends ResourceServerConfigurerAdapter {
 
-    @Autowired
-    private
-    TokenStore jwtTokenStore;
+    private JwtAccessTokenConverter tokenConverter;
+    private TokenStore jwtTokenStore;
 
     @Autowired
-    JwtAccessTokenConverter tokenConverter;
+    public ResourceServerConfiguration(TokenStore jwtTokenStore, JwtAccessTokenConverter tokenConverter) {
+        this.jwtTokenStore = jwtTokenStore;
+        this.tokenConverter = tokenConverter;
+    }
 
     @Override
     public void configure(HttpSecurity http) throws Exception {

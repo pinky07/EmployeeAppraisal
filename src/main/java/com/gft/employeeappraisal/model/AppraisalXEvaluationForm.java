@@ -28,7 +28,7 @@ public class AppraisalXEvaluationForm {
     private EvaluationForm evaluationForm;
 
     @OneToMany(mappedBy = "appraisalXEvaluationForm", fetch = FetchType.LAZY)
-	private Set<AppraisalXEvaluationFormXEmployeeRelationship> appraisalXEvaluationFormXEmployeeRelationships;
+    private Set<AppraisalXEvaluationFormXEmployeeRelationship> appraisalXEvaluationFormXEmployeeRelationships;
 
     public int getId() {
         return id;
@@ -54,16 +54,16 @@ public class AppraisalXEvaluationForm {
         this.evaluationForm = evaluationForm;
     }
 
-	public Set<AppraisalXEvaluationFormXEmployeeRelationship> getAppraisalXEvaluationFormXEmployeeRelationships() {
-		return appraisalXEvaluationFormXEmployeeRelationships;
-	}
+    public Set<AppraisalXEvaluationFormXEmployeeRelationship> getAppraisalXEvaluationFormXEmployeeRelationships() {
+        return appraisalXEvaluationFormXEmployeeRelationships;
+    }
 
-	public void setAppraisalXEvaluationFormXEmployeeRelationships(Set<AppraisalXEvaluationFormXEmployeeRelationship>
-																		  appraisalXEvaluationFormXEmployeeRelationships) {
-		this.appraisalXEvaluationFormXEmployeeRelationships = appraisalXEvaluationFormXEmployeeRelationships;
-	}
+    public void setAppraisalXEvaluationFormXEmployeeRelationships(
+            Set<AppraisalXEvaluationFormXEmployeeRelationship> appraisalXEvaluationFormXEmployeeRelationships) {
+        this.appraisalXEvaluationFormXEmployeeRelationships = appraisalXEvaluationFormXEmployeeRelationships;
+    }
 
-	@Override
+    @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;

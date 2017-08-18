@@ -14,14 +14,18 @@ import org.springframework.stereotype.Service;
 @Service
 public class JobFamilyServiceImpl implements JobFamilyService {
 
-	@Autowired
-	private JobFamilyRepository jobFamilyRepository;
+    private JobFamilyRepository jobFamilyRepository;
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public JobFamily save(JobFamily entity) {
-		return jobFamilyRepository.save(entity);
-	}
+    @Autowired
+    public JobFamilyServiceImpl(JobFamilyRepository jobFamilyRepository) {
+        this.jobFamilyRepository = jobFamilyRepository;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public JobFamily save(JobFamily entity) {
+        return jobFamilyRepository.save(entity);
+    }
 }

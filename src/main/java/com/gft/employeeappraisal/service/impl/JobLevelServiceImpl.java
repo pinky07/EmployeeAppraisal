@@ -16,21 +16,25 @@ import java.util.Optional;
 @Service
 public class JobLevelServiceImpl implements JobLevelService {
 
-	@Autowired
-	private JobLevelRepository jobLevelRepository;
+    private JobLevelRepository jobLevelRepository;
 
-	/**
-	 * @see JobLevelService#findById(int)
-	 * @param jobLevelId Internal lookup ID for the JobLevel.
-	 * @return The JobLevel entity. {@code null} if there is no JobLevel under the provided ID.
-	 */
-	@Override
-	public Optional<JobLevel> findById(int jobLevelId) {
-		return Optional.ofNullable(jobLevelRepository.findOne(jobLevelId));
-	}
+    @Autowired
+    public JobLevelServiceImpl(JobLevelRepository jobLevelRepository) {
+        this.jobLevelRepository = jobLevelRepository;
+    }
 
-	@Override
-	public JobLevel save(JobLevel entity) {
-		return jobLevelRepository.save(entity);
-	}
+    /**
+     * @param jobLevelId Internal lookup ID for the JobLevel.
+     * @return The JobLevel entity. {@code null} if there is no JobLevel under the provided ID.
+     * @see JobLevelService#findById(int)
+     */
+    @Override
+    public Optional<JobLevel> findById(int jobLevelId) {
+        return Optional.ofNullable(jobLevelRepository.findOne(jobLevelId));
+    }
+
+    @Override
+    public JobLevel save(JobLevel entity) {
+        return jobLevelRepository.save(entity);
+    }
 }

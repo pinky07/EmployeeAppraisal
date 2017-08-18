@@ -14,8 +14,13 @@ import org.springframework.stereotype.Service;
 @Service
 public class EvaluationFormServiceImpl implements EvaluationFormService {
 
-    @Autowired
     private EvaluationFormRepository evaluationFormRepository;
+
+    @Autowired
+    public EvaluationFormServiceImpl(
+            EvaluationFormRepository evaluationFormRepository) {
+        this.evaluationFormRepository = evaluationFormRepository;
+    }
 
     /**
      * {@inheritDoc}

@@ -4,6 +4,7 @@ import com.gft.employeeappraisal.model.*;
 import com.gft.employeeappraisal.repository.AppraisalXEvaluationFormXEmployeeRelationshipRepository;
 import com.gft.employeeappraisal.service.EvaluationFormXSectionXQuestionService;
 import com.gft.employeeappraisal.service.RelationshipService;
+import org.apache.commons.lang.NotImplementedException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,18 +21,21 @@ import java.util.stream.Stream;
 @Service
 public class EvaluationFormXSectionXQuestionServiceImpl implements EvaluationFormXSectionXQuestionService {
 
-    @Autowired
     private RelationshipService relationshipService;
+    private AppraisalXEvaluationFormXEmployeeRelationshipRepository appraisalXEvaluationFormXEmployeeRelationshipRepository;
 
     @Autowired
-    private AppraisalXEvaluationFormXEmployeeRelationshipRepository appraisalXEvaluationFormXEmployeeRelationshipRepository;
+    public EvaluationFormXSectionXQuestionServiceImpl(
+            RelationshipService relationshipService,
+            AppraisalXEvaluationFormXEmployeeRelationshipRepository appraisalXEvaluationFormXEmployeeRelationshipRepository) {
+        this.relationshipService = relationshipService;
+        this.appraisalXEvaluationFormXEmployeeRelationshipRepository = appraisalXEvaluationFormXEmployeeRelationshipRepository;
+    }
 
     @Override
     public Stream<EvaluationForm> findByAppraisalAndEmployee(Appraisal appraisal, Employee employee) {
-//        Stream<EvaluationForm> selfEvaluationForm = Stream.of(this.findSelfEvaluationFormByAppraisalAndEmployee(appraisal, employee));
-//        Stream<EvaluationForm> referenceEvaluationForms = this.findReferenceEvaluationFormsByAppraisalAndEmployee(appraisal, employee);
-//        Stream<EvaluationForm> mentorEvaluationForm = Stream.of(this.findMentorEvaluationFormByAppraisalAndEmployee());
-        return null;
+        // TODO Implement this method!
+        throw new NotImplementedException();
     }
 
     @Override

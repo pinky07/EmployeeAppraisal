@@ -1,6 +1,5 @@
 package com.gft.employeeappraisal.service.impl;
 
-import com.gft.employeeappraisal.exception.AccessDeniedException;
 import com.gft.employeeappraisal.exception.EmployeeNotFoundException;
 import com.gft.employeeappraisal.model.*;
 import com.gft.employeeappraisal.repository.EmployeeRepository;
@@ -25,20 +24,25 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     private final Logger log = LoggerFactory.getLogger(EmployeeServiceImpl.class);
 
-    @Autowired
     private ApplicationRoleService applicationRoleService;
-
-    @Autowired
     private EmployeeRelationshipService employeeRelationshipService;
-
-    @Autowired
     private JobLevelService jobLevelService;
-
-    @Autowired
     private RelationshipService relationshipService;
+    private EmployeeRepository employeeRepository;
 
     @Autowired
-    private EmployeeRepository employeeRepository;
+    public EmployeeServiceImpl(
+            ApplicationRoleService applicationRoleService,
+            EmployeeRelationshipService employeeRelationshipService,
+            JobLevelService jobLevelService,
+            RelationshipService relationshipService,
+            EmployeeRepository employeeRepository) {
+        this.applicationRoleService = applicationRoleService;
+        this.employeeRelationshipService = employeeRelationshipService;
+        this.jobLevelService = jobLevelService;
+        this.relationshipService = relationshipService;
+        this.employeeRepository = employeeRepository;
+    }
 
     /**
      * {@inheritDoc}
@@ -117,12 +121,12 @@ public class EmployeeServiceImpl implements EmployeeService {
                 .map(EmployeeRelationship::getTargetEmployee);
     }
 
-	/**
-	 * {@inheritDoc}
-	 */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Stream<EmployeeRelationship> findCurrentRelationshipsById(int employeeId, RelationshipName... relationshipNames)
-			throws EmployeeNotFoundException {
+            throws EmployeeNotFoundException {
         // Try to find the Employee
         Employee employee = this.findById(employeeId).orElseThrow(() ->
                 new EmployeeNotFoundException(String.format("Employee with id: %s was not found", employeeId)));
@@ -130,17 +134,17 @@ public class EmployeeServiceImpl implements EmployeeService {
         return findCurrentRelationshipsBySourceEmployee(employee, relationshipNames);
     }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public Stream<EmployeeRelationship> findCurrentRelationshipsBySourceEmployee(Employee employee, RelationshipName... relationshipNames)
-			throws EmployeeNotFoundException {
-		// Try to get his References
-		return employeeRelationshipService
-				.findCurrentBySourceEmployeeAndRelationships(
-						employee, relationshipNames);
-	}
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Stream<EmployeeRelationship> findCurrentRelationshipsBySourceEmployee(Employee employee, RelationshipName... relationshipNames)
+            throws EmployeeNotFoundException {
+        // Try to get his References
+        return employeeRelationshipService
+                .findCurrentBySourceEmployeeAndRelationships(
+                        employee, relationshipNames);
+    }
 
     /**
      * {@inheritDoc}

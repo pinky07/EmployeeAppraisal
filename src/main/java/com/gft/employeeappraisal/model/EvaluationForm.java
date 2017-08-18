@@ -30,13 +30,13 @@ public class EvaluationForm {
     private String description;
 
     @OneToMany(mappedBy = "evaluationForm", fetch = FetchType.LAZY)
-	private Set<AppraisalXEvaluationForm> appraisalXEvaluationForms;
+    private Set<AppraisalXEvaluationForm> appraisalXEvaluationForms;
 
-	@OneToMany(mappedBy = "evaluationForm", fetch = FetchType.LAZY)
-	private Set<EvaluationFormXJobLevel> evaluationFormXJobLevels;
+    @OneToMany(mappedBy = "evaluationForm", fetch = FetchType.LAZY)
+    private Set<EvaluationFormXJobLevel> evaluationFormXJobLevels;
 
-	@OneToMany(mappedBy = "evaluationForm", fetch = FetchType.LAZY)
-	private Set<EvaluationFormXSectionXQuestion> evaluationFormXSectionXQuestions;
+    @OneToMany(mappedBy = "evaluationForm", fetch = FetchType.LAZY)
+    private Set<EvaluationFormXSectionXQuestion> evaluationFormXSectionXQuestions;
 
     public int getId() {
         return id;
@@ -62,31 +62,31 @@ public class EvaluationForm {
         this.description = description;
     }
 
-	public Set<AppraisalXEvaluationForm> getAppraisalXEvaluationForms() {
-		return appraisalXEvaluationForms;
-	}
+    public Set<AppraisalXEvaluationForm> getAppraisalXEvaluationForms() {
+        return appraisalXEvaluationForms;
+    }
 
-	public void setAppraisalXEvaluationForms(Set<AppraisalXEvaluationForm> appraisalXEvaluationForms) {
-		this.appraisalXEvaluationForms = appraisalXEvaluationForms;
-	}
+    public void setAppraisalXEvaluationForms(Set<AppraisalXEvaluationForm> appraisalXEvaluationForms) {
+        this.appraisalXEvaluationForms = appraisalXEvaluationForms;
+    }
 
-	public Set<EvaluationFormXJobLevel> getEvaluationFormXJobLevels() {
-		return evaluationFormXJobLevels;
-	}
+    public Set<EvaluationFormXJobLevel> getEvaluationFormXJobLevels() {
+        return evaluationFormXJobLevels;
+    }
 
-	public void setEvaluationFormXJobLevels(Set<EvaluationFormXJobLevel> evaluationFormXJobLevels) {
-		this.evaluationFormXJobLevels = evaluationFormXJobLevels;
-	}
+    public void setEvaluationFormXJobLevels(Set<EvaluationFormXJobLevel> evaluationFormXJobLevels) {
+        this.evaluationFormXJobLevels = evaluationFormXJobLevels;
+    }
 
-	public Set<EvaluationFormXSectionXQuestion> getEvaluationFormXSectionXQuestions() {
-		return evaluationFormXSectionXQuestions;
-	}
+    public Set<EvaluationFormXSectionXQuestion> getEvaluationFormXSectionXQuestions() {
+        return evaluationFormXSectionXQuestions;
+    }
 
-	public void setEvaluationFormXSectionXQuestions(Set<EvaluationFormXSectionXQuestion> evaluationFormXSectionXQuestions) {
-		this.evaluationFormXSectionXQuestions = evaluationFormXSectionXQuestions;
-	}
+    public void setEvaluationFormXSectionXQuestions(Set<EvaluationFormXSectionXQuestion> evaluationFormXSectionXQuestions) {
+        this.evaluationFormXSectionXQuestions = evaluationFormXSectionXQuestions;
+    }
 
-	@Override
+    @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;

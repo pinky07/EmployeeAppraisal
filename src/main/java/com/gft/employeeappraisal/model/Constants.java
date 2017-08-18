@@ -6,7 +6,7 @@ package com.gft.employeeappraisal.model;
  * @author Manuel Yepez
  */
 public interface Constants {
-	String SUCCESS = "SUCCESS";
-	String ERROR = "ERROR";
-	String INTERNAL_SERVER_ERROR_MESSAGE = "An internal server error occurred.";
+    String SUCCESS = "SUCCESS";
+    String ERROR = "ERROR";
+    String INTERNAL_SERVER_ERROR_MESSAGE = "An internal server error occurred.";
 }

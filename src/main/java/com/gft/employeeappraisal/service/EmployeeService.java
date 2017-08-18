@@ -1,6 +1,5 @@
 package com.gft.employeeappraisal.service;
 
-import com.gft.employeeappraisal.exception.AccessDeniedException;
 import com.gft.employeeappraisal.exception.EmployeeNotFoundException;
 import com.gft.employeeappraisal.model.Employee;
 import com.gft.employeeappraisal.model.EmployeeRelationship;
@@ -65,7 +64,8 @@ public interface EmployeeService {
 
     /**
      * Finds a stream of current relationships an employee has, given a lookup ID.
-     * @param employeeId Internal lookup ID for the employee.
+     *
+     * @param employeeId        Internal lookup ID for the employee.
      * @param relationshipNames One or more relationship types for lookup.
      * @return A stream of found relationships.
      * @throws EmployeeNotFoundException If the ID provided does not correspond to an employee.
@@ -73,15 +73,16 @@ public interface EmployeeService {
     Stream<EmployeeRelationship> findCurrentRelationshipsById(int employeeId, RelationshipName... relationshipNames)
             throws EmployeeNotFoundException;
 
-	/**
-	 * Finds a stream of current relationships an employee has.
-	 * @param employee Employee lookup entity
-	 * @param relationshipNames One or more relationship types for lookup.
-	 * @return A stream of found relationships.
-	 * @throws EmployeeNotFoundException if the entity provided does not correspond to an employee.
-	 */
-	Stream<EmployeeRelationship> findCurrentRelationshipsBySourceEmployee(Employee employee, RelationshipName... relationshipNames)
-			throws EmployeeNotFoundException;
+    /**
+     * Finds a stream of current relationships an employee has.
+     *
+     * @param employee          Employee lookup entity
+     * @param relationshipNames One or more relationship types for lookup.
+     * @return A stream of found relationships.
+     * @throws EmployeeNotFoundException if the entity provided does not correspond to an employee.
+     */
+    Stream<EmployeeRelationship> findCurrentRelationshipsBySourceEmployee(Employee employee, RelationshipName... relationshipNames)
+            throws EmployeeNotFoundException;
 
     /**
      * Given an Employee, determines if that employee is an application administrator.

@@ -22,7 +22,8 @@ public class SecurityServiceImpl implements SecurityService {
     private EmployeeService employeeService;
 
     @Autowired
-    public SecurityServiceImpl(EmployeeService employeeService) {
+    public SecurityServiceImpl(
+            EmployeeService employeeService) {
         this.employeeService = employeeService;
     }
 
@@ -30,7 +31,7 @@ public class SecurityServiceImpl implements SecurityService {
      * {@inheritDoc}
      */
     @Override
-    public void canReadEmployeeInformation(int employeeId, int requestedId) throws EmployeeNotFoundException, AccessDeniedException {
+    public void canReadEmployee(int employeeId, int requestedId) throws EmployeeNotFoundException, AccessDeniedException {
 
         // The Employee can access his own information
         if (employeeId != requestedId) {

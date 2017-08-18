@@ -25,14 +25,15 @@ import java.util.stream.Stream;
 @Service
 public class EmployeeRelationshipServiceImpl implements EmployeeRelationshipService {
 
-    @Autowired
     private EmployeeRelationshipRepository employeeRelationshipRepository;
-
-    @Autowired
     private RelationshipService relationshipService;
 
-    public EmployeeRelationshipServiceImpl() {
-        super();
+    @Autowired
+    public EmployeeRelationshipServiceImpl(
+            EmployeeRelationshipRepository employeeRelationshipRepository,
+            RelationshipService relationshipService) {
+        this.employeeRelationshipRepository = employeeRelationshipRepository;
+        this.relationshipService = relationshipService;
     }
 
     /**
@@ -191,33 +192,33 @@ public class EmployeeRelationshipServiceImpl implements EmployeeRelationshipServ
                 .stream();
     }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public Stream<EmployeeRelationship> findBySourceEmployeeAndRelationships(Employee sourceEmployee, RelationshipName... relationshipNames) {
-		List<Relationship> relationships = relationshipService.findRelationshipsByNames(relationshipNames).collect(Collectors.toList());
-
-		return employeeRelationshipRepository
-				.findAllBySourceEmployeeAndRelationshipIn(
-						sourceEmployee,
-						new HashSet<>(relationships))
-				.stream();
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
+    /**
+     * {@inheritDoc}
+     */
     @Override
-	public Stream<EmployeeRelationship> findCurrentBySourceEmployeeAndRelationships(Employee sourceEmployee, RelationshipName... relationshipNames) {
-    	List<Relationship> relationships = relationshipService.findRelationshipsByNames(relationshipNames).collect(Collectors.toList());
+    public Stream<EmployeeRelationship> findBySourceEmployeeAndRelationships(Employee sourceEmployee, RelationshipName... relationshipNames) {
+        List<Relationship> relationships = relationshipService.findRelationshipsByNames(relationshipNames).collect(Collectors.toList());
 
-		return employeeRelationshipRepository
-				.findCurrentBySourceEmployeeAndRelationships(
-						sourceEmployee,
-						new HashSet<>(relationships))
-				.stream();
-	}
+        return employeeRelationshipRepository
+                .findAllBySourceEmployeeAndRelationshipIn(
+                        sourceEmployee,
+                        new HashSet<>(relationships))
+                .stream();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Stream<EmployeeRelationship> findCurrentBySourceEmployeeAndRelationships(Employee sourceEmployee, RelationshipName... relationshipNames) {
+        List<Relationship> relationships = relationshipService.findRelationshipsByNames(relationshipNames).collect(Collectors.toList());
+
+        return employeeRelationshipRepository
+                .findCurrentBySourceEmployeeAndRelationships(
+                        sourceEmployee,
+                        new HashSet<>(relationships))
+                .stream();
+    }
 
     /**
      * {@inheritDoc}

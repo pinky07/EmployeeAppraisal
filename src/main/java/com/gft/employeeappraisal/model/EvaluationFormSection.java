@@ -56,15 +56,15 @@ public class EvaluationFormSection {
         this.description = description;
     }
 
-	public Set<EvaluationFormXSectionXQuestion> getEvaluationFormXSectionXQuestions() {
-		return evaluationFormXSectionXQuestions;
-	}
+    public Set<EvaluationFormXSectionXQuestion> getEvaluationFormXSectionXQuestions() {
+        return evaluationFormXSectionXQuestions;
+    }
 
-	public void setEvaluationFormXSectionXQuestions(Set<EvaluationFormXSectionXQuestion> evaluationFormXSectionXQuestions) {
-		this.evaluationFormXSectionXQuestions = evaluationFormXSectionXQuestions;
-	}
+    public void setEvaluationFormXSectionXQuestions(Set<EvaluationFormXSectionXQuestion> evaluationFormXSectionXQuestions) {
+        this.evaluationFormXSectionXQuestions = evaluationFormXSectionXQuestions;
+    }
 
-	@Override
+    @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;

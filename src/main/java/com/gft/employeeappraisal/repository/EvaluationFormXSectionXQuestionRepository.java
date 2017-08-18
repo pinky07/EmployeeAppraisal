@@ -13,5 +13,4 @@ import org.springframework.transaction.annotation.Transactional;
 @Repository
 @Transactional
 public interface EvaluationFormXSectionXQuestionRepository extends JpaRepository<EvaluationFormXSectionXQuestion, Integer> {
-
 }

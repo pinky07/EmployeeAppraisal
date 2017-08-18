@@ -41,7 +41,7 @@ public class EmployeeRelationship {
     private LocalDateTime endDate;
 
     @OneToMany(mappedBy = "employeeRelationship", fetch = FetchType.LAZY)
-	private Set<AppraisalXEvaluationFormXEmployeeRelationship> appraisalXEvaluationFormXEmployeeRelationships;
+    private Set<AppraisalXEvaluationFormXEmployeeRelationship> appraisalXEvaluationFormXEmployeeRelationships;
 
     public int getId() {
         return id;
@@ -91,41 +91,41 @@ public class EmployeeRelationship {
         this.relationship = relationship;
     }
 
-	public Set<AppraisalXEvaluationFormXEmployeeRelationship> getAppraisalXEvaluationFormXEmployeeRelationships() {
-		return appraisalXEvaluationFormXEmployeeRelationships;
-	}
+    public Set<AppraisalXEvaluationFormXEmployeeRelationship> getAppraisalXEvaluationFormXEmployeeRelationships() {
+        return appraisalXEvaluationFormXEmployeeRelationships;
+    }
 
-	public void setAppraisalXEvaluationFormXEmployeeRelationships(Set<AppraisalXEvaluationFormXEmployeeRelationship>
-																		  appraisalXEvaluationFormXEmployeeRelationships) {
-		this.appraisalXEvaluationFormXEmployeeRelationships = appraisalXEvaluationFormXEmployeeRelationships;
-	}
+    public void setAppraisalXEvaluationFormXEmployeeRelationships(
+            Set<AppraisalXEvaluationFormXEmployeeRelationship> appraisalXEvaluationFormXEmployeeRelationships) {
+        this.appraisalXEvaluationFormXEmployeeRelationships = appraisalXEvaluationFormXEmployeeRelationships;
+    }
 
-	@Override
-	public boolean equals(Object o) {
-		if (this == o) return true;
-		if (o == null || getClass() != o.getClass()) return false;
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
 
-		EmployeeRelationship that = (EmployeeRelationship) o;
+        EmployeeRelationship that = (EmployeeRelationship) o;
 
-		return getId() == that.getId() &&
-				getStartDate().equals(that.getStartDate()) &&
-				getEndDate().equals(that.getEndDate());
-	}
+        return getId() == that.getId() &&
+                getStartDate().equals(that.getStartDate()) &&
+                getEndDate().equals(that.getEndDate());
+    }
 
-	@Override
-	public int hashCode() {
-		int result = getId();
-		result = 31 * result + getStartDate().hashCode();
-		result = 31 * result + getEndDate().hashCode();
-		return result;
-	}
+    @Override
+    public int hashCode() {
+        int result = getId();
+        result = 31 * result + getStartDate().hashCode();
+        result = 31 * result + getEndDate().hashCode();
+        return result;
+    }
 
-	@Override
-	public String toString() {
-		return "EmployeeRelationship{" +
-				"id=" + id +
-				", startDate=" + startDate +
-				", endDate=" + endDate +
-				'}';
-	}
+    @Override
+    public String toString() {
+        return "EmployeeRelationship{" +
+                "id=" + id +
+                ", startDate=" + startDate +
+                ", endDate=" + endDate +
+                '}';
+    }
 }

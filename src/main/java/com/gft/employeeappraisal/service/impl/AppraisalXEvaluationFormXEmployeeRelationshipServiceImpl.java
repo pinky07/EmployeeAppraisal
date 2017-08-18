@@ -29,8 +29,8 @@ public class AppraisalXEvaluationFormXEmployeeRelationshipServiceImpl implements
 
     @Autowired
     public AppraisalXEvaluationFormXEmployeeRelationshipServiceImpl(
-            final RelationshipService relationshipService,
-            final AppraisalXEvaluationFormXEmployeeRelationshipRepository appraisalXEvaluationFormXEmployeeRelationshipRepository) {
+            RelationshipService relationshipService,
+            AppraisalXEvaluationFormXEmployeeRelationshipRepository appraisalXEvaluationFormXEmployeeRelationshipRepository) {
         this.relationshipService = relationshipService;
         this.appraisalXEvaluationFormXEmployeeRelationshipRepository = appraisalXEvaluationFormXEmployeeRelationshipRepository;
     }

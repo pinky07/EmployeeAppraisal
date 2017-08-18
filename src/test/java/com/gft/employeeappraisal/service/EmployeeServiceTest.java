@@ -49,6 +49,9 @@ public class EmployeeServiceTest extends ServiceSpringBootUnitTest {
     @Autowired
     private JobLevelService jobLevelService;
 
+    @Autowired
+    private SecurityService securityService;
+
     @Rule
 	public final ExpectedException exception = ExpectedException.none();
 
@@ -68,7 +71,7 @@ public class EmployeeServiceTest extends ServiceSpringBootUnitTest {
     @Test
     public void checkAccess() throws Exception {
     	// no exception is thrown in this case and test passes
-		employeeService.checkAccess(employee.getId(), employee.getId());
+		securityService.canReadEmployee(employee.getId(), employee.getId());
     }
 
 	@Test
@@ -76,22 +79,22 @@ public class EmployeeServiceTest extends ServiceSpringBootUnitTest {
 		Employee mentor = employeeService.saveAndFlush(mockAdmin(-2)).get();
 		employeeRelationshipService.changeMentor(mentor, employee);
 		// no exception is thrown in this case and test passes
-		employeeService.checkAccess(mentor.getId(), employee.getId());
+		securityService.canReadEmployee(mentor.getId(), employee.getId());
 	}
 
 	@Test
 	public void checkAccess_notFound() throws Exception {
 		// non-existing employeeappraisal
 		exception.expect(EmployeeNotFoundException.class);
-		employeeService.checkAccess(-100, employee.getId());
-		employeeService.checkAccess(employee.getId(), -100);
+		securityService.canReadEmployee(-100, employee.getId());
+		securityService.canReadEmployee(employee.getId(), -100);
 	}
 
 	@Test
 	public void checkAccess_forbidden() throws Exception {
 		Employee mentor = employeeService.saveAndFlush(mockAdmin(-2)).get();
 		exception.expect(AccessDeniedException.class);
-		employeeService.checkAccess(mentor.getId(), employee.getId());
+		securityService.canReadEmployee(mentor.getId(), employee.getId());
 	}
 
     @Test

@@ -14,8 +14,13 @@ import org.springframework.stereotype.Service;
 @Service
 public class AppraisalXEvaluationFormServiceImpl implements AppraisalXEvaluationFormService {
 
-    @Autowired
     private AppraisalXEvaluationFormRepository appraisalXEvaluationFormRepository;
+
+    @Autowired
+    public AppraisalXEvaluationFormServiceImpl(
+            AppraisalXEvaluationFormRepository appraisalXEvaluationFormRepository) {
+        this.appraisalXEvaluationFormRepository = appraisalXEvaluationFormRepository;
+    }
 
     @Override
     public void saveAndFlush(AppraisalXEvaluationForm appraisalXEvaluationForm) {

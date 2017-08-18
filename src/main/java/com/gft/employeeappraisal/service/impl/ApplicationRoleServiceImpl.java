@@ -16,22 +16,27 @@ import java.util.Optional;
 @Service
 public class ApplicationRoleServiceImpl implements ApplicationRoleService {
 
-	@Autowired
-	private ApplicationRoleRepository applicationRoleRepository;
+    private ApplicationRoleRepository applicationRoleRepository;
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public Optional<ApplicationRole> findById(int applicationRoleId) {
-		return Optional.ofNullable(applicationRoleRepository.findOne(applicationRoleId));
-	}
+    @Autowired
+    public ApplicationRoleServiceImpl(
+            ApplicationRoleRepository applicationRoleRepository) {
+        this.applicationRoleRepository = applicationRoleRepository;
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public ApplicationRole save(ApplicationRole entity) {
-		return applicationRoleRepository.save(entity);
-	}
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Optional<ApplicationRole> findById(int applicationRoleId) {
+        return Optional.ofNullable(applicationRoleRepository.findOne(applicationRoleId));
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public ApplicationRole save(ApplicationRole entity) {
+        return applicationRoleRepository.save(entity);
+    }
 }

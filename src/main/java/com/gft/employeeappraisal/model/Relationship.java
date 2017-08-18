@@ -13,8 +13,7 @@ import java.util.Set;
  */
 @Entity
 @Table(name = "Relationship", uniqueConstraints = {
-        @UniqueConstraint(columnNames = "name")
-})
+        @UniqueConstraint(columnNames = "name")})
 public class Relationship {
 
     @Id
@@ -22,17 +21,17 @@ public class Relationship {
     private int id;
 
     @NotEmpty
-	@Size(max = 20)
+    @Size(max = 20)
     @Column(name = "name", unique = true, nullable = false, length = 20)
     private String name;
 
     @NotEmpty
-	@Size(max = 500)
+    @Size(max = 500)
     @Column(name = "description", nullable = false, length = 500)
     private String description;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "relationship")
-	private Set<EmployeeRelationship> employeeRelationships;
+    private Set<EmployeeRelationship> employeeRelationships;
 
     public int getId() {
         return id;
@@ -66,32 +65,32 @@ public class Relationship {
         this.employeeRelationships = employeeRelationships;
     }
 
-	@Override
-	public boolean equals(Object o) {
-		if (this == o) return true;
-		if (o == null || getClass() != o.getClass()) return false;
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
 
-		Relationship that = (Relationship) o;
+        Relationship that = (Relationship) o;
 
-		return getId() == that.getId() &&
-				(getName() != null ? getName().equals(that.getName()) : that.getName() == null) &&
-				(getDescription() != null ? getDescription().equals(that.getDescription()) : that.getDescription() == null);
-	}
+        return getId() == that.getId() &&
+                (getName() != null ? getName().equals(that.getName()) : that.getName() == null) &&
+                (getDescription() != null ? getDescription().equals(that.getDescription()) : that.getDescription() == null);
+    }
 
-	@Override
-	public int hashCode() {
-		int result = getId();
-		result = 31 * result + (getName() != null ? getName().hashCode() : 0);
-		result = 31 * result + (getDescription() != null ? getDescription().hashCode() : 0);
-		return result;
-	}
+    @Override
+    public int hashCode() {
+        int result = getId();
+        result = 31 * result + (getName() != null ? getName().hashCode() : 0);
+        result = 31 * result + (getDescription() != null ? getDescription().hashCode() : 0);
+        return result;
+    }
 
-	@Override
-	public String toString() {
-		return "Relationship{" +
-				"id=" + id +
-				", name='" + name + '\'' +
-				", description='" + description + '\'' +
-				'}';
-	}
+    @Override
+    public String toString() {
+        return "Relationship{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                '}';
+    }
 }
