@@ -25,32 +25,33 @@ public class EmployeeRelationshipDTOBuilder implements ObjectBuilder<EmployeeRel
     private OffsetDateTime endDate;
     private RelationshipDTO relationshipDTO;
 
-    public EmployeeRelationshipDTOBuilder() {}
+    public EmployeeRelationshipDTOBuilder() {
+    }
 
     public EmployeeRelationshipDTOBuilder id(int id) {
-    	this.id = id;
-    	return this;
-	}
+        this.id = id;
+        return this;
+    }
 
-	public EmployeeRelationshipDTOBuilder reference(EmployeeDTO reference) {
-    	this.reference = reference;
-    	return this;
-	}
+    public EmployeeRelationshipDTOBuilder reference(EmployeeDTO reference) {
+        this.reference = reference;
+        return this;
+    }
 
-	public EmployeeRelationshipDTOBuilder startDate(OffsetDateTime startDate) {
-    	this.startDate = startDate;
-    	return this;
-	}
+    public EmployeeRelationshipDTOBuilder startDate(OffsetDateTime startDate) {
+        this.startDate = startDate;
+        return this;
+    }
 
-	public EmployeeRelationshipDTOBuilder endDate(OffsetDateTime endDate) {
-    	this.endDate = endDate;
-    	return this;
-	}
+    public EmployeeRelationshipDTOBuilder endDate(OffsetDateTime endDate) {
+        this.endDate = endDate;
+        return this;
+    }
 
-	public EmployeeRelationshipDTOBuilder relationship(RelationshipDTO relationshipDTO) {
-    	this.relationshipDTO = relationshipDTO;
-    	return this;
-	}
+    public EmployeeRelationshipDTOBuilder relationship(RelationshipDTO relationshipDTO) {
+        this.relationshipDTO = relationshipDTO;
+        return this;
+    }
 
     @Override
     public EmployeeRelationshipDTO build() {
@@ -58,7 +59,7 @@ public class EmployeeRelationshipDTOBuilder implements ObjectBuilder<EmployeeRel
         dto.setId(this.id);
         dto.setStartDate(this.startDate);
         dto.setEndDate(this.endDate);
-        dto.setReference(this.reference);
+        dto.setReferred(this.reference);
         dto.setRelationship(this.relationshipDTO);
         return dto;
     }
@@ -74,7 +75,7 @@ public class EmployeeRelationshipDTOBuilder implements ObjectBuilder<EmployeeRel
         when(mock.getId()).thenReturn(this.id);
         when(mock.getStartDate()).thenReturn(this.startDate);
         when(mock.getEndDate()).thenReturn(this.endDate);
-        when(mock.getReference()).thenReturn(this.reference);
+        when(mock.getReferred()).thenReturn(this.reference);
         when(mock.getRelationship()).thenReturn(this.relationshipDTO);
         return mock;
     }
