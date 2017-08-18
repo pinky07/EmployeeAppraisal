@@ -88,7 +88,7 @@ public class EmployeeRelationshipBuilder implements ObjectBuilder<EmployeeRelati
     @Override
     public EmployeeRelationship buildWithDefaults() {
         EmployeeRelationship obj = new EmployeeRelationship();
-        obj.setId(this.idSet ? this.id : this.currentId++);
+        obj.setId(this.idSet ? this.id : currentId++);
         obj.setSourceEmployee(this.sourceEmployeeSet ? this.sourceEmployee : new EmployeeBuilder().buildWithDefaults());
         obj.setTargetEmployee(this.targetEmployeeSet ? this.targetEmployee : new EmployeeBuilder().buildWithDefaults());
         obj.setStartDate(this.startDateSet ? this.startDate : LocalDateTime.now().minusDays(1));

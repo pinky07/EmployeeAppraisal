@@ -16,6 +16,7 @@ import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenCo
 public class ResourceServerConfiguration extends ResourceServerConfigurerAdapter {
 
     @Autowired
+    private
     TokenStore jwtTokenStore;
 
     @Autowired

@@ -35,7 +35,6 @@ public interface AppraisalService {
 	 * Save an Entity instance of {@link Appraisal}
 	 *
 	 * @param appraisal Appraisal Entity to saveAndFlush
-	 * @return True if the saveAndFlush is successful
 	 */
 	void saveAndFlush(Appraisal appraisal);
 }

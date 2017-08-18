@@ -57,7 +57,7 @@ public class RelationshipBuilder implements ObjectBuilder<Relationship> {
     @Override
     public Relationship buildWithDefaults() {
         Relationship relationship = new Relationship();
-        relationship.setId(this.idSet ? this.id : this.currentId++);
+        relationship.setId(this.idSet ? this.id : currentId++);
         relationship.setName(this.nameSet ? this.name : RelationshipName.PEER.name());
         relationship.setDescription(this.descriptionSet ? this.description : "Description");
         return relationship;

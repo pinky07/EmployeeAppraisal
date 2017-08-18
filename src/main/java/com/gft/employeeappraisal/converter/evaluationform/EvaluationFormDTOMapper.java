@@ -1,9 +1,9 @@
 package com.gft.employeeappraisal.converter.evaluationform;
 
-import com.gft.employeeappraisal.converter.employeerelationship.EmployeeRelationshipDTOConverter;
 import com.gft.employeeappraisal.model.EvaluationForm;
 import com.gft.employeeappraisal.model.EvaluationFormQuestion;
 import com.gft.employeeappraisal.model.EvaluationFormSection;
+import com.gft.employeeappraisal.model.EvaluationFormXSectionXQuestion;
 import com.gft.swagger.employees.model.EvaluationFormDTO;
 import com.gft.swagger.employees.model.EvaluationFormQuestionDTO;
 import com.gft.swagger.employees.model.EvaluationFormSectionDTO;
@@ -38,7 +38,7 @@ public class EvaluationFormDTOMapper extends CustomMapper<EvaluationForm, Evalua
         Map<EvaluationFormSection, List<EvaluationFormQuestion>> questionsBySection = evaluationForm.getEvaluationFormXSectionXQuestions()
                 .stream()
                 .collect(Collectors.toMap(
-                        evaluationFormXSectionXQuestion -> evaluationFormXSectionXQuestion.getEvaluationFormSection(),
+                        EvaluationFormXSectionXQuestion::getEvaluationFormSection,
                         evaluationFormXSectionXQuestion -> {
                             List<EvaluationFormQuestion> question = new ArrayList<>();
                             question.add(evaluationFormXSectionXQuestion.getEvaluationFormQuestion());

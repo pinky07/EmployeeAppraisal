@@ -76,7 +76,7 @@ public class AppraisalBuilder implements ObjectBuilder<Appraisal> {
     @Override
     public Appraisal buildWithDefaults() {
         Appraisal appraisal = new Appraisal();
-        appraisal.setId(this.idSet ? this.id : this.currentId++);
+        appraisal.setId(this.idSet ? this.id : currentId++);
         appraisal.setName(this.nameSet ? this.name : "Name");
         appraisal.setDescription(this.descriptionSet ? this.description : "Description");
         appraisal.setStartDate(this.startDateSet ? this.startDate : LocalDateTime.now().minusDays(1));

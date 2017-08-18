@@ -45,7 +45,6 @@ public interface AppraisalXEvaluationFormXEmployeeRelationshipService {
      * Save an Entity instance of {@link AppraisalXEvaluationFormXEmployeeRelationship}
      *
      * @param appraisalXEvaluationFormXEmployeeRelationship Appraisal Entity to saveAndFlush
-     * @return True if the saveAndFlush is successful
      */
     void saveAndFlush(AppraisalXEvaluationFormXEmployeeRelationship appraisalXEvaluationFormXEmployeeRelationship);
 }

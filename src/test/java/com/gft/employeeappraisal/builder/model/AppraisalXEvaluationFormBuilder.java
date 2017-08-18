@@ -55,7 +55,7 @@ public class AppraisalXEvaluationFormBuilder implements ObjectBuilder<AppraisalX
     @Override
     public AppraisalXEvaluationForm buildWithDefaults() {
         AppraisalXEvaluationForm obj = new AppraisalXEvaluationForm();
-        obj.setId(this.idSet ? this.id : this.currentId++);
+        obj.setId(this.idSet ? this.id : currentId++);
         obj.setAppraisal(this.appraisalSet ? this.appraisal : new AppraisalBuilder().buildWithDefaults());
         obj.setEvaluationForm(this.evaluationFormSet ? this.evaluationForm : new EvaluationFormBuilder().buildWithDefaults());
         return obj;

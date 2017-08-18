@@ -57,7 +57,7 @@ public class JobFamilyBuilder implements ObjectBuilder<JobFamily> {
     @Override
     public JobFamily buildWithDefaults() {
         JobFamily jobFamily = new JobFamily();
-        jobFamily.setId(this.idSet ? this.id : this.currentId++);
+        jobFamily.setId(this.idSet ? this.id : currentId++);
         jobFamily.setName(this.nameSet ? this.name : "Name");
         jobFamily.setDescription(this.descriptionSet ? this.description : "Description");
         return jobFamily;

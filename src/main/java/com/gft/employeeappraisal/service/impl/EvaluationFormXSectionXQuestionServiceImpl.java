@@ -2,7 +2,6 @@ package com.gft.employeeappraisal.service.impl;
 
 import com.gft.employeeappraisal.model.*;
 import com.gft.employeeappraisal.repository.AppraisalXEvaluationFormXEmployeeRelationshipRepository;
-import com.gft.employeeappraisal.service.EvaluationFormService;
 import com.gft.employeeappraisal.service.EvaluationFormXSectionXQuestionService;
 import com.gft.employeeappraisal.service.RelationshipService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,8 +43,8 @@ public class EvaluationFormXSectionXQuestionServiceImpl implements EvaluationFor
                 .findByAppraisalAndEmployeeAsSourceAndTarget(appraisal, employee, relationshipSet)
                 .stream()
                 .findFirst()
-                .map(appraisalXEvaluationFormXEmployeeRelationship -> appraisalXEvaluationFormXEmployeeRelationship.getAppraisalXEvaluationForm())
-                .map(appraisalXEvaluationForm -> appraisalXEvaluationForm.getEvaluationForm());
+                .map(AppraisalXEvaluationFormXEmployeeRelationship::getAppraisalXEvaluationForm)
+                .map(AppraisalXEvaluationForm::getEvaluationForm);
     }
 
     @Override
@@ -59,8 +58,8 @@ public class EvaluationFormXSectionXQuestionServiceImpl implements EvaluationFor
         return appraisalXEvaluationFormXEmployeeRelationshipRepository
                 .findByAppraisalAndSourceEmployee(appraisal, employee, relationshipSet)
                 .stream()
-                .map(appraisalXEvaluationFormXEmployeeRelationship -> appraisalXEvaluationFormXEmployeeRelationship.getAppraisalXEvaluationForm())
-                .map(appraisalXEvaluationForm -> appraisalXEvaluationForm.getEvaluationForm());
+                .map(AppraisalXEvaluationFormXEmployeeRelationship::getAppraisalXEvaluationForm)
+                .map(AppraisalXEvaluationForm::getEvaluationForm);
     }
 
     @Override
@@ -72,7 +71,7 @@ public class EvaluationFormXSectionXQuestionServiceImpl implements EvaluationFor
                 .findByAppraisalAndTargetEmployee(appraisal, employee, relationshipSet)
                 .stream()
                 .findFirst()
-                .map(appraisalXEvaluationFormXEmployeeRelationship -> appraisalXEvaluationFormXEmployeeRelationship.getAppraisalXEvaluationForm())
-                .map(appraisalXEvaluationForm -> appraisalXEvaluationForm.getEvaluationForm());
+                .map(AppraisalXEvaluationFormXEmployeeRelationship::getAppraisalXEvaluationForm)
+                .map(AppraisalXEvaluationForm::getEvaluationForm);
     }
 }

@@ -3,7 +3,6 @@ package com.gft.employeeappraisal.converter.employee;
 import com.gft.employeeappraisal.converter.EntityDTOConverter;
 import com.gft.employeeappraisal.model.Employee;
 import com.gft.swagger.employees.model.EmployeeDTO;
-import ma.glasnost.orika.BoundMapperFacade;
 import ma.glasnost.orika.MapperFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;

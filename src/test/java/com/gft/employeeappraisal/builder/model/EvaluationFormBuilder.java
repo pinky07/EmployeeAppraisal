@@ -54,7 +54,7 @@ public class EvaluationFormBuilder implements ObjectBuilder<EvaluationForm> {
     @Override
     public EvaluationForm buildWithDefaults() {
         EvaluationForm evaluationForm = new EvaluationForm();
-        evaluationForm.setId(this.idSet ? this.id : this.currentId++);
+        evaluationForm.setId(this.idSet ? this.id : currentId++);
         evaluationForm.setName(this.nameSet ? this.name : "Name");
         evaluationForm.setDescription(this.descriptionSet ? this.description : "Description");
         return evaluationForm;

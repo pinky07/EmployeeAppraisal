@@ -29,7 +29,7 @@ import static org.junit.Assert.assertTrue;
 @DataJpaTest
 public class AppraisalXEvaluationFormXEmployeeRelationshipRepositoryTest {
 
-    private Logger logger = LoggerFactory.getLogger(AppraisalXEvaluationFormXEmployeeRelationshipRepositoryTest.class);
+    private final Logger logger = LoggerFactory.getLogger(AppraisalXEvaluationFormXEmployeeRelationshipRepositoryTest.class);
 
     @Autowired
     private AppraisalRepository appraisalRepository;
@@ -111,9 +111,9 @@ public class AppraisalXEvaluationFormXEmployeeRelationshipRepositoryTest {
         peerRelationship = this.relationshipRepository.findByName(RelationshipName.PEER.name())
                 .orElseThrow(() -> new EmployeeAppraisalMicroserviceTestException("Couldn't find Relationship Name PEER"));
 
-        selfRelationshipSet = new HashSet<>(Arrays.asList(selfRelationship));
+        selfRelationshipSet = new HashSet<>(Collections.singletonList(selfRelationship));
 
-        peerRelationshipSet = new HashSet<>(Arrays.asList(peerRelationship));
+        peerRelationshipSet = new HashSet<>(Collections.singletonList(peerRelationship));
 
         a2bEmployeeRelationship = new EmployeeRelationshipBuilder()
                 .sourceEmployee(employeeA)

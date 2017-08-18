@@ -23,7 +23,7 @@ import java.util.stream.Stream;
 @Service
 public class EmployeeServiceImpl implements EmployeeService {
 
-    private Logger log = LoggerFactory.getLogger(EmployeeServiceImpl.class);
+    private final Logger log = LoggerFactory.getLogger(EmployeeServiceImpl.class);
 
     @Autowired
     private ApplicationRoleService applicationRoleService;

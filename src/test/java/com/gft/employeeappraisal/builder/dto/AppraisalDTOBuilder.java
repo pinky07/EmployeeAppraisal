@@ -1,7 +1,6 @@
 package com.gft.employeeappraisal.builder.dto;
 
 import com.gft.employeeappraisal.builder.ObjectBuilder;
-import com.gft.swagger.employees.model.ApplicationRoleDTO;
 import com.gft.swagger.employees.model.AppraisalDTO;
 import org.apache.commons.lang.NotImplementedException;
 import org.mockito.Mockito;

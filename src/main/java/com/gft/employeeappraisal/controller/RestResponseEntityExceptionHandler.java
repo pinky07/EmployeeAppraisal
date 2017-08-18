@@ -22,7 +22,7 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 @ControllerAdvice
 public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionHandler {
 
-    private Logger logger = LoggerFactory.getLogger(RestResponseEntityExceptionHandler.class);
+    private final Logger logger = LoggerFactory.getLogger(RestResponseEntityExceptionHandler.class);
 
     /**
      * Handles exceptions of type {@link EmployeeNotFoundException} coming from the controllers that support it.

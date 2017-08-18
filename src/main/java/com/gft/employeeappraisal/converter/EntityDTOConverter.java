@@ -1,9 +1,5 @@
 package com.gft.employeeappraisal.converter;
 
-import com.gft.employeeappraisal.model.Employee;
-import com.gft.employeeappraisal.model.EmployeeRelationship;
-import com.gft.swagger.employees.model.EmployeeDTO;
-import com.gft.swagger.employees.model.EmployeeRelationshipDTO;
 import ma.glasnost.orika.BoundMapperFacade;
 
 /**

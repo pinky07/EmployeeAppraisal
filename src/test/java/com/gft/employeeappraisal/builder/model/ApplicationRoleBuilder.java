@@ -57,7 +57,7 @@ public class ApplicationRoleBuilder implements ObjectBuilder<ApplicationRole> {
     @Override
     public ApplicationRole buildWithDefaults() {
         ApplicationRole applicationRole = new ApplicationRole();
-        applicationRole.setId(this.idSet ? this.id : this.currentId++);
+        applicationRole.setId(this.idSet ? this.id : currentId++);
         applicationRole.setName(this.nameSet ? this.name : "Name");
         applicationRole.setDescription(this.descriptionSet ? this.description : "Description");
         return applicationRole;

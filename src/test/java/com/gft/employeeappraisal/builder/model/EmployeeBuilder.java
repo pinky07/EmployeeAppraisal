@@ -95,7 +95,7 @@ public class EmployeeBuilder implements ObjectBuilder<Employee> {
     @Override
     public Employee buildWithDefaults() {
         Employee employee = new Employee();
-        employee.setId(this.idSet ? this.id : this.currentId++);
+        employee.setId(this.idSet ? this.id : currentId++);
         employee.setFirstName(this.firstNameSet ? this.firstName : "First Name");
         employee.setLastName(this.lastNameSet ? this.lastName : "Last Name");
         employee.setGftIdentifier(this.gftIdentifierSet ? this.gftIdentifier : "----");

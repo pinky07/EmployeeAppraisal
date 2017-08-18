@@ -13,7 +13,7 @@ cleanUpDocker() {
 	then
 
 		echo 'Attempting to remove dangling images...'
-		DANGLING_REMOVED=`docker rmi $DANGLING_IMAGES`
+		DANGLING_REMOVED=`docker rmi ${DANGLING_IMAGES}`
 
 		if test -n "$DANGLING_REMOVED";
 		then 
@@ -31,20 +31,20 @@ removeContainer() {
 	VERSION=$2
 	NAME_VERSION="$NAME:$VERSION"
 
-	echo 'Looking for containers running based on' $NAME_VERSION '...'
+	echo 'Looking for containers running based on' ${NAME_VERSION} '...'
 	CONTAINERS_RUNNING=`docker ps -a | grep "$NAME_VERSION" | awk '{print $1}'`
 
 	if test -n "$CONTAINERS_RUNNING";
 	then
 
 		echo 'Stopping the containers found...'
-		CONTAINERS_STOPPED=`echo $CONTAINERS_RUNNING | xargs docker stop`
+		CONTAINERS_STOPPED=`echo ${CONTAINERS_RUNNING} | xargs docker stop`
 
 		if test -n "$CONTAINERS_STOPPED";
 		then
 
 			echo "Removing the stopped containers..."
-			CONTAINERS_REMOVED=`echo $CONTAINERS_STOPPED | xargs docker rm`
+			CONTAINERS_REMOVED=`echo ${CONTAINERS_STOPPED} | xargs docker rm`
 
 			if test -n "$CONTAINERS_STOPPED";
 			then
@@ -65,14 +65,14 @@ removeImage() {
 	VERSION=$2
 	NAME_VERSION="$NAME:$VERSION"
 
-	echo 'Looking for an image named' $NAME_VERSION '...'	
+	echo 'Looking for an image named' ${NAME_VERSION} '...'
 	IMAGE=`docker images | grep -E "$NAME\s+$VERSION" | awk '{print $3}'`
 
 	if test -n "$IMAGE";
 	then
 
 		echo 'Removing the image found...'
-		IMAGE_REMOVED=`echo $IMAGE | xargs docker rmi`
+		IMAGE_REMOVED=`echo ${IMAGE} | xargs docker rmi`
 
 		if test -n "$IMAGE_REMOVED";
 		then 

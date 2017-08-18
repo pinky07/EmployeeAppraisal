@@ -35,7 +35,7 @@ import java.util.stream.Collectors;
 @Controller
 public class AppraisalsController implements AppraisalApi {
 
-    private Logger logger = LoggerFactory.getLogger(AppraisalsController.class);
+    private final Logger logger = LoggerFactory.getLogger(AppraisalsController.class);
 
     @Autowired
     private AppraisalService appraisalService;

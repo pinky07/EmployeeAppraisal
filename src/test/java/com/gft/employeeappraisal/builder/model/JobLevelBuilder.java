@@ -76,7 +76,7 @@ public class JobLevelBuilder implements ObjectBuilder<JobLevel> {
     @Override
     public JobLevel buildWithDefaults() {
         JobLevel jobLevel = new JobLevel();
-        jobLevel.setId(this.idSet ? this.id : this.currentId++);
+        jobLevel.setId(this.idSet ? this.id : currentId++);
         jobLevel.setName(this.nameSet ? this.name : "Name");
         jobLevel.setDescription(this.descriptionSet ? this.description : "Description");
         jobLevel.setExpertise(this.expertiseSet ? this.expertise : "Expertise");

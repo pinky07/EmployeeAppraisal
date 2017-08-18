@@ -46,7 +46,7 @@ public class EntityDTOComparator {
      * @param entity Application Role Entity
      * @param dto    Application Role DTO
      */
-    public void assertEqualsApplicationRole(ApplicationRole entity, ApplicationRoleDTO dto) {
+    private void assertEqualsApplicationRole(ApplicationRole entity, ApplicationRoleDTO dto) {
         assertNotNull(entity);
         assertNotNull(dto);
         assertEquals((Integer) entity.getId(), dto.getId());
@@ -60,7 +60,7 @@ public class EntityDTOComparator {
      * @param entity Job Level Entity
      * @param dto    Job Level DTO
      */
-    public void assertEqualsJobLevel(JobLevel entity, JobLevelDTO dto) {
+    private void assertEqualsJobLevel(JobLevel entity, JobLevelDTO dto) {
         assertNotNull(entity);
         assertNotNull(dto);
         assertEquals((Integer) entity.getId(), dto.getId());
@@ -76,7 +76,7 @@ public class EntityDTOComparator {
      * @param entity Job Family Entity
      * @param dto    Job Family DTO
      */
-    public void assertEqualsJobFamily(JobFamily entity, JobFamilyDTO dto) {
+    private void assertEqualsJobFamily(JobFamily entity, JobFamilyDTO dto) {
         assertNotNull(entity);
         assertNotNull(dto);
         assertEquals((Integer) entity.getId(), dto.getId());

@@ -43,7 +43,7 @@ import java.util.Optional;
 @Controller
 public class EmployeesController implements EmployeeApi {
 
-    private Logger logger = LoggerFactory.getLogger(EmployeesController.class);
+    private final Logger logger = LoggerFactory.getLogger(EmployeesController.class);
 
     @Autowired
     private EmployeeService employeeService;

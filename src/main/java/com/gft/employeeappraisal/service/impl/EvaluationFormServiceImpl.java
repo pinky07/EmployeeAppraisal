@@ -3,7 +3,6 @@ package com.gft.employeeappraisal.service.impl;
 import com.gft.employeeappraisal.model.EvaluationForm;
 import com.gft.employeeappraisal.repository.EvaluationFormRepository;
 import com.gft.employeeappraisal.service.EvaluationFormService;
-import com.netflix.discovery.converters.Auto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

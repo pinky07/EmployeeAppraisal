@@ -65,7 +65,7 @@ public class AppraisalXEvaluationFormXEmployeeRelationshipBuilder implements Obj
     @Override
     public AppraisalXEvaluationFormXEmployeeRelationship buildWithDefaults() {
         AppraisalXEvaluationFormXEmployeeRelationship obj = new AppraisalXEvaluationFormXEmployeeRelationship();
-        obj.setId(this.idSet ? this.id : this.currentId++);
+        obj.setId(this.idSet ? this.id : currentId++);
         obj.setAppraisalXEvaluationForm(this.appraisalXEvaluationFormSet ? this.appraisalXEvaluationForm :
                 new AppraisalXEvaluationFormBuilder().buildWithDefaults());
         obj.setEmployeeRelationship(this.employeeRelationshipSet ? this.employeeRelationship :

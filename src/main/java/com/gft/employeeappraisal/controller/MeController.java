@@ -26,7 +26,7 @@ import java.util.stream.Collectors;
 @Controller
 public class MeController implements MeApi {
 
-    private Logger logger = LoggerFactory.getLogger(MeController.class);
+    private final Logger logger = LoggerFactory.getLogger(MeController.class);
 
     @Autowired
     private EmployeeService employeeService;
