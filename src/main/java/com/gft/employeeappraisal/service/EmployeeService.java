@@ -24,16 +24,6 @@ public interface EmployeeService {
     Employee getLoggedInUser() throws EmployeeNotFoundException;
 
     /**
-     * Determines if certain person can obtain a specific employee information.
-     *
-     * @param employeeId  Id of the Employee who wants access
-     * @param requestedId Id of the Employee to be accessed
-     * @throws EmployeeNotFoundException if either the IDs provided do not correspond to an existing employee.
-	 * @throws AccessDeniedException if the employee is not an admin or current mentor requesting the employee information.
-     */
-    void checkAccess(int employeeId, int requestedId) throws EmployeeNotFoundException, AccessDeniedException;
-
-    /**
      * Given an email, looks up an employee and returns it.
      *
      * @param email Lookup email for the employee.

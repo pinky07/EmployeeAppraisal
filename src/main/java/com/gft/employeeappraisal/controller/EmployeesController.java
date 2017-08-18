@@ -8,6 +8,7 @@ import com.gft.employeeappraisal.model.Employee;
 import com.gft.employeeappraisal.model.RelationshipName;
 import com.gft.employeeappraisal.service.EmployeeRelationshipService;
 import com.gft.employeeappraisal.service.EmployeeService;
+import com.gft.employeeappraisal.service.SecurityService;
 import com.gft.employeeappraisal.validator.DTOValidator;
 import com.gft.employeeappraisal.validator.EmployeeDTOToEntityCreateValidator;
 import com.gft.swagger.employees.api.EmployeeApi;
@@ -15,7 +16,6 @@ import com.gft.swagger.employees.model.EmployeeDTO;
 import com.gft.swagger.employees.model.EmployeeRelationshipDTO;
 import com.gft.swagger.employees.model.FieldErrorDTO;
 import com.gft.swagger.employees.model.OperationResultDTO;
-import io.swagger.annotations.ApiParam;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -61,18 +61,17 @@ public class EmployeesController implements EmployeeApi {
     private EmployeeDTOToEntityCreateValidator employeeDTOToEntityCreateValidator;
 
     @Autowired
+    private SecurityService securityService;
+
+    @Autowired
     private MessageSource messageSource;
+
+
 
     @Override
     public ResponseEntity<List<EmployeeDTO>> employeesGet(
-            @ApiParam(value = "Page number. Defaults to 1. ", defaultValue = "1") @RequestParam(
-                    value = "page",
-                    required = false,
-                    defaultValue = "1") Integer page,
-            @ApiParam(value = "Number of elements in each page. Defaults to 10. ", defaultValue = "10") @RequestParam(
-                    value = "size",
-                    required = false,
-                    defaultValue = "10") Integer size) {
+            @RequestParam(value = "page", required = false, defaultValue = "1") Integer page,
+            @RequestParam(value = "size", required = false, defaultValue = "10") Integer size) {
         return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
     }
 
@@ -83,13 +82,13 @@ public class EmployeesController implements EmployeeApi {
 
     @Override
     public ResponseEntity<EmployeeDTO> employeesIdGet(
-            @ApiParam(value = "`Employee` Id. ", required = true) @PathVariable("employeeId") Integer employeeId) {
+            @PathVariable("employeeId") Integer employeeId) {
 
         // Get the logged in Employee
         Employee user = this.employeeService.getLoggedInUser();
 
         // This method will throw an Exception if the user can't access the Employee information
-        employeeService.checkAccess(user.getId(), employeeId);
+        securityService.canReadEmployeeInformation(user.getId(), employeeId);
 
         Employee employee = employeeService.findById(employeeId).orElseThrow(
                 () -> new EmployeeNotFoundException(
@@ -103,13 +102,13 @@ public class EmployeesController implements EmployeeApi {
 
     @Override
     public ResponseEntity<Void> employeesIdMenteesGet(
-            @ApiParam(value = "`Employee` Id. ", required = true) @PathVariable("employeeId") Integer employeeId) {
+            @PathVariable("employeeId") Integer employeeId) {
         return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
     }
 
     @Override
     public ResponseEntity<Void> employeesIdMenteesPost(
-            @ApiParam(value = "`Employee` Id. ", required = true) @PathVariable("employeeId") Integer employeeId) {
+            @PathVariable("employeeId") Integer employeeId) {
         return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
     }
 
@@ -121,7 +120,6 @@ public class EmployeesController implements EmployeeApi {
      */
     @Override
     public ResponseEntity<EmployeeDTO> employeesIdMentorGet(
-            @ApiParam(value = "`Employee` Id. ", required = true)
             @PathVariable("employeeId") Integer employeeId)
             throws EmployeeNotFoundException {
 
@@ -146,7 +144,7 @@ public class EmployeesController implements EmployeeApi {
      */
     @Override
     public ResponseEntity<OperationResultDTO> employeesIdMentorPut(
-            @ApiParam(value = "`Employee` Id. ", required = true) @PathVariable("employeeId") Integer employeeId,
+            @PathVariable("employeeId") Integer employeeId,
             @RequestBody EmployeeDTO newMentorDTO) {
 
         // TODO We don't need a complete Employee object for this endpoint!
@@ -181,19 +179,24 @@ public class EmployeesController implements EmployeeApi {
     }
 
     @Override
-    public ResponseEntity<Void> employeesIdPut(EmployeeDTO employee) {
+    public ResponseEntity<Void> employeesIdPut(
+            @RequestBody EmployeeDTO employee) {
         return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
     }
 
     @Override
-    public ResponseEntity<List<EmployeeRelationshipDTO>> employeesIdRelationshipsGet(@PathVariable("employeeId")
-                                                                                             Integer employeeId, @RequestParam(value = "exclude", required = false) List<String> exclude,
-                                                                                     String startDate, String endDate, Boolean current) {
+    public ResponseEntity<List<EmployeeRelationshipDTO>> employeesIdRelationshipsGet(
+            @PathVariable("employeeId") Integer employeeId,
+            @RequestParam(value = "exclude", required = false) List<String> exclude,
+            @RequestParam(value = "startDate", required = false) String startDate,
+            @RequestParam(value = "endDate", required = false) String endDate,
+            @RequestParam(value = "current", required = false) Boolean current) {
+
         // Get the logged in Employee
         Employee user = this.employeeService.getLoggedInUser();
 
         // This method will throw an Exception if the user can't access the Employee information
-        employeeService.checkAccess(user.getId(), employeeId);
+        securityService.canReadEmployeeInformation(user.getId(), employeeId);
 
         Employee employee = employeeService.findById(employeeId).orElseThrow(
                 () -> new EmployeeNotFoundException(
@@ -223,6 +226,9 @@ public class EmployeesController implements EmployeeApi {
             @PathVariable("employeeId") Integer employeeId,
             @RequestBody EmployeeRelationshipDTO relationship) {
 
+
+
+
         // TODO Implement this!
 
         return new ResponseEntity<>(HttpStatus.CREATED);
@@ -235,7 +241,8 @@ public class EmployeesController implements EmployeeApi {
      * @return {@link OperationResultDTO} Entity with any possible validation error messages, or success.
      */
     @Override
-    public ResponseEntity<OperationResultDTO> employeesPost(@RequestBody EmployeeDTO employee) {
+    public ResponseEntity<OperationResultDTO> employeesPost(
+            @RequestBody EmployeeDTO employee) {
         OperationResultDTO response = new OperationResultDTO();
         HttpStatus status;
         BindingResult result = validate(employee, employeeDTOToEntityCreateValidator);
@@ -269,7 +276,8 @@ public class EmployeesController implements EmployeeApi {
     }
 
     @Override
-    public ResponseEntity<Void> employeesPut(EmployeeDTO postEmployee) {
+    public ResponseEntity<Void> employeesPut(
+            @RequestBody EmployeeDTO employee) {
         return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
     }
 
@@ -284,12 +292,9 @@ public class EmployeesController implements EmployeeApi {
     private <T> BindingResult validate(T target, DTOValidator<T> validator) {
         DataBinder binder = new DataBinder(target);
         binder.setValidator(validator);
-
         validator.setPropertyValues(target);
         binder.bind(validator.getPropertyValues());
-
         binder.validate();
-
         return binder.getBindingResult();
     }
 

@@ -56,43 +56,6 @@ public class EmployeeServiceImpl implements EmployeeService {
      * {@inheritDoc}
      */
     @Override
-    public void checkAccess(int employeeId, int requestedId) throws EmployeeNotFoundException, AccessDeniedException {
-
-        // The employeeappraisal can access his own information
-        if (employeeId != requestedId) {
-
-            // Get Employee requesting access
-            Employee employee = this.findById(employeeId)
-                    .orElseThrow(() -> new EmployeeNotFoundException(
-                            String.format("Can't find Employee with Id %d",
-                                    employeeId)));
-
-
-            // Get the Employee that is trying to be accessed
-            Employee requestedEmployee = this.findById(requestedId)
-                    .orElseThrow(() -> new EmployeeNotFoundException(
-                            String.format("Can't find requested Employee with Id %d",
-                                    requestedId)));
-
-            //  Get the Mentor of the Employee that's being trying to be accessed
-            Optional<Employee> requestedEmployeeMentor = this.findCurrentMentorById(requestedEmployee.getId());
-
-            // The Employee can access the requested Employee if he is his Mentor
-            if (!requestedEmployeeMentor.isPresent() || !employee.equals(requestedEmployeeMentor.get())) {
-
-                // Otherwise an Access Denied Exception is thrown
-                throw new AccessDeniedException(String.format(
-                        "Employee with Id %d can't access Employee with %d information",
-                        employeeId,
-                        requestedId));
-            }
-        }
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
     public Optional<Employee> findById(Integer id) {
         return Optional.ofNullable(employeeRepository.findOne(id));
     }
