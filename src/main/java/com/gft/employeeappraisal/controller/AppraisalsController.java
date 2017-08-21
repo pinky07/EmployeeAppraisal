@@ -3,10 +3,7 @@ package com.gft.employeeappraisal.controller;
 import com.gft.employeeappraisal.converter.appraisal.AppraisalDTOConverter;
 import com.gft.employeeappraisal.converter.evaluationform.EvaluationFormDTOConverter;
 import com.gft.employeeappraisal.exception.NotFoundException;
-import com.gft.employeeappraisal.model.Appraisal;
-import com.gft.employeeappraisal.model.AppraisalXEvaluationForm;
-import com.gft.employeeappraisal.model.AppraisalXEvaluationFormXEmployeeRelationship;
-import com.gft.employeeappraisal.model.Employee;
+import com.gft.employeeappraisal.model.*;
 import com.gft.employeeappraisal.service.AppraisalService;
 import com.gft.employeeappraisal.service.AppraisalXEvaluationFormXEmployeeRelationshipService;
 import com.gft.employeeappraisal.service.EmployeeService;
@@ -59,11 +56,25 @@ public class AppraisalsController implements AppraisalApi {
     }
 
     @Override
-    public ResponseEntity<List<AppraisalDTO>> employeesIdAppraisalsGet(
-            @PathVariable("employeeId") Integer employeeId) {
+    public ResponseEntity<AppraisalDTO> employeesIdAppraisalsIdGet(@PathVariable Integer employeeId,
+                                                                   @PathVariable Integer appraisalId) {
+        Employee employee = employeeService.findById(employeeId).orElseThrow(() -> new NotFoundException(
+                String.format("Employee with id %d was not found",
+                        employeeId)));
 
-        // TODO Implement this method!
-        throw new NotImplementedException();
+        // Get Appraisal
+        Appraisal appraisal = appraisalService.findById(appraisalId)
+                .orElseThrow(() -> new NotFoundException(String.format(
+                        "Appraisal with id %d was not found", appraisalId)));
+
+        // Check if the employee was indeed part of the appraisal
+        AppraisalDTO result = appraisalXEvaluationFormXEmployeeRelationshipService
+                .findByAppraisalAndEmployeeAndSourceRelationships(appraisal, employee, RelationshipName.SELF)
+                .map(AppraisalXEvaluationFormXEmployeeRelationship::getAppraisalXEvaluationForm)
+                .map(AppraisalXEvaluationForm::getAppraisal)
+                .findFirst().map(a -> appraisalDTOConverter.convert(a)).orElse(new AppraisalDTO());
+
+        return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
     /**
@@ -98,18 +109,47 @@ public class AppraisalsController implements AppraisalApi {
     }
 
     @Override
-    public ResponseEntity<AppraisalDTO> employeesIdAppraisalsIdGet(
-            @PathVariable("employeeId") Integer employeeId,
-            @PathVariable("appraisalId") Integer appraisalId) {
+    public ResponseEntity<List<AppraisalDTO>> employeesIdAppraisalsGet(@PathVariable Integer employeeId,
+                                                                       @RequestParam(value = "status", required = false)
+                                                                       List<String> statusList) {
+        logger.debug("Called endpoint: GET /employees/{}/appraisals", employeeId);
 
-        // TODO Implement this method!
-        throw new NotImplementedException();
+        List<AppraisalDTO> result = new ArrayList<>();
+        Employee employee = employeeService.findById(employeeId).orElseThrow(() -> new NotFoundException(
+                String.format("Employee with id %d was not found",
+                        employeeId)));
+
+        appraisalService.findEmployeeAppraisals(employee, null)
+                .forEach(ea -> result.add(appraisalDTOConverter.convert(ea)));
+
+        return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
     @Override
-    public ResponseEntity<List<AppraisalDTO>> meAppraisalsGet(
-            @RequestParam(value = "status", required = false) List<String> statusList) {
+    public ResponseEntity<AppraisalDTO> meAppraisalsIdGet(@PathVariable Integer appraisalId) {
 
+        // Get logged in user
+        Employee user = this.employeeService.getLoggedInUser();
+        logger.debug("{} called endpoint: GET /me/appraisals/{}", user.getEmail(), appraisalId);
+
+        // Get Appraisal
+        Appraisal appraisal = appraisalService.findById(appraisalId)
+                .orElseThrow(() -> new NotFoundException(String.format(
+                        "Appraisal with id %d was not found", appraisalId)));
+
+        // Check if the employee was indeed part of the appraisal
+        AppraisalDTO result = appraisalXEvaluationFormXEmployeeRelationshipService
+                .findByAppraisalAndEmployeeAndSourceRelationships(appraisal, user, RelationshipName.SELF)
+                .map(AppraisalXEvaluationFormXEmployeeRelationship::getAppraisalXEvaluationForm)
+                .map(AppraisalXEvaluationForm::getAppraisal)
+                .findFirst().map(a -> appraisalDTOConverter.convert(a)).orElse(new AppraisalDTO());
+
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
+    @Override
+    public ResponseEntity<List<AppraisalDTO>> meAppraisalsGet(@RequestParam(value = "status", required = false)
+                                                                      List<String> statusList) {
         // Get logged in user
         Employee user = this.employeeService.getLoggedInUser();
         logger.debug("{} called endpoint: GET /me/appraisals", user.getEmail());
@@ -158,18 +198,6 @@ public class AppraisalsController implements AppraisalApi {
     public ResponseEntity<EvaluationFormDTO> meAppraisalsIdFormsIdGet(
             @PathVariable("appraisalId") Integer appraisalId,
             @PathVariable("formId") Integer formId) {
-
-        // TODO Implement this method!
-        throw new NotImplementedException();
-    }
-
-    @Override
-    public ResponseEntity<AppraisalDTO> meAppraisalsIdGet(
-            @PathVariable("appraisalId") Integer appraisalId) {
-
-        // Get logged in user
-        Employee user = this.employeeService.getLoggedInUser();
-        logger.debug("{} called endpoint: GET /me/appraisals/:id", user.getEmail());
 
         // TODO Implement this method!
         throw new NotImplementedException();

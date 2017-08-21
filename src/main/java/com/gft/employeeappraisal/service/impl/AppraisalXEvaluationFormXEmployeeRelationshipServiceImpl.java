@@ -52,6 +52,27 @@ public class AppraisalXEvaluationFormXEmployeeRelationshipServiceImpl implements
                 .stream();
     }
 
+    /**
+     * @inheritDoc
+     */
+    @Override
+    public Stream<AppraisalXEvaluationFormXEmployeeRelationship> findByAppraisalAndEmployeeAndSourceRelationships(
+            Appraisal appraisal,
+            Employee employee,
+            RelationshipName... relationshipNames
+    ) {
+        // All relationships where employee appears as source
+        Set<Relationship> sourceRelationshipSet = this.relationshipService.findRelationshipsByNames(
+                relationshipNames)
+                .collect(Collectors.toSet());
+
+        // Query the DB
+        List<AppraisalXEvaluationFormXEmployeeRelationship> sourceList = new ArrayList<>(this.appraisalXEvaluationFormXEmployeeRelationshipRepository
+                .findByAppraisalAndSourceEmployee(appraisal, employee, sourceRelationshipSet));
+
+        return sourceList.stream();
+    }
+
     @Override
     public Stream<AppraisalXEvaluationFormXEmployeeRelationship> findByAppraisalAndEmployee(
             Appraisal appraisal,

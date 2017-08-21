@@ -26,12 +26,9 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.mock.mockito.MockReset;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
@@ -53,10 +50,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  * @author Manuel Yepez
  */
 @RunWith(SpringRunner.class)
-@AutoConfigureMockMvc
-@SpringBootTest
-@ActiveProfiles({ "default", "local", "test" })
-public class EmployeesControllerMentorTest {
+public class EmployeesControllerMentorTest extends BaseControllerTest {
 
 	private static final String EMPLOYEES_URL = "/employees";
 
@@ -70,6 +64,7 @@ public class EmployeesControllerMentorTest {
 	private ObjectMapper mapper;
 
 	@Autowired
+	@SuppressWarnings("unused")
 	private EmployeeDTOConverter employeeDTOConverter;
 
 	@MockBean(reset = MockReset.AFTER)

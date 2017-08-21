@@ -33,8 +33,24 @@ public interface AppraisalXEvaluationFormXEmployeeRelationshipService {
             List<EmployeeRelationship> employeeRelationships,
             EvaluationStatus evaluationStatus);
 
+    /**
+     * Searches the AppraisalXEvaluationFormXEmployeeRelationship table for a series of values. Relationship
+     * names provided are made given that the employee is of type Source (look into {@link EmployeeRelationship} for
+     * details).
+     * @param appraisal {@link Appraisal} First lookup filter.
+     * @param employee {@link Employee} Source employee filter.
+     * @param relationshipNames One or many relationship types to look up for the employee: SELF, MENTOR, PEER, etc.
+     * @return A stream of {@link AppraisalXEvaluationFormXEmployeeRelationship} with all values found.
+     */
+    Stream<AppraisalXEvaluationFormXEmployeeRelationship> findByAppraisalAndEmployeeAndSourceRelationships(
+            Appraisal appraisal,
+            Employee employee,
+            RelationshipName... relationshipNames
+    );
 
     /**
+     * TODO Add parameter documentation!
+     *
      * Returns all AppraisalXEvaluationFormXEmployeeRelationship given an specific Appraisal and Employee being
      * evaluated
      */

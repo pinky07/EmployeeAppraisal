@@ -758,6 +758,16 @@ paths:
           type: integer
           description: |
             `Employee` Id.
+        - in: query
+          name: status
+          required: false
+          type: array
+          collectionFormat: csv
+          items:
+            type: string
+          description: |
+            Filter for obtaining the appraisals in which the employee has participated or pending appraisals.
+            Having no parameter will return all the appraisals, both pending and done.
       responses:
         '200':
           description: |

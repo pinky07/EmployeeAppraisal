@@ -17,12 +17,9 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
@@ -46,10 +43,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  * @author Manuel Yepez
  */
 @RunWith(SpringRunner.class)
-@AutoConfigureMockMvc
-@SpringBootTest
-@ActiveProfiles({"default", "local", "test"})
-public class EmployeesControllerGetTest {
+public class EmployeesControllerGetTest extends BaseControllerTest {
 
     private static final String EMPLOYEES_URL = "/employees";
     private static final String USER_EMAIL = "user@gft.com";
@@ -99,7 +93,7 @@ public class EmployeesControllerGetTest {
                 .id(1)
                 .name("Job Family")
                 .description("Job Family Description")
-                .buildMock();
+                .build();
 
         jobLevelMock = new JobLevelBuilder()
                 .id(1)
@@ -107,13 +101,13 @@ public class EmployeesControllerGetTest {
                 .description("Job Level Description")
                 .expertise("Expertise")
                 .jobFamily(jobFamilyMock)
-                .buildMock();
+                .build();
 
         applicationRoleMock = new ApplicationRoleBuilder()
                 .id(1)
                 .name("Application Role")
                 .description("Application Role Description")
-                .buildMock();
+                .build();
 
         userMock = new EmployeeBuilder()
                 .email("user@gft.com")
@@ -122,7 +116,7 @@ public class EmployeesControllerGetTest {
                 .gftIdentifier("JODO")
                 .jobLevel(jobLevelMock)
                 .applicationRole(applicationRoleMock)
-                .buildMock();
+                .build();
 
         when(employeeService.getLoggedInUser()).thenReturn(userMock);
     }

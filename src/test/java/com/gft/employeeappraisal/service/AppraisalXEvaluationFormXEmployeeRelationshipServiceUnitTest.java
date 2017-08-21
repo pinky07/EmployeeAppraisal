@@ -119,4 +119,78 @@ public class AppraisalXEvaluationFormXEmployeeRelationshipServiceUnitTest {
         assertTrue(result.containsAll(sourceList));
         assertTrue(result.containsAll(targetList));
     }
+
+    @Test
+    public void findByAppraisalAndEmployeeAndSourceRelationships() {
+        // Mock employee
+        Employee employee = new EmployeeBuilder()
+                .buildWithDefaults();
+
+        // Mock Appraisal
+        Appraisal appraisal = new AppraisalBuilder()
+                .buildWithDefaults();
+
+        // Mock Relationships
+        Relationship self = new RelationshipBuilder().name(RelationshipName.SELF.name()).buildWithDefaults();
+
+        // Mock source stream
+        Stream<Relationship> sourceStream = Stream.of(self);
+        when(relationshipService.findRelationshipsByNames(
+                eq(RelationshipName.SELF)))
+                .thenReturn(sourceStream);
+
+        // Mock source and target list
+        List<AppraisalXEvaluationFormXEmployeeRelationship> sourceList = new ArrayList<>();
+        sourceList.add(new AppraisalXEvaluationFormXEmployeeRelationshipBuilder()
+                .buildWithDefaults());
+
+
+        when(appraisalXEvaluationFormXEmployeeRelationshipRepository.findByAppraisalAndSourceEmployee(
+                eq(appraisal),
+                eq(employee),
+                any()))
+                .thenReturn(sourceList);
+
+        // Execution
+        List<AppraisalXEvaluationFormXEmployeeRelationship> result = this.appraisalXEvaluationFormXEmployeeRelationshipService
+                .findByAppraisalAndEmployeeAndSourceRelationships(appraisal, employee, RelationshipName.SELF)
+                .collect(Collectors.toList());
+
+        // Verification
+        assertTrue(result.size() == sourceList.size());
+        assertTrue(result.containsAll(sourceList));
+    }
+
+    @Test
+    public void findByAppraisalAndEmployeeAndSourceRelationships_emptyList() {
+        // Mock employee
+        Employee employee = new EmployeeBuilder()
+                .buildWithDefaults();
+
+        // Mock Appraisal
+        Appraisal appraisal = new AppraisalBuilder()
+                .buildWithDefaults();
+
+        // Mock source stream
+        when(relationshipService.findRelationshipsByNames(
+                eq(RelationshipName.SELF)))
+                .thenReturn(Stream.empty());
+
+        // Mock source and target list
+        List<AppraisalXEvaluationFormXEmployeeRelationship> sourceList = new ArrayList<>();
+
+        when(appraisalXEvaluationFormXEmployeeRelationshipRepository.findByAppraisalAndSourceEmployee(
+                eq(appraisal),
+                eq(employee),
+                any()))
+                .thenReturn(sourceList);
+
+        // Execution
+        List<AppraisalXEvaluationFormXEmployeeRelationship> result = this.appraisalXEvaluationFormXEmployeeRelationshipService
+                .findByAppraisalAndEmployeeAndSourceRelationships(appraisal, employee, RelationshipName.SELF)
+                .collect(Collectors.toList());
+
+        // Verification
+        assertTrue(result.isEmpty());
+    }
 }
