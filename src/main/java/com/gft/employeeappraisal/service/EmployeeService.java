@@ -1,6 +1,6 @@
 package com.gft.employeeappraisal.service;
 
-import com.gft.employeeappraisal.exception.EmployeeNotFoundException;
+import com.gft.employeeappraisal.exception.NotFoundException;
 import com.gft.employeeappraisal.model.Employee;
 import com.gft.employeeappraisal.model.EmployeeRelationship;
 import com.gft.employeeappraisal.model.RelationshipName;
@@ -20,7 +20,7 @@ public interface EmployeeService {
      *
      * @return Currently logged in user
      */
-    Employee getLoggedInUser() throws EmployeeNotFoundException;
+    Employee getLoggedInUser() throws NotFoundException;
 
     /**
      * Given an email, looks up an employee and returns it.
@@ -44,7 +44,7 @@ public interface EmployeeService {
      * @param menteeId Internal lookup ID for the employee.
      * @return An Optional object that may or may not contain the employee's current mentor.
      */
-    Optional<Employee> findCurrentMentorById(int menteeId) throws EmployeeNotFoundException;
+    Optional<Employee> findCurrentMentorById(int menteeId) throws NotFoundException;
 
     /**
      * Given an Employee ID, looks up the current mentor for that employee and returns it.
@@ -52,7 +52,7 @@ public interface EmployeeService {
      * @param mentorId Internal lookup ID for the mentor.
      * @return A stream of Employees describing the employee's current mentees.
      */
-    Stream<Employee> findCurrentMenteesById(int mentorId) throws EmployeeNotFoundException;
+    Stream<Employee> findCurrentMenteesById(int mentorId) throws NotFoundException;
 
     /**
      * Given an Employee ID, looks up the current peers for that employee and returns them.
@@ -60,7 +60,7 @@ public interface EmployeeService {
      * @param employeeId Internal lookup ID for the employee.
      * @return A stream of Employees describing the employee's current peers.
      */
-    Stream<Employee> findCurrentPeersById(int employeeId) throws EmployeeNotFoundException;
+    Stream<Employee> findCurrentPeersById(int employeeId) throws NotFoundException;
 
     /**
      * Finds a stream of current relationships an employee has, given a lookup ID.
@@ -68,10 +68,10 @@ public interface EmployeeService {
      * @param employeeId        Internal lookup ID for the employee.
      * @param relationshipNames One or more relationship types for lookup.
      * @return A stream of found relationships.
-     * @throws EmployeeNotFoundException If the ID provided does not correspond to an employee.
+     * @throws NotFoundException If the ID provided does not correspond to an employee.
      */
     Stream<EmployeeRelationship> findCurrentRelationshipsById(int employeeId, RelationshipName... relationshipNames)
-            throws EmployeeNotFoundException;
+            throws NotFoundException;
 
     /**
      * Finds a stream of current relationships an employee has.
@@ -79,10 +79,10 @@ public interface EmployeeService {
      * @param employee          Employee lookup entity
      * @param relationshipNames One or more relationship types for lookup.
      * @return A stream of found relationships.
-     * @throws EmployeeNotFoundException if the entity provided does not correspond to an employee.
+     * @throws NotFoundException if the entity provided does not correspond to an employee.
      */
     Stream<EmployeeRelationship> findCurrentRelationshipsBySourceEmployee(Employee employee, RelationshipName... relationshipNames)
-            throws EmployeeNotFoundException;
+            throws NotFoundException;
 
     /**
      * Given an Employee, determines if that employee is an application administrator.

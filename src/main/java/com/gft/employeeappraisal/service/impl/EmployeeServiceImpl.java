@@ -1,6 +1,6 @@
 package com.gft.employeeappraisal.service.impl;
 
-import com.gft.employeeappraisal.exception.EmployeeNotFoundException;
+import com.gft.employeeappraisal.exception.NotFoundException;
 import com.gft.employeeappraisal.model.*;
 import com.gft.employeeappraisal.repository.EmployeeRepository;
 import com.gft.employeeappraisal.service.*;
@@ -48,10 +48,10 @@ public class EmployeeServiceImpl implements EmployeeService {
      * {@inheritDoc}
      */
     @Override
-    public Employee getLoggedInUser() throws EmployeeNotFoundException {
+    public Employee getLoggedInUser() throws NotFoundException {
         String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
         return this.findByEmail(userEmail)
-                .orElseThrow(() -> new EmployeeNotFoundException(String.format(
+                .orElseThrow(() -> new NotFoundException(String.format(
                         "Logged in user with email: %s couldn't be found",
                         userEmail)));
     }
@@ -76,10 +76,10 @@ public class EmployeeServiceImpl implements EmployeeService {
      * {@inheritDoc}
      */
     @Override
-    public Optional<Employee> findCurrentMentorById(int menteeId) throws EmployeeNotFoundException {
+    public Optional<Employee> findCurrentMentorById(int menteeId) throws NotFoundException {
         // Try to find the Mentee
         Employee mentee = this.findById(menteeId).orElseThrow(() ->
-                new EmployeeNotFoundException(String.format("Employee with id: %s was not found", menteeId)));
+                new NotFoundException(String.format("Employee with id: %s was not found", menteeId)));
         // Try to get his Mentor
         return employeeRelationshipService
                 .findCurrentByTargetEmployeeAndRelationship(
@@ -93,10 +93,10 @@ public class EmployeeServiceImpl implements EmployeeService {
      * {@inheritDoc}
      */
     @Override
-    public Stream<Employee> findCurrentMenteesById(int mentorId) throws EmployeeNotFoundException {
+    public Stream<Employee> findCurrentMenteesById(int mentorId) throws NotFoundException {
         // Try to find the Mentor
         Employee mentor = this.findById(mentorId).orElseThrow(() ->
-                new EmployeeNotFoundException(String.format("Employee with id: %s was not found", mentorId)));
+                new NotFoundException(String.format("Employee with id: %s was not found", mentorId)));
         // Try to get his Mentees
         return employeeRelationshipService
                 .findCurrentBySourceEmployeeAndRelationship(
@@ -109,10 +109,10 @@ public class EmployeeServiceImpl implements EmployeeService {
      * {@inheritDoc}
      */
     @Override
-    public Stream<Employee> findCurrentPeersById(int employeeId) throws EmployeeNotFoundException {
+    public Stream<Employee> findCurrentPeersById(int employeeId) throws NotFoundException {
         // Try to find the Employee
         Employee employee = this.findById(employeeId).orElseThrow(() ->
-                new EmployeeNotFoundException(String.format("Employee with id: %s was not found", employeeId)));
+                new NotFoundException(String.format("Employee with id: %s was not found", employeeId)));
         // Try to get his Peers
         return employeeRelationshipService
                 .findCurrentBySourceEmployeeAndRelationship(
@@ -126,10 +126,10 @@ public class EmployeeServiceImpl implements EmployeeService {
      */
     @Override
     public Stream<EmployeeRelationship> findCurrentRelationshipsById(int employeeId, RelationshipName... relationshipNames)
-            throws EmployeeNotFoundException {
+            throws NotFoundException {
         // Try to find the Employee
         Employee employee = this.findById(employeeId).orElseThrow(() ->
-                new EmployeeNotFoundException(String.format("Employee with id: %s was not found", employeeId)));
+                new NotFoundException(String.format("Employee with id: %s was not found", employeeId)));
         // Try to get his Peers
         return findCurrentRelationshipsBySourceEmployee(employee, relationshipNames);
     }
@@ -139,7 +139,7 @@ public class EmployeeServiceImpl implements EmployeeService {
      */
     @Override
     public Stream<EmployeeRelationship> findCurrentRelationshipsBySourceEmployee(Employee employee, RelationshipName... relationshipNames)
-            throws EmployeeNotFoundException {
+            throws NotFoundException {
         // Try to get his References
         return employeeRelationshipService
                 .findCurrentBySourceEmployeeAndRelationships(

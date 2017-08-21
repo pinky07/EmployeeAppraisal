@@ -2,6 +2,7 @@ package com.gft.employeeappraisal.validator;
 
 import com.gft.swagger.employees.model.EmployeeDTO;
 import org.springframework.beans.MutablePropertyValues;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.ValidationUtils;
@@ -13,7 +14,7 @@ import org.springframework.validation.ValidationUtils;
  * @author Manuel Yepez
  */
 @Component
-public class EmployeeDTOToEntityCreateValidator implements DTOValidator<EmployeeDTO> {
+public class EmployeeDTOCreateValidator implements DTOValidator<EmployeeDTO> {
 
     private static final String FIRST_NAME_FIELD = "firstName";
     private static final String LAST_NAME_FIELD = "lastName";
@@ -22,10 +23,13 @@ public class EmployeeDTOToEntityCreateValidator implements DTOValidator<Employee
     private static final String APPLICATION_ROLE_FIELD = "applicationRole";
     private static final String JOB_LEVEL_FIELD = "jobLevel";
 
-    private MutablePropertyValues values;
+    private ApplicationRoleDTOValidator applicationRoleDTOValidator;
+    private JobLevelDTOValidator jobLevelDTOValidator;
 
-    public EmployeeDTOToEntityCreateValidator() {
-        this.values = new MutablePropertyValues();
+    @Autowired
+    public EmployeeDTOCreateValidator(ApplicationRoleDTOValidator applicationRoleDTOValidator, JobLevelDTOValidator jobLevelDTOValidator) {
+        this.applicationRoleDTOValidator = applicationRoleDTOValidator;
+        this.jobLevelDTOValidator = jobLevelDTOValidator;
     }
 
     @Override
@@ -43,8 +47,8 @@ public class EmployeeDTOToEntityCreateValidator implements DTOValidator<Employee
         ValidationUtils.rejectIfEmpty(errors, JOB_LEVEL_FIELD, "employeeDTO.emptyField", new Object[]{JOB_LEVEL_FIELD});
 
         EmployeeDTO employeeDTO = (EmployeeDTO) target;
-        ApplicationRoleDTOToEntityValidator applicationRoleValidator = new ApplicationRoleDTOToEntityValidator();
-        JobLevelDTOToEntityValidator jobLevelValidator = new JobLevelDTOToEntityValidator();
+        applicationRoleDTOValidator = new ApplicationRoleDTOValidator();
+        jobLevelDTOValidator = new JobLevelDTOValidator();
 
         if (employeeDTO.getGftIdentifier() != null && employeeDTO.getGftIdentifier().length() != 4) {
             errors.rejectValue(GFT_IDENTIFIER_FIELD, "employeeDTO.gftIdentifierLength");
@@ -52,39 +56,26 @@ public class EmployeeDTOToEntityCreateValidator implements DTOValidator<Employee
 
         if (employeeDTO.getApplicationRole() != null) {
             errors.pushNestedPath("applicationRole");
-            ValidationUtils.invokeValidator(applicationRoleValidator, employeeDTO.getApplicationRole(), errors);
+            ValidationUtils.invokeValidator(applicationRoleDTOValidator, employeeDTO.getApplicationRole(), errors);
             errors.popNestedPath();
         }
 
         if (employeeDTO.getJobLevel() != null) {
             errors.pushNestedPath("jobLevel");
-            ValidationUtils.invokeValidator(jobLevelValidator, employeeDTO.getJobLevel(), errors);
+            ValidationUtils.invokeValidator(jobLevelDTOValidator, employeeDTO.getJobLevel(), errors);
             errors.popNestedPath();
         }
     }
 
-    /**
-     * @return Initialized PropertyValues.
-     * @see DTOValidator#getPropertyValues()
-     */
     @Override
-    public MutablePropertyValues getPropertyValues() {
-        return this.values;
-    }
-
-    /**
-     * Maps the various FIELDs to the target DTO's getters.
-     *
-     * @param target Target DTO object to be validated.
-     * @see DTOValidator#setPropertyValues(Object)
-     */
-    @Override
-    public void setPropertyValues(EmployeeDTO target) {
+    public MutablePropertyValues getPropertyValues(EmployeeDTO target) {
+        MutablePropertyValues values = new MutablePropertyValues();
         values.addPropertyValue(EMAIL_FIELD, target.getEmail());
         values.addPropertyValue(FIRST_NAME_FIELD, target.getFirstName());
         values.addPropertyValue(LAST_NAME_FIELD, target.getLastName());
         values.addPropertyValue(GFT_IDENTIFIER_FIELD, target.getGftIdentifier());
         values.addPropertyValue(APPLICATION_ROLE_FIELD, target.getApplicationRole());
         values.addPropertyValue(JOB_LEVEL_FIELD, target.getJobLevel());
+        return values;
     }
 }

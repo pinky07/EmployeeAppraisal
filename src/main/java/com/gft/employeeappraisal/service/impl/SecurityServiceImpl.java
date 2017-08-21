@@ -1,7 +1,7 @@
 package com.gft.employeeappraisal.service.impl;
 
 import com.gft.employeeappraisal.exception.AccessDeniedException;
-import com.gft.employeeappraisal.exception.EmployeeNotFoundException;
+import com.gft.employeeappraisal.exception.NotFoundException;
 import com.gft.employeeappraisal.model.Employee;
 import com.gft.employeeappraisal.service.EmployeeService;
 import com.gft.employeeappraisal.service.SecurityService;
@@ -31,21 +31,21 @@ public class SecurityServiceImpl implements SecurityService {
      * {@inheritDoc}
      */
     @Override
-    public void canReadEmployee(int employeeId, int requestedId) throws EmployeeNotFoundException, AccessDeniedException {
+    public void canReadEmployee(int employeeId, int requestedId) throws NotFoundException, AccessDeniedException {
 
         // The Employee can access his own information
         if (employeeId != requestedId) {
 
             // Get Employee requesting access
             Employee employee = employeeService.findById(employeeId)
-                    .orElseThrow(() -> new EmployeeNotFoundException(
+                    .orElseThrow(() -> new NotFoundException(
                             String.format("Can't find Employee with Id %d",
                                     employeeId)));
 
 
             // Get the Employee that is trying to be accessed
             Employee requestedEmployee = employeeService.findById(requestedId)
-                    .orElseThrow(() -> new EmployeeNotFoundException(
+                    .orElseThrow(() -> new NotFoundException(
                             String.format("Can't find requested Employee with Id %d",
                                     requestedId)));
 

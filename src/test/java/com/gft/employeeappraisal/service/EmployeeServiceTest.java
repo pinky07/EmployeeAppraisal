@@ -6,7 +6,7 @@ import com.gft.employeeappraisal.builder.model.EmployeeBuilder;
 import com.gft.employeeappraisal.builder.model.JobFamilyBuilder;
 import com.gft.employeeappraisal.builder.model.JobLevelBuilder;
 import com.gft.employeeappraisal.exception.AccessDeniedException;
-import com.gft.employeeappraisal.exception.EmployeeNotFoundException;
+import com.gft.employeeappraisal.exception.NotFoundException;
 import com.gft.employeeappraisal.model.*;
 import com.gft.employeeappraisal.repository.EmployeeRepository;
 import org.junit.Before;
@@ -85,7 +85,7 @@ public class EmployeeServiceTest extends ServiceSpringBootUnitTest {
 	@Test
 	public void checkAccess_notFound() throws Exception {
 		// non-existing employeeappraisal
-		exception.expect(EmployeeNotFoundException.class);
+		exception.expect(NotFoundException.class);
 		securityService.canReadEmployee(-100, employee.getId());
 		securityService.canReadEmployee(employee.getId(), -100);
 	}

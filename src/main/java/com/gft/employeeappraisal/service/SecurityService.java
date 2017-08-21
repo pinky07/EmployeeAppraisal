@@ -1,7 +1,7 @@
 package com.gft.employeeappraisal.service;
 
 import com.gft.employeeappraisal.exception.AccessDeniedException;
-import com.gft.employeeappraisal.exception.EmployeeNotFoundException;
+import com.gft.employeeappraisal.exception.NotFoundException;
 
 /**
  * Service that verifies what actions can be performed by users.
@@ -15,9 +15,9 @@ public interface SecurityService {
      *
      * @param employeeId  Id of the Employee who wants access
      * @param requestedId Id of the Employee to be accessed
-     * @throws EmployeeNotFoundException if either the IDs provided do not correspond to an existing employee.
+     * @throws NotFoundException if either the IDs provided do not correspond to an existing employee.
      * @throws AccessDeniedException     if the employee is not an admin or current mentor requesting the employee information.
      */
-    void canReadEmployee(int employeeId, int requestedId) throws EmployeeNotFoundException, AccessDeniedException;
+    void canReadEmployee(int employeeId, int requestedId) throws NotFoundException, AccessDeniedException;
 
 }

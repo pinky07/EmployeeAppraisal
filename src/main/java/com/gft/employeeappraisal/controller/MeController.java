@@ -1,7 +1,7 @@
 package com.gft.employeeappraisal.controller;
 
 import com.gft.employeeappraisal.converter.employee.EmployeeDTOConverter;
-import com.gft.employeeappraisal.exception.EmployeeNotFoundException;
+import com.gft.employeeappraisal.exception.NotFoundException;
 import com.gft.employeeappraisal.model.Employee;
 import com.gft.employeeappraisal.service.EmployeeService;
 import com.gft.swagger.employees.api.MeApi;
@@ -86,7 +86,7 @@ public class MeController implements MeApi {
 
         // Find Mentor
         Employee mentor = employeeService.findCurrentMentorById(user.getId())
-                .orElseThrow(() -> new EmployeeNotFoundException(String.format(
+                .orElseThrow(() -> new NotFoundException(String.format(
                         "Mentor for Employee with Id %s was not found",
                         user.getId())));
 

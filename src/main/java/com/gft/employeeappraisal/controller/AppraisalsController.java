@@ -2,7 +2,7 @@ package com.gft.employeeappraisal.controller;
 
 import com.gft.employeeappraisal.converter.appraisal.AppraisalDTOConverter;
 import com.gft.employeeappraisal.converter.evaluationform.EvaluationFormDTOConverter;
-import com.gft.employeeappraisal.exception.AppraisalNotFoundException;
+import com.gft.employeeappraisal.exception.NotFoundException;
 import com.gft.employeeappraisal.model.Appraisal;
 import com.gft.employeeappraisal.model.AppraisalXEvaluationForm;
 import com.gft.employeeappraisal.model.AppraisalXEvaluationFormXEmployeeRelationship;
@@ -139,7 +139,7 @@ public class AppraisalsController implements AppraisalApi {
 
         // Get Appraisal
         Appraisal appraisal = appraisalService.findById(appraisalId)
-                .orElseThrow(() -> new AppraisalNotFoundException(String.format(
+                .orElseThrow(() -> new NotFoundException(String.format(
                         "Appraisal with id %d was not found", appraisalId)));
 
         // Get Evaluation Forms

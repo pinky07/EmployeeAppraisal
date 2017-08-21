@@ -4,11 +4,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.gft.employeeappraisal.builder.model.*;
 import com.gft.employeeappraisal.converter.employee.EmployeeDTOConverter;
 import com.gft.employeeappraisal.converter.employeerelationship.EmployeeRelationshipDTOConverter;
-import com.gft.employeeappraisal.exception.EmployeeNotFoundException;
+import com.gft.employeeappraisal.exception.NotFoundException;
 import com.gft.employeeappraisal.model.*;
 import com.gft.employeeappraisal.service.EmployeeRelationshipService;
 import com.gft.employeeappraisal.service.EmployeeService;
 import com.gft.employeeappraisal.service.SecurityService;
+import com.gft.employeeappraisal.service.ValidationService;
 import com.gft.swagger.employees.model.EmployeeDTO;
 import com.gft.swagger.employees.model.EmployeeRelationshipDTO;
 import com.gft.swagger.employees.model.OperationResultDTO;
@@ -68,6 +69,9 @@ public class EmployeesControllerGetTest {
 
     @MockBean
     private SecurityService securityService;
+
+    @MockBean
+    private ValidationService validationService;
 
     @Autowired
     @SuppressWarnings("unused")
@@ -279,7 +283,7 @@ public class EmployeesControllerGetTest {
 
     @Test
     public void employeesEmployeeIdRelationshipsGet_requestedNotExists() throws Exception {
-        doThrow(EmployeeNotFoundException.class).when(employeeService).findById(anyInt());
+        doThrow(NotFoundException.class).when(employeeService).findById(anyInt());
 
         MvcResult result = mockMvc.perform(
                 get(String.format("%s/%d/relationships",

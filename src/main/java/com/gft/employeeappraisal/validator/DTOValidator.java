@@ -8,20 +8,15 @@ import org.springframework.validation.Validator;
  * to map FieldErrors to DTO getter fields.
  *
  * @author Manuel Yepez
+ * @author Rubén Jiménez
  */
 public interface DTOValidator<T> extends Validator {
 
     /**
-     * Getter for the MutablePropertyValues initialized on the Validator implementations.
+     * Maps the corresponding PropertyValues to the getter methods of the target object.
      *
+     * @param targetObject Target object to be validated.
      * @return PropertyValues with mapped fields.
      */
-    MutablePropertyValues getPropertyValues();
-
-    /**
-     * Implementations of this method should map the corresponding PropertyValues to the target objects' getter methods.
-     *
-     * @param dtoObject Target DTO object to be validated.
-     */
-    void setPropertyValues(T dtoObject);
+    MutablePropertyValues getPropertyValues(T targetObject);
 }
