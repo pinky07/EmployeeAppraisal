@@ -13,9 +13,9 @@ cleanUpDocker() {
 	then
 
 		echo 'Attempting to remove dangling images...'
-		DANGLING_REMOVED=`docker rmi ${DANGLING_IMAGES}`
+		DANGLING_IMAGES_REMOVED=`docker rmi ${DANGLING_IMAGES}`
 
-		if test -n "$DANGLING_REMOVED";
+		if test -n "$DANGLING_IMAGES_REMOVED";
 		then 
 			echo 'Successful'
 		else 
@@ -23,6 +23,26 @@ cleanUpDocker() {
 		fi
 	else
 		echo 'No dangling images were found'
+	fi
+
+	echo 'Looking for dangling volumes...'
+	DANGLING_VOLUMES=`docker volume ls -f dangling=true -q`
+
+	if test -n "$DANGLING_VOLUMES";
+	then
+
+		echo 'Attempting to remove dangling volumes...'
+		DANGLING_VOLUMES_REMOVED=`docker volume rm $DANGLING_VOLUMES`
+
+		if test  -n "$DANGLING_VOLUMES_REMOVED";
+		then 
+			echo 'Successful'
+		else 
+			echo "ERROR: Couldn't remove dangling volumes!"
+		fi
+
+	else 
+		echo 'No dangling volumes were found'
 	fi
 }
 
@@ -44,7 +64,7 @@ removeContainer() {
 		then
 
 			echo "Removing the stopped containers..."
-			CONTAINERS_REMOVED=`echo ${CONTAINERS_STOPPED} | xargs docker rm`
+			CONTAINERS_REMOVED=`echo ${CONTAINERS_STOPPED} | xargs docker rm -v`
 
 			if test -n "$CONTAINERS_STOPPED";
 			then
@@ -93,12 +113,12 @@ echo 'Cleaning up Docker...'
 cleanUpDocker
 
 # Stop application
-echo 'Removing previous image and containers'
+echo 'Removing previous app image and containers...'
 removeContainer 'com.gft.employee-appraisal' 'latest' 
 removeImage 'com.gft.employee-appraisal' 'latest' 
 
 # Stop db
-echo 'Removing previous image and containers'
+echo 'Removing previous db image and containers...'
 removeContainer 'postgres' 'alpine' 
 # removeImage 'postgres' 'alpine'
 
