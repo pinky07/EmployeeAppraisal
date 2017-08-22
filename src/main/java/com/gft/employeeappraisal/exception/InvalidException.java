@@ -1,6 +1,6 @@
 package com.gft.employeeappraisal.exception;
 
-import org.springframework.validation.BindingResult;
+import org.springframework.validation.Errors;
 
 /**
  * Exception thrown when the Validator Service finds an invalid objects.
@@ -9,24 +9,19 @@ import org.springframework.validation.BindingResult;
  */
 public class InvalidException extends EmployeeAppraisalMicroserviceException {
 
-    private BindingResult bindingResult;
+    private Errors errors;
 
     /**
      * Creates an instance of InvalidException.
      *
-     * @param bindingResult Result that contains the validation errors.
+     * @param errors Validation Errors
      */
-    public InvalidException(String message, BindingResult bindingResult) {
+    public InvalidException(String message, Errors errors) {
         super(message);
-        this.bindingResult = bindingResult;
+        this.errors = errors;
     }
 
-    /**
-     * Returns the BindingResult with errors associated with this exception.
-     *
-     * @return BindingResult with errors
-     */
-    public BindingResult getBindingResult() {
-        return this.bindingResult;
+    public Errors getErrors() {
+        return errors;
     }
 }

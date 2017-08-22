@@ -1,6 +1,5 @@
 package com.gft.employeeappraisal.service;
 
-import com.gft.employeeappraisal.ServiceSpringBootUnitTest;
 import com.gft.employeeappraisal.builder.model.*;
 import com.gft.employeeappraisal.model.*;
 import com.gft.employeeappraisal.repository.EmployeeRelationshipRepository;
@@ -8,6 +7,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.time.LocalDateTime;
@@ -23,7 +23,8 @@ import static org.junit.Assert.*;
  * @author Manuel Yepez
  */
 @RunWith(SpringRunner.class)
-public class EmployeeRelationshipServiceTest extends ServiceSpringBootUnitTest {
+@DataJpaTest
+public class EmployeeRelationshipServiceTest {
 
     @Autowired
     private ApplicationRoleService applicationRoleService;
@@ -56,223 +57,223 @@ public class EmployeeRelationshipServiceTest extends ServiceSpringBootUnitTest {
     @SuppressWarnings("all")
     public void generateData() {
         applicationRole = applicationRoleService.save(mockApplicationRole().get());
-        jobFamily = jobFamilyService.save(mockJobFamily());
-        jobLevel = jobLevelService.save(mockJobLevel().get());
+        jobFamily = jobFamilyService.saveAndFlush(mockJobFamily());
+        jobLevel = jobLevelService.saveAndFlush(mockJobLevel().get());
         employee = employeeService.saveAndFlush(mockEmployee()).get();
         mentor = employeeService.saveAndFlush(mockMentor()).get();
     }
 
     @Test
     public void changeMentor() throws Exception {
-		assertFalse(employeeRelationshipService.isCurrentMentor(mentor, employee));
-         long beforeCount = employeeRelationshipRepository.count();
-         employeeRelationshipService.changeMentor(mentor, employee);
-         long afterCount = employeeRelationshipRepository.count();
-         assertTrue(beforeCount + 1 == afterCount);
+        assertFalse(employeeRelationshipService.isCurrentMentor(mentor, employee));
+        long beforeCount = employeeRelationshipRepository.count();
+        employeeRelationshipService.changeMentor(mentor, employee);
+        long afterCount = employeeRelationshipRepository.count();
+        assertTrue(beforeCount + 1 == afterCount);
 
-		assertTrue(employeeRelationshipService.isCurrentMentor(mentor, employee));
+        assertTrue(employeeRelationshipService.isCurrentMentor(mentor, employee));
     }
 
     @Test
     public void isCurrentMentor() throws Exception {
-         employeeRelationshipService.changeMentor(mentor, employee);
-         assertTrue(employeeRelationshipService.isCurrentMentor(mentor, employee));
-         assertFalse(employeeRelationshipService.isCurrentMentor(employee, mentor));
+        employeeRelationshipService.changeMentor(mentor, employee);
+        assertTrue(employeeRelationshipService.isCurrentMentor(mentor, employee));
+        assertFalse(employeeRelationshipService.isCurrentMentor(employee, mentor));
     }
 
     @Test
-	public void isCurrentPeer() throws Exception {
-    	assertFalse(employeeRelationshipService.hasPeers(employee));
-    	employeeRelationshipService.addPeer(employee, mentor);
-    	assertTrue(employeeRelationshipService.hasPeers(employee));
-    	assertTrue(employeeRelationshipService.isCurrentPeer(employee, mentor));
-	}
+    public void isCurrentPeer() throws Exception {
+        assertFalse(employeeRelationshipService.hasPeers(employee));
+        employeeRelationshipService.addPeer(employee, mentor);
+        assertTrue(employeeRelationshipService.hasPeers(employee));
+        assertTrue(employeeRelationshipService.isCurrentPeer(employee, mentor));
+    }
 
-	@Test
-	public void isCurrentRelationship() throws Exception {
-    	Relationship mentorRelationship = relationshipService.findByName(RelationshipName.MENTOR);
+    @Test
+    public void isCurrentRelationship() throws Exception {
+        Relationship mentorRelationship = relationshipService.findByName(RelationshipName.MENTOR);
 
-		assertFalse(employeeRelationshipService.isCurrentRelationship(mentor, employee, mentorRelationship));
-		employeeRelationshipService.changeMentor(mentor, employee);
-		assertTrue(employeeRelationshipService.isCurrentRelationship(mentor, employee, mentorRelationship));
-	}
+        assertFalse(employeeRelationshipService.isCurrentRelationship(mentor, employee, mentorRelationship));
+        employeeRelationshipService.changeMentor(mentor, employee);
+        assertTrue(employeeRelationshipService.isCurrentRelationship(mentor, employee, mentorRelationship));
+    }
 
-	@Test
-	public void hasMentor() throws Exception {
-    	assertFalse(employeeRelationshipService.hasMentor(employee));
-    	employeeRelationshipService.changeMentor(mentor, employee);
-		assertTrue(employeeRelationshipService.hasMentor(employee));
-	}
+    @Test
+    public void hasMentor() throws Exception {
+        assertFalse(employeeRelationshipService.hasMentor(employee));
+        employeeRelationshipService.changeMentor(mentor, employee);
+        assertTrue(employeeRelationshipService.hasMentor(employee));
+    }
 
-	@Test
-	public void hasMentees() throws Exception {
-		assertFalse(employeeRelationshipService.hasMentees(mentor));
-		employeeRelationshipService.changeMentor(mentor, employee);
-		assertTrue(employeeRelationshipService.hasMentees(mentor));
-	}
+    @Test
+    public void hasMentees() throws Exception {
+        assertFalse(employeeRelationshipService.hasMentees(mentor));
+        employeeRelationshipService.changeMentor(mentor, employee);
+        assertTrue(employeeRelationshipService.hasMentees(mentor));
+    }
 
-	@Test
-	public void hasPeers() throws Exception {
-		assertFalse(employeeRelationshipService.hasPeers(employee));
-		employeeRelationshipService.addPeer(employee, mentor);
-		assertTrue(employeeRelationshipService.hasPeers(employee));
-	}
+    @Test
+    public void hasPeers() throws Exception {
+        assertFalse(employeeRelationshipService.hasPeers(employee));
+        employeeRelationshipService.addPeer(employee, mentor);
+        assertTrue(employeeRelationshipService.hasPeers(employee));
+    }
 
-	@Test
-	public void hasRelationshipAsSourceEmployee() throws Exception {
-		Relationship mentorRelationship = relationshipService.findByName(RelationshipName.MENTOR);
+    @Test
+    public void hasRelationshipAsSourceEmployee() throws Exception {
+        Relationship mentorRelationship = relationshipService.findByName(RelationshipName.MENTOR);
 
-		assertFalse(employeeRelationshipService.hasRelationshipAsSourceEmployee(mentor, mentorRelationship));
-		employeeRelationshipService.changeMentor(mentor, employee);
-		assertTrue(employeeRelationshipService.hasRelationshipAsSourceEmployee(mentor, mentorRelationship));
-	}
+        assertFalse(employeeRelationshipService.hasRelationshipAsSourceEmployee(mentor, mentorRelationship));
+        employeeRelationshipService.changeMentor(mentor, employee);
+        assertTrue(employeeRelationshipService.hasRelationshipAsSourceEmployee(mentor, mentorRelationship));
+    }
 
-	@Test
-	public void hasRelationshipAsTargetEmployee() throws Exception {
-		Relationship mentorRelationship = relationshipService.findByName(RelationshipName.MENTOR);
+    @Test
+    public void hasRelationshipAsTargetEmployee() throws Exception {
+        Relationship mentorRelationship = relationshipService.findByName(RelationshipName.MENTOR);
 
-		assertFalse(employeeRelationshipService.hasRelationshipAsTargetEmployee(employee, mentorRelationship));
-		employeeRelationshipService.changeMentor(mentor, employee);
-		assertTrue(employeeRelationshipService.hasRelationshipAsTargetEmployee(employee, mentorRelationship));
-	}
+        assertFalse(employeeRelationshipService.hasRelationshipAsTargetEmployee(employee, mentorRelationship));
+        employeeRelationshipService.changeMentor(mentor, employee);
+        assertTrue(employeeRelationshipService.hasRelationshipAsTargetEmployee(employee, mentorRelationship));
+    }
 
-	@Test
-	public void addPeer() throws Exception {
-		assertFalse(employeeRelationshipService.hasPeers(employee));
-		employeeRelationshipService.addPeer(employee, mentor);
-		assertTrue(employeeRelationshipService.hasPeers(employee));
-	}
+    @Test
+    public void addPeer() throws Exception {
+        assertFalse(employeeRelationshipService.hasPeers(employee));
+        employeeRelationshipService.addPeer(employee, mentor);
+        assertTrue(employeeRelationshipService.hasPeers(employee));
+    }
 
-	@Test
-	public void addPeers() throws Exception {
-		assertFalse(employeeRelationshipService.hasPeers(employee));
-		employeeRelationshipService.addPeers(employee, Collections.singletonList(mentor));
-		assertTrue(employeeRelationshipService.hasPeers(employee));
-	}
+    @Test
+    public void addPeers() throws Exception {
+        assertFalse(employeeRelationshipService.hasPeers(employee));
+        employeeRelationshipService.addPeers(employee, Collections.singletonList(mentor));
+        assertTrue(employeeRelationshipService.hasPeers(employee));
+    }
 
-	@Test
-	public void startEmployeeRelationship() throws Exception {
-		Relationship mentorRelationship = relationshipService.findByName(RelationshipName.MENTOR);
+    @Test
+    public void startEmployeeRelationship() throws Exception {
+        Relationship mentorRelationship = relationshipService.findByName(RelationshipName.MENTOR);
 
-		assertFalse(employeeRelationshipService.hasMentees(mentor));
-		employeeRelationshipService.startEmployeeRelationship(mentor, employee, mentorRelationship);
-		assertTrue(employeeRelationshipService.hasMentees(mentor));
-	}
+        assertFalse(employeeRelationshipService.hasMentees(mentor));
+        employeeRelationshipService.startEmployeeRelationship(mentor, employee, mentorRelationship);
+        assertTrue(employeeRelationshipService.hasMentees(mentor));
+    }
 
-	@Test
-	public void endEmployeeRelationship() throws Exception {
-		Relationship mentorRelationship = relationshipService.findByName(RelationshipName.MENTOR);
+    @Test
+    public void endEmployeeRelationship() throws Exception {
+        Relationship mentorRelationship = relationshipService.findByName(RelationshipName.MENTOR);
 
-		assertFalse(employeeRelationshipService.hasMentees(mentor));
-		employeeRelationshipService.startEmployeeRelationship(mentor, employee, mentorRelationship);
-		assertTrue(employeeRelationshipService.hasMentees(mentor));
+        assertFalse(employeeRelationshipService.hasMentees(mentor));
+        employeeRelationshipService.startEmployeeRelationship(mentor, employee, mentorRelationship);
+        assertTrue(employeeRelationshipService.hasMentees(mentor));
 
-		EmployeeRelationship employeeRelationship = employeeRelationshipService
-				.findCurrentBySourceEmployeeAndTargetEmployeeAndRelationship(mentor, employee, mentorRelationship)
-				.findFirst().get();
+        EmployeeRelationship employeeRelationship = employeeRelationshipService
+                .findCurrentBySourceEmployeeAndTargetEmployeeAndRelationship(mentor, employee, mentorRelationship)
+                .findFirst().get();
 
-		assertNull(employeeRelationship.getEndDate());
-		employeeRelationshipService.endEmployeeRelationship(employeeRelationship);
-		assertNotNull(employeeRelationship.getEndDate());
-	}
+        assertNull(employeeRelationship.getEndDate());
+        employeeRelationshipService.endEmployeeRelationship(employeeRelationship);
+        assertNotNull(employeeRelationship.getEndDate());
+    }
 
-	@Test
-	public void findCurrentBySourceEmployeeAndRelationship() throws Exception {
-		Relationship mentorRelationship = relationshipService.findByName(RelationshipName.MENTOR);
+    @Test
+    public void findCurrentBySourceEmployeeAndRelationship() throws Exception {
+        Relationship mentorRelationship = relationshipService.findByName(RelationshipName.MENTOR);
 
-		assertFalse(employeeRelationshipService
-				.findCurrentBySourceEmployeeAndRelationship(mentor, mentorRelationship)
-				.findFirst().isPresent());
-		employeeRelationshipService.startEmployeeRelationship(mentor, employee, mentorRelationship);
+        assertFalse(employeeRelationshipService
+                .findCurrentBySourceEmployeeAndRelationship(mentor, mentorRelationship)
+                .findFirst().isPresent());
+        employeeRelationshipService.startEmployeeRelationship(mentor, employee, mentorRelationship);
 
-		assertTrue(employeeRelationshipService
-				.findCurrentBySourceEmployeeAndRelationship(mentor, mentorRelationship)
-				.findFirst().isPresent());
-	}
+        assertTrue(employeeRelationshipService
+                .findCurrentBySourceEmployeeAndRelationship(mentor, mentorRelationship)
+                .findFirst().isPresent());
+    }
 
-	@Test
-	public void findCurrentBySourceEmployeeAndRelationships() throws Exception {
-		Relationship mentorRelationship = relationshipService.findByName(RelationshipName.MENTOR);
+    @Test
+    public void findCurrentBySourceEmployeeAndRelationships() throws Exception {
+        Relationship mentorRelationship = relationshipService.findByName(RelationshipName.MENTOR);
 
-		assertFalse(employeeRelationshipService
-				.findCurrentBySourceEmployeeAndRelationships(mentor, RelationshipName.MENTOR)
-				.findFirst().isPresent());
-		employeeRelationshipService.startEmployeeRelationship(mentor, employee, mentorRelationship);
+        assertFalse(employeeRelationshipService
+                .findCurrentBySourceEmployeeAndRelationships(mentor, RelationshipName.MENTOR)
+                .findFirst().isPresent());
+        employeeRelationshipService.startEmployeeRelationship(mentor, employee, mentorRelationship);
 
-		assertTrue(employeeRelationshipService
-				.findCurrentBySourceEmployeeAndRelationships(mentor, RelationshipName.MENTOR)
-				.findFirst().isPresent());
-	}
+        assertTrue(employeeRelationshipService
+                .findCurrentBySourceEmployeeAndRelationships(mentor, RelationshipName.MENTOR)
+                .findFirst().isPresent());
+    }
 
-	@Test
-	public void findCurrentByTargetEmployeeAndRelationship() throws Exception {
-		Relationship mentorRelationship = relationshipService.findByName(RelationshipName.MENTOR);
+    @Test
+    public void findCurrentByTargetEmployeeAndRelationship() throws Exception {
+        Relationship mentorRelationship = relationshipService.findByName(RelationshipName.MENTOR);
 
-		assertFalse(employeeRelationshipService
-				.findCurrentByTargetEmployeeAndRelationship(employee, mentorRelationship)
-				.findFirst().isPresent());
-		employeeRelationshipService.startEmployeeRelationship(mentor, employee, mentorRelationship);
+        assertFalse(employeeRelationshipService
+                .findCurrentByTargetEmployeeAndRelationship(employee, mentorRelationship)
+                .findFirst().isPresent());
+        employeeRelationshipService.startEmployeeRelationship(mentor, employee, mentorRelationship);
 
-		assertTrue(employeeRelationshipService
-				.findCurrentByTargetEmployeeAndRelationship(employee, mentorRelationship)
-				.findFirst().isPresent());
-	}
+        assertTrue(employeeRelationshipService
+                .findCurrentByTargetEmployeeAndRelationship(employee, mentorRelationship)
+                .findFirst().isPresent());
+    }
 
-	@Test
-	public void findCurrentBySourceEmployeeAndTargetEmployeeAndRelationship() throws Exception {
-		Relationship mentorRelationship = relationshipService.findByName(RelationshipName.MENTOR);
+    @Test
+    public void findCurrentBySourceEmployeeAndTargetEmployeeAndRelationship() throws Exception {
+        Relationship mentorRelationship = relationshipService.findByName(RelationshipName.MENTOR);
 
-		assertFalse(employeeRelationshipService
-				.findCurrentBySourceEmployeeAndTargetEmployeeAndRelationship(mentor, employee, mentorRelationship)
-				.findFirst().isPresent());
-		employeeRelationshipService.startEmployeeRelationship(mentor, employee, mentorRelationship);
+        assertFalse(employeeRelationshipService
+                .findCurrentBySourceEmployeeAndTargetEmployeeAndRelationship(mentor, employee, mentorRelationship)
+                .findFirst().isPresent());
+        employeeRelationshipService.startEmployeeRelationship(mentor, employee, mentorRelationship);
 
-		assertTrue(employeeRelationshipService
-				.findCurrentBySourceEmployeeAndTargetEmployeeAndRelationship(mentor, employee, mentorRelationship)
-				.findFirst().isPresent());
-	}
+        assertTrue(employeeRelationshipService
+                .findCurrentBySourceEmployeeAndTargetEmployeeAndRelationship(mentor, employee, mentorRelationship)
+                .findFirst().isPresent());
+    }
 
-	@Test
+    @Test
     public void save() throws Exception {
-         Employee newPeer = new EmployeeBuilder()
-         .firstName("Peer")
-         .lastName("Peerez")
-         .gftIdentifier("1111")
-         .email("peerpeerez@gft.com")
-         .applicationRole(applicationRole)
-         .jobLevel(jobLevel)
-         .build();
+        Employee newPeer = new EmployeeBuilder()
+                .firstName("Peer")
+                .lastName("Peerez")
+                .gftIdentifier("1111")
+                .email("peerpeerez@gft.com")
+                .applicationRole(applicationRole)
+                .jobLevel(jobLevel)
+                .build();
 
-         Employee newPeer2 = new EmployeeBuilder()
-         .firstName("Peer2")
-         .lastName("Peerez2")
-         .gftIdentifier("2222")
-         .email("peerpeerez2@gft.com")
-         .applicationRole(applicationRole)
-         .jobLevel(jobLevel)
-         .build();
+        Employee newPeer2 = new EmployeeBuilder()
+                .firstName("Peer2")
+                .lastName("Peerez2")
+                .gftIdentifier("2222")
+                .email("peerpeerez2@gft.com")
+                .applicationRole(applicationRole)
+                .jobLevel(jobLevel)
+                .build();
 
-         newPeer = employeeService.saveAndFlush(newPeer).get();
-         newPeer2 = employeeService.saveAndFlush(newPeer2).get();
+        newPeer = employeeService.saveAndFlush(newPeer).get();
+        newPeer2 = employeeService.saveAndFlush(newPeer2).get();
 
-         Relationship relationship = relationshipService.findById(RelationshipName.PEER.getId()).get();
+        Relationship relationship = relationshipService.findById(RelationshipName.PEER.getId()).get();
 
-         EmployeeRelationship employeeRelationship = new EmployeeRelationshipBuilder()
-         .relationship(relationship)
-         .sourceEmployee(newPeer)
-         .targetEmployee(newPeer2)
-         .startDate(LocalDateTime.now())
-         .build();
+        EmployeeRelationship employeeRelationship = new EmployeeRelationshipBuilder()
+                .relationship(relationship)
+                .sourceEmployee(newPeer)
+                .targetEmployee(newPeer2)
+                .startDate(LocalDateTime.now())
+                .build();
 
-         long beforeCount = employeeRelationshipRepository.count();
-         employeeRelationshipService.saveAndFlush(employeeRelationship);
-         long afterCount = employeeRelationshipRepository.count();
+        long beforeCount = employeeRelationshipRepository.count();
+        employeeRelationshipService.saveAndFlush(employeeRelationship);
+        long afterCount = employeeRelationshipRepository.count();
 
-         assertTrue(beforeCount + 1 == afterCount);
+        assertTrue(beforeCount + 1 == afterCount);
 
-         Stream<EmployeeRelationship> stream = employeeRelationshipService
-         	.findCurrentBySourceEmployeeAndRelationship(newPeer, relationship);
-         assertFalse(stream.equals(Stream.empty()));
+        Stream<EmployeeRelationship> stream = employeeRelationshipService
+                .findCurrentBySourceEmployeeAndRelationship(newPeer, relationship);
+        assertFalse(stream.equals(Stream.empty()));
     }
 
     @SuppressWarnings("all")

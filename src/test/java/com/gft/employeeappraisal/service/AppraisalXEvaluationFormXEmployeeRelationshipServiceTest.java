@@ -11,6 +11,8 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.ArrayList;
@@ -29,23 +31,24 @@ import static org.mockito.Mockito.when;
  * @author Rubén Jiménez
  */
 @RunWith(SpringRunner.class)
-public class AppraisalXEvaluationFormXEmployeeRelationshipServiceUnitTest {
+@DataJpaTest
+public class AppraisalXEvaluationFormXEmployeeRelationshipServiceTest {
+
+    @Autowired
+    private AppraisalXEvaluationFormXEmployeeRelationshipRepository appraisalXEvaluationFormXEmployeeRelationshipRepository;
 
     @Mock
     private RelationshipService relationshipService;
 
-    @Mock
-    private AppraisalXEvaluationFormXEmployeeRelationshipRepository appraisalXEvaluationFormXEmployeeRelationshipRepository;
-
+    // Class under test
     private AppraisalXEvaluationFormXEmployeeRelationshipService appraisalXEvaluationFormXEmployeeRelationshipService;
 
     @Before
     public void setUp() {
         appraisalXEvaluationFormXEmployeeRelationshipService = new AppraisalXEvaluationFormXEmployeeRelationshipServiceImpl(
-                relationshipService,
-                appraisalXEvaluationFormXEmployeeRelationshipRepository);
+                this.relationshipService,
+                this.appraisalXEvaluationFormXEmployeeRelationshipRepository);
     }
-
 
     /**
      * Tests if the method {@link AppraisalXEvaluationFormXEmployeeRelationshipService#findByAppraisalAndEmployee(Appraisal, Employee)}
@@ -96,17 +99,17 @@ public class AppraisalXEvaluationFormXEmployeeRelationshipServiceUnitTest {
                     .buildWithDefaults());
         }
 
-        when(appraisalXEvaluationFormXEmployeeRelationshipRepository.findByAppraisalAndSourceEmployee(
-                eq(appraisal),
-                eq(employee),
-                any()))
-                .thenReturn(sourceList);
-
-        when(appraisalXEvaluationFormXEmployeeRelationshipRepository.findByAppraisalAndTargetEmployee(
-                eq(appraisal),
-                eq(employee),
-                any()))
-                .thenReturn(targetList);
+//        when(appraisalXEvaluationFormXEmployeeRelationshipRepository.findByAppraisalAndSourceEmployee(
+//                eq(appraisal),
+//                eq(employee),
+//                any()))
+//                .thenReturn(sourceList);
+//
+//        when(appraisalXEvaluationFormXEmployeeRelationshipRepository.findByAppraisalAndTargetEmployee(
+//                eq(appraisal),
+//                eq(employee),
+//                any()))
+//                .thenReturn(targetList);
 
 
         // Execution

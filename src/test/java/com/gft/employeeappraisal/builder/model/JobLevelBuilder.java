@@ -15,8 +15,6 @@ import static org.mockito.Mockito.when;
  */
 public class JobLevelBuilder implements ObjectBuilder<JobLevel> {
 
-    private static int currentId = 1_000_000;
-
     private int id;
     private JobFamily jobFamily;
     private String name;
@@ -64,24 +62,24 @@ public class JobLevelBuilder implements ObjectBuilder<JobLevel> {
 
     @Override
     public JobLevel build() {
-        JobLevel jobLevel = new JobLevel();
-        jobLevel.setId(this.id);
-        jobLevel.setName(this.name);
-        jobLevel.setDescription(this.description);
-        jobLevel.setExpertise(this.expertise);
-        jobLevel.setJobFamily(this.jobFamily);
-        return jobLevel;
+        JobLevel obj = new JobLevel();
+        obj.setId(this.id);
+        obj.setName(this.name);
+        obj.setDescription(this.description);
+        obj.setExpertise(this.expertise);
+        obj.setJobFamily(this.jobFamily);
+        return obj;
     }
 
     @Override
     public JobLevel buildWithDefaults() {
-        JobLevel jobLevel = new JobLevel();
-        jobLevel.setId(this.idSet ? this.id : currentId++);
-        jobLevel.setName(this.nameSet ? this.name : "Name");
-        jobLevel.setDescription(this.descriptionSet ? this.description : "Description");
-        jobLevel.setExpertise(this.expertiseSet ? this.expertise : "Expertise");
-        jobLevel.setJobFamily(this.jobFamilySet ? this.jobFamily : new JobFamilyBuilder().buildWithDefaults());
-        return jobLevel;
+        JobLevel obj = new JobLevel();
+        if (this.idSet) obj.setId(this.id);
+        obj.setName(this.nameSet ? this.name : "LL");
+        obj.setDescription(this.descriptionSet ? this.description : "Description");
+        obj.setExpertise(this.expertiseSet ? this.expertise : "Expertise");
+        obj.setJobFamily(this.jobFamilySet ? this.jobFamily : new JobFamilyBuilder().buildWithDefaults());
+        return obj;
     }
 
     @Override

@@ -14,8 +14,6 @@ import static org.mockito.Mockito.when;
  */
 public class EvaluationFormBuilder implements ObjectBuilder<EvaluationForm> {
 
-    private static int currentId = 1_000_000;
-
     private int id;
     private String name;
     private String description;
@@ -44,20 +42,20 @@ public class EvaluationFormBuilder implements ObjectBuilder<EvaluationForm> {
 
     @Override
     public EvaluationForm build() {
-        EvaluationForm evaluationForm = new EvaluationForm();
-        evaluationForm.setId(this.id);
-        evaluationForm.setName(this.name);
-        evaluationForm.setDescription(this.description);
-        return evaluationForm;
+        EvaluationForm obj = new EvaluationForm();
+        obj.setId(this.id);
+        obj.setName(this.name);
+        obj.setDescription(this.description);
+        return obj;
     }
 
     @Override
     public EvaluationForm buildWithDefaults() {
-        EvaluationForm evaluationForm = new EvaluationForm();
-        evaluationForm.setId(this.idSet ? this.id : currentId++);
-        evaluationForm.setName(this.nameSet ? this.name : "Name");
-        evaluationForm.setDescription(this.descriptionSet ? this.description : "Description");
-        return evaluationForm;
+        EvaluationForm obj = new EvaluationForm();
+        if (this.idSet) obj.setId(this.id);
+        obj.setName(this.nameSet ? this.name : "Name");
+        obj.setDescription(this.descriptionSet ? this.description : "Description");
+        return obj;
     }
 
     @Override

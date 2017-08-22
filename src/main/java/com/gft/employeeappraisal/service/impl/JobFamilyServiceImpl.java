@@ -6,6 +6,8 @@ import com.gft.employeeappraisal.service.JobFamilyService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 /**
  * Service implementation of {@link JobFamilyService}
  *
@@ -25,7 +27,15 @@ public class JobFamilyServiceImpl implements JobFamilyService {
      * {@inheritDoc}
      */
     @Override
-    public JobFamily save(JobFamily entity) {
+    public Optional<JobFamily> findById(int jobFamilyId) {
+        return Optional.ofNullable(jobFamilyRepository.findOne(jobFamilyId));
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public JobFamily saveAndFlush(JobFamily entity) {
         return jobFamilyRepository.save(entity);
     }
 }

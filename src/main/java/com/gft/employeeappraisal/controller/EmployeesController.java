@@ -151,7 +151,7 @@ public class EmployeesController implements EmployeeApi {
         OperationResultDTO response = new OperationResultDTO();
 
         // Validate parameters
-        this.validationService.validate(newMentorDTO, employeeDTOToEntityCreateValidator);
+        this.validationService.validate(newMentorDTO);
 
         // Find Employee
         Employee employee = employeeService.findById(employeeId)
@@ -240,7 +240,7 @@ public class EmployeesController implements EmployeeApi {
         OperationResultDTO response = new OperationResultDTO();
         HttpStatus httpStatus;
 
-        this.validationService.validate(employeeDTOIn, employeeDTOToEntityCreateValidator);
+        this.validationService.validate(employeeDTOIn);
 
         Optional<Employee> lookupEmployee = employeeService.findByEmail(employeeDTOIn.getEmail());
 

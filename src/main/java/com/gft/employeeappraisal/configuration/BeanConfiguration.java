@@ -13,6 +13,8 @@ import ma.glasnost.orika.impl.DefaultMapperFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
+import org.springframework.validation.Validator;
+import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 
 import java.util.Arrays;
 import java.util.List;
@@ -39,8 +41,7 @@ public class BeanConfiguration {
             EvaluationFormDTOMapper evaluationFormDTOMapper,
             EvaluationFormQuestionDTOMapper evaluationFormQuestionDTOMapper,
             EvaluationFormSectionDTOMapper evaluationFormSectionDTOMapper,
-            ScoreTypeDTOMapper scoreTypeDTOMapper
-    ) {
+            ScoreTypeDTOMapper scoreTypeDTOMapper) {
 
         List<CustomMapper<?, ?>> mappers = Arrays.asList(
                 appraisalDTOMapper,
@@ -51,10 +52,20 @@ public class BeanConfiguration {
                 evaluationFormSectionDTOMapper,
                 scoreTypeDTOMapper
         );
-
         DefaultMapperFactory mapperFactory = new DefaultMapperFactory.Builder().build();
         mappers.forEach(mapperFactory::registerMapper);
         return mapperFactory;
+    }
+
+    /**
+     * Default Validator bean.
+     *
+     * @return Default validator bean
+     * @see <a href="Spring reference">http://docs.spring.io/spring/docs/current/spring-framework-reference/html/validation.html#validation-beanvalidation-spring</a>
+     */
+    @Bean
+    public Validator validator() {
+        return new LocalValidatorFactoryBean();
     }
 
     /**

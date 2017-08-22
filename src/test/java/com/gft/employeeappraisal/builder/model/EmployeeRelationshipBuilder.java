@@ -18,8 +18,6 @@ import static org.mockito.Mockito.when;
  */
 public class EmployeeRelationshipBuilder implements ObjectBuilder<EmployeeRelationship> {
 
-    private static int currentId = 1_000_000;
-
     private int id;
     private Employee sourceEmployee;
     private Employee targetEmployee;
@@ -88,7 +86,7 @@ public class EmployeeRelationshipBuilder implements ObjectBuilder<EmployeeRelati
     @Override
     public EmployeeRelationship buildWithDefaults() {
         EmployeeRelationship obj = new EmployeeRelationship();
-        obj.setId(this.idSet ? this.id : currentId++);
+        if (this.idSet) obj.setId(this.id);
         obj.setSourceEmployee(this.sourceEmployeeSet ? this.sourceEmployee : new EmployeeBuilder().buildWithDefaults());
         obj.setTargetEmployee(this.targetEmployeeSet ? this.targetEmployee : new EmployeeBuilder().buildWithDefaults());
         obj.setStartDate(this.startDateSet ? this.startDate : LocalDateTime.now().minusDays(1));

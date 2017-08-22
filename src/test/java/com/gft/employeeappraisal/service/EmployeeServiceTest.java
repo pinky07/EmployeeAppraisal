@@ -1,265 +1,359 @@
 package com.gft.employeeappraisal.service;
 
-import com.gft.employeeappraisal.ServiceSpringBootUnitTest;
-import com.gft.employeeappraisal.builder.model.ApplicationRoleBuilder;
 import com.gft.employeeappraisal.builder.model.EmployeeBuilder;
+import com.gft.employeeappraisal.builder.model.EmployeeRelationshipBuilder;
 import com.gft.employeeappraisal.builder.model.JobFamilyBuilder;
 import com.gft.employeeappraisal.builder.model.JobLevelBuilder;
-import com.gft.employeeappraisal.exception.AccessDeniedException;
-import com.gft.employeeappraisal.exception.NotFoundException;
 import com.gft.employeeappraisal.model.*;
-import com.gft.employeeappraisal.repository.EmployeeRepository;
+import com.gft.employeeappraisal.repository.*;
+import com.gft.employeeappraisal.service.impl.EmployeeServiceImpl;
 import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
+import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import javax.validation.ConstraintViolationException;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static org.junit.Assert.*;
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.when;
 
 /**
  * Service layer test for {@link EmployeeService}
  *
  * @author Manuel Yepez
+ * @author Rubén Jiménez
  */
 @RunWith(SpringRunner.class)
-public class EmployeeServiceTest extends ServiceSpringBootUnitTest {
+@DataJpaTest
+public class EmployeeServiceTest {
 
-	@Autowired
-    private ApplicationRoleService applicationRoleService;
-
-    @Autowired
-	private EmployeeRelationshipService employeeRelationshipService;
-
-    @Autowired
-    private EmployeeService employeeService;
+    // Required to initialize the class under test
 
     @Autowired
     private EmployeeRepository employeeRepository;
 
-    @Autowired
-    private JobFamilyService jobFamilyService;
+    @Mock
+    private ApplicationRoleService applicationRoleService;
 
-    @Autowired
+    @Mock
+    private EmployeeRelationshipService employeeRelationshipService;
+
+    @Mock
     private JobLevelService jobLevelService;
 
+    @Mock
+    private RelationshipService relationshipService;
+
+    // Class under test
+    private EmployeeService employeeService;
+
+    // Other repositories
+
     @Autowired
-    private SecurityService securityService;
+    private ApplicationRoleRepository applicationRoleRepository;
 
-    @Rule
-	public final ExpectedException exception = ExpectedException.none();
+    @Autowired
+    private JobFamilyRepository jobFamilyRepository;
 
-	private Employee employee;
-    private ApplicationRole applicationRole;
-    private JobLevel jobLevel;
+    @Autowired
+    private JobLevelRepository jobLevelRepository;
+
+    @Autowired
+    private RelationshipRepository relationshipRepository;
+
+    @Autowired
+    private EmployeeRelationshipRepository employeeRelationshipRepository;
+
+    // Test Fixtures
+    private ApplicationRole userApplicationRole;
+    private ApplicationRole adminApplicationRole;
     private JobFamily jobFamily;
+    private JobLevel jobLevel;
+    private Employee employeeA;
+    private Employee employeeB;
+    private Employee mentee;
+    private Employee mentor;
+    private Employee admin;
+    private Relationship mentorRelationship;
+    private Relationship peerRelationship;
+    private EmployeeRelationship mentorEmployeeRelationship;
+    private EmployeeRelationship peerEmployeeRelationship;
 
     @Before
-    public void generateData() {
-        applicationRole = applicationRoleService.save(mockApplicationRole().get());
-        jobFamily = jobFamilyService.save(mockJobFamily());
-        jobLevel = jobLevelService.save(mockJobLevel().get());
-        employee = employeeService.saveAndFlush(mockEmployee(0, "----")).get();
+    public void setUp() throws Exception {
+
+        // Initialize the service
+        this.employeeService = new EmployeeServiceImpl(
+                this.applicationRoleService,
+                this.employeeRelationshipService,
+                this.jobLevelService,
+                this.relationshipService,
+                this.employeeRepository);
+
+        // Create an Application Role
+        userApplicationRole = this.applicationRoleRepository
+                .findByNameIgnoreCase(ApplicationRoleName.USER.name());
+
+        // Create and Admin Application Role
+        adminApplicationRole = this.applicationRoleRepository
+                .findByNameIgnoreCase(ApplicationRoleName.ADMIN.name());
+
+        // Create a Job Family
+        jobFamily = this.jobFamilyRepository.save(new JobFamilyBuilder()
+                .buildWithDefaults());
+
+        // Create a Job Level
+        jobLevel = this.jobLevelRepository.save(new JobLevelBuilder()
+                .jobFamily(jobFamily)
+                .buildWithDefaults());
+
+        // Some test employees
+
+        this.employeeA = this.employeeRepository.save(new EmployeeBuilder()
+                .firstName("EmployeeA")
+                .jobLevel(jobLevel)
+                .applicationRole(userApplicationRole)
+                .buildWithDefaults());
+
+        this.employeeB = this.employeeRepository.save(new EmployeeBuilder()
+                .firstName("EmployeeB")
+                .jobLevel(jobLevel)
+                .applicationRole(userApplicationRole)
+                .buildWithDefaults());
+
+        this.mentee = this.employeeRepository.save(new EmployeeBuilder()
+                .firstName("Mentee")
+                .jobLevel(jobLevel)
+                .applicationRole(userApplicationRole)
+                .buildWithDefaults());
+
+        this.mentor = this.employeeRepository.save(new EmployeeBuilder()
+                .firstName("Mentor")
+                .jobLevel(jobLevel)
+                .applicationRole(userApplicationRole)
+                .buildWithDefaults());
+
+        this.admin = this.employeeRepository.save(new EmployeeBuilder()
+                .firstName("Admin")
+                .jobLevel(jobLevel)
+                .applicationRole(adminApplicationRole)
+                .buildWithDefaults());
+
+        // Retrieve the Mentor Relationship
+        this.mentorRelationship = this.relationshipRepository
+                .findByName(RelationshipName.MENTOR.name()).get();
+
+        // Retrieve the Peer Relationship
+        this.peerRelationship = this.relationshipRepository
+                .findByName(RelationshipName.PEER.name()).get();
+
+        // Create an EmployeeRelationship between mentee and mentor
+        this.mentorEmployeeRelationship = this.employeeRelationshipRepository.save(new EmployeeRelationshipBuilder()
+                .sourceEmployee(mentor)
+                .targetEmployee(mentee)
+                .relationship(mentorRelationship)
+                .buildWithDefaults());
+
+        // Create an EmployeeRelationship between employeeA and employeeB
+        this.peerEmployeeRelationship = this.employeeRelationshipRepository.save(new EmployeeRelationshipBuilder()
+                .sourceEmployee(employeeA)
+                .targetEmployee(employeeB)
+                .relationship(peerRelationship)
+                .buildWithDefaults());
     }
 
+    /**
+     * Tests {@link EmployeeService#findById(Integer)}
+     *
+     * @throws Exception If the test fails
+     */
     @Test
-    public void checkAccess() throws Exception {
-    	// no exception is thrown in this case and test passes
-		securityService.canReadEmployee(employee.getId(), employee.getId());
+    public void findById_Successful() throws Exception {
+        // Execution
+        Optional<Employee> employeeRetrieved = this.employeeService
+                .findById(employeeA.getId());
+
+        // Verification
+        assertTrue(employeeRetrieved.isPresent());
+        assertEquals(employeeA, employeeRetrieved.get());
     }
 
-	@Test
-	public void checkAccess_mentor() throws Exception {
-		Employee mentor = employeeService.saveAndFlush(mockAdmin(-2)).get();
-		employeeRelationshipService.changeMentor(mentor, employee);
-		// no exception is thrown in this case and test passes
-		securityService.canReadEmployee(mentor.getId(), employee.getId());
-	}
-
-	@Test
-	public void checkAccess_notFound() throws Exception {
-		// non-existing employeeappraisal
-		exception.expect(NotFoundException.class);
-		securityService.canReadEmployee(-100, employee.getId());
-		securityService.canReadEmployee(employee.getId(), -100);
-	}
-
-	@Test
-	public void checkAccess_forbidden() throws Exception {
-		Employee mentor = employeeService.saveAndFlush(mockAdmin(-2)).get();
-		exception.expect(AccessDeniedException.class);
-		securityService.canReadEmployee(mentor.getId(), employee.getId());
-	}
-
+    /**
+     * Tests {@link EmployeeService#findById(Integer)}
+     *
+     * @throws Exception If the test fails
+     */
     @Test
-    public void findById() throws Exception {
-        assertEquals(employee, employeeService.findById(employee.getId()).get());
+    public void findById_NotFound() throws Exception {
+        // Execution
+        Optional<Employee> employeeRetrieved = this.employeeService
+                .findById(-100);
+
+        // Verification
+        assertFalse(employeeRetrieved.isPresent());
     }
 
+    /**
+     * Tests {@link EmployeeService#findByEmail(String)}
+     *
+     * @throws Exception If the test fails
+     */
     @Test
-    public void findById_notExists() throws Exception {
-        assertEquals(Optional.empty(), employeeService.findById(-100));
+    public void findByEmail_Successful() throws Exception {
+        // Execution
+        Optional<Employee> employeeRetrieved = this.employeeService
+                .findByEmail(employeeA.getEmail());
+
+        // Verification
+        assertTrue(employeeRetrieved.isPresent());
+        assertEquals(employeeA, employeeRetrieved.get());
     }
 
+    /**
+     * Tests {@link EmployeeService#findByEmail(String)}
+     *
+     * @throws Exception If the test fails
+     */
     @Test
-    public void findByEmail() throws Exception {
-        assertEquals(employee, employeeService.findByEmail(employee.getEmail()).get());
+    public void findByEmail_NotFound() throws Exception {
+        // Execution
+        Optional<Employee> employeeRetrieved = this.employeeService
+                .findByEmail("notfound@gft.com");
+
+        // Verification
+        assertFalse(employeeRetrieved.isPresent());
     }
 
+    /**
+     * Tests {@link EmployeeService#findCurrentMentorById(int)}
+     *
+     * @throws Exception If the test fails
+     */
     @Test
-    public void findByEmail_notExists() throws Exception {
-        assertEquals(Optional.empty(), employeeService.findByEmail("doesnotexist@gft.com"));
+    public void findCurrentMentorById_Successful() throws Exception {
+        // Set Up
+        when(this.relationshipService.findByName(any(RelationshipName.class)))
+                .thenReturn(mentorRelationship);
+        when(this.employeeRelationshipService.findCurrentByTargetEmployeeAndRelationship(mentee, mentorRelationship))
+                .thenReturn(Stream.of(mentorEmployeeRelationship));
+
+        // Execution
+        Optional<Employee> mentorRetrieved = this.employeeService.findCurrentMentorById(mentee.getId());
+
+        // Verification
+        assertTrue(mentorRetrieved.isPresent());
+        assertEquals(mentor, mentorRetrieved.get());
     }
 
+    /**
+     * Tests {@link EmployeeService#findCurrentMenteesById(int)}
+     *
+     * @throws Exception If the test fails
+     */
     @Test
-    public void findCurrentMentorById() throws Exception {
-    	Employee mentor = employeeService.saveAndFlush(mockAdmin(-2)).get();
-    	employeeRelationshipService.changeMentor(mentor, employee);
+    public void findCurrentMenteesById_Successful() throws Exception {
+        // Set Up
+        when(this.relationshipService.findByName(any(RelationshipName.class)))
+                .thenReturn(mentorRelationship);
+        when(this.employeeRelationshipService.findCurrentBySourceEmployeeAndRelationship(mentor, mentorRelationship))
+                .thenReturn(Stream.of(mentorEmployeeRelationship));
 
-    	assertEquals(mentor, employeeService.findCurrentMentorById(employee.getId()).get());
-	}
+        // Execution
+        List<Employee> menteesRetrieved = this.employeeService.findCurrentMenteesById(mentor.getId())
+                .collect(Collectors.toList());
 
-	@Test
-	public void findCurrentMenteesById() throws Exception {
-		Employee mentor = employeeService.saveAndFlush(mockAdmin(-2)).get();
-		employeeRelationshipService.changeMentor(mentor, employee);
+        // Verification
+        assertTrue(menteesRetrieved.size() == 1);
+        assertEquals(mentee, menteesRetrieved.get(0));
+    }
 
-		assertEquals(employee, employeeService.findCurrentMenteesById(mentor.getId()).findFirst().get());
-	}
+    /**
+     * Tests {@link EmployeeService#findCurrentPeersById(int)}
+     *
+     * @throws Exception If the test fails
+     */
+    @Test
+    public void findCurrentPeersById_Successful() throws Exception {
+        // Set Up
+        when(this.relationshipService.findByName(any(RelationshipName.class)))
+                .thenReturn(peerRelationship);
+        when(this.employeeRelationshipService.findCurrentBySourceEmployeeAndRelationship(employeeA, peerRelationship))
+                .thenReturn(Stream.of(peerEmployeeRelationship));
 
-	@Test
-	public void findCurrentPeersById() throws Exception {
-		Employee anotherEmployee = employeeService.saveAndFlush(mockEmployee(-3, "....")).get();
-    	employeeRelationshipService.addPeer(employee, anotherEmployee);
+        // Execution
+        List<Employee> peersRetrieved = this.employeeService.findCurrentPeersById(employeeA.getId())
+                .collect(Collectors.toList());
 
-		List<Employee> currentPeersById = employeeService.findCurrentPeersById(employee.getId()).collect(Collectors.toList());
-		assertEquals(anotherEmployee, currentPeersById.get(0));
-	}
+        // Verification
+        assertTrue(peersRetrieved.size() == 1);
+        assertEquals(employeeB, peersRetrieved.get(0));
+    }
 
-	@Test
-	public void findCurrentRelationshipsById() throws Exception {
-		Employee mentor = employeeService.saveAndFlush(mockAdmin(-2)).get();
-		employeeRelationshipService.changeMentor(mentor, employee);
-
-		Optional<EmployeeRelationship> employeeRelationshipOpt =
-				employeeService.findCurrentRelationshipsById(mentor.getId(), RelationshipName.MENTOR).findFirst();
-
-		assertTrue(employeeRelationshipOpt.isPresent());
-		EmployeeRelationship employeeRelationship = employeeRelationshipOpt.get();
-		assertEquals(mentor, employeeRelationship.getSourceEmployee());
-		assertEquals(employee, employeeRelationship.getTargetEmployee());
-	}
-
-	@Test
-	public void findCurrentRelationshipsBySourceEmployee() throws Exception {
-		Employee mentor = employeeService.saveAndFlush(mockAdmin(-2)).get();
-		employeeRelationshipService.changeMentor(mentor, employee);
-
-		Optional<EmployeeRelationship> employeeRelationshipOpt =
-				employeeService.findCurrentRelationshipsBySourceEmployee(mentor, RelationshipName.MENTOR).findFirst();
-
-		assertTrue(employeeRelationshipOpt.isPresent());
-		EmployeeRelationship employeeRelationship = employeeRelationshipOpt.get();
-		assertEquals(mentor, employeeRelationship.getSourceEmployee());
-		assertEquals(employee, employeeRelationship.getTargetEmployee());
-	}
-
+    /**
+     * Tests {@link EmployeeService#isAdmin(Employee)}
+     *
+     * @throws Exception If the test fails
+     */
     @Test
     public void isAdmin() throws Exception {
-        assertFalse(employeeService.isAdmin(employee));
-        assertTrue(employeeService.isAdmin(mockAdmin(-2)));
+        assertFalse(this.employeeService.isAdmin(employeeA));
+        assertTrue(this.employeeService.isAdmin(admin));
     }
 
+    /**
+     * Tests {@link EmployeeService#saveAndFlush(Employee)}
+     *
+     * @throws Exception If the test fails
+     */
     @Test
-    public void save() throws Exception {
-        Employee newEmployee = new EmployeeBuilder()
-                .firstName("Newb")
-                .lastName("Newbie")
-                .gftIdentifier("NOOB")
-                .email("noob@gft.com")
-                .applicationRole(applicationRole)
+    public void saveAndFlush_Successful() throws Exception {
+        // Set up
+        Employee employee = new EmployeeBuilder()
+                .applicationRole(userApplicationRole)
                 .jobLevel(jobLevel)
-                .build();
+                .buildWithDefaults();
+        when(this.applicationRoleService.findById(this.userApplicationRole.getId()))
+                .thenReturn(Optional.of(this.userApplicationRole));
+        when(this.jobLevelService.findById(this.jobLevel.getId()))
+                .thenReturn(Optional.of(this.jobLevel));
 
-        assertEquals(Optional.empty(), employeeService.findByEmail(newEmployee.getEmail()));
-
+        // Execution
         long beforeCount = employeeRepository.count();
-        newEmployee = employeeService.saveAndFlush(newEmployee).get();
+        Optional<Employee> employeeRetrieved = employeeService.saveAndFlush(employee);
         long afterCount = employeeRepository.count();
 
+        // Verification
         assertTrue(beforeCount + 1 == afterCount);
-        assertEquals(newEmployee, employeeService.findByEmail(newEmployee.getEmail()).get());
+        assertTrue(employeeRetrieved.isPresent());
     }
 
-    @Test
-    public void save_invalid() throws Exception {
-        Employee newEmployee = new EmployeeBuilder()
-                .firstName("Newb")
-                .lastName("Newbie")
-                .gftIdentifier("NOOB")
-                .email("noob@gft.com")
-                .applicationRole(new ApplicationRoleBuilder()
-                        .name("invalid").description("invalid").build())
+    /**
+     * Tests {@link EmployeeService#saveAndFlush(Employee)}
+     *
+     * @throws Exception If the test fails
+     */
+    @Test(expected = ConstraintViolationException.class)
+    public void saveAndFlush_Invalid() throws Exception {
+        // Set up
+        Employee employee = new EmployeeBuilder()
+                .gftIdentifier("12345")
+                .applicationRole(userApplicationRole)
                 .jobLevel(jobLevel)
                 .build();
+        when(this.applicationRoleService.findById(this.userApplicationRole.getId()))
+                .thenReturn(Optional.of(this.userApplicationRole));
+        when(this.jobLevelService.findById(this.jobLevel.getId()))
+                .thenReturn(Optional.of(this.jobLevel));
 
-        assertEquals(Optional.empty(), employeeService.findByEmail(newEmployee.getEmail()));
-
-        long beforeCount = employeeRepository.count();
-        Optional<Employee> result = employeeService.saveAndFlush(newEmployee);
-        long afterCount = employeeRepository.count();
-
-        assertTrue(beforeCount == afterCount);
-        assertEquals(Optional.empty(), result);
-        assertEquals(Optional.empty(), employeeService.findByEmail(newEmployee.getEmail()));
-    }
-
-    @SuppressWarnings("all")
-    private Employee mockEmployee(int offsetId, String identifier) {
-        return new EmployeeBuilder()
-				.id(offsetId)
-                .firstName("Manuel")
-                .lastName("Yepez")
-                .gftIdentifier(identifier)
-                .email("nolo.yepez@gft.com")
-                .applicationRole(applicationRole)
-                .jobLevel(jobLevel)
-                .build();
-    }
-
-    @SuppressWarnings("all")
-    private Employee mockAdmin(int offsetId) {
-        return new EmployeeBuilder()
-				.id(offsetId)
-                .firstName("Admin")
-                .lastName("Admin")
-                .gftIdentifier("0000")
-                .email("admin@gft.com")
-                .applicationRole(applicationRoleService.findById(ApplicationRoleNames.ADMIN.getId()).get())
-                .jobLevel(jobLevel)
-                .build();
-    }
-
-    private Optional<ApplicationRole> mockApplicationRole() {
-        return Optional.of(new ApplicationRoleBuilder()
-                .name("ApplicationRole").description("AppDescription").build());
-    }
-
-    private Optional<JobLevel> mockJobLevel() {
-        return Optional.of(new JobLevelBuilder()
-                .name("LX").description("Description").expertise("Expertise")
-                .jobFamily(jobFamily
-                ).build());
-    }
-
-    private JobFamily mockJobFamily() {
-        return new JobFamilyBuilder()
-                .name("Job Family").description("Description").build();
+        // Execution
+        employeeService.saveAndFlush(employee);
     }
 }

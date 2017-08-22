@@ -1,19 +1,21 @@
 package com.gft.employeeappraisal.service;
 
-import com.gft.employeeappraisal.ServiceSpringBootUnitTest;
 import com.gft.employeeappraisal.builder.model.JobFamilyBuilder;
 import com.gft.employeeappraisal.model.JobFamily;
 import com.gft.employeeappraisal.repository.JobFamilyRepository;
-import org.junit.Rule;
+import com.gft.employeeappraisal.service.impl.JobFamilyServiceImpl;
+import org.junit.Before;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import javax.validation.ConstraintViolationException;
+import java.util.Optional;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Service layer test for {@link JobFamilyService}
@@ -21,42 +23,36 @@ import static org.junit.Assert.*;
  * @author Manuel Yepez
  */
 @RunWith(SpringRunner.class)
-public class JobFamilyServiceTest extends ServiceSpringBootUnitTest {
+@DataJpaTest
+public class JobFamilyServiceTest {
 
-	@Autowired
-	private JobFamilyService jobFamilyService;
+    @Autowired
+    private JobFamilyRepository jobFamilyRepository;
 
-	@Autowired
-	private JobFamilyRepository jobFamilyRepository;
+    // Class under test
+    private JobFamilyService jobFamilyService;
 
-	@Rule
-	public final ExpectedException exception = ExpectedException.none();
+    @Before
+    public void setUp() throws Exception {
+        this.jobFamilyService = new JobFamilyServiceImpl(this.jobFamilyRepository);
+    }
 
-	private JobFamily jobFamily;
+    @Test
+    public void save() throws Exception {
+        JobFamily jobFamily = new JobFamilyBuilder().buildWithDefaults();
 
-	@Test
-	public void save() throws Exception {
-		long beforeCount = jobFamilyRepository.count();
-		jobFamily = jobFamilyService.save(mockJobFamily());
-		long afterCount = jobFamilyRepository.count();
-		assertTrue(beforeCount + 1 == afterCount);
+        long beforeCount = jobFamilyRepository.count();
+        jobFamily = jobFamilyService.saveAndFlush(jobFamily);
+        long afterCount = jobFamilyRepository.count();
 
-		assertNotNull(jobFamilyRepository.findOne(jobFamily.getId()));
-	}
+        assertTrue(beforeCount + 1 == afterCount);
+        Optional<JobFamily> jobFamilyRetrieved = this.jobFamilyService.findById(jobFamily.getId());
+        assertTrue(jobFamilyRetrieved.isPresent());
+        assertEquals(jobFamily, jobFamilyRetrieved.get());
+    }
 
-	@Test
-	public void save_invalid() throws Exception {
-		long beforeCount = jobFamilyRepository.count();
-		exception.expect(ConstraintViolationException.class);
-		jobFamily = jobFamilyService.save(new JobFamilyBuilder().name("invalid").build());
-		long afterCount = jobFamilyRepository.count();
-		assertTrue(beforeCount == afterCount);
-
-		assertNull(jobFamilyRepository.findOne(jobFamily.getId()));
-	}
-
-	private JobFamily mockJobFamily() {
-		return new JobFamilyBuilder()
-				.name("Job Family").description("Description").build();
-	}
+    @Test(expected = ConstraintViolationException.class)
+    public void save_Invalid() throws Exception {
+        jobFamilyService.saveAndFlush(new JobFamilyBuilder().name("invalid").build());
+    }
 }
