@@ -1105,6 +1105,68 @@ paths:
             An entity with the specified Id wasn't found.
 
 ########################################################################################################################
+# /relationships/:id ###################################################################################################
+########################################################################################################################
+
+  '/relationships':
+    get:
+      tags:
+        - Employee
+      summary: |
+        Obtains all Relationship entities.
+      description: |
+        Fetches all Relationship entities from database. Refer to the database model for details.
+      operationId: relationshipsGet
+      produces:
+        - application/json
+      responses:
+        '200':
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/RelationshipDTO'
+          description: |
+            Successful.
+        '403':
+          description: |
+            The user isn't authenticated or authorized to perform this action.
+
+########################################################################################################################
+# /relationships/:id ###################################################################################################
+########################################################################################################################
+
+  '/relationships/{relationshipId}':
+    get:
+      tags:
+        - Employee
+      summary: |
+        Obtains a Relationship entity.
+      description: |
+        Fetches a single Relationship entity from database. Refer to the database model for details.
+      operationId: relationshipsIdGet
+      produces:
+        - application/json
+      parameters:
+        - in: path
+          name: relationshipId
+          required: true
+          type: integer
+          description: |
+            `Relationship` Id.
+      responses:
+        '200':
+          schema:
+            $ref: '#/definitions/RelationshipDTO'
+          description: |
+            Successful.
+        '403':
+          description: |
+            The user isn't authenticated or authorized to perform this action.
+        '404':
+          description: |
+            An entity with the specified Id wasn't found.
+
+########################################################################################################################
 # Definitions ##########################################################################################################
 ########################################################################################################################
 

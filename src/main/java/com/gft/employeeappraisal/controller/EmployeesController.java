@@ -2,19 +2,18 @@ package com.gft.employeeappraisal.controller;
 
 import com.gft.employeeappraisal.converter.employee.EmployeeDTOConverter;
 import com.gft.employeeappraisal.converter.employeerelationship.EmployeeRelationshipDTOConverter;
+import com.gft.employeeappraisal.converter.relationship.RelationshipDTOConverter;
 import com.gft.employeeappraisal.exception.NotFoundException;
 import com.gft.employeeappraisal.model.Constants;
 import com.gft.employeeappraisal.model.Employee;
 import com.gft.employeeappraisal.model.RelationshipName;
-import com.gft.employeeappraisal.service.EmployeeRelationshipService;
-import com.gft.employeeappraisal.service.EmployeeService;
-import com.gft.employeeappraisal.service.SecurityService;
-import com.gft.employeeappraisal.service.ValidationService;
+import com.gft.employeeappraisal.service.*;
 import com.gft.employeeappraisal.validator.EmployeeDTOCreateValidator;
 import com.gft.swagger.employees.api.EmployeeApi;
 import com.gft.swagger.employees.model.EmployeeDTO;
 import com.gft.swagger.employees.model.EmployeeRelationshipDTO;
 import com.gft.swagger.employees.model.OperationResultDTO;
+import com.gft.swagger.employees.model.RelationshipDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,6 +44,8 @@ public class EmployeesController implements EmployeeApi {
     private EmployeeRelationshipDTOConverter employeeRelationshipDTOConverter;
     private EmployeeRelationshipService employeeRelationshipService;
     private EmployeeDTOCreateValidator employeeDTOToEntityCreateValidator;
+    private RelationshipDTOConverter relationshipDTOConverter;
+    private RelationshipService relationshipService;
     private SecurityService securityService;
     private ValidationService validationService;
 
@@ -55,6 +56,8 @@ public class EmployeesController implements EmployeeApi {
             EmployeeRelationshipDTOConverter employeeRelationshipDTOConverter,
             EmployeeRelationshipService employeeRelationshipService,
             EmployeeDTOCreateValidator employeeDTOToEntityCreateValidator,
+            RelationshipDTOConverter relationshipDTOConverter,
+            RelationshipService relationshipService,
             SecurityService securityService,
             ValidationService validationService) {
         this.employeeService = employeeService;
@@ -62,6 +65,8 @@ public class EmployeesController implements EmployeeApi {
         this.employeeRelationshipDTOConverter = employeeRelationshipDTOConverter;
         this.employeeRelationshipService = employeeRelationshipService;
         this.employeeDTOToEntityCreateValidator = employeeDTOToEntityCreateValidator;
+        this.relationshipDTOConverter = relationshipDTOConverter;
+        this.relationshipService = relationshipService;
         this.securityService = securityService;
         this.validationService = validationService;
     }
@@ -268,5 +273,33 @@ public class EmployeesController implements EmployeeApi {
     public ResponseEntity<Void> employeesPut(
             @RequestBody EmployeeDTO employee) {
         return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
+    }
+
+    @Override
+    public ResponseEntity<List<RelationshipDTO>> relationshipsGet() {
+        logger.debug("GET endpoint: /relationships/");
+
+        List<RelationshipDTO> relationshipDTOList = new ArrayList<>();
+
+        // We will omit other relationship types for now. Plus this might require a filter.
+        relationshipService
+                .findRelationshipsByNames(RelationshipName.LEAD,
+                        RelationshipName.PEER,
+                        RelationshipName.OTHER)
+                .forEach(r -> relationshipDTOList.add(relationshipDTOConverter.convert(r)));
+
+        return new ResponseEntity<>(relationshipDTOList, HttpStatus.OK);
+    }
+
+    @Override
+    public ResponseEntity<RelationshipDTO> relationshipsIdGet(@PathVariable Integer relationshipId) {
+        logger.debug("GET endpoint: /relationships/{}", relationshipId);
+
+        RelationshipDTO relationship = relationshipService.findById(relationshipId)
+                .map(r -> relationshipDTOConverter.convert(r))
+                .orElseThrow(() -> new NotFoundException(String.format("Relationship with id %d was not found",
+                        relationshipId)));
+
+        return new ResponseEntity<>(relationship, HttpStatus.OK);
     }
 }
