@@ -1,12 +1,5 @@
 package com.gft.employeeappraisal.configuration;
 
-import com.gft.employeeappraisal.converter.appraisal.AppraisalDTOMapper;
-import com.gft.employeeappraisal.converter.employee.EmployeeDTOMapper;
-import com.gft.employeeappraisal.converter.employeerelationship.EmployeeRelationshipDTOMapper;
-import com.gft.employeeappraisal.converter.evaluationFormQuestion.EvaluationFormQuestionDTOMapper;
-import com.gft.employeeappraisal.converter.evaluationFormSection.EvaluationFormSectionDTOMapper;
-import com.gft.employeeappraisal.converter.evaluationform.EvaluationFormDTOMapper;
-import com.gft.employeeappraisal.converter.scoretype.ScoreTypeDTOMapper;
 import ma.glasnost.orika.CustomMapper;
 import ma.glasnost.orika.MapperFactory;
 import ma.glasnost.orika.impl.DefaultMapperFactory;
@@ -14,8 +7,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
 
-import java.util.Arrays;
-import java.util.List;
+import java.util.Set;
 
 /**
  * Container class that keeps track of bean instantiations necessary for the EmployeeAppraisal microservice.
@@ -32,26 +24,7 @@ public class BeanConfiguration {
      * @return Mapper Factory instance.
      */
     @Bean
-    public MapperFactory mapperFactory(
-            AppraisalDTOMapper appraisalDTOMapper,
-            EmployeeDTOMapper employeeDTOMapper,
-            EmployeeRelationshipDTOMapper employeeRelationshipDTOMapper,
-            EvaluationFormDTOMapper evaluationFormDTOMapper,
-            EvaluationFormQuestionDTOMapper evaluationFormQuestionDTOMapper,
-            EvaluationFormSectionDTOMapper evaluationFormSectionDTOMapper,
-            ScoreTypeDTOMapper scoreTypeDTOMapper) {
-
-        // TODO Improve this with a Set of Custom Mappers injected!
-
-        List<CustomMapper<?, ?>> mappers = Arrays.asList(
-                appraisalDTOMapper,
-                employeeDTOMapper,
-                employeeRelationshipDTOMapper,
-                evaluationFormDTOMapper,
-                evaluationFormQuestionDTOMapper,
-                evaluationFormSectionDTOMapper,
-                scoreTypeDTOMapper
-        );
+    public MapperFactory mapperFactory(Set<CustomMapper<?, ?>> mappers) {
         DefaultMapperFactory mapperFactory = new DefaultMapperFactory.Builder().build();
         mappers.forEach(mapperFactory::registerMapper);
         return mapperFactory;
