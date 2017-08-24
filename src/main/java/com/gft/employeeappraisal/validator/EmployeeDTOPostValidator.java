@@ -10,7 +10,7 @@ import org.springframework.validation.Validator;
 
 /**
  * Class that describes validation rules for the conversion from an EmployeeDTO to an Employee entity,
- * specifically in the case of an Employee being created.
+ * specifically in the case of an Employee being created through a POST request.
  *
  * @author Manuel Yepez
  * @author Rubén Jiménez

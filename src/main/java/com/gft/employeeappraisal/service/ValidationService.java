@@ -23,7 +23,8 @@ public interface ValidationService {
     void validate(Object target) throws InvalidException;
 
     /**
-     * TODO Document this!
+     * Validates the target object, according to the Http Method from which it was received. If a validation error
+     * occurs, throws an InvalidException.
      *
      * @param target
      * @param httpMethod

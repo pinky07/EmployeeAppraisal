@@ -18,21 +18,33 @@ public class ApplicationRoleDTOValidator implements Validator, HttpValidator {
 
     private static final String ID_FIELD = "id";
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean supports(Class<?> clazz) {
         return ApplicationRoleDTO.class.equals(clazz);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean supports(HttpMethod httpMethod) {
         return true;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void validate(Object target, Errors errors) {
         ValidationUtils.rejectIfEmpty(errors, ID_FIELD, "employeeDTO.emptyField", new Object[]{ID_FIELD});
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void validate(Object target, HttpMethod httpMethod, Errors errors) {
         validate(target, errors);

@@ -8,6 +8,13 @@ import org.springframework.validation.Errors;
 
 import java.util.Set;
 
+/**
+ * This Validator is meant to be used from any other Validators and from the Validation Service. It contains a Set of
+ * all Validators implementing the HttpValidator interface and it's smart enough to decide which Validator to use when
+ * its validate method is called.
+ *
+ * @author Rubén Jiménez
+ */
 @Component
 public class CompositeValidator implements HttpValidator {
 
