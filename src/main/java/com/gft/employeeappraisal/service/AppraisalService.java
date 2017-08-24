@@ -37,5 +37,5 @@ public interface AppraisalService {
      *
      * @param appraisal Appraisal Entity to saveAndFlush
      */
-    void saveAndFlush(Appraisal appraisal);
+    Optional<Appraisal> saveAndFlush(Appraisal appraisal);
 }

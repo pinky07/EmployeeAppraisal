@@ -2,6 +2,8 @@ package com.gft.employeeappraisal.service;
 
 import com.gft.employeeappraisal.model.EvaluationForm;
 
+import java.util.Optional;
+
 /**
  * Interacts with tables and repositories related to the EvaluationForm
  *
@@ -14,5 +16,5 @@ public interface EvaluationFormService {
      *
      * @param evaluationForm Entity to saveAndFlush
      */
-    void saveAndFlush(EvaluationForm evaluationForm);
+    Optional<EvaluationForm> saveAndFlush(EvaluationForm evaluationForm);
 }

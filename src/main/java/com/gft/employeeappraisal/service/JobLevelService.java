@@ -25,5 +25,5 @@ public interface JobLevelService {
      * @param entity The entity to be persisted.
      * @return The same entity after being persisted.
      */
-    JobLevel saveAndFlush(JobLevel entity);
+    Optional<JobLevel> saveAndFlush(JobLevel entity);
 }

@@ -45,135 +45,130 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @RunWith(SpringRunner.class)
 @AutoConfigureMockMvc
 @SpringBootTest
-@ActiveProfiles({ "default", "local", "test" })
+@ActiveProfiles({"default", "local", "test"})
 public class EmployeesControllerPostTest {
 
-	@Autowired
-	private MockMvc mockMvc;
+    private static final String EMPLOYEES_URL = "/employees";
+    private static EmployeeDTO mockEmployeeDTO;
+    @Autowired
+    private MockMvc mockMvc;
+    @Autowired
+    private ObjectMapper mapper;
+    @Autowired
+    @SuppressWarnings("unused")
+    private EmployeeDTOConverter employeeDTOConverter;
+    @MockBean(reset = MockReset.AFTER)
+    private EmployeeService employeeService;
+    @MockBean(reset = MockReset.AFTER)
+    @SuppressWarnings("unused")
+    private EmployeeRelationshipService employeeRelationshipService;
 
-	@Autowired
-	private ObjectMapper mapper;
+    @BeforeClass
+    public static void setUp() {
+        mockEmployeeDTO = new EmployeeDTOBuilder()
+                .firstName("Manuel")
+                .lastName("Yepez")
+                .gftIdentifier("MLYZ")
+                .email("manuel.yepez@gft.com")
+                .applicationRole(mockApplicationRoleDTO())
+                .jobLevel(mockJobLevelDTO())
+                .build();
 
-	@Autowired
-	@SuppressWarnings("unused")
-	private EmployeeDTOConverter employeeDTOConverter;
+    }
 
-	@MockBean(reset = MockReset.AFTER)
-	private EmployeeService employeeService;
+    private static ApplicationRoleDTO mockApplicationRoleDTO() {
+        return new ApplicationRoleDTOBuilder()
+                .name("ApplicationRole").description("AppDescription").build();
+    }
 
-	@MockBean(reset = MockReset.AFTER)
-	@SuppressWarnings("unused")
-	private EmployeeRelationshipService employeeRelationshipService;
+    private static JobLevelDTO mockJobLevelDTO() {
+        return new JobLevelDTOBuilder()
+                .name("Level").description("Description").expertise("Expertise")
+                .jobFamily(new JobFamilyDTOBuilder()
+                        .name("Job Family").description("Description").build()
+                ).build();
+    }
 
-	private static EmployeeDTO mockEmployeeDTO;
+    @Test
+    public void employeesPost() throws Exception {
+        when(employeeService.findByEmail(anyString())).thenReturn(Optional.empty());
+        when(employeeService.saveAndFlush(any(Employee.class))).thenReturn(Optional.of(mockEmployee()));
 
-	private static final String EMPLOYEES_URL = "/employees";
+        MvcResult result = mockMvc.perform(post(EMPLOYEES_URL)
+                .with(csrf())
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(mapper.writeValueAsString(mockEmployeeDTO))
+        ).andExpect(status().isCreated()).andReturn();
 
-	@BeforeClass
-	public static void setUp() {
-		mockEmployeeDTO = new EmployeeDTOBuilder()
-				.firstName("Manuel")
-				.lastName("Yepez")
-				.gftIdentifier("MLYZ")
-				.email("manuel.yepez@gft.com")
-				.applicationRole(mockApplicationRoleDTO())
-				.jobLevel(mockJobLevelDTO())
-				.build();
+        OperationResultDTO resultDTO = mapper.readValue(result.getResponse().getContentAsString(), OperationResultDTO.class);
 
-	}
+        verify(employeeService, times(1)).findByEmail(anyString());
+        verify(employeeService, times(1)).saveAndFlush(any(Employee.class));
 
-	@Test
-	public void employeesPost() throws Exception {
-		when(employeeService.findByEmail(anyString())).thenReturn(Optional.empty());
-		when(employeeService.saveAndFlush(any(Employee.class))).thenReturn(Optional.of(mockEmployee()));
+        EmployeeDTO resultEmployeeDTO = mapper.convertValue(resultDTO.getData(), EmployeeDTO.class);
+        assertEquals(Constants.SUCCESS, resultDTO.getMessage());
+        assertEquals(resultEmployeeDTO.getFirstName(), mockEmployeeDTO.getFirstName());
+        assertNull(resultDTO.getErrors());
+    }
 
-		MvcResult result = mockMvc.perform(post(EMPLOYEES_URL)
-				.with(csrf())
-				.contentType(MediaType.APPLICATION_JSON)
-				.content(mapper.writeValueAsString(mockEmployeeDTO))
-		).andExpect(status().isCreated()).andReturn();
+    @Test
+    public void employeesPost_exists() throws Exception {
+        when(employeeService.findByEmail(anyString())).thenReturn(Optional.of(mockEmployee()));
 
-		OperationResultDTO resultDTO = mapper.readValue(result.getResponse().getContentAsString(), OperationResultDTO.class);
+        MvcResult result = mockMvc.perform(post(EMPLOYEES_URL)
+                .with(csrf())
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(mapper.writeValueAsString(mockEmployeeDTO))
+        ).andExpect(status().isUnprocessableEntity()).andReturn();
 
-		verify(employeeService, times(1)).findByEmail(anyString());
-		verify(employeeService, times(1)).saveAndFlush(any(Employee.class));
+        verify(employeeService, times(1)).findByEmail(anyString());
+        verify(employeeService, never()).saveAndFlush(any(Employee.class));
 
-		EmployeeDTO resultEmployeeDTO = mapper.convertValue(resultDTO.getData(), EmployeeDTO.class);
-		assertEquals(Constants.SUCCESS, resultDTO.getMessage());
-		assertEquals(resultEmployeeDTO.getFirstName(), mockEmployeeDTO.getFirstName());
-		assertNull(resultDTO.getErrors());
-	}
+        OperationResultDTO resultDTO = mapper.readValue(result.getResponse().getContentAsString(), OperationResultDTO.class);
+        assertEquals(Constants.ERROR, resultDTO.getMessage());
+        assertNull(resultDTO.getData());
+    }
 
-	@Test
-	public void employeesPost_exists() throws Exception {
-		when(employeeService.findByEmail(anyString())).thenReturn(Optional.of(mockEmployee()));
+    @Test
+    public void employeesPost_BadRequest() throws Exception {
+        EmployeeDTO badRequestEmployee = new EmployeeDTO();
 
-		MvcResult result = mockMvc.perform(post(EMPLOYEES_URL)
-				.with(csrf())
-				.contentType(MediaType.APPLICATION_JSON)
-				.content(mapper.writeValueAsString(mockEmployeeDTO))
-		).andExpect(status().isUnprocessableEntity()).andReturn();
+        MvcResult result = mockMvc.perform(post(EMPLOYEES_URL)
+                .with(csrf())
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(mapper.writeValueAsString(badRequestEmployee))
+        ).andExpect(status().isBadRequest()).andReturn();
 
-		verify(employeeService, times(1)).findByEmail(anyString());
-		verify(employeeService, never()).saveAndFlush(any(Employee.class));
+        verify(employeeService, never()).findByEmail(anyString());
+        verify(employeeService, never()).saveAndFlush(any(Employee.class));
 
-		OperationResultDTO resultDTO = mapper.readValue(result.getResponse().getContentAsString(), OperationResultDTO.class);
-		assertEquals(Constants.ERROR, resultDTO.getMessage());
-		assertNull(resultDTO.getData());
-	}
+        OperationResultDTO resultDTO = mapper.readValue(result.getResponse().getContentAsString(), OperationResultDTO.class);
+        assertNull(resultDTO.getData());
+        assertFalse(resultDTO.getErrors().isEmpty());
+    }
 
-	@Test public void employeesPost_badRequest() throws Exception {
-		EmployeeDTO badRequestEmployee = new EmployeeDTO();
+    private Optional<ApplicationRole> mockApplicationRole() {
+        return Optional.of(new ApplicationRoleBuilder()
+                .name("ApplicationRole").description("AppDescription").build());
+    }
 
-		MvcResult result = mockMvc.perform(post(EMPLOYEES_URL)
-				.with(csrf())
-				.contentType(MediaType.APPLICATION_JSON)
-				.content(mapper.writeValueAsString(badRequestEmployee))
-		).andExpect(status().isBadRequest()).andReturn();
+    private Optional<JobLevel> mockJobLevel() {
+        return Optional.of(new JobLevelBuilder()
+                .name("Level").description("Description").expertise("Expertise")
+                .jobFamily(new JobFamilyBuilder()
+                        .name("Job Family").description("Description").build()
+                ).build());
+    }
 
-		verify(employeeService, never()).findByEmail(anyString());
-		verify(employeeService, never()).saveAndFlush(any(Employee.class));
-
-		OperationResultDTO resultDTO = mapper.readValue(result.getResponse().getContentAsString(), OperationResultDTO.class);
-		assertNull(resultDTO.getData());
-		assertFalse(resultDTO.getErrors().isEmpty());
-	}
-
-	private Optional<ApplicationRole> mockApplicationRole() {
-		return Optional.of(new ApplicationRoleBuilder()
-				.name("ApplicationRole").description("AppDescription").build());
-	}
-
-	private static ApplicationRoleDTO mockApplicationRoleDTO() {
-		return new ApplicationRoleDTOBuilder()
-				.name("ApplicationRole").description("AppDescription").build();
-	}
-
-	private Optional<JobLevel> mockJobLevel() {
-		return Optional.of(new JobLevelBuilder()
-				.name("Level").description("Description").expertise("Expertise")
-				.jobFamily(new JobFamilyBuilder()
-						.name("Job Family").description("Description").build()
-				).build());
-	}
-
-	private static JobLevelDTO mockJobLevelDTO() {
-		return new JobLevelDTOBuilder()
-				.name("Level").description("Description").expertise("Expertise")
-				.jobFamily(new JobFamilyDTOBuilder()
-						.name("Job Family").description("Description").build()
-				).build();
-	}
-
-	@SuppressWarnings("all")
-	private Employee mockEmployee() {
-		return new EmployeeBuilder()
-				.firstName("Manuel")
-				.lastName("Yepez")
-				.gftIdentifier("MLYZ")
-				.email("manuel.yepez@gft.com")
-				.applicationRole(mockApplicationRole().get())
-				.jobLevel(mockJobLevel().get())
-				.build();
-	}
+    @SuppressWarnings("all")
+    private Employee mockEmployee() {
+        return new EmployeeBuilder()
+                .firstName("Manuel")
+                .lastName("Yepez")
+                .gftIdentifier("MLYZ")
+                .email("manuel.yepez@gft.com")
+                .applicationRole(mockApplicationRole().get())
+                .jobLevel(mockJobLevel().get())
+                .build();
+    }
 }

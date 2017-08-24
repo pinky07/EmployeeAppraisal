@@ -50,12 +50,16 @@ public class JobLevelServiceTest {
 
     @Test
     public void findById() throws Exception {
+        // Set up
         JobLevel jobLevel = new JobLevelBuilder()
                 .jobFamily(this.jobFamily)
                 .buildWithDefaults();
-        jobLevel = jobLevelService.saveAndFlush(jobLevel);
-        Optional<JobLevel> jobLevelRetrieved = jobLevelService.findById(jobLevel.getId());
-        assertEquals(jobLevel, jobLevelRetrieved.get());
+
+        // Execution
+        Optional<JobLevel> jobLevelRetrieved = jobLevelService.saveAndFlush(jobLevel);
+
+        // Verification
+        assertTrue(jobLevelRetrieved.isPresent());
     }
 
     @Test
@@ -65,24 +69,28 @@ public class JobLevelServiceTest {
 
     @Test
     public void save() throws Exception {
+        // Set up
         JobLevel jobLevel = new JobLevelBuilder()
                 .jobFamily(this.jobFamily)
                 .buildWithDefaults();
 
+        // Execution
         long beforeCount = jobLevelRepository.count();
-        jobLevel = jobLevelService.saveAndFlush(jobLevel);
+        Optional<JobLevel> jobLevelRetrieved = jobLevelService.saveAndFlush(jobLevel);
         long afterCount = jobLevelRepository.count();
 
+        // Verification
         assertTrue(beforeCount + 1 == afterCount);
-        Optional<JobLevel> jobLevelRetrieved = jobLevelService.findById(jobLevel.getId());
         assertTrue(jobLevelRetrieved.isPresent());
-        assertEquals(jobLevel, jobLevelRetrieved.get());
     }
 
     @Test(expected = ConstraintViolationException.class)
     public void save_Invalid() throws Exception {
+        // Set up
         JobLevel newJobLevel = new JobLevelBuilder()
                 .build();
+
+        // Execution
         jobLevelService.saveAndFlush(newJobLevel);
     }
 }

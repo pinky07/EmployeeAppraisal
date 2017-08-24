@@ -24,9 +24,9 @@ public class GftIdentifierGenerator {
         return instance.getNext();
     }
 
-    private String getNext() {
+    private synchronized String getNext() {
         String next = "";
-        for (int j = 0; j < SIZE; j++) {
+        for (int j = SIZE - 1; 0 <= j; j--) {
             next += chars[counter.get(j)];
         }
         counter.increase();

@@ -35,7 +35,7 @@ public class JobFamilyServiceImpl implements JobFamilyService {
      * {@inheritDoc}
      */
     @Override
-    public JobFamily saveAndFlush(JobFamily entity) {
-        return jobFamilyRepository.save(entity);
+    public Optional<JobFamily> saveAndFlush(JobFamily entity) {
+        return Optional.ofNullable(jobFamilyRepository.saveAndFlush(entity));
     }
 }

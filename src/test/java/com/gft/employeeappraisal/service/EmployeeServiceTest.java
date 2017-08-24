@@ -87,6 +87,11 @@ public class EmployeeServiceTest {
     private EmployeeRelationship mentorEmployeeRelationship;
     private EmployeeRelationship peerEmployeeRelationship;
 
+    /**
+     * Set up. Objects that need to be reinitialized.
+     *
+     * @throws Exception
+     */
     @Before
     public void setUp() throws Exception {
 
@@ -99,49 +104,44 @@ public class EmployeeServiceTest {
                 this.employeeRepository);
 
         // Create an Application Role
-        userApplicationRole = this.applicationRoleRepository
+        this.userApplicationRole = this.applicationRoleRepository
                 .findByNameIgnoreCase(ApplicationRoleName.USER.name());
 
         // Create and Admin Application Role
-        adminApplicationRole = this.applicationRoleRepository
+        this.adminApplicationRole = this.applicationRoleRepository
                 .findByNameIgnoreCase(ApplicationRoleName.ADMIN.name());
 
         // Create a Job Family
-        jobFamily = this.jobFamilyRepository.save(new JobFamilyBuilder()
+        this.jobFamily = this.jobFamilyRepository.saveAndFlush(new JobFamilyBuilder()
                 .buildWithDefaults());
 
         // Create a Job Level
-        jobLevel = this.jobLevelRepository.save(new JobLevelBuilder()
+        this.jobLevel = this.jobLevelRepository.saveAndFlush(new JobLevelBuilder()
                 .jobFamily(jobFamily)
                 .buildWithDefaults());
 
-        // Some test employees
-
-        this.employeeA = this.employeeRepository.save(new EmployeeBuilder()
+        // Test employees
+        this.employeeA = this.employeeRepository.saveAndFlush(new EmployeeBuilder()
                 .firstName("EmployeeA")
                 .jobLevel(jobLevel)
                 .applicationRole(userApplicationRole)
                 .buildWithDefaults());
-
-        this.employeeB = this.employeeRepository.save(new EmployeeBuilder()
+        this.employeeB = this.employeeRepository.saveAndFlush(new EmployeeBuilder()
                 .firstName("EmployeeB")
                 .jobLevel(jobLevel)
                 .applicationRole(userApplicationRole)
                 .buildWithDefaults());
-
-        this.mentee = this.employeeRepository.save(new EmployeeBuilder()
+        this.mentee = this.employeeRepository.saveAndFlush(new EmployeeBuilder()
                 .firstName("Mentee")
                 .jobLevel(jobLevel)
                 .applicationRole(userApplicationRole)
                 .buildWithDefaults());
-
-        this.mentor = this.employeeRepository.save(new EmployeeBuilder()
+        this.mentor = this.employeeRepository.saveAndFlush(new EmployeeBuilder()
                 .firstName("Mentor")
                 .jobLevel(jobLevel)
                 .applicationRole(userApplicationRole)
                 .buildWithDefaults());
-
-        this.admin = this.employeeRepository.save(new EmployeeBuilder()
+        this.admin = this.employeeRepository.saveAndFlush(new EmployeeBuilder()
                 .firstName("Admin")
                 .jobLevel(jobLevel)
                 .applicationRole(adminApplicationRole)
@@ -155,15 +155,15 @@ public class EmployeeServiceTest {
         this.peerRelationship = this.relationshipRepository
                 .findByName(RelationshipName.PEER.name()).get();
 
-        // Create an EmployeeRelationship between mentee and mentor
-        this.mentorEmployeeRelationship = this.employeeRelationshipRepository.save(new EmployeeRelationshipBuilder()
+        // Create an EmployeeRelationship: Mentor --> Mentee (MENTOR)
+        this.mentorEmployeeRelationship = this.employeeRelationshipRepository.saveAndFlush(new EmployeeRelationshipBuilder()
                 .sourceEmployee(mentor)
                 .targetEmployee(mentee)
                 .relationship(mentorRelationship)
                 .buildWithDefaults());
 
-        // Create an EmployeeRelationship between employeeA and employeeB
-        this.peerEmployeeRelationship = this.employeeRelationshipRepository.save(new EmployeeRelationshipBuilder()
+        // Create an EmployeeRelationship: EmployeeA --> EmployeeB (PEER)
+        this.peerEmployeeRelationship = this.employeeRelationshipRepository.saveAndFlush(new EmployeeRelationshipBuilder()
                 .sourceEmployee(employeeA)
                 .targetEmployee(employeeB)
                 .relationship(peerRelationship)
@@ -239,7 +239,7 @@ public class EmployeeServiceTest {
      */
     @Test
     public void findCurrentMentorById_Successful() throws Exception {
-        // Set Up
+        // Set up
         when(this.relationshipService.findByName(any(RelationshipName.class)))
                 .thenReturn(mentorRelationship);
         when(this.employeeRelationshipService.findCurrentByTargetEmployeeAndRelationship(mentee, mentorRelationship))
@@ -260,7 +260,7 @@ public class EmployeeServiceTest {
      */
     @Test
     public void findCurrentMenteesById_Successful() throws Exception {
-        // Set Up
+        // Set up
         when(this.relationshipService.findByName(any(RelationshipName.class)))
                 .thenReturn(mentorRelationship);
         when(this.employeeRelationshipService.findCurrentBySourceEmployeeAndRelationship(mentor, mentorRelationship))
@@ -282,7 +282,7 @@ public class EmployeeServiceTest {
      */
     @Test
     public void findCurrentPeersById_Successful() throws Exception {
-        // Set Up
+        // Set up
         when(this.relationshipService.findByName(any(RelationshipName.class)))
                 .thenReturn(peerRelationship);
         when(this.employeeRelationshipService.findCurrentBySourceEmployeeAndRelationship(employeeA, peerRelationship))
@@ -304,6 +304,7 @@ public class EmployeeServiceTest {
      */
     @Test
     public void isAdmin() throws Exception {
+        // Execution & Verification
         assertFalse(this.employeeService.isAdmin(employeeA));
         assertTrue(this.employeeService.isAdmin(admin));
     }

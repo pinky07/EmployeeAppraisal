@@ -90,7 +90,7 @@ public class EmployeeRelationshipBuilder implements ObjectBuilder<EmployeeRelati
         obj.setSourceEmployee(this.sourceEmployeeSet ? this.sourceEmployee : new EmployeeBuilder().buildWithDefaults());
         obj.setTargetEmployee(this.targetEmployeeSet ? this.targetEmployee : new EmployeeBuilder().buildWithDefaults());
         obj.setStartDate(this.startDateSet ? this.startDate : LocalDateTime.now().minusDays(1));
-        obj.setEndDate(this.endDateSet ? this.endDate : LocalDateTime.now().plusDays(1));
+        obj.setEndDate(this.endDateSet ? this.endDate : null);
         obj.setRelationship(this.relationshipSet ? this.relationship : new RelationshipBuilder().buildWithDefaults());
         return obj;
     }

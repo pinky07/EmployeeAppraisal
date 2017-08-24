@@ -25,5 +25,5 @@ public interface JobFamilyService {
      * @param entity Entity to be persisted.
      * @return Entity after being persisted to the DB.
      */
-    JobFamily saveAndFlush(JobFamily entity);
+    Optional<JobFamily> saveAndFlush(JobFamily entity);
 }

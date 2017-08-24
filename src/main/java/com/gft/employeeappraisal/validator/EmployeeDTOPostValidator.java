@@ -1,8 +1,8 @@
 package com.gft.employeeappraisal.validator;
 
-import com.gft.employeeappraisal.service.ValidationService;
 import com.gft.swagger.employees.model.EmployeeDTO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.ValidationUtils;
@@ -16,7 +16,7 @@ import org.springframework.validation.Validator;
  * @author Rubén Jiménez
  */
 @Component
-public class EmployeeDTOCreateValidator implements Validator {
+public class EmployeeDTOPostValidator implements Validator, HttpValidator {
 
     private static final String FIRST_NAME_FIELD = "firstName";
     private static final String LAST_NAME_FIELD = "lastName";
@@ -25,16 +25,21 @@ public class EmployeeDTOCreateValidator implements Validator {
     private static final String APPLICATION_ROLE_FIELD = "applicationRole";
     private static final String JOB_LEVEL_FIELD = "jobLevel";
 
-    private ValidationService validationService;
+    private CompositeValidator compositeValidator;
 
     @Autowired
-    public EmployeeDTOCreateValidator(ValidationService validationService) {
-        this.validationService = validationService;
+    public EmployeeDTOPostValidator(CompositeValidator compositeValidator) {
+        this.compositeValidator = compositeValidator;
     }
 
     @Override
     public boolean supports(Class<?> clazz) {
         return EmployeeDTO.class.equals(clazz);
+    }
+
+    @Override
+    public boolean supports(HttpMethod httpMethod) {
+        return httpMethod.equals(HttpMethod.POST);
     }
 
     @Override
@@ -54,14 +59,19 @@ public class EmployeeDTOCreateValidator implements Validator {
 
         if (employeeDTO.getApplicationRole() != null) {
             errors.pushNestedPath("applicationRole");
-            this.validationService.validate(employeeDTO.getApplicationRole(), errors);
+            this.compositeValidator.validate(employeeDTO.getApplicationRole(), errors);
             errors.popNestedPath();
         }
 
         if (employeeDTO.getJobLevel() != null) {
             errors.pushNestedPath("jobLevel");
-            this.validationService.validate(employeeDTO.getJobLevel(), errors);
+            this.compositeValidator.validate(employeeDTO.getJobLevel(), errors);
             errors.popNestedPath();
         }
+    }
+
+    @Override
+    public void validate(Object target, HttpMethod httpMethod, Errors errors) {
+        validate(target, errors);
     }
 }
