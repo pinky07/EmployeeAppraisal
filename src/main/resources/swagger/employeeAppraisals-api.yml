@@ -363,6 +363,12 @@ paths:
         - application/json
       parameters:
         - in: query
+          name: name
+          type: string
+          required: false
+          description: |
+            Optional search term by employee first or last name.
+        - in: query
           name: page
           type: integer
           required: false

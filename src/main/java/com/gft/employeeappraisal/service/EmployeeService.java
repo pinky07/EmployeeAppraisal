@@ -23,6 +23,16 @@ public interface EmployeeService {
     Employee getLoggedInUser() throws NotFoundException;
 
     /**
+     * Searches all employees according to first and last name criterias, while being paginated.
+     *
+     * @param firstName Employee's first name.
+     * @param lastName Employee's last name.
+     * @param pageSize Page size to be returned by the repository.
+     * @return A stream of found employees.
+     */
+    Stream<Employee> findPagedByFirstNameOrLastName(String firstName, String lastName, int pageSize);
+
+    /**
      * Given an email, looks up an employee and returns it.
      *
      * @param email Lookup email for the employee.

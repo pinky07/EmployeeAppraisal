@@ -7,11 +7,7 @@ import com.gft.employeeappraisal.exception.NotFoundException;
 import com.gft.employeeappraisal.model.Constants;
 import com.gft.employeeappraisal.model.Employee;
 import com.gft.employeeappraisal.model.RelationshipName;
-import com.gft.employeeappraisal.service.EmployeeRelationshipService;
-import com.gft.employeeappraisal.service.EmployeeService;
-import com.gft.employeeappraisal.service.SecurityService;
-import com.gft.employeeappraisal.service.ValidationService;
-import com.gft.employeeappraisal.validator.EmployeeDTOPostValidator;
+import com.gft.employeeappraisal.service.*;
 import com.gft.swagger.employees.api.EmployeeApi;
 import com.gft.swagger.employees.model.EmployeeDTO;
 import com.gft.swagger.employees.model.EmployeeRelationshipDTO;
@@ -47,6 +43,8 @@ public class EmployeesController implements EmployeeApi {
     private EmployeeDTOConverter employeeDTOConverter;
     private EmployeeRelationshipDTOConverter employeeRelationshipDTOConverter;
     private EmployeeRelationshipService employeeRelationshipService;
+    private RelationshipDTOConverter relationshipDTOConverter;
+    private RelationshipService relationshipService;
     private SecurityService securityService;
     private ValidationService validationService;
 
@@ -56,20 +54,31 @@ public class EmployeesController implements EmployeeApi {
             EmployeeDTOConverter employeeDTOConverter,
             EmployeeRelationshipDTOConverter employeeRelationshipDTOConverter,
             EmployeeRelationshipService employeeRelationshipService,
+            RelationshipDTOConverter relationshipDTOConverter,
+            RelationshipService relationshipService,
             SecurityService securityService,
             ValidationService validationService) {
         this.employeeService = employeeService;
         this.employeeDTOConverter = employeeDTOConverter;
         this.employeeRelationshipDTOConverter = employeeRelationshipDTOConverter;
         this.employeeRelationshipService = employeeRelationshipService;
+        this.relationshipDTOConverter = relationshipDTOConverter;
+        this.relationshipService = relationshipService;
         this.securityService = securityService;
         this.validationService = validationService;
     }
 
     @Override
     public ResponseEntity<List<EmployeeDTO>> employeesGet(
+            @RequestParam(value = "name", required = false) String name,
             @RequestParam(value = "page", required = false, defaultValue = "1") Integer page,
             @RequestParam(value = "size", required = false, defaultValue = "10") Integer size) {
+
+        logger.debug("GET endpoint: /employees/ with name: {} page: {} and size: {}", name, page, size);
+
+        List<EmployeeDTO> employeeDTOList = new ArrayList<>();
+        //employeeService.findPagedByFirstNameOrLastName();
+
         return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
     }
 

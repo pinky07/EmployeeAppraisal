@@ -7,6 +7,7 @@ import com.gft.employeeappraisal.service.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
@@ -54,6 +55,16 @@ public class EmployeeServiceImpl implements EmployeeService {
                 .orElseThrow(() -> new NotFoundException(String.format(
                         "Logged in user with email: %s couldn't be found",
                         userEmail)));
+    }
+
+    /**
+     * @inheritDoc
+     */
+    @Override
+    public Stream<Employee> findPagedByFirstNameOrLastName(String firstName, String lastName, int pageSize) {
+        return employeeRepository
+                .findByFirstNameContainsOrLastNameContainsAllIgnoreCase(firstName,
+                        lastName, new PageRequest(1, pageSize)).getContent().stream();
     }
 
     /**

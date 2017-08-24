@@ -1,12 +1,14 @@
 package com.gft.employeeappraisal.repository;
 
 import com.gft.employeeappraisal.model.Employee;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
- * A Repository for the entity Employee is simply created by extending the CrudRepository
+ * A Repository for the entity Employee is simply created by extending the JpaRepository
  * interface provided by spring. The following methods are some of the ones
  * available from such interface: save, delete, deleteAll, findOne and findAll.
  * The magic is that such methods must not be implemented, and moreover it is
@@ -20,4 +22,8 @@ import org.springframework.transaction.annotation.Transactional;
 public interface EmployeeRepository extends JpaRepository<Employee, Integer> {
     
     Employee findByEmailIgnoreCase(String email);
+
+    Page<Employee> findByFirstNameContainsOrLastNameContainsAllIgnoreCase(String firstName,
+                                                                          String lastName,
+                                                                          Pageable pageable);
 }
