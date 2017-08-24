@@ -16,8 +16,6 @@ import static org.mockito.Mockito.when;
  */
 public class AppraisalXEvaluationFormXEmployeeRelationshipBuilder implements ObjectBuilder<AppraisalXEvaluationFormXEmployeeRelationship> {
 
-    private static int currentId = 1_000_000;
-
     private int id;
     private AppraisalXEvaluationForm appraisalXEvaluationForm;
     private EmployeeRelationship employeeRelationship;
@@ -65,7 +63,7 @@ public class AppraisalXEvaluationFormXEmployeeRelationshipBuilder implements Obj
     @Override
     public AppraisalXEvaluationFormXEmployeeRelationship buildWithDefaults() {
         AppraisalXEvaluationFormXEmployeeRelationship obj = new AppraisalXEvaluationFormXEmployeeRelationship();
-        obj.setId(this.idSet ? this.id : currentId++);
+        if (this.idSet) obj.setId(this.id);
         obj.setAppraisalXEvaluationForm(this.appraisalXEvaluationFormSet ? this.appraisalXEvaluationForm :
                 new AppraisalXEvaluationFormBuilder().buildWithDefaults());
         obj.setEmployeeRelationship(this.employeeRelationshipSet ? this.employeeRelationship :

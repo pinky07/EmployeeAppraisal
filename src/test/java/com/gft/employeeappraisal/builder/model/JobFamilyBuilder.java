@@ -14,8 +14,6 @@ import static org.mockito.Mockito.when;
  */
 public class JobFamilyBuilder implements ObjectBuilder<JobFamily> {
 
-    private static int currentId = 1_000_0000;
-
     private int id;
     private String name;
     private String description;
@@ -47,20 +45,20 @@ public class JobFamilyBuilder implements ObjectBuilder<JobFamily> {
 
     @Override
     public JobFamily build() {
-        JobFamily jobFamily = new JobFamily();
-        jobFamily.setId(this.id);
-        jobFamily.setName(this.name);
-        jobFamily.setDescription(this.description);
-        return jobFamily;
+        JobFamily obj = new JobFamily();
+        obj.setId(this.id);
+        obj.setName(this.name);
+        obj.setDescription(this.description);
+        return obj;
     }
 
     @Override
     public JobFamily buildWithDefaults() {
-        JobFamily jobFamily = new JobFamily();
-        jobFamily.setId(this.idSet ? this.id : currentId++);
-        jobFamily.setName(this.nameSet ? this.name : "Name");
-        jobFamily.setDescription(this.descriptionSet ? this.description : "Description");
-        return jobFamily;
+        JobFamily obj = new JobFamily();
+        if (this.idSet) obj.setId(this.id);
+        obj.setName(this.nameSet ? this.name : "Name");
+        obj.setDescription(this.descriptionSet ? this.description : "Description");
+        return obj;
     }
 
     @Override

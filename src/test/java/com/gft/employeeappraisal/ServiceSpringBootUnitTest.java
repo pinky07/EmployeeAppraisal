@@ -13,6 +13,5 @@ import org.springframework.test.context.ContextConfiguration;
  */
 @ActiveProfiles("test")
 @ContextConfiguration(classes = { UnitTestConfiguration.class })
-@DataJpaTest
 public abstract class ServiceSpringBootUnitTest {
 }

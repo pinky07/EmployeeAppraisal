@@ -11,11 +11,13 @@ import org.springframework.transaction.annotation.Transactional;
  * available from such interface: save, delete, deleteAll, findOne and findAll.
  * The magic is that such methods must not be implemented, and moreover it is
  * possible create new query methods working only by defining their signature!
- * 
+ *
  * @author Ricardo Coto
  * @author Manuel Yepez
  */
 @Repository
 @Transactional
 public interface ApplicationRoleRepository extends JpaRepository<ApplicationRole, Integer> {
+
+    ApplicationRole findByNameIgnoreCase(String name);
 }

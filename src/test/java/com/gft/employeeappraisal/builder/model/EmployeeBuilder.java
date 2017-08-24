@@ -1,10 +1,13 @@
 package com.gft.employeeappraisal.builder.model;
 
 import com.gft.employeeappraisal.builder.ObjectBuilder;
+import com.gft.employeeappraisal.builder.helper.GftIdentifierGenerator;
 import com.gft.employeeappraisal.model.ApplicationRole;
 import com.gft.employeeappraisal.model.Employee;
 import com.gft.employeeappraisal.model.JobLevel;
 import org.mockito.Mockito;
+
+import java.util.UUID;
 
 import static org.mockito.Mockito.when;
 
@@ -15,8 +18,6 @@ import static org.mockito.Mockito.when;
  * @author Ruben Jimenez
  */
 public class EmployeeBuilder implements ObjectBuilder<Employee> {
-
-    private static int currentId = 1_000_000;
 
     private int id;
     private ApplicationRole applicationRole;
@@ -81,28 +82,28 @@ public class EmployeeBuilder implements ObjectBuilder<Employee> {
 
     @Override
     public Employee build() {
-        Employee employee = new Employee();
-        employee.setId(this.id);
-        employee.setFirstName(this.firstName);
-        employee.setLastName(this.lastName);
-        employee.setGftIdentifier(this.gftIdentifier);
-        employee.setEmail(this.email);
-        employee.setApplicationRole(this.applicationRole);
-        employee.setJobLevel(this.jobLevel);
-        return employee;
+        Employee obj = new Employee();
+        obj.setId(this.id);
+        obj.setFirstName(this.firstName);
+        obj.setLastName(this.lastName);
+        obj.setGftIdentifier(this.gftIdentifier);
+        obj.setEmail(this.email);
+        obj.setApplicationRole(this.applicationRole);
+        obj.setJobLevel(this.jobLevel);
+        return obj;
     }
 
     @Override
     public Employee buildWithDefaults() {
-        Employee employee = new Employee();
-        employee.setId(this.idSet ? this.id : currentId++);
-        employee.setFirstName(this.firstNameSet ? this.firstName : "First Name");
-        employee.setLastName(this.lastNameSet ? this.lastName : "Last Name");
-        employee.setGftIdentifier(this.gftIdentifierSet ? this.gftIdentifier : "----");
-        employee.setEmail(this.emailSet ? this.email : "email@gft.com");
-        employee.setApplicationRole(this.applicationRoleSet ? this.applicationRole : new ApplicationRoleBuilder().buildWithDefaults());
-        employee.setJobLevel(this.jobLevelSet ? this.jobLevel : new JobLevelBuilder().buildWithDefaults());
-        return employee;
+        Employee obj = new Employee();
+        if (this.idSet) obj.setId(this.id);
+        obj.setFirstName(this.firstNameSet ? this.firstName : "First Name");
+        obj.setLastName(this.lastNameSet ? this.lastName : "Last Name");
+        obj.setGftIdentifier(this.gftIdentifierSet ? this.gftIdentifier : GftIdentifierGenerator.next());
+        obj.setEmail(this.emailSet ? this.email : UUID.randomUUID().toString() + "@gft.com");
+        obj.setApplicationRole(this.applicationRoleSet ? this.applicationRole : new ApplicationRoleBuilder().buildWithDefaults());
+        obj.setJobLevel(this.jobLevelSet ? this.jobLevel : new JobLevelBuilder().buildWithDefaults());
+        return obj;
     }
 
     @Override

@@ -39,8 +39,9 @@ public class BeanConfiguration {
             EvaluationFormDTOMapper evaluationFormDTOMapper,
             EvaluationFormQuestionDTOMapper evaluationFormQuestionDTOMapper,
             EvaluationFormSectionDTOMapper evaluationFormSectionDTOMapper,
-            ScoreTypeDTOMapper scoreTypeDTOMapper
-    ) {
+            ScoreTypeDTOMapper scoreTypeDTOMapper) {
+
+        // TODO Improve this with a Set of Custom Mappers injected!
 
         List<CustomMapper<?, ?>> mappers = Arrays.asList(
                 appraisalDTOMapper,
@@ -51,7 +52,6 @@ public class BeanConfiguration {
                 evaluationFormSectionDTOMapper,
                 scoreTypeDTOMapper
         );
-
         DefaultMapperFactory mapperFactory = new DefaultMapperFactory.Builder().build();
         mappers.forEach(mapperFactory::registerMapper);
         return mapperFactory;

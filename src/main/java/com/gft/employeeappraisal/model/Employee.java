@@ -21,12 +21,12 @@ public class Employee {
     private int id;
 
     @NotEmpty
-    @Size(max = 40)
+    @Size(max = 50)
     @Column(name = "email", nullable = false, length = 40)
     private String email;
 
     @NotEmpty
-    @Size(max = 20)
+    @Size(max = 50)
     @Column(name = "firstName", nullable = false, length = 20)
     private String firstName;
 

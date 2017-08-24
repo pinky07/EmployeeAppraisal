@@ -15,9 +15,8 @@ public interface SecurityService {
      *
      * @param employeeId  Id of the Employee who wants access
      * @param requestedId Id of the Employee to be accessed
-     * @throws NotFoundException if either the IDs provided do not correspond to an existing employee.
-     * @throws AccessDeniedException     if the employee is not an admin or current mentor requesting the employee information.
+     * @throws NotFoundException     if either the IDs provided do not correspond to an existing employee.
+     * @throws AccessDeniedException if the employee is not an admin or current mentor requesting the employee information.
      */
     void canReadEmployee(int employeeId, int requestedId) throws NotFoundException, AccessDeniedException;
-
 }

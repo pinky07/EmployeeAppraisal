@@ -15,8 +15,6 @@ import static org.mockito.Mockito.when;
  */
 public class AppraisalBuilder implements ObjectBuilder<Appraisal> {
 
-    private static int currentId = 1_000_000;
-
     private int id;
     private String name;
     private String description;
@@ -64,24 +62,24 @@ public class AppraisalBuilder implements ObjectBuilder<Appraisal> {
 
     @Override
     public Appraisal build() {
-        Appraisal appraisal = new Appraisal();
-        appraisal.setId(this.id);
-        appraisal.setName(this.name);
-        appraisal.setDescription(this.description);
-        appraisal.setStartDate(this.startDate);
-        appraisal.setEndDate(this.endDate);
-        return appraisal;
+        Appraisal obj = new Appraisal();
+        obj.setId(this.id);
+        obj.setName(this.name);
+        obj.setDescription(this.description);
+        obj.setStartDate(this.startDate);
+        obj.setEndDate(this.endDate);
+        return obj;
     }
 
     @Override
     public Appraisal buildWithDefaults() {
-        Appraisal appraisal = new Appraisal();
-        appraisal.setId(this.idSet ? this.id : currentId++);
-        appraisal.setName(this.nameSet ? this.name : "Name");
-        appraisal.setDescription(this.descriptionSet ? this.description : "Description");
-        appraisal.setStartDate(this.startDateSet ? this.startDate : LocalDateTime.now().minusDays(1));
-        appraisal.setEndDate(this.endDateSet ? this.endDate : LocalDateTime.now().plusDays(1));
-        return appraisal;
+        Appraisal obj = new Appraisal();
+        if (this.idSet) obj.setId(this.id);
+        obj.setName(this.nameSet ? this.name : "Name");
+        obj.setDescription(this.descriptionSet ? this.description : "Description");
+        obj.setStartDate(this.startDateSet ? this.startDate : LocalDateTime.now().minusDays(1));
+        obj.setEndDate(this.endDateSet ? this.endDate : LocalDateTime.now().plusDays(1));
+        return obj;
     }
 
     @Override
