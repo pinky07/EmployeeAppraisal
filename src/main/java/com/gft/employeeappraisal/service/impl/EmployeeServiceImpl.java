@@ -64,7 +64,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     public Stream<Employee> findPagedByFirstNameOrLastName(String firstName, String lastName, int pageSize) {
         return employeeRepository
                 .findByFirstNameContainsOrLastNameContainsAllIgnoreCase(firstName,
-                        lastName, new PageRequest(1, pageSize)).getContent().stream();
+                        lastName, new PageRequest(0, pageSize)).getContent().stream();
     }
 
     /**

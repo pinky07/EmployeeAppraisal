@@ -20,6 +20,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -70,16 +71,22 @@ public class EmployeesController implements EmployeeApi {
 
     @Override
     public ResponseEntity<List<EmployeeDTO>> employeesGet(
-            @RequestParam(value = "name", required = false) String name,
+            @RequestParam(value = "searchTerm", required = false) String name,
             @RequestParam(value = "page", required = false, defaultValue = "1") Integer page,
             @RequestParam(value = "size", required = false, defaultValue = "10") Integer size) {
 
         logger.debug("GET endpoint: /employees/ with name: {} page: {} and size: {}", name, page, size);
 
         List<EmployeeDTO> employeeDTOList = new ArrayList<>();
-        //employeeService.findPagedByFirstNameOrLastName();
 
-        return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
+        if (!StringUtils.isEmpty(name.trim())) {
+            logger.debug("Calling search term {}", name);
+            // This is an OR search, so term must be on both first and last name.
+            employeeService.findPagedByFirstNameOrLastName(name, name, size)
+                .forEach(e -> employeeDTOList.add(employeeDTOConverter.convert(e)));
+        }
+
+        return new ResponseEntity<>(employeeDTOList, HttpStatus.OK);
     }
 
     @Override

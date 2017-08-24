@@ -5,6 +5,11 @@ spring:
     console:
       enabled: true
       path: /h2-console
+  jpa:
+    properties:
+      hibernate:
+        show_sql: true
+        format_sql: true
 management:
   security:
     enabled: false
@@ -15,3 +20,8 @@ eureka:
   client:
     serviceUrl:
       defaultZone: http://localhost:11001/eureka
+logging:
+  level:
+    org:
+      hibernate:
+        type: trace
