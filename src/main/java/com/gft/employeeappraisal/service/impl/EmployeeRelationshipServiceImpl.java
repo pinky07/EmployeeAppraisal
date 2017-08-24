@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -161,23 +162,23 @@ public class EmployeeRelationshipServiceImpl implements EmployeeRelationshipServ
      * {@inheritDoc}
      */
     @Override
-    public void startEmployeeRelationship(Employee sourceEmployee, Employee targetEmployee, Relationship relationship) {
+    public Optional<EmployeeRelationship> startEmployeeRelationship(Employee sourceEmployee, Employee targetEmployee, Relationship relationship) {
         EmployeeRelationship employeeRelationship = new EmployeeRelationship();
         employeeRelationship.setSourceEmployee(sourceEmployee);
         employeeRelationship.setTargetEmployee(targetEmployee);
         employeeRelationship.setRelationship(relationship);
         employeeRelationship.setStartDate(LocalDateTime.now());
         employeeRelationship.setEndDate(null);
-        this.saveAndFlush(employeeRelationship);
+        return this.saveAndFlush(employeeRelationship);
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public void endEmployeeRelationship(EmployeeRelationship employeeRelationship) {
+    public Optional<EmployeeRelationship> endEmployeeRelationship(EmployeeRelationship employeeRelationship) {
         employeeRelationship.setEndDate(LocalDateTime.now());
-        this.saveAndFlush(employeeRelationship);
+        return this.saveAndFlush(employeeRelationship);
     }
 
     /**
@@ -211,9 +212,11 @@ public class EmployeeRelationshipServiceImpl implements EmployeeRelationshipServ
      */
     @Override
     public Stream<EmployeeRelationship> findCurrentBySourceEmployeeAndRelationships(Employee sourceEmployee, RelationshipName... relationshipNames) {
-        List<Relationship> relationships = relationshipService.findRelationshipsByNames(relationshipNames).collect(Collectors.toList());
+        List<Relationship> relationships = this.relationshipService
+                .findRelationshipsByNames(relationshipNames)
+                .collect(Collectors.toList());
 
-        return employeeRelationshipRepository
+        return this.employeeRelationshipRepository
                 .findCurrentBySourceEmployeeAndRelationships(
                         sourceEmployee,
                         new HashSet<>(relationships))
@@ -249,7 +252,7 @@ public class EmployeeRelationshipServiceImpl implements EmployeeRelationshipServ
      * {@inheritDoc}
      */
     @Override
-    public void saveAndFlush(EmployeeRelationship employeeRelationship) {
-        employeeRelationshipRepository.saveAndFlush(employeeRelationship);
+    public Optional<EmployeeRelationship> saveAndFlush(EmployeeRelationship employeeRelationship) {
+        return Optional.ofNullable(employeeRelationshipRepository.saveAndFlush(employeeRelationship));
     }
 }

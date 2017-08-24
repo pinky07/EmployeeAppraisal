@@ -7,8 +7,11 @@ import com.gft.employeeappraisal.exception.NotFoundException;
 import com.gft.employeeappraisal.model.Constants;
 import com.gft.employeeappraisal.model.Employee;
 import com.gft.employeeappraisal.model.RelationshipName;
-import com.gft.employeeappraisal.service.*;
-import com.gft.employeeappraisal.validator.EmployeeDTOCreateValidator;
+import com.gft.employeeappraisal.service.EmployeeRelationshipService;
+import com.gft.employeeappraisal.service.EmployeeService;
+import com.gft.employeeappraisal.service.SecurityService;
+import com.gft.employeeappraisal.service.ValidationService;
+import com.gft.employeeappraisal.validator.EmployeeDTOPostValidator;
 import com.gft.swagger.employees.api.EmployeeApi;
 import com.gft.swagger.employees.model.EmployeeDTO;
 import com.gft.swagger.employees.model.EmployeeRelationshipDTO;
@@ -17,6 +20,7 @@ import com.gft.swagger.employees.model.RelationshipDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -43,9 +47,6 @@ public class EmployeesController implements EmployeeApi {
     private EmployeeDTOConverter employeeDTOConverter;
     private EmployeeRelationshipDTOConverter employeeRelationshipDTOConverter;
     private EmployeeRelationshipService employeeRelationshipService;
-    private EmployeeDTOCreateValidator employeeDTOToEntityCreateValidator;
-    private RelationshipDTOConverter relationshipDTOConverter;
-    private RelationshipService relationshipService;
     private SecurityService securityService;
     private ValidationService validationService;
 
@@ -55,18 +56,12 @@ public class EmployeesController implements EmployeeApi {
             EmployeeDTOConverter employeeDTOConverter,
             EmployeeRelationshipDTOConverter employeeRelationshipDTOConverter,
             EmployeeRelationshipService employeeRelationshipService,
-            EmployeeDTOCreateValidator employeeDTOToEntityCreateValidator,
-            RelationshipDTOConverter relationshipDTOConverter,
-            RelationshipService relationshipService,
             SecurityService securityService,
             ValidationService validationService) {
         this.employeeService = employeeService;
         this.employeeDTOConverter = employeeDTOConverter;
         this.employeeRelationshipDTOConverter = employeeRelationshipDTOConverter;
         this.employeeRelationshipService = employeeRelationshipService;
-        this.employeeDTOToEntityCreateValidator = employeeDTOToEntityCreateValidator;
-        this.relationshipDTOConverter = relationshipDTOConverter;
-        this.relationshipService = relationshipService;
         this.securityService = securityService;
         this.validationService = validationService;
     }
@@ -156,7 +151,7 @@ public class EmployeesController implements EmployeeApi {
         OperationResultDTO response = new OperationResultDTO();
 
         // Validate parameters
-        this.validationService.validate(newMentorDTO, employeeDTOToEntityCreateValidator);
+        this.validationService.validate(newMentorDTO);
 
         // Find Employee
         Employee employee = employeeService.findById(employeeId)
@@ -245,7 +240,7 @@ public class EmployeesController implements EmployeeApi {
         OperationResultDTO response = new OperationResultDTO();
         HttpStatus httpStatus;
 
-        this.validationService.validate(employeeDTOIn, employeeDTOToEntityCreateValidator);
+        this.validationService.validate(employeeDTOIn, HttpMethod.POST);
 
         Optional<Employee> lookupEmployee = employeeService.findByEmail(employeeDTOIn.getEmail());
 

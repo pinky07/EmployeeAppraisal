@@ -151,7 +151,7 @@ public class EmployeeServiceImpl implements EmployeeService {
      */
     @Override
     public boolean isAdmin(Employee employee) {
-        return employee.getApplicationRole().getName().equals(ApplicationRoleNames.ADMIN.name()); // admin
+        return employee.getApplicationRole().getName().equals(ApplicationRoleName.ADMIN.name()); // admin
     }
 
     /**
@@ -159,26 +159,32 @@ public class EmployeeServiceImpl implements EmployeeService {
      */
     @Override
     public Optional<Employee> saveAndFlush(Employee employee) {
-        Employee savedEmployee = null;
+
         Optional<ApplicationRole> applicationRole = applicationRoleService.findById(employee.getApplicationRole().getId());
         Optional<JobLevel> jobLevel = jobLevelService.findById(employee.getJobLevel().getId());
 
-        if (applicationRole.isPresent() && jobLevel.isPresent()) {
-            savedEmployee = new Employee();
-            savedEmployee.setFirstName(employee.getFirstName());
-            savedEmployee.setLastName(employee.getLastName());
-            savedEmployee.setGftIdentifier(employee.getGftIdentifier());
-            savedEmployee.setEmail(employee.getEmail());
-            savedEmployee.setApplicationRole(applicationRole.get());
-            savedEmployee.setJobLevel(jobLevel.get());
+        Employee newEmployee = null;
 
-            savedEmployee = employeeRepository.saveAndFlush(savedEmployee);
-        } else if (!applicationRole.isPresent()) {
-            log.error("Application Role:" + employee.getApplicationRole().getId() + " does not exist.");
+        if (applicationRole.isPresent() && jobLevel.isPresent()) {
+            
+            newEmployee = new Employee();
+            newEmployee.setFirstName(employee.getFirstName());
+            newEmployee.setLastName(employee.getLastName());
+            newEmployee.setGftIdentifier(employee.getGftIdentifier());
+            newEmployee.setEmail(employee.getEmail());
+            newEmployee.setApplicationRole(applicationRole.get());
+            newEmployee.setJobLevel(jobLevel.get());
+
+            newEmployee = employeeRepository.saveAndFlush(newEmployee);
         } else {
-            log.error("Job Level:" + employee.getJobLevel().getId() + " does not exist.");
+            if (!applicationRole.isPresent()) {
+                log.error("Application Role with Id: " + employee.getApplicationRole().getId() + " does not exist.");
+            }
+            if (!jobLevel.isPresent()) {
+                log.error("Job Level with Id: " + employee.getJobLevel().getId() + " does not exist.");
+            }
         }
 
-        return Optional.ofNullable(savedEmployee);
+        return Optional.ofNullable(newEmployee);
     }
 }

@@ -6,6 +6,7 @@ import com.gft.employeeappraisal.model.Relationship;
 import com.gft.employeeappraisal.model.RelationshipName;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Stream;
 
 /**
@@ -121,7 +122,7 @@ public interface EmployeeRelationshipService {
      * @param targetEmployee Right side of the relationship
      * @param relationship   Relationship that should be read from left to right
      */
-    void startEmployeeRelationship(Employee sourceEmployee, Employee targetEmployee, Relationship relationship);
+    Optional<EmployeeRelationship> startEmployeeRelationship(Employee sourceEmployee, Employee targetEmployee, Relationship relationship);
 
     /**
      * Relationships shouldn't be deleted, rather it should be marked with an end date as this method does.
@@ -129,7 +130,7 @@ public interface EmployeeRelationshipService {
      *
      * @param employeeRelationship Relationship to end
      */
-    void endEmployeeRelationship(EmployeeRelationship employeeRelationship);
+    Optional<EmployeeRelationship> endEmployeeRelationship(EmployeeRelationship employeeRelationship);
 
     /**
      * Finds a list of relationships, all of which should be the current valid relationships that source Employee has.
@@ -179,9 +180,9 @@ public interface EmployeeRelationshipService {
     Stream<EmployeeRelationship> findCurrentBySourceEmployeeAndTargetEmployeeAndRelationship(Employee sourceEmployee, Employee targetEmployee, Relationship relationship);
 
     /**
-     * Saves the EmployeeRelationship entity to the database.
+     * Saves the EmployeeRelationship entity to the database. Returns the saved entity.
      *
      * @param employeeRelationship Entity to be persisted onto the database.
      */
-    void saveAndFlush(EmployeeRelationship employeeRelationship);
+    Optional<EmployeeRelationship> saveAndFlush(EmployeeRelationship employeeRelationship);
 }

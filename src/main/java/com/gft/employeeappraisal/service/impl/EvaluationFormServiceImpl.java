@@ -6,6 +6,8 @@ import com.gft.employeeappraisal.service.EvaluationFormService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 /**
  * Service implementation of {@link EvaluationFormService}.
  *
@@ -26,7 +28,7 @@ public class EvaluationFormServiceImpl implements EvaluationFormService {
      * {@inheritDoc}
      */
     @Override
-    public void saveAndFlush(EvaluationForm evaluationForm) {
-        this.evaluationFormRepository.saveAndFlush(evaluationForm);
+    public Optional<EvaluationForm> saveAndFlush(EvaluationForm evaluationForm) {
+        return Optional.ofNullable(this.evaluationFormRepository.saveAndFlush(evaluationForm));
     }
 }

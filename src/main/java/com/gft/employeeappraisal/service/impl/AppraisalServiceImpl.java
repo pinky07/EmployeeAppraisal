@@ -64,7 +64,7 @@ public class AppraisalServiceImpl implements AppraisalService {
      * @inheritDoc
      */
     @Override
-    public void saveAndFlush(Appraisal appraisal) {
-        appraisalRepository.saveAndFlush(appraisal);
+    public Optional<Appraisal> saveAndFlush(Appraisal appraisal) {
+        return Optional.ofNullable(appraisalRepository.saveAndFlush(appraisal));
     }
 }

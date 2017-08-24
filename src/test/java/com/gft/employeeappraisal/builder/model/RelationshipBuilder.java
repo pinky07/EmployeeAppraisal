@@ -14,8 +14,6 @@ import static org.mockito.Mockito.when;
  */
 public class RelationshipBuilder implements ObjectBuilder<Relationship> {
 
-    private static int currentId = 1_000_000;
-
     private int id;
     private String name;
     private String description;
@@ -47,20 +45,20 @@ public class RelationshipBuilder implements ObjectBuilder<Relationship> {
 
     @Override
     public Relationship build() {
-        Relationship relationship = new Relationship();
-        relationship.setId(this.id);
-        relationship.setName(this.name);
-        relationship.setDescription(this.description);
-        return relationship;
+        Relationship obj = new Relationship();
+        obj.setId(this.id);
+        obj.setName(this.name);
+        obj.setDescription(this.description);
+        return obj;
     }
 
     @Override
     public Relationship buildWithDefaults() {
-        Relationship relationship = new Relationship();
-        relationship.setId(this.idSet ? this.id : currentId++);
-        relationship.setName(this.nameSet ? this.name : RelationshipName.PEER.name());
-        relationship.setDescription(this.descriptionSet ? this.description : "Description");
-        return relationship;
+        Relationship obj = new Relationship();
+        if (this.idSet) obj.setId(this.id);
+        obj.setName(this.nameSet ? this.name : RelationshipName.PEER.name());
+        obj.setDescription(this.descriptionSet ? this.description : "Description");
+        return obj;
     }
 
     @Override

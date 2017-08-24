@@ -1,17 +1,17 @@
 package com.gft.employeeappraisal.service;
 
-import com.gft.employeeappraisal.ServiceSpringBootUnitTest;
 import com.gft.employeeappraisal.builder.model.JobFamilyBuilder;
 import com.gft.employeeappraisal.builder.model.JobLevelBuilder;
 import com.gft.employeeappraisal.model.JobFamily;
 import com.gft.employeeappraisal.model.JobLevel;
+import com.gft.employeeappraisal.repository.JobFamilyRepository;
 import com.gft.employeeappraisal.repository.JobLevelRepository;
+import com.gft.employeeappraisal.service.impl.JobLevelServiceImpl;
 import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import javax.validation.ConstraintViolationException;
@@ -26,76 +26,71 @@ import static org.junit.Assert.assertTrue;
  * @author Manuel Yepez
  */
 @RunWith(SpringRunner.class)
-public class JobLevelServiceTest extends ServiceSpringBootUnitTest {
+@DataJpaTest
+public class JobLevelServiceTest {
 
-	@Autowired
-	private JobFamilyService jobFamilyService;
+    @Autowired
+    private JobLevelRepository jobLevelRepository;
 
-	@Autowired
-	private JobLevelRepository jobLevelRepository;
+    @Autowired
+    private JobFamilyRepository jobFamilyRepository;
 
-	@Autowired
-	private JobLevelService jobLevelService;
+    // Class under test
+    private JobLevelService jobLevelService;
 
-	@Rule
-	public final ExpectedException exception = ExpectedException.none();
+    private JobFamily jobFamily;
 
-	private JobLevel jobLevel;
-	private JobFamily jobFamily;
+    @Before
+    public void setUp() throws Exception {
+        this.jobLevelService = new JobLevelServiceImpl(
+                this.jobLevelRepository);
+        this.jobFamily = this.jobFamilyRepository.saveAndFlush(new JobFamilyBuilder()
+                .buildWithDefaults());
+    }
 
-	@Before
-	public void generateData() {
-		jobFamily = jobFamilyService.save(mockJobFamily());
-		jobLevel = jobLevelService.save(mockJobLevel().get());
-	}
+    @Test
+    public void findById() throws Exception {
+        // Set up
+        JobLevel jobLevel = new JobLevelBuilder()
+                .jobFamily(this.jobFamily)
+                .buildWithDefaults();
 
-	@Test
-	public void findById() throws Exception {
-		assertEquals(jobLevel, jobLevelService.findById(jobLevel.getId()).get());
-	}
+        // Execution
+        Optional<JobLevel> jobLevelRetrieved = jobLevelService.saveAndFlush(jobLevel);
 
-	@Test
-	public void findById_notExists() throws Exception {
-		assertEquals(Optional.empty(), jobLevelService.findById(-100));
-	}
+        // Verification
+        assertTrue(jobLevelRetrieved.isPresent());
+    }
 
-	@Test
-	public void save() throws Exception {
-		JobLevel newJobLevel = new JobLevelBuilder()
-				.name("LY").description("Desc").expertise("Exp")
-				.jobFamily(jobFamily
-				).build();
+    @Test
+    public void findById_NotFound() throws Exception {
+        assertEquals(Optional.empty(), jobLevelService.findById(-100));
+    }
 
-		assertEquals(Optional.empty(), jobLevelService.findById(newJobLevel.getId()));
+    @Test
+    public void save() throws Exception {
+        // Set up
+        JobLevel jobLevel = new JobLevelBuilder()
+                .jobFamily(this.jobFamily)
+                .buildWithDefaults();
 
-		long beforeCount = jobLevelRepository.count();
-		newJobLevel = jobLevelService.save(newJobLevel);
-		long afterCount = jobLevelRepository.count();
+        // Execution
+        long beforeCount = jobLevelRepository.count();
+        Optional<JobLevel> jobLevelRetrieved = jobLevelService.saveAndFlush(jobLevel);
+        long afterCount = jobLevelRepository.count();
 
-		assertTrue(beforeCount + 1 == afterCount);
-		assertEquals(newJobLevel, jobLevelService.findById(newJobLevel.getId()).get());
-	}
+        // Verification
+        assertTrue(beforeCount + 1 == afterCount);
+        assertTrue(jobLevelRetrieved.isPresent());
+    }
 
-	@Test
-	public void save_invalid() throws Exception {
-		JobLevel newJobLevel = new JobLevelBuilder()
-				.name("LZ").description("Desc2").expertise("Exp2")
-				.build();
+    @Test(expected = ConstraintViolationException.class)
+    public void save_Invalid() throws Exception {
+        // Set up
+        JobLevel newJobLevel = new JobLevelBuilder()
+                .build();
 
-		assertEquals(Optional.empty(), jobLevelService.findById(newJobLevel.getId()));
-		exception.expect(ConstraintViolationException.class);
-		jobLevelService.save(newJobLevel);
-	}
-
-	private Optional<JobLevel> mockJobLevel() {
-		return Optional.of(new JobLevelBuilder()
-				.name("LX").description("Description").expertise("Expertise")
-				.jobFamily(jobFamily
-				).build());
-	}
-
-	private JobFamily mockJobFamily() {
-		return new JobFamilyBuilder()
-				.name("Job Family").description("Description").build();
-	}
+        // Execution
+        jobLevelService.saveAndFlush(newJobLevel);
+    }
 }

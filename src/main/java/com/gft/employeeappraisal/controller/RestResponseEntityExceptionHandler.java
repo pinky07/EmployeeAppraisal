@@ -1,8 +1,8 @@
 package com.gft.employeeappraisal.controller;
 
 import com.gft.employeeappraisal.exception.AccessDeniedException;
-import com.gft.employeeappraisal.exception.NotFoundException;
 import com.gft.employeeappraisal.exception.InvalidException;
+import com.gft.employeeappraisal.exception.NotFoundException;
 import com.gft.employeeappraisal.model.Constants;
 import com.gft.employeeappraisal.service.ValidationService;
 import com.gft.swagger.employees.model.OperationResultDTO;
@@ -41,7 +41,7 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
      * @param webRequest Request that triggered the exception.
      * @return {@link OperationResultDTO} Object containing the error messages.
      */
-    @ExceptionHandler(value = {NotFoundException.class })
+    @ExceptionHandler(value = {NotFoundException.class})
     private ResponseEntity<OperationResultDTO> handleNotFoundException(Exception exception, WebRequest webRequest) {
         logger.error("Handling NotFoundException: {}", exception);
         OperationResultDTO operationResultDTO = new OperationResultDTO();
@@ -79,7 +79,7 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
         InvalidException invalidException = (InvalidException) exception;
         OperationResultDTO operationResultDTO = new OperationResultDTO();
         operationResultDTO.setMessage(Constants.ERROR);
-        operationResultDTO.setErrors(this.validationService.getErrorList(invalidException.getBindingResult()));
+        operationResultDTO.setErrors(this.validationService.getFieldErrorDTOList(invalidException.getErrors()));
         return new ResponseEntity<>(operationResultDTO, HttpStatus.BAD_REQUEST);
     }
 

@@ -34,7 +34,7 @@ public class JobLevelServiceImpl implements JobLevelService {
     }
 
     @Override
-    public JobLevel save(JobLevel entity) {
-        return jobLevelRepository.save(entity);
+    public Optional<JobLevel> saveAndFlush(JobLevel entity) {
+        return Optional.ofNullable(jobLevelRepository.saveAndFlush(entity));
     }
 }
