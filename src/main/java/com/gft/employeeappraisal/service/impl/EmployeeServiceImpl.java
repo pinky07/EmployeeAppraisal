@@ -78,6 +78,15 @@ public class EmployeeServiceImpl implements EmployeeService {
     /**
      * {@inheritDoc}
      */
+    public Employee getById(Integer employeeId) throws NotFoundException {
+        return this.findById(employeeId).orElseThrow(() -> new NotFoundException(String.format(
+                "Employee with Id %d couldn't be found",
+                employeeId)));
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Optional<Employee> findByEmail(String email) {
         return Optional.ofNullable(employeeRepository.findByEmailIgnoreCase(email));
@@ -177,7 +186,7 @@ public class EmployeeServiceImpl implements EmployeeService {
         Employee newEmployee = null;
 
         if (applicationRole.isPresent() && jobLevel.isPresent()) {
-            
+
             newEmployee = new Employee();
             newEmployee.setFirstName(employee.getFirstName());
             newEmployee.setLastName(employee.getLastName());

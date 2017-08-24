@@ -94,13 +94,11 @@ public class EmployeesController implements EmployeeApi {
         // Get the logged in Employee
         Employee user = this.employeeService.getLoggedInUser();
 
-        // This method will throw an Exception if the user can't access the Employee information
-        securityService.canReadEmployee(user.getId(), employeeId);
+        // Find Employee
+        Employee employee = this.employeeService.getById(employeeId);
 
-        Employee employee = employeeService.findById(employeeId).orElseThrow(
-                () -> new NotFoundException(
-                        String.format("Employee with id %d was not found",
-                                employeeId)));
+        // This method will throw an Exception if the user can't access the Employee information
+        securityService.canReadEmployee(user, employee);
 
         EmployeeDTO response = employeeDTOConverter.convert(employee);
 
@@ -131,10 +129,7 @@ public class EmployeesController implements EmployeeApi {
             throws NotFoundException {
 
         // Find Mentor
-        Employee mentor = employeeService.findCurrentMentorById(employeeId)
-                .orElseThrow(() -> new NotFoundException(String.format(
-                        "Mentor for Employee with Id %d was not found",
-                        employeeId)));
+        Employee mentor = this.employeeService.getById(employeeId);
 
         // Set the response
         EmployeeDTO response = employeeDTOConverter.convert(mentor);
@@ -163,16 +158,10 @@ public class EmployeesController implements EmployeeApi {
         this.validationService.validate(newMentorDTO);
 
         // Find Employee
-        Employee employee = employeeService.findById(employeeId)
-                .orElseThrow(() -> new NotFoundException(String.format(
-                        "Employee with Id %d couldn't be found",
-                        employeeId)));
+        Employee employee = this.employeeService.getById(employeeId);
 
         // Find Mentor to be
-        Employee newMentor = employeeService.findById(newMentorDTO.getId())
-                .orElseThrow(() -> new NotFoundException(String.format(
-                        "Employee with Id %d couldn't be found therefore it cannot be put as Mentor",
-                        employeeId)));
+        Employee newMentor = this.employeeService.getById(newMentorDTO.getId());
 
         // Change Mentor
         employeeRelationshipService.changeMentor(newMentor, employee);
@@ -199,13 +188,11 @@ public class EmployeesController implements EmployeeApi {
         // Get the logged in Employee
         Employee user = this.employeeService.getLoggedInUser();
 
-        // This method will throw an Exception if the user can't access the Employee information
-        securityService.canReadEmployee(user.getId(), employeeId);
+        // Find Employee
+        Employee employee = this.employeeService.getById(employeeId);
 
-        Employee employee = employeeService.findById(employeeId).orElseThrow(
-                () -> new NotFoundException(
-                        String.format("Employee with id %d was not found",
-                                employeeId)));
+        // This method will throw an Exception if the user can't access the Employee information
+        securityService.canReadEmployee(user, employee);
 
         List<EmployeeRelationshipDTO> employeeRelationshipDTOList = new ArrayList<>();
         employeeService.findCurrentRelationshipsBySourceEmployee(employee,
@@ -229,6 +216,9 @@ public class EmployeesController implements EmployeeApi {
     public ResponseEntity<OperationResultDTO> employeesIdRelationshipsPost(
             @PathVariable("employeeId") Integer employeeId,
             @RequestBody EmployeeRelationshipDTO relationship) {
+        // Get logged in user
+        Employee user = this.employeeService.getLoggedInUser();
+        logger.debug("{} called endpoint: GET /me", user.getEmail());
 
 
         // TODO Implement this!
@@ -286,10 +276,9 @@ public class EmployeesController implements EmployeeApi {
         List<RelationshipDTO> relationshipDTOList = new ArrayList<>();
 
         // We will omit other relationship types for now. Plus this might require a filter.
-        relationshipService
-                .findRelationshipsByNames(RelationshipName.LEAD,
-                        RelationshipName.PEER,
-                        RelationshipName.OTHER)
+        relationshipService.findRelationshipsByNames(RelationshipName.LEAD,
+                RelationshipName.PEER,
+                RelationshipName.OTHER)
                 .forEach(r -> relationshipDTOList.add(relationshipDTOConverter.convert(r)));
 
         return new ResponseEntity<>(relationshipDTOList, HttpStatus.OK);
