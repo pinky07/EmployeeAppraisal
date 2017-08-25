@@ -1,5 +1,6 @@
 package com.gft.employeeappraisal.service.impl;
 
+import com.gft.employeeappraisal.exception.NotFoundException;
 import com.gft.employeeappraisal.model.Employee;
 import com.gft.employeeappraisal.model.EmployeeRelationship;
 import com.gft.employeeappraisal.model.Relationship;
@@ -35,6 +36,24 @@ public class EmployeeRelationshipServiceImpl implements EmployeeRelationshipServ
             RelationshipService relationshipService) {
         this.employeeRelationshipRepository = employeeRelationshipRepository;
         this.relationshipService = relationshipService;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Optional<EmployeeRelationship> findById(Integer id) {
+        return Optional.ofNullable(this.employeeRelationshipRepository.findOne(id));
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public EmployeeRelationship getById(Integer id) {
+        return this.findById(id).orElseThrow(() -> new NotFoundException(String.format(
+                "EmployeeRelationship with Id %d couldn't be found",
+                id)));
     }
 
     /**

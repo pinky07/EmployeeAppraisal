@@ -10,6 +10,7 @@ import com.gft.employeeappraisal.builder.model.EmployeeBuilder;
 import com.gft.employeeappraisal.builder.model.JobFamilyBuilder;
 import com.gft.employeeappraisal.builder.model.JobLevelBuilder;
 import com.gft.employeeappraisal.converter.employee.EmployeeDTOConverter;
+import com.gft.employeeappraisal.exception.NotFoundException;
 import com.gft.employeeappraisal.model.ApplicationRole;
 import com.gft.employeeappraisal.model.Constants;
 import com.gft.employeeappraisal.model.Employee;
@@ -52,242 +53,268 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @RunWith(SpringRunner.class)
 public class EmployeesControllerMentorTest extends BaseControllerTest {
 
-	private static final String EMPLOYEES_URL = "/employees";
+    private static final String EMPLOYEES_URL = "/employees";
+    private static EmployeeDTO mockEmployeeDTO;
+    private static EmployeeDTO mockMentorDTO;
+    @Rule
+    public final ExpectedException exception = ExpectedException.none();
+    @Autowired
+    private MockMvc mockMvc;
+    @Autowired
+    private EntityDTOComparator entityDTOComparator;
+    @Autowired
+    private ObjectMapper mapper;
+    @Autowired
+    @SuppressWarnings("unused")
+    private EmployeeDTOConverter employeeDTOConverter;
+    @MockBean(reset = MockReset.AFTER)
+    private EmployeeService employeeService;
+    @MockBean(reset = MockReset.AFTER)
+    private EmployeeRelationshipService employeeRelationshipService;
 
-	@Autowired
-	private MockMvc mockMvc;
+    @BeforeClass
+    public static void setUp() {
+        mockEmployeeDTO = new EmployeeDTOBuilder()
+                .id(-1)
+                .firstName("Manuel")
+                .lastName("Yepez")
+                .gftIdentifier("....")
+                .email("manuel.yepez@gft.com")
+                .applicationRole(mockApplicationRoleDTO())
+                .jobLevel(mockJobLevelDTO())
+                .build();
 
-	@Autowired
-	private EntityDTOComparator entityDTOComparator;
+        mockMentorDTO = new EmployeeDTOBuilder()
+                .id(-2)
+                .firstName("Admin")
+                .lastName("Admin")
+                .gftIdentifier("AAAA")
+                .email("admin@gft.com")
+                .applicationRole(mockApplicationRoleDTO())
+                .jobLevel(mockJobLevelDTO())
+                .build();
+    }
 
-	@Autowired
-	private ObjectMapper mapper;
+    private static ApplicationRoleDTO mockApplicationRoleDTO() {
+        return new ApplicationRoleDTOBuilder()
+                .name("ApplicationRole").description("AppDescription").build();
+    }
 
-	@Autowired
-	@SuppressWarnings("unused")
-	private EmployeeDTOConverter employeeDTOConverter;
+    private static JobLevelDTO mockJobLevelDTO() {
+        return new JobLevelDTOBuilder()
+                .name("Level").description("Description").expertise("Expertise")
+                .jobFamily(new JobFamilyDTOBuilder()
+                        .name("Job Family").description("Description").build()
+                ).build();
+    }
 
-	@MockBean(reset = MockReset.AFTER)
-	private EmployeeService employeeService;
+    /**
+     * Tests {@link EmployeesController#employeesIdMentorGet(Integer)}
+     *
+     * @throws Exception
+     */
+    @Test
+    public void employeesIdMentorGet_Successful() throws Exception {
+        // Set up
+        Employee mockMentor = mockMentor();
+        when(employeeService.getCurrentMentorById(anyInt())).thenReturn(mockMentor);
 
-	@MockBean(reset = MockReset.AFTER)
-	private EmployeeRelationshipService employeeRelationshipService;
+        // Execution
+        MvcResult result = mockMvc.perform(get(String.format(
+                "%s/%d/mentor",
+                EMPLOYEES_URL,
+                mockEmployeeDTO.getId()))
+                .with(csrf())
+                .contentType(MediaType.APPLICATION_JSON)
+        ).andExpect(status().isOk()).andReturn();
 
-	@Rule
-	public final ExpectedException exception = ExpectedException.none();
+        // Verification
+        verify(employeeService, times(1)).getCurrentMentorById(anyInt());
+        EmployeeDTO resultDTO = mapper.readValue(result.getResponse().getContentAsString(),
+                EmployeeDTO.class);
+        entityDTOComparator.assertEqualsEmployee(mockMentor, resultDTO);
+    }
 
-	private static EmployeeDTO mockEmployeeDTO;
-	private static EmployeeDTO mockMentorDTO;
+    /**
+     * Tessts {@link EmployeesController#employeesIdMentorGet(Integer)}
+     *
+     * @throws Exception
+     */
+    @Test
+    public void employeesIdMentorGet_MentorNotFound() throws Exception {
+        // Set up
+        when(employeeService.getCurrentMentorById(anyInt())).thenThrow(NotFoundException.class);
 
-	@BeforeClass
-	public static void setUp() {
-		mockEmployeeDTO = new EmployeeDTOBuilder()
-				.id(-1)
-				.firstName("Manuel")
-				.lastName("Yepez")
-				.gftIdentifier("....")
-				.email("manuel.yepez@gft.com")
-				.applicationRole(mockApplicationRoleDTO())
-				.jobLevel(mockJobLevelDTO())
-				.build();
+        // Execution
+        MvcResult result = mockMvc.perform(get(String.format("%s/%d/mentor", EMPLOYEES_URL, mockEmployeeDTO.getId()))
+                .with(csrf())
+                .contentType(MediaType.APPLICATION_JSON)
+        ).andExpect(status().isNotFound()).andReturn();
+        EmployeeDTO resultDTO = mapper.readValue(result.getResponse().getContentAsString(), EmployeeDTO.class);
 
-		mockMentorDTO = new EmployeeDTOBuilder()
-				.id(-2)
-				.firstName("Admin")
-				.lastName("Admin")
-				.gftIdentifier("AAAA")
-				.email("admin@gft.com")
-				.applicationRole(mockApplicationRoleDTO())
-				.jobLevel(mockJobLevelDTO())
-				.build();
-	}
+        // Verification
+        assertNotNull(resultDTO);
+        assertNull(resultDTO.getFirstName());
+        assertNull(resultDTO.getLastName());
+        assertNull(resultDTO.getGftIdentifier());
+        assertNull(resultDTO.getEmail());
+        assertNull(resultDTO.getApplicationRole());
+        assertNull(resultDTO.getJobLevel());
+        verify(employeeService, times(1)).getCurrentMentorById(anyInt());
+    }
 
-	@Test
-	public void employeesEmployeeIdMentorGet() throws Exception {
-		//mentor lookup
-		Employee mockMentor = mockMentor();
-		when(employeeService.findCurrentMentorById(anyInt())).thenReturn(Optional.of(mockMentor));
+    @Test
+    public void employeesEmployeeIdMentorGet_badRequest() throws Exception {
+        MvcResult result = mockMvc.perform(get(String.format("%s/null/mentor", EMPLOYEES_URL))
+                .with(csrf())
+                .contentType(MediaType.APPLICATION_JSON)
+        ).andExpect(status().isBadRequest()).andReturn();
 
-		MvcResult result = mockMvc.perform(get(String.format("%s/%d/mentor", EMPLOYEES_URL, mockEmployeeDTO.getId()))
-				.with(csrf())
-				.contentType(MediaType.APPLICATION_JSON)
-		).andExpect(status().isOk()).andReturn();
+        verify(employeeService, never()).findCurrentMentorById(anyInt());
 
-		verify(employeeService, times(1)).findCurrentMentorById(anyInt());
+        assertTrue(StringUtils.isEmpty(result.getResponse().getContentAsString()));
+    }
 
-		EmployeeDTO resultDTO = mapper.readValue(result.getResponse().getContentAsString(),
-				EmployeeDTO.class);
+    /**
+     * Tests {@link EmployeesController#employeesIdMentorPut(Integer, EmployeeDTO)}
+     *
+     * @throws Exception
+     */
+    @Test
+    public void employeesIdMentorPut() throws Exception {
+        // Set up
+        when(employeeService.getById(mockEmployeeDTO.getId())).thenReturn(mockEmployee());
+        when(employeeService.getById(mockMentorDTO.getId())).thenReturn(mockMentor());
+        doNothing().when(employeeRelationshipService).changeMentor(any(Employee.class), any(Employee.class));
 
-		entityDTOComparator.assertEqualsEmployee(mockMentor, resultDTO);
-	}
+        // Execution
+        MvcResult result = mockMvc.perform(put(String.format("%s/%d/mentor", EMPLOYEES_URL, mockEmployeeDTO.getId()))
+                .with(csrf())
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(mapper.writeValueAsString(mockMentorDTO)))
+                .andExpect(status().isOk()).andReturn();
+        OperationResultDTO resultDTO = mapper.readValue(result.getResponse().getContentAsString(), OperationResultDTO.class);
 
-	@Test
-	public void employeesEmployeeIdMentorGet_MentorNotExists() throws Exception {
-		when(employeeService.findCurrentMentorById(anyInt())).thenReturn(Optional.empty());
+        // Verification
+        assertEquals(Constants.SUCCESS, resultDTO.getMessage());
+        assertNotNull(resultDTO);
+        assertNull(resultDTO.getData());
+        assertNull(resultDTO.getErrors());
+        verify(employeeService, times(2)).getById(anyInt());
+        verify(employeeRelationshipService, times(1)).changeMentor(any(Employee.class), any(Employee.class));
+    }
 
-		MvcResult result = mockMvc.perform(get(String.format("%s/%d/mentor", EMPLOYEES_URL, mockEmployeeDTO.getId()))
-				.with(csrf())
-				.contentType(MediaType.APPLICATION_JSON)
-		).andExpect(status().isNotFound()).andReturn();
+    /**
+     * Tests {@link EmployeesController#employeesIdMentorPut(Integer, EmployeeDTO)}
+     *
+     * @throws Exception
+     */
+    @Test
+    public void employeesIdMentorPut_EmployeeNotFound() throws Exception {
+        // Set up
+        when(employeeService.getById(mockEmployeeDTO.getId())).thenThrow(NotFoundException.class);
 
-		verify(employeeService, times(1)).findCurrentMentorById(anyInt());
+        // Execution
+        MvcResult result = mockMvc.perform(put(String.format(
+                "%s/%d/mentor",
+                EMPLOYEES_URL,
+                mockEmployeeDTO.getId()))
+                .with(csrf())
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(mapper.writeValueAsString(mockMentorDTO))
+        ).andExpect(status().isNotFound()).andReturn();
+        OperationResultDTO resultDTO = mapper.readValue(result.getResponse().getContentAsString(), OperationResultDTO.class);
 
-		EmployeeDTO resultDTO = mapper.readValue(result.getResponse().getContentAsString(), EmployeeDTO.class);
+        // Verification
+        assertNotNull(resultDTO);
+        assertEquals(Constants.ERROR, resultDTO.getMessage());
+        assertNull(resultDTO.getErrors());
+        verify(employeeService, times(1)).getById(anyInt());
+        verify(employeeRelationshipService, never()).changeMentor(any(Employee.class), any(Employee.class));
+    }
 
-		assertNotNull(resultDTO);
-		assertNull(resultDTO.getFirstName());
-		assertNull(resultDTO.getLastName());
-		assertNull(resultDTO.getGftIdentifier());
-		assertNull(resultDTO.getEmail());
-		assertNull(resultDTO.getApplicationRole());
-		assertNull(resultDTO.getJobLevel());
-	}
+    /**
+     * Tests {@link EmployeesController#employeesIdMentorPut(Integer, EmployeeDTO)}
+     *
+     * @throws Exception
+     */
+    @Test
+    public void employeesIdMentorPut_MentorNotFound() throws Exception {
+        // Set up
+        Employee mockEmployee = mockEmployee();
+        when(employeeService.getById(mockEmployeeDTO.getId())).thenReturn(mockEmployee);
+        when(employeeService.getById(mockMentorDTO.getId())).thenThrow(NotFoundException.class);
 
-	@Test
-	public void employeesEmployeeIdMentorGet_badRequest() throws Exception {
-		MvcResult result = mockMvc.perform(get(String.format("%s/null/mentor", EMPLOYEES_URL))
-				.with(csrf())
-				.contentType(MediaType.APPLICATION_JSON)
-		).andExpect(status().isBadRequest()).andReturn();
+        // Execution
+        MvcResult result = mockMvc.perform(put(String.format("%s/%d/mentor", EMPLOYEES_URL, mockEmployeeDTO.getId()))
+                .with(csrf())
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(mapper.writeValueAsString(mockMentorDTO))
+        ).andExpect(status().isNotFound()).andReturn();
+        OperationResultDTO resultDTO = mapper.readValue(result.getResponse().getContentAsString(), OperationResultDTO.class);
 
-		verify(employeeService, never()).findCurrentMentorById(anyInt());
+        // Verification
+        assertNotNull(resultDTO);
+        assertEquals(Constants.ERROR, resultDTO.getMessage());
+        assertNull(resultDTO.getErrors());
+        verify(employeeService, times(2)).getById(anyInt());
+        verify(employeeRelationshipService, never()).changeMentor(any(Employee.class), any(Employee.class));
+    }
 
-		assertTrue(StringUtils.isEmpty(result.getResponse().getContentAsString()));
-	}
+    @Test
+    public void employeesEmployeeIdMentorPut_badRequest() throws Exception {
 
-	@Test
-	public void employeesEmployeeIdMentorPut() throws Exception {
-		when(employeeService.findById(mockEmployeeDTO.getId())).thenReturn(Optional.of(mockEmployee()));
-		when(employeeService.findById(mockMentorDTO.getId())).thenReturn(Optional.of(mockMentor()));
-		doNothing().when(employeeRelationshipService).changeMentor(any(Employee.class), any(Employee.class));
+        MvcResult result = mockMvc.perform(put(String.format("%s/%d/mentor", EMPLOYEES_URL, mockEmployeeDTO.getId()))
+                .with(csrf())
+                .contentType(MediaType.APPLICATION_JSON)
+        ).andExpect(status().isBadRequest()).andReturn();
 
-		MvcResult result = mockMvc.perform(put(String.format("%s/%d/mentor", EMPLOYEES_URL, mockEmployeeDTO.getId()))
-				.with(csrf())
-				.contentType(MediaType.APPLICATION_JSON)
-				.content(mapper.writeValueAsString(mockMentorDTO)))
-				.andExpect(status().isOk()).andReturn();
+        assertTrue(StringUtils.isEmpty(result.getResponse().getContentAsString()));
 
-		OperationResultDTO resultDTO = mapper.readValue(result.getResponse().getContentAsString(), OperationResultDTO.class);
+        verify(employeeService, never()).findById(anyInt());
+        verify(employeeRelationshipService, never()).changeMentor(any(Employee.class), any(Employee.class));
 
-		verify(employeeService, times(2)).findById(anyInt());
-		verify(employeeRelationshipService, times(1)).changeMentor(any(Employee.class), any(Employee.class));
+        result = mockMvc.perform(put(String.format("%s/null/mentor", EMPLOYEES_URL))
+                .with(csrf())
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(mapper.writeValueAsString(mockMentorDTO)))
+                .andExpect(status().isBadRequest()).andReturn();
 
-		assertNotNull(resultDTO);
-		assertEquals(Constants.SUCCESS, resultDTO.getMessage());
-		assertNull(resultDTO.getData());
-		assertNull(resultDTO.getErrors());
-	}
+        assertTrue(StringUtils.isEmpty(result.getResponse().getContentAsString()));
 
-	@Test
-	public void employeesEmployeeIdMentorPut_EmployeeNotExists() throws Exception {
-		when(employeeService.findById(mockEmployeeDTO.getId())).thenReturn(Optional.empty());
+        verify(employeeService, never()).findById(anyInt());
+        verify(employeeRelationshipService, never()).changeMentor(any(Employee.class), any(Employee.class));
+    }
 
-		MvcResult result = mockMvc.perform(put(String.format("%s/%d/mentor", EMPLOYEES_URL, mockEmployeeDTO.getId()))
-				.with(csrf())
-				.contentType(MediaType.APPLICATION_JSON)
-				.content(mapper.writeValueAsString(mockMentorDTO))
-		).andExpect(status().isNotFound()).andReturn();
+    @SuppressWarnings("all")
+    private Employee mockEmployee() {
+        return new EmployeeBuilder()
+                .id(-1)
+                .firstName("Manuel").lastName("Yepez").gftIdentifier("....").email("manuel.yepez@gft.com")
+                .applicationRole(mockApplicationRole().get()).jobLevel(mockJobLevel().get()).build();
+    }
 
-		OperationResultDTO resultDTO = mapper.readValue(result.getResponse().getContentAsString(), OperationResultDTO.class);
+    @SuppressWarnings("all")
+    private Employee mockMentor() {
+        return new EmployeeBuilder()
+                .id(-2)
+                .firstName("Admin")
+                .lastName("Admin")
+                .gftIdentifier("AAAA")
+                .email("admin@gft.com")
+                .applicationRole(mockApplicationRole().get())
+                .jobLevel(mockJobLevel().get())
+                .build();
+    }
 
-		verify(employeeService, times(1)).findById(anyInt());
-		verify(employeeRelationshipService, never()).changeMentor(any(Employee.class), any(Employee.class));
+    private Optional<ApplicationRole> mockApplicationRole() {
+        return Optional.of(new ApplicationRoleBuilder()
+                .name("ApplicationRole").description("AppDescription").build());
+    }
 
-		assertNotNull(resultDTO);
-		assertEquals(Constants.ERROR, resultDTO.getMessage());
-		assertEquals("Employee with Id -1 couldn't be found", resultDTO.getData());
-		assertNull(resultDTO.getErrors());
-	}
-
-	@Test
-	public void employeesEmployeeIdMentorPut_MentorNotExists() throws Exception {
-		when(employeeService.findById(mockEmployeeDTO.getId())).thenReturn(Optional.of(mockEmployee()));
-		when(employeeService.findById(mockMentorDTO.getId())).thenReturn(Optional.empty());
-
-		MvcResult result = mockMvc.perform(put(String.format("%s/%d/mentor", EMPLOYEES_URL, mockEmployeeDTO.getId()))
-				.with(csrf())
-				.contentType(MediaType.APPLICATION_JSON)
-				.content(mapper.writeValueAsString(mockMentorDTO))
-		).andExpect(status().isNotFound()).andReturn();
-
-		OperationResultDTO resultDTO = mapper.readValue(result.getResponse().getContentAsString(), OperationResultDTO.class);
-
-		verify(employeeService, times(2)).findById(anyInt());
-		verify(employeeRelationshipService, never()).changeMentor(any(Employee.class), any(Employee.class));
-
-		assertNotNull(resultDTO);
-		assertEquals(Constants.ERROR, resultDTO.getMessage());
-		assertEquals("Employee with Id -1 couldn't be found therefore it cannot be put as Mentor", resultDTO.getData());
-		assertNull(resultDTO.getErrors());
-	}
-
-	@Test
-	public void employeesEmployeeIdMentorPut_badRequest() throws Exception {
-
-		MvcResult result = mockMvc.perform(put(String.format("%s/%d/mentor", EMPLOYEES_URL, mockEmployeeDTO.getId()))
-				.with(csrf())
-				.contentType(MediaType.APPLICATION_JSON)
-		).andExpect(status().isBadRequest()).andReturn();
-
-		assertTrue(StringUtils.isEmpty(result.getResponse().getContentAsString()));
-
-		verify(employeeService, never()).findById(anyInt());
-		verify(employeeRelationshipService, never()).changeMentor(any(Employee.class), any(Employee.class));
-
-		result = mockMvc.perform(put(String.format("%s/null/mentor", EMPLOYEES_URL))
-				.with(csrf())
-				.contentType(MediaType.APPLICATION_JSON)
-				.content(mapper.writeValueAsString(mockMentorDTO)))
-				.andExpect(status().isBadRequest()).andReturn();
-
-		assertTrue(StringUtils.isEmpty(result.getResponse().getContentAsString()));
-
-		verify(employeeService, never()).findById(anyInt());
-		verify(employeeRelationshipService, never()).changeMentor(any(Employee.class), any(Employee.class));
-	}
-
-	private static ApplicationRoleDTO mockApplicationRoleDTO() {
-		return new ApplicationRoleDTOBuilder()
-				.name("ApplicationRole").description("AppDescription").build();
-	}
-
-	private static JobLevelDTO mockJobLevelDTO() {
-		return new JobLevelDTOBuilder()
-				.name("Level").description("Description").expertise("Expertise")
-				.jobFamily(new JobFamilyDTOBuilder()
-						.name("Job Family").description("Description").build()
-				).build();
-	}
-
-	@SuppressWarnings("all")
-	private Employee mockEmployee() {
-		return new EmployeeBuilder()
-				.id(-1)
-				.firstName("Manuel").lastName("Yepez").gftIdentifier("....").email("manuel.yepez@gft.com")
-				.applicationRole(mockApplicationRole().get()).jobLevel(mockJobLevel().get()).build();
-	}
-
-	@SuppressWarnings("all")
-	private Employee mockMentor() {
-		return new EmployeeBuilder()
-				.id(-2)
-				.firstName("Admin")
-				.lastName("Admin")
-				.gftIdentifier("AAAA")
-				.email("admin@gft.com")
-				.applicationRole(mockApplicationRole().get())
-				.jobLevel(mockJobLevel().get())
-				.build();
-	}
-
-	private Optional<ApplicationRole> mockApplicationRole() {
-		return Optional.of(new ApplicationRoleBuilder()
-				.name("ApplicationRole").description("AppDescription").build());
-	}
-
-	private Optional<JobLevel> mockJobLevel() {
-		return Optional.of(new JobLevelBuilder()
-				.name("Level").description("Description").expertise("Expertise")
-				.jobFamily(new JobFamilyBuilder().name("Job Family").description("Description").build()).build());
-	}
+    private Optional<JobLevel> mockJobLevel() {
+        return Optional.of(new JobLevelBuilder()
+                .name("Level").description("Description").expertise("Expertise")
+                .jobFamily(new JobFamilyBuilder().name("Job Family").description("Description").build()).build());
+    }
 }

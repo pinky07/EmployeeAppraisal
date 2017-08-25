@@ -1,7 +1,7 @@
 package com.gft.employeeappraisal.service;
 
 import com.gft.employeeappraisal.exception.AccessDeniedException;
-import com.gft.employeeappraisal.exception.NotFoundException;
+import com.gft.employeeappraisal.model.Employee;
 
 /**
  * Service that verifies what actions can be performed by users.
@@ -12,11 +12,25 @@ public interface SecurityService {
 
     /**
      * Determines if certain person can obtain a specific employee information.
+     * Rules:
+     * - An Employee can read his own information
+     * - A Mentor can read the information of their Mentees
      *
-     * @param employeeId  Id of the Employee who wants access
-     * @param requestedId Id of the Employee to be accessed
-     * @throws NotFoundException     if either the IDs provided do not correspond to an existing employee.
-     * @throws AccessDeniedException if the employee is not an admin or current mentor requesting the employee information.
+     * @param reader    Employee who wants access to another Employee
+     * @param requested Employee to be accessed
+     * @throws AccessDeniedException If the access is denied
      */
-    void canReadEmployee(int employeeId, int requestedId) throws NotFoundException, AccessDeniedException;
+    void canReadEmployee(Employee reader, Employee requested) throws AccessDeniedException;
+
+    /**
+     * Determines if a certain person can create a certain Employee Relationship between two employees.
+     * Rules:
+     * - An Employee can write EmployeeRelationships where he is the SourceEmployee.
+     * - A Mentor can write EmployeeRelationships for their Mentees where their Mentee is the SourceEmployee.
+     *
+     * @param writer         Employee who wants to write a new EmployeeRelationship
+     * @param sourceEmployee Source Employee of the new Relationship
+     * @param targetEmployee Target Employee of the new Relationship
+     */
+    void canWriteEmployeeRelationship(Employee writer, Employee sourceEmployee, Employee targetEmployee) throws AccessDeniedException;
 }
