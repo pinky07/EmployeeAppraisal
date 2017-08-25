@@ -6,7 +6,6 @@ import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.ValidationUtils;
-import org.springframework.validation.Validator;
 
 /**
  * Class that describes validation rules for the conversion from an EmployeeDTO to an Employee entity,
@@ -44,17 +43,17 @@ public class EmployeeDTOPostValidator implements HttpValidator {
 
     @Override
     public void validate(Object target, Errors errors) {
-        ValidationUtils.rejectIfEmptyOrWhitespace(errors, FIRST_NAME_FIELD, "employeeDTO.emptyField", new Object[]{FIRST_NAME_FIELD});
-        ValidationUtils.rejectIfEmptyOrWhitespace(errors, LAST_NAME_FIELD, "employeeDTO.emptyField", new Object[]{LAST_NAME_FIELD});
-        ValidationUtils.rejectIfEmptyOrWhitespace(errors, EMAIL_FIELD, "employeeDTO.emptyField", new Object[]{EMAIL_FIELD});
-        ValidationUtils.rejectIfEmptyOrWhitespace(errors, GFT_IDENTIFIER_FIELD, "employeeDTO.emptyField", new Object[]{GFT_IDENTIFIER_FIELD});
-        ValidationUtils.rejectIfEmpty(errors, APPLICATION_ROLE_FIELD, "employeeDTO.emptyField", new Object[]{APPLICATION_ROLE_FIELD});
-        ValidationUtils.rejectIfEmpty(errors, JOB_LEVEL_FIELD, "employeeDTO.emptyField", new Object[]{JOB_LEVEL_FIELD});
+        ValidationUtils.rejectIfEmptyOrWhitespace(errors, FIRST_NAME_FIELD, "employeeDTO.post.firstNameNotSet");
+        ValidationUtils.rejectIfEmptyOrWhitespace(errors, LAST_NAME_FIELD, "employeeDTO.post.lastNameNotSet");
+        ValidationUtils.rejectIfEmptyOrWhitespace(errors, EMAIL_FIELD, "employeeDTO.post.emailNotSet");
+        ValidationUtils.rejectIfEmptyOrWhitespace(errors, GFT_IDENTIFIER_FIELD, "employeeDTO.post.gftIdentifierNotSet");
+        ValidationUtils.rejectIfEmpty(errors, APPLICATION_ROLE_FIELD, "employeeDTO.post.applicationRoleNotSet");
+        ValidationUtils.rejectIfEmpty(errors, JOB_LEVEL_FIELD, "employeeDTO.post.jobLevelNotSet");
 
         EmployeeDTO employeeDTO = (EmployeeDTO) target;
 
         if (employeeDTO.getGftIdentifier() != null && employeeDTO.getGftIdentifier().length() != 4) {
-            errors.rejectValue(GFT_IDENTIFIER_FIELD, "employeeDTO.gftIdentifierLength");
+            errors.rejectValue(GFT_IDENTIFIER_FIELD, "employeeDTO.post.gftIdentifierInvalid");
         }
 
         if (employeeDTO.getApplicationRole() != null) {

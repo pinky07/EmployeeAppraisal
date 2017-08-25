@@ -18,6 +18,22 @@ import java.util.stream.Stream;
 public interface EmployeeRelationshipService {
 
     /**
+     * Looks up an EmployeeRelationship and returns it. Can return an empty Optional.
+     *
+     * @param id EmployeeRelationship Id
+     * @return EmployeeRelationship
+     */
+    Optional<EmployeeRelationship> findById(Integer id);
+
+    /**
+     * Looks up an EmployeeRelationship and returns it. If it doesn't exist, throws a NotFoundException.
+     *
+     * @param id EmployeeRelationship Id
+     * @return EmployeeRelationship
+     */
+    EmployeeRelationship getById(Integer id);
+
+    /**
      * Checks if there is a current MENTOR relationship from mentor to mentee.
      *
      * @param mentor Possible mentor
@@ -185,4 +201,5 @@ public interface EmployeeRelationshipService {
      * @param employeeRelationship Entity to be persisted onto the database.
      */
     Optional<EmployeeRelationship> saveAndFlush(EmployeeRelationship employeeRelationship);
+
 }

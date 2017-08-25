@@ -57,12 +57,22 @@ public interface EmployeeService {
     Employee getById(Integer id) throws NotFoundException;
 
     /**
-     * Given an Employee Id, looks up the current mentor for that employee and returns it.
+     * Given an Employee Id, looks up the current Mentor for that Employee and returns it.
      *
      * @param menteeId Internal lookup Id for the employee.
      * @return An Optional object that may or may not contain the employee's current mentor.
      */
     Optional<Employee> findCurrentMentorById(int menteeId) throws NotFoundException;
+
+    /**
+     * Given an Employee Id, looks up the current Mentor for that Employee and returns it. Will throw a
+     * NotFoundException if the Employee of its Mentor can't be found.
+     *
+     * @param menteeId Internal lookup Id for the Employee.
+     * @return The Employee's current Mentor.
+     * @throws NotFoundException If either the Employee or its Mentor are not found.
+     */
+    Employee getCurrentMentorById(int menteeId) throws NotFoundException;
 
     /**
      * Given an Employee Id, looks up the current mentor for that employee and returns it.

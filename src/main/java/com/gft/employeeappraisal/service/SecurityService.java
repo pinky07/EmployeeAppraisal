@@ -2,7 +2,6 @@ package com.gft.employeeappraisal.service;
 
 import com.gft.employeeappraisal.exception.AccessDeniedException;
 import com.gft.employeeappraisal.model.Employee;
-import com.gft.employeeappraisal.model.Relationship;
 
 /**
  * Service that verifies what actions can be performed by users.
@@ -13,7 +12,9 @@ public interface SecurityService {
 
     /**
      * Determines if certain person can obtain a specific employee information.
-     * TODO Add rules in this Javadoc
+     * Rules:
+     * - An Employee can read his own information
+     * - A Mentor can read the information of their Mentees
      *
      * @param reader    Employee who wants access to another Employee
      * @param requested Employee to be accessed
@@ -23,11 +24,13 @@ public interface SecurityService {
 
     /**
      * Determines if a certain person can create a certain Employee Relationship between two employees.
-     * TODO Add rules in this Javadoc
+     * Rules:
+     * - An Employee can write EmployeeRelationships where he is the SourceEmployee.
+     * - A Mentor can write EmployeeRelationships for their Mentees where their Mentee is the SourceEmployee.
      *
-     * @param writer
-     * @param sourceEmployee
-     * @param targetEmployee
+     * @param writer         Employee who wants to write a new EmployeeRelationship
+     * @param sourceEmployee Source Employee of the new Relationship
+     * @param targetEmployee Target Employee of the new Relationship
      */
-    void canWriteEmployeeRelationship(Employee writer, Employee sourceEmployee, Employee targetEmployee, Relationship relationship) throws AccessDeniedException;
+    void canWriteEmployeeRelationship(Employee writer, Employee sourceEmployee, Employee targetEmployee) throws AccessDeniedException;
 }

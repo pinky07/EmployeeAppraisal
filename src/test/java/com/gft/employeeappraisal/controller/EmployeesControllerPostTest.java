@@ -106,7 +106,7 @@ public class EmployeesControllerPostTest extends BaseControllerTest {
     }
 
     @Test
-    public void employeesPost_exists() throws Exception {
+    public void employeesPost_Exists() throws Exception {
         when(employeeService.findByEmail(anyString())).thenReturn(Optional.of(mockEmployee()));
 
         MvcResult result = mockMvc.perform(post(EMPLOYEES_URL)

@@ -5,7 +5,6 @@ import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.ValidationUtils;
-import org.springframework.validation.Validator;
 
 /**
  * Class that describes validation rules for the conversion from a JobLevelDTO to a JobLevel entity.
@@ -30,7 +29,7 @@ public class JobLevelDTOValidator implements HttpValidator {
 
     @Override
     public void validate(Object target, Errors errors) {
-        ValidationUtils.rejectIfEmpty(errors, ID_FIELD, "employeeDTO.emptyField", new Object[]{ID_FIELD});
+        ValidationUtils.rejectIfEmpty(errors, ID_FIELD, "jobLevelDTO.idNotSet");
     }
 
     @Override

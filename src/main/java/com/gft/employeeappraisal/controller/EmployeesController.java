@@ -3,9 +3,12 @@ package com.gft.employeeappraisal.controller;
 import com.gft.employeeappraisal.converter.employee.EmployeeDTOConverter;
 import com.gft.employeeappraisal.converter.employeerelationship.EmployeeRelationshipDTOConverter;
 import com.gft.employeeappraisal.converter.relationship.RelationshipDTOConverter;
+import com.gft.employeeappraisal.exception.AccessDeniedException;
+import com.gft.employeeappraisal.exception.EmployeeAppraisalMicroserviceException;
 import com.gft.employeeappraisal.exception.NotFoundException;
 import com.gft.employeeappraisal.model.Constants;
 import com.gft.employeeappraisal.model.Employee;
+import com.gft.employeeappraisal.model.EmployeeRelationship;
 import com.gft.employeeappraisal.model.RelationshipName;
 import com.gft.employeeappraisal.service.*;
 import com.gft.swagger.employees.api.EmployeeApi;
@@ -26,6 +29,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 /**
@@ -127,9 +131,8 @@ public class EmployeesController implements EmployeeApi {
     public ResponseEntity<EmployeeDTO> employeesIdMentorGet(
             @PathVariable("employeeId") Integer employeeId)
             throws NotFoundException {
-
         // Find Mentor
-        Employee mentor = this.employeeService.getById(employeeId);
+        Employee mentor = this.employeeService.getCurrentMentorById(employeeId);
 
         // Set the response
         EmployeeDTO response = employeeDTOConverter.convert(mentor);
@@ -148,8 +151,6 @@ public class EmployeesController implements EmployeeApi {
     public ResponseEntity<OperationResultDTO> employeesIdMentorPut(
             @PathVariable("employeeId") Integer employeeId,
             @RequestBody EmployeeDTO newMentorDTO) {
-
-        // TODO We don't need a complete Employee object for this endpoint!
 
         // Response object
         OperationResultDTO response = new OperationResultDTO();
@@ -191,7 +192,7 @@ public class EmployeesController implements EmployeeApi {
         // Find Employee
         Employee employee = this.employeeService.getById(employeeId);
 
-        // This method will throw an Exception if the user can't access the Employee information
+        // Security check
         securityService.canReadEmployee(user, employee);
 
         List<EmployeeRelationshipDTO> employeeRelationshipDTOList = new ArrayList<>();
@@ -205,9 +206,41 @@ public class EmployeesController implements EmployeeApi {
     @Override
     public ResponseEntity<Void> employeesIdRelationshipsIdDelete(
             @PathVariable("employeeId") Integer employeeId,
-            @PathVariable("relationshipId") Integer relationshipId) {
+            @PathVariable("relationshipId") Integer employeeRelationshipId) {
 
-        // TODO Implement this!
+        // Get the logged in Employee
+        Employee user = this.employeeService.getLoggedInUser();
+        logger.debug("{} called endpoint: DELETE /employees/{}/relationships/{}", user.getEmail(), employeeId, employeeRelationshipId);
+
+        // Find Employee
+        Employee employee = this.employeeService.getById(employeeId);
+
+        // Find EmployeeRelationship
+        EmployeeRelationship employeeRelationship = this.employeeRelationshipService.getById(employeeRelationshipId);
+
+        // Is the relationship already ended?
+        if (Objects.nonNull(employeeRelationship.getEndDate())) {
+            throw new EmployeeAppraisalMicroserviceException(String.format(
+                    "EmployeeRelationship with Id: %d is already ended",
+                    employeeRelationship.getId()));
+        }
+
+        // The Employee must be the SourceEmployee of the EmployeeRelationship
+        if (!employee.equals(employeeRelationship.getSourceEmployee()))
+            throw new AccessDeniedException(String.format(
+                    "Employee with Id: %d is not the source employee of EmployeeRelationship with Id: %d",
+                    employeeId,
+                    employeeRelationshipId));
+
+        // Security check
+        this.securityService.canWriteEmployeeRelationship(user, employeeRelationship.getSourceEmployee(), employeeRelationship.getTargetEmployee());
+
+        // End EmployeeRelationship
+        // TODO Define what type of Exception should this throw?
+        this.employeeRelationshipService.endEmployeeRelationship(employeeRelationship)
+                .orElseThrow(() -> new EmployeeAppraisalMicroserviceException(String.format(
+                        "EmployeeRelationship with Id: %d could not be terminated",
+                        employeeRelationshipId)));
 
         return new ResponseEntity<>(HttpStatus.OK);
     }
@@ -215,15 +248,44 @@ public class EmployeesController implements EmployeeApi {
     @Override
     public ResponseEntity<OperationResultDTO> employeesIdRelationshipsPost(
             @PathVariable("employeeId") Integer employeeId,
-            @RequestBody EmployeeRelationshipDTO relationship) {
+            @RequestBody EmployeeRelationshipDTO employeeRelationshipDTO) {
+
         // Get logged in user
         Employee user = this.employeeService.getLoggedInUser();
-        logger.debug("{} called endpoint: GET /me", user.getEmail());
+        logger.debug("{} called endpoint: POST /employees/{}/relationships", user.getEmail(), employeeId);
 
+        // Validate DTO
+        this.validationService.validate(employeeRelationshipDTO);
 
-        // TODO Implement this!
+        // Find Employee who will be the Source Employee of the EmployeeRelationship
+        Employee sourceEmployee = this.employeeService.getById(employeeId);
 
-        return new ResponseEntity<>(HttpStatus.CREATED);
+        // Find Referred employee who will be the Target Employee of the EmployeeRelationship
+        Employee targetEmployee = this.employeeService.getById(employeeRelationshipDTO.getReferred().getId());
+
+        // Security check
+        this.securityService.canWriteEmployeeRelationship(user, sourceEmployee, targetEmployee);
+
+        // Convert DTO to Entity
+        EmployeeRelationship employeeRelationship = this.employeeRelationshipDTOConverter.convertBack(employeeRelationshipDTO);
+
+        // Create the new EmployeeRelationship
+        EmployeeRelationship createdEmployeeRelationship = this.employeeRelationshipService.startEmployeeRelationship( // <-- This creates a new EmployeeRelationship and could be improved!
+                sourceEmployee,
+                employeeRelationship.getTargetEmployee(),
+                employeeRelationship.getRelationship())
+                .orElseThrow(() -> new EmployeeAppraisalMicroserviceException(String.format(
+                        "EmployeeRelationship between Employee[%d] -> Employee[%d] of type %s",
+                        sourceEmployee.getId(),
+                        targetEmployee.getId(),
+                        employeeRelationship.getRelationship().getName())));
+
+        // Create Result DTO
+        OperationResultDTO response = new OperationResultDTO();
+        response.setMessage(Constants.SUCCESS);
+        response.setData(this.employeeRelationshipDTOConverter.convert(createdEmployeeRelationship));
+
+        return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
     /**

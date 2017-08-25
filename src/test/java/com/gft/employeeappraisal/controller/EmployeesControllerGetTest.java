@@ -121,17 +121,18 @@ public class EmployeesControllerGetTest extends BaseControllerTest {
         when(employeeService.getLoggedInUser()).thenReturn(userMock);
     }
 
-
+    /**
+     * Tests {@link EmployeesController#employeesIdGet(Integer)}
+     *
+     * @throws Exception
+     */
     @Test
     @WithMockUser(USER_EMAIL)
-    public void employeesEmployeeIdGet_Successful() throws Exception {
-
+    public void employeesIdGet_Successful() throws Exception {
         // Set-up
-
-        when(employeeService.findById(userMock.getId())).thenReturn(Optional.of(userMock));
+        when(employeeService.getById(userMock.getId())).thenReturn(userMock);
 
         // Execution
-
         MvcResult result = mockMvc.perform(
                 get(String.format("%s/%d",
                         EMPLOYEES_URL,
@@ -145,24 +146,23 @@ public class EmployeesControllerGetTest extends BaseControllerTest {
         EmployeeDTO employeeDTO = mapper.readValue(resultString, EmployeeDTO.class);
 
         // Verification
-
-        verify(securityService, times(1)).canReadEmployee(anyInt(), anyInt());
-        verify(employeeService, times(1)).findById(userMock.getId());
-
+        verify(securityService, times(1)).canReadEmployee(any(Employee.class), any(Employee.class));
+        verify(employeeService, times(1)).getById(userMock.getId());
         entityDTOComparator.assertEqualsEmployee(userMock, employeeDTO);
     }
 
-
+    /**
+     * Tests {@link EmployeesController#employeesIdGet(Integer)}
+     *
+     * @throws Exception
+     */
     @Test
     @WithMockUser(USER_EMAIL)
-    public void employeesEmployeeIdGet_userNotFound() throws Exception {
-
+    public void employeesIdGet_NotFound() throws Exception {
         // Set-up
-
-        when(employeeService.findById(userMock.getId())).thenReturn(Optional.empty());
+        when(employeeService.getById(userMock.getId())).thenThrow(NotFoundException.class);
 
         // Execution
-
         MvcResult result = mockMvc.perform(
                 get(String.format("%s/%d",
                         EMPLOYEES_URL,
@@ -171,16 +171,11 @@ public class EmployeesControllerGetTest extends BaseControllerTest {
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNotFound())
                 .andReturn();
-
         String resultString = result.getResponse().getContentAsString();
         OperationResultDTO operationResultDTO = mapper.readValue(resultString, OperationResultDTO.class);
 
         // Verification
-
-        verify(securityService, times(1)).canReadEmployee(anyInt(), anyInt());
-
-        verify(employeeService, times(1)).findById(userMock.getId());
-
+        verify(employeeService, times(1)).getById(userMock.getId());
         assertEquals(operationResultDTO.getMessage(), Constants.ERROR);
     }
 
@@ -199,20 +194,27 @@ public class EmployeesControllerGetTest extends BaseControllerTest {
 
         // Verification
 
-        verify(securityService, never()).canReadEmployee(anyInt(), anyInt());
+        verify(securityService, never()).canReadEmployee(any(Employee.class), any(Employee.class));
 
         verify(employeeService, never()).findById(userMock.getId());
 
         assertTrue(StringUtils.isEmpty(resultString));
     }
 
+    /**
+     * Tests {@link EmployeesController#employeesIdRelationshipsGet(Integer, List, String, String, Boolean)}
+     *
+     * @throws Exception
+     */
     @Test
-    public void employeesEmployeeIdRelationshipsGet() throws Exception {
-        when(employeeService.findById(userMock.getId())).thenReturn(Optional.of(userMock));
+    public void employeesIdRelationshipsGet_Successful() throws Exception {
+        // Set up
+        when(employeeService.getById(userMock.getId())).thenReturn(userMock);
         doReturn(Stream.of(mockEmployeeRelationship()))
                 .when(employeeService).findCurrentRelationshipsBySourceEmployee(userMock,
                 RelationshipName.PEER, RelationshipName.LEAD, RelationshipName.OTHER);
 
+        // Execution
         MvcResult result = mockMvc.perform(
                 get(String.format("%s/%d/relationships",
                         EMPLOYEES_URL,
@@ -221,37 +223,40 @@ public class EmployeesControllerGetTest extends BaseControllerTest {
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andReturn();
-
         List<EmployeeRelationshipDTO> employeeRelationshipDTOList = Arrays.asList(mapper.readValue(result
                 .getResponse().getContentAsString(), EmployeeRelationshipDTO[].class));
 
+        // Verification
         assertNotNull(employeeRelationshipDTOList);
         assertFalse(employeeRelationshipDTOList.isEmpty());
-
-        verify(securityService, times(1)).canReadEmployee(anyInt(), anyInt());
-
+        verify(securityService, times(1)).canReadEmployee(any(Employee.class), any(Employee.class));
         verify(employeeService, times(1)).getLoggedInUser();
-        verify(employeeService, times(1)).findById(anyInt());
+        verify(employeeService, times(1)).getById(anyInt());
         verify(employeeService, times(1)).findCurrentRelationshipsBySourceEmployee(userMock,
                 RelationshipName.PEER, RelationshipName.LEAD, RelationshipName.OTHER);
-
         EmployeeRelationshipDTO employeeRelationshipDTO = employeeRelationshipDTOList.get(0);
         assertNotNull(employeeRelationshipDTO.getReferred());
         assertNotNull(employeeRelationshipDTO.getRelationship());
         assertNotNull(employeeRelationshipDTO.getStartDate());
         assertNull(employeeRelationshipDTO.getEndDate());
-
         EmployeeDTO reference = employeeRelationshipDTO.getReferred();
         entityDTOComparator.assertEqualsEmployee(mockMentor(), reference);
     }
 
+    /**
+     * Tests {@link EmployeesController#employeesIdRelationshipsGet(Integer, List, String, String, Boolean)}
+     *
+     * @throws Exception
+     */
     @Test
-    public void employeesEmployeeIdRelationshipsGet_emptyList() throws Exception {
-        when(employeeService.findById(userMock.getId())).thenReturn(Optional.of(userMock));
+    public void employeesIdRelationshipsGet_emptyList() throws Exception {
+        // set up
+        when(employeeService.getById(userMock.getId())).thenReturn(userMock);
         doReturn(Stream.empty())
                 .when(employeeService).findCurrentRelationshipsBySourceEmployee(userMock,
                 RelationshipName.PEER, RelationshipName.LEAD, RelationshipName.OTHER);
 
+        // Execution
         MvcResult result = mockMvc.perform(
                 get(String.format("%s/%d/relationships",
                         EMPLOYEES_URL,
@@ -260,25 +265,30 @@ public class EmployeesControllerGetTest extends BaseControllerTest {
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andReturn();
-
         List<EmployeeRelationshipDTO> employeeRelationshipDTOList = Arrays.asList(mapper.readValue(result
                 .getResponse().getContentAsString(), EmployeeRelationshipDTO[].class));
 
+        // Verification
         assertNotNull(employeeRelationshipDTOList);
         assertTrue(employeeRelationshipDTOList.isEmpty());
-
-        verify(securityService, times(1)).canReadEmployee(anyInt(), anyInt());
-
+        verify(securityService, times(1)).canReadEmployee(any(Employee.class), any(Employee.class));
         verify(employeeService, times(1)).getLoggedInUser();
-        verify(employeeService, times(1)).findById(anyInt());
+        verify(employeeService, times(1)).getById(anyInt());
         verify(employeeService, times(1)).findCurrentRelationshipsBySourceEmployee(userMock,
                 RelationshipName.PEER, RelationshipName.LEAD, RelationshipName.OTHER);
     }
 
+    /**
+     * Tests {@link EmployeesController#employeesIdRelationshipsGet(Integer, List, String, String, Boolean)}
+     *
+     * @throws Exception
+     */
     @Test
-    public void employeesEmployeeIdRelationshipsGet_requestedNotExists() throws Exception {
-        doThrow(NotFoundException.class).when(employeeService).findById(anyInt());
+    public void employeesIdRelationshipsGet_requestedNotExists() throws Exception {
+        // Set up
+        when(employeeService.getById(anyInt())).thenThrow(NotFoundException.class);
 
+        // Execution
         MvcResult result = mockMvc.perform(
                 get(String.format("%s/%d/relationships",
                         EMPLOYEES_URL,
@@ -287,19 +297,17 @@ public class EmployeesControllerGetTest extends BaseControllerTest {
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNotFound())
                 .andReturn();
-
         OperationResultDTO resultDTO = mapper.readValue(result.getResponse().getContentAsString(),
                 OperationResultDTO.class);
 
+        // Verification
         assertNotNull(resultDTO);
         assertEquals(Constants.ERROR, resultDTO.getMessage());
         assertNull(resultDTO.getData());
         assertNull(resultDTO.getErrors());
-
-        verify(securityService, times(1)).canReadEmployee(anyInt(), anyInt());
-
         verify(employeeService, times(1)).getLoggedInUser();
-        verify(employeeService, times(1)).findById(anyInt());
+        verify(employeeService, times(1)).getById(anyInt());
+        verify(securityService, never()).canReadEmployee(any(Employee.class), any(Employee.class));
         verify(employeeService, never()).findCurrentRelationshipsBySourceEmployee(userMock,
                 RelationshipName.PEER, RelationshipName.LEAD, RelationshipName.OTHER);
     }
@@ -317,7 +325,7 @@ public class EmployeesControllerGetTest extends BaseControllerTest {
         String response = result.getResponse().getContentAsString();
         assertTrue(StringUtils.isEmpty(response));
 
-        verify(securityService, never()).canReadEmployee(anyInt(), anyInt());
+        verify(securityService, never()).canReadEmployee(any(Employee.class), any(Employee.class));
 
         verify(employeeService, never()).getLoggedInUser();
         verify(employeeService, never()).findById(anyInt());
