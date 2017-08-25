@@ -30,7 +30,7 @@ public interface EmployeeService {
      * @param pageSize Page size to be returned by the repository.
      * @return A stream of found employees.
      */
-    Stream<Employee> findPagedByFirstNameOrLastName(String firstName, String lastName, int pageSize);
+    Stream<Employee> findPagedByFirstNameOrLastName(String firstName, String lastName, int pageNumber, int pageSize);
 
     /**
      * Given an email, looks up an employee and returns it.

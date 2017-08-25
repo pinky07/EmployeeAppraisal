@@ -372,9 +372,9 @@ paths:
           name: page
           type: integer
           required: false
-          default: 1
+          default: 0
           description: |
-            Page number. Defaults to 1.
+            Page number. Defaults to 0.
         - in: query
           name: size
           type: integer

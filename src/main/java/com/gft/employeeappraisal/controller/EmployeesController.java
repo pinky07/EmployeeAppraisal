@@ -71,18 +71,18 @@ public class EmployeesController implements EmployeeApi {
 
     @Override
     public ResponseEntity<List<EmployeeDTO>> employeesGet(
-            @RequestParam(value = "searchTerm", required = false) String name,
-            @RequestParam(value = "page", required = false, defaultValue = "1") Integer page,
+            @RequestParam(value = "searchTerm", required = false) String term,
+            @RequestParam(value = "page", required = false, defaultValue = "0") Integer page,
             @RequestParam(value = "size", required = false, defaultValue = "10") Integer size) {
 
-        logger.debug("GET endpoint: /employees/ with name: {} page: {} and size: {}", name, page, size);
+        logger.debug("GET endpoint: /employees/ with term: {} page: {} and size: {}", term, page, size);
 
         List<EmployeeDTO> employeeDTOList = new ArrayList<>();
 
-        if (!StringUtils.isEmpty(name.trim())) {
-            logger.debug("Calling search term {}", name);
+        if (term != null && !StringUtils.isEmpty(term.trim())) {
+            logger.debug("Calling search term {}", term);
             // This is an OR search, so term must be on both first and last name.
-            employeeService.findPagedByFirstNameOrLastName(name, name, size)
+            employeeService.findPagedByFirstNameOrLastName(term, term, page, size)
                 .forEach(e -> employeeDTOList.add(employeeDTOConverter.convert(e)));
         }
 

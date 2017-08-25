@@ -61,10 +61,10 @@ public class EmployeeServiceImpl implements EmployeeService {
      * @inheritDoc
      */
     @Override
-    public Stream<Employee> findPagedByFirstNameOrLastName(String firstName, String lastName, int pageSize) {
+    public Stream<Employee> findPagedByFirstNameOrLastName(String firstName, String lastName, int pageNumber, int pageSize) {
         return employeeRepository
                 .findByFirstNameContainsOrLastNameContainsAllIgnoreCase(firstName,
-                        lastName, new PageRequest(0, pageSize)).getContent().stream();
+                        lastName, new PageRequest(pageNumber, pageSize)).getContent().stream();
     }
 
     /**
