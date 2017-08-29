@@ -1,6 +1,6 @@
 spring:
   datasource:
-    url: jdbc:postgresql://10.200.202.122:5432/employeeappraisals
+    url: jdbc:postgresql://10.200.220.130:5432/employeeappraisals
     platform: postgres
     username: postgres
     password: postgres
@@ -13,8 +13,8 @@ security:
     enabled: false
 eureka:
   instance:
-    ipAddress: 10.200.202.122
+    ipAddress: 10.200.220.130
     preferIpAddress: true
   client:
     serviceUrl:
-      defaultZone: http://10.200.202.122:11001/eureka
+      defaultZone: http://10.200.220.130:11001/eureka
