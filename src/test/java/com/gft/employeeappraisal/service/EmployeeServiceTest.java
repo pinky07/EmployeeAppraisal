@@ -4,6 +4,7 @@ import com.gft.employeeappraisal.builder.model.EmployeeBuilder;
 import com.gft.employeeappraisal.builder.model.EmployeeRelationshipBuilder;
 import com.gft.employeeappraisal.builder.model.JobFamilyBuilder;
 import com.gft.employeeappraisal.builder.model.JobLevelBuilder;
+import com.gft.employeeappraisal.exception.NotFoundException;
 import com.gft.employeeappraisal.model.*;
 import com.gft.employeeappraisal.repository.*;
 import com.gft.employeeappraisal.service.impl.EmployeeServiceImpl;
@@ -123,6 +124,7 @@ public class EmployeeServiceTest {
         // Test employees
         this.employeeA = this.employeeRepository.saveAndFlush(new EmployeeBuilder()
                 .firstName("EmployeeA")
+                .lastName("LastNameA")
                 .jobLevel(jobLevel)
                 .applicationRole(userApplicationRole)
                 .buildWithDefaults());
@@ -253,6 +255,12 @@ public class EmployeeServiceTest {
         assertEquals(mentor, mentorRetrieved.get());
     }
 
+    @Test(expected = NotFoundException.class)
+    public void findCurrentMentorById_notFound() throws Exception {
+        // Execution
+        this.employeeService.findCurrentMentorById(-100);
+    }
+
     /**
      * Tests {@link EmployeeService#findCurrentMenteesById(int)}
      *
@@ -275,6 +283,12 @@ public class EmployeeServiceTest {
         assertEquals(mentee, menteesRetrieved.get(0));
     }
 
+    @Test(expected = NotFoundException.class)
+    public void findCurrentMenteesById_notFound() throws Exception {
+        // Execution
+        this.employeeService.findCurrentMenteesById(-100);
+    }
+
     /**
      * Tests {@link EmployeeService#findCurrentPeersById(int)}
      *
@@ -295,6 +309,31 @@ public class EmployeeServiceTest {
         // Verification
         assertTrue(peersRetrieved.size() == 1);
         assertEquals(employeeB, peersRetrieved.get(0));
+    }
+
+    @Test(expected = NotFoundException.class)
+    public void findCurrentPeersById_notFound() throws Exception {
+        // Execution
+        this.employeeService.findCurrentPeersById(-100);
+    }
+
+    @Test
+    public void findPagedByFirstNameOrLastName() throws Exception {
+        List<Employee> employees = employeeService
+                .findPagedByFirstNameOrLastName(employeeA.getFirstName(), employeeA.getLastName(),
+                        0, 10).collect(Collectors.toList());
+
+        assertTrue(employees.size() == 1);
+        assertEquals(employeeA, employees.get(0));
+    }
+
+    @Test
+    public void findPagedByFirstNameOrLastName_noResults() throws Exception {
+        List<Employee> employees = employeeService
+                .findPagedByFirstNameOrLastName("someunexistingname ", "someunexistingname",
+                        0, 10).collect(Collectors.toList());
+
+        assertTrue(employees.isEmpty());
     }
 
     /**

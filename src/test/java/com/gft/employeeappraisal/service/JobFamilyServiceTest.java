@@ -14,6 +14,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import javax.validation.ConstraintViolationException;
 import java.util.Optional;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 /**
@@ -31,9 +32,22 @@ public class JobFamilyServiceTest {
     // Class under test
     private JobFamilyService jobFamilyService;
 
+    private JobFamily jobFamily;
+
     @Before
     public void setUp() throws Exception {
         this.jobFamilyService = new JobFamilyServiceImpl(this.jobFamilyRepository);
+
+        this.jobFamily = this.jobFamilyRepository.saveAndFlush(new JobFamilyBuilder()
+                .buildWithDefaults());
+    }
+
+    @Test
+    public void findById() throws Exception {
+        Optional<JobFamily> retrieved = jobFamilyService.findById(jobFamily.getId());
+
+        assertTrue(retrieved.isPresent());
+        assertEquals(jobFamily, retrieved.get());
     }
 
     @Test

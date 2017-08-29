@@ -11,10 +11,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.*;
 
 /**
  * Service layer test for {@link RelationshipService}
@@ -53,5 +54,16 @@ public class RelationshipServiceTest {
     public void findByName() throws Exception {
         Relationship relationship = relationshipService.findByName(RelationshipName.OTHER);
         assertNotNull(relationship);
+    }
+
+    @Test
+    public void findByNames() throws Exception {
+        List<Relationship> relationships = relationshipService
+                .findRelationshipsByNames(RelationshipName.SELF, RelationshipName.OTHER)
+                .collect(Collectors.toList());
+
+        assertTrue(relationships.size() == 2);
+        assertTrue(relationships.contains(relationshipService.findByName(RelationshipName.OTHER)));
+        assertTrue(relationships.contains(relationshipService.findByName(RelationshipName.SELF)));
     }
 }

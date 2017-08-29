@@ -1,6 +1,8 @@
 package com.gft.employeeappraisal.service;
 
-import com.gft.employeeappraisal.repository.AppraisalRepository;
+import com.gft.employeeappraisal.builder.model.*;
+import com.gft.employeeappraisal.model.*;
+import com.gft.employeeappraisal.repository.*;
 import com.gft.employeeappraisal.service.impl.AppraisalServiceImpl;
 import org.junit.Before;
 import org.junit.Test;
@@ -10,7 +12,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import static org.junit.Assert.assertTrue;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
+import static org.junit.Assert.*;
+import static org.mockito.Mockito.when;
 
 /**
  * Service layer test for {@link AppraisalService}
@@ -24,6 +33,24 @@ public class AppraisalServiceTest {
     @Autowired
     private AppraisalRepository appraisalRepository;
 
+    @Autowired
+    private EmployeeRepository employeeRepository;
+
+    @Autowired
+    private ApplicationRoleRepository applicationRoleRepository;
+
+    @Autowired
+    private EmployeeRelationshipRepository employeeRelationshipRepository;
+
+    @Autowired
+    private JobFamilyRepository jobFamilyRepository;
+
+    @Autowired
+    private JobLevelRepository jobLevelRepository;
+
+    @Autowired
+    private RelationshipRepository relationshipRepository;
+
     @Mock
     private AppraisalXEvaluationFormXEmployeeRelationshipService appraisalXEvaluationFormXEmployeeRelationshipService;
 
@@ -33,17 +60,104 @@ public class AppraisalServiceTest {
     // Class under test
     private AppraisalService appraisalService;
 
+    private Appraisal appraisal;
+    private Employee employeeA;
+    private EmployeeRelationship selfEmployeeRelationship;
+    private Relationship selfRelationship;
+    private ApplicationRole userApplicationRole;
+    private JobFamily jobFamily;
+    private JobLevel jobLevel;
+
     @Before
     public void setUp() throws Exception {
         this.appraisalService = new AppraisalServiceImpl(
                 this.appraisalRepository,
                 this.appraisalXEvaluationFormXEmployeeRelationshipService,
                 this.employeeRelationshipService);
+
+        // Create an Application Role
+        this.userApplicationRole = this.applicationRoleRepository
+                .findByNameIgnoreCase(ApplicationRoleName.USER.name());
+
+        // Create a Job Family
+        this.jobFamily = this.jobFamilyRepository.saveAndFlush(new JobFamilyBuilder()
+                .buildWithDefaults());
+
+        // Create a Job Level
+        this.jobLevel = this.jobLevelRepository.saveAndFlush(new JobLevelBuilder()
+                .jobFamily(jobFamily)
+                .buildWithDefaults());
+
+        // Test employees
+        this.employeeA = this.employeeRepository.saveAndFlush(new EmployeeBuilder()
+                .firstName("EmployeeA")
+                .lastName("LastNameA")
+                .jobLevel(jobLevel)
+                .applicationRole(userApplicationRole)
+                .buildWithDefaults());
+
+        // Retrieve the Mentor Relationship
+        this.selfRelationship = this.relationshipRepository
+                .findByName(RelationshipName.SELF.name()).get();
+
+        // Create a SELF EmployeeRelationship
+        this.selfEmployeeRelationship = this.employeeRelationshipRepository
+                .saveAndFlush(new EmployeeRelationshipBuilder()
+                .sourceEmployee(employeeA)
+                .targetEmployee(employeeA)
+                .relationship(selfRelationship)
+                .buildWithDefaults());
+
+        this.appraisal = this.appraisalRepository.saveAndFlush(new AppraisalBuilder().buildWithDefaults());
     }
 
     @Test
     public void findById() throws Exception {
-        // TODO Implement this!
-        assertTrue("Hello World".length() == 11);
+        Optional<Appraisal> retrieved = appraisalService.findById(appraisal.getId());
+
+        assertTrue(retrieved.isPresent());
+        assertEquals(appraisal, retrieved.get());
+    }
+
+    @Test
+    public void findById_invalid() throws Exception {
+        assertEquals(Optional.empty(), appraisalService.findById(-100));
+    }
+
+    @Test
+    public void findEmployeeAppraisals() throws Exception {
+        when(employeeRelationshipService
+                .findBySourceEmployeeAndRelationships(employeeA, RelationshipName.SELF))
+                .thenReturn(Stream.of(selfEmployeeRelationship));
+        when(appraisalXEvaluationFormXEmployeeRelationshipService
+                .findByEmployeeRelationshipsAndEvaluationStatus(Collections.singletonList(selfEmployeeRelationship),
+                        null)).thenReturn(Stream.of(mockAEFER()));
+
+        List<Appraisal> retrieved = appraisalService
+                .findEmployeeAppraisals(employeeA, null).collect(Collectors.toList());
+
+        assertFalse(retrieved.isEmpty());
+        assertEquals(appraisal, retrieved.get(0));
+    }
+
+    @Test
+    public void saveAndFlush() throws Exception {
+        Appraisal appraisal = new AppraisalBuilder()
+                .name("newAppraisal")
+                .buildWithDefaults();
+
+        long beforeCount = appraisalRepository.count();
+        Optional<Appraisal> retrieved = appraisalService.saveAndFlush(appraisal);
+        long afterCount = appraisalRepository.count();
+
+        assertTrue(beforeCount + 1 == afterCount);
+        assertTrue(retrieved.isPresent());
+        assertEquals(appraisal, retrieved.get());
+    }
+
+    private AppraisalXEvaluationFormXEmployeeRelationship mockAEFER() {
+        return new AppraisalXEvaluationFormXEmployeeRelationshipBuilder()
+                .appraisalXEvaluationForm(new AppraisalXEvaluationFormBuilder()
+                .appraisal(appraisal).buildWithDefaults()).buildWithDefaults();
     }
 }
