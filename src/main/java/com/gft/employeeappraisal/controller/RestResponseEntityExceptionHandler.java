@@ -67,7 +67,7 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
     }
 
     /**
-     * Handles exceptions of type {@link AccessDeniedException} coming from the controllers that support it.
+     * Handles exceptions of type {@link InvalidException} coming from the controllers that support it.
      *
      * @param exception  Exception received from the controller.
      * @param webRequest Request that triggered the exception.

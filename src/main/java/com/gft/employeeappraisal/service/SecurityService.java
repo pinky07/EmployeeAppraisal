@@ -33,4 +33,11 @@ public interface SecurityService {
      * @param targetEmployee Target Employee of the new Relationship
      */
     void canWriteEmployeeRelationship(Employee writer, Employee sourceEmployee, Employee targetEmployee) throws AccessDeniedException;
+
+    /**
+     * We have a business limitation where an Employee cannot have more than 5 active references on a single moment
+     * in time. This method checks for such a limit.
+     * @param sourceEmployee Employee to check.
+     */
+    void checkRelationshipCount(Employee sourceEmployee) throws AccessDeniedException;
 }

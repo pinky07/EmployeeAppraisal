@@ -17,3 +17,7 @@ logging:
       netflix:
         discovery: ERROR
         eureka: ERROR
+com:
+  gft:
+    businessRules:
+      maxMenteeReferences: 5
