@@ -17,6 +17,7 @@ public class EvaluationForm {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(columnDefinition = "serial")
     private int id;
 
     @NotEmpty

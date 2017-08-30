@@ -16,6 +16,7 @@ public class EmployeeRelationship {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(columnDefinition = "serial")
     private int id;
 
     @NotNull

@@ -19,6 +19,7 @@ public class Appraisal {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(columnDefinition = "serial")
     private int id;
 
     @NotEmpty
