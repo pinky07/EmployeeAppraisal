@@ -21,11 +21,11 @@ public interface AppraisalService {
 	Optional<Appraisal> findById(int appraisalId);
 
     /**
-     * Given an employee and (optionally) an evaluation status, this method will return all the
+     * Given an employee and (optionally) an evaluation status, this method will return h2 the
      * Appraisals the employee has been a part of.
      *
      * @param employee         Employee to evaluate.
-     * @param evaluationStatus Evaluation type filter (PENDING, DONE). Pass {@code null} if all appraisals are desired.
+     * @param evaluationStatus Evaluation type filter (PENDING, DONE). Pass {@code null} if h2 appraisals are desired.
      * @return Stream set of matching appraisals.
      */
     Stream<Appraisal> findEmployeeAppraisals(Employee employee, EvaluationStatus evaluationStatus);
