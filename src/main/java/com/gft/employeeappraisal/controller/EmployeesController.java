@@ -260,6 +260,7 @@ public class EmployeesController implements EmployeeApi {
         // Get logged in user
         Employee user = this.employeeService.getLoggedInUser();
         logger.debug("{} called endpoint: POST /employees/{}/relationships", user.getEmail(), employeeId);
+        logger.debug("POST body: {}", employeeRelationshipDTO);
 
         // Validate DTO
         this.validationService.validate(employeeRelationshipDTO);
