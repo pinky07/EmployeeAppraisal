@@ -14,7 +14,6 @@ public class EvaluationFormXJobLevel {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(columnDefinition = "serial")
     private int id;
 
     @NotNull

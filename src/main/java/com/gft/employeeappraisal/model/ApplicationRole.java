@@ -18,7 +18,6 @@ public class ApplicationRole {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(columnDefinition = "serial")
     private int id;
 
     @OneToMany(mappedBy = "applicationRole", fetch = FetchType.LAZY)

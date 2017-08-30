@@ -17,7 +17,6 @@ public class ScoreType {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(columnDefinition = "serial")
     private int id;
 
     @NotEmpty
@@ -25,11 +24,11 @@ public class ScoreType {
     @Column(name = "definition", nullable = false, length = 40)
     private String definition;
 
-    @OneToMany(mappedBy = "scoreType", fetch = FetchType.LAZY)
-    private Set<ScoreValue> scoreValues;
+	@OneToMany(mappedBy = "scoreType", fetch = FetchType.LAZY)
+	private Set<ScoreValue> scoreValues;
 
-    @OneToMany(mappedBy = "scoreType", fetch = FetchType.LAZY)
-    private Set<EvaluationFormQuestion> evaluationFormQuestions;
+	@OneToMany(mappedBy = "scoreType", fetch = FetchType.LAZY)
+	private Set<EvaluationFormQuestion> evaluationFormQuestions;
 
     public int getId() {
         return id;
@@ -47,41 +46,41 @@ public class ScoreType {
         this.definition = definition;
     }
 
-    public Set<ScoreValue> getScoreValues() {
-        return scoreValues;
-    }
+	public Set<ScoreValue> getScoreValues() {
+		return scoreValues;
+	}
 
-    public void setScoreValues(Set<ScoreValue> scoreValues) {
-        this.scoreValues = scoreValues;
-    }
+	public void setScoreValues(Set<ScoreValue> scoreValues) {
+		this.scoreValues = scoreValues;
+	}
 
-    public Set<EvaluationFormQuestion> getEvaluationFormQuestions() {
-        return evaluationFormQuestions;
-    }
+	public Set<EvaluationFormQuestion> getEvaluationFormQuestions() {
+		return evaluationFormQuestions;
+	}
 
-    public void setEvaluationFormQuestions(Set<EvaluationFormQuestion> evaluationFormQuestions) {
-        this.evaluationFormQuestions = evaluationFormQuestions;
-    }
+	public void setEvaluationFormQuestions(Set<EvaluationFormQuestion> evaluationFormQuestions) {
+		this.evaluationFormQuestions = evaluationFormQuestions;
+	}
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
 
-        ScoreType scoreType = (ScoreType) o;
+		ScoreType scoreType = (ScoreType) o;
 
-        return getId() == scoreType.getId() &&
-                getDefinition().equals(scoreType.getDefinition());
-    }
+		return getId() == scoreType.getId() &&
+				getDefinition().equals(scoreType.getDefinition());
+	}
 
-    @Override
-    public int hashCode() {
-        int result = getId();
-        result = 31 * result + getDefinition().hashCode();
-        return result;
-    }
+	@Override
+	public int hashCode() {
+		int result = getId();
+		result = 31 * result + getDefinition().hashCode();
+		return result;
+	}
 
-    @Override
+	@Override
     public String toString() {
         return "ScoreType{" +
                 "id=" + id +
