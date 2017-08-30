@@ -8,6 +8,8 @@ import com.gft.employeeappraisal.model.RelationshipName;
 import com.gft.employeeappraisal.repository.EmployeeRelationshipRepository;
 import com.gft.employeeappraisal.service.EmployeeRelationshipService;
 import com.gft.employeeappraisal.service.RelationshipService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -26,6 +28,8 @@ import java.util.stream.Stream;
  */
 @Service
 public class EmployeeRelationshipServiceImpl implements EmployeeRelationshipService {
+
+    private final Logger logger = LoggerFactory.getLogger(EmployeeRelationshipServiceImpl.class);
 
     private EmployeeRelationshipRepository employeeRelationshipRepository;
     private RelationshipService relationshipService;
@@ -188,6 +192,7 @@ public class EmployeeRelationshipServiceImpl implements EmployeeRelationshipServ
         employeeRelationship.setRelationship(relationship);
         employeeRelationship.setStartDate(LocalDateTime.now());
         employeeRelationship.setEndDate(null);
+        logger.debug("EmployeeRelationship: {}", employeeRelationship);
         return this.saveAndFlush(employeeRelationship);
     }
 
