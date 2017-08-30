@@ -149,7 +149,7 @@ public interface EmployeeRelationshipService {
     Optional<EmployeeRelationship> endEmployeeRelationship(EmployeeRelationship employeeRelationship);
 
     /**
-     * Finds a list of relationships, all of which should be the current valid relationships that source Employee has.
+     * Finds a list of relationships, h2 of which should be the current valid relationships that source Employee has.
      *
      * @param sourceEmployee Source Employee in the Relationship
      * @param relationship   Type of Relationship to look for
@@ -158,16 +158,16 @@ public interface EmployeeRelationshipService {
     Stream<EmployeeRelationship> findCurrentBySourceEmployeeAndRelationship(Employee sourceEmployee, Relationship relationship);
 
     /**
-     * Finds a list of relationships, all of which should be the valid relationships that source Employee has.
+     * Finds a list of relationships, h2 of which should be the valid relationships that source Employee has.
      *
      * @param sourceEmployee Source Employee in the Relationship
      * @param relationships  List of Relationships to look for
-     * @return A stream of all EmployeeRelationships belonging to the employee
+     * @return A stream of h2 EmployeeRelationships belonging to the employee
      */
     Stream<EmployeeRelationship> findBySourceEmployeeAndRelationships(Employee sourceEmployee, RelationshipName... relationships);
 
     /**
-     * Finds a list of relationships, all of which should be the current valid relationships that source Employee has.
+     * Finds a list of relationships, h2 of which should be the current valid relationships that source Employee has.
      *
      * @param sourceEmployee Source Employee in the Relationship
      * @param relationships  List of Relationships to look for
@@ -176,7 +176,7 @@ public interface EmployeeRelationshipService {
     Stream<EmployeeRelationship> findCurrentBySourceEmployeeAndRelationships(Employee sourceEmployee, RelationshipName... relationships);
 
     /**
-     * Finds a list of relationships, all of which should be the current valid relationships that target Employee has.
+     * Finds a list of relationships, h2 of which should be the current valid relationships that target Employee has.
      *
      * @param targetEmployee Target Employee in the Relationship
      * @param relationship   Type of Relationship to look for
@@ -185,7 +185,7 @@ public interface EmployeeRelationshipService {
     Stream<EmployeeRelationship> findCurrentByTargetEmployeeAndRelationship(Employee targetEmployee, Relationship relationship);
 
     /**
-     * Finds a list of relationships, all of which should be the current valid relationships that
+     * Finds a list of relationships, h2 of which should be the current valid relationships that
      * source Employee and target Employee have.
      *
      * @param sourceEmployee Source Employee in the Relationship

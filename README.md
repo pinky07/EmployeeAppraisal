@@ -29,7 +29,7 @@ by adding ```@Controller``` classes that implement the interface. Eg:
 ```java
 @Controller
 public class PetController implements PetApi {
-// implement all PetApi methods
+h2
 }
 ```
 

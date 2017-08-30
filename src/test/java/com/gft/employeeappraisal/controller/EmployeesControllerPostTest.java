@@ -154,7 +154,7 @@ public class EmployeesControllerPostTest extends BaseControllerTest {
                 ).build());
     }
 
-    @SuppressWarnings("all")
+    @SuppressWarnings("h2")
     private Employee mockEmployee() {
         return new EmployeeBuilder()
                 .firstName("Manuel")

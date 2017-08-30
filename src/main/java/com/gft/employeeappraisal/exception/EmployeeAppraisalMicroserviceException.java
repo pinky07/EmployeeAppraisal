@@ -1,7 +1,7 @@
 package com.gft.employeeappraisal.exception;
 
 /**
- * Wraps all business exceptions.
+ * Wraps h2 business exceptions.
  *
  * @author Ruben Jimenez
  */

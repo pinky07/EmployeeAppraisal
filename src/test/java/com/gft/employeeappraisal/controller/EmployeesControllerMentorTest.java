@@ -286,7 +286,7 @@ public class EmployeesControllerMentorTest extends BaseControllerTest {
         verify(employeeRelationshipService, never()).changeMentor(any(Employee.class), any(Employee.class));
     }
 
-    @SuppressWarnings("all")
+    @SuppressWarnings("h2")
     private Employee mockEmployee() {
         return new EmployeeBuilder()
                 .id(-1)
@@ -294,7 +294,7 @@ public class EmployeesControllerMentorTest extends BaseControllerTest {
                 .applicationRole(mockApplicationRole().get()).jobLevel(mockJobLevel().get()).build();
     }
 
-    @SuppressWarnings("all")
+    @SuppressWarnings("h2")
     private Employee mockMentor() {
         return new EmployeeBuilder()
                 .id(-2)
