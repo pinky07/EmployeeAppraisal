@@ -3,6 +3,9 @@ spring:
     active: default,oauth2,local
   application:
     name: employeeAppraisals-v1
+  jackson:
+    serialization:
+      write_dates_as_timestamps: false
   jpa:
     hibernate:
       naming:
