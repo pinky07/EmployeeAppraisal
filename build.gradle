@@ -89,7 +89,7 @@ dependencies {
     compile('org.flywaydb:flyway-core:4.2.0')
 
     compile('com.h2database:h2') // Local development
-    compile group: 'org.postgresql', name: 'postgresql', version: '42.1.4' // CI DEV database
+    compile group: 'org.postgresql', name: 'postgresql', version: '42.1.3' // CI DEV database
 
     // Swagger
     compile('io.springfox:springfox-swagger2:2.7.0')
