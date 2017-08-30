@@ -270,6 +270,8 @@ public class EmployeesController implements EmployeeApi {
         // Find Referred employee who will be the Target Employee of the EmployeeRelationship
         Employee targetEmployee = this.employeeService.getById(employeeRelationshipDTO.getReferred().getId());
 
+        securityService.checkRelationshipCount(sourceEmployee);
+
         // Security check
         this.securityService.canWriteEmployeeRelationship(user, sourceEmployee, targetEmployee);
 
