@@ -119,7 +119,7 @@ removeImage 'com.gft.employee-appraisal' 'latest'
 
 # Stop db
 echo 'Removing previous db image and containers...'
-removeContainer 'postgres' 'alpine'
+removeContainer 'postgres' 'alpine' 
 # removeImage 'postgres' 'alpine'
 
 #
