@@ -10,7 +10,7 @@ import java.util.stream.Stream;
 public interface EvaluationFormXSectionXQuestionService {
 
     /**
-     * Returns h2 Evaluation Forms of an Employee for a given Appraisal process.
+     * Returns all Evaluation Forms of an Employee for a given Appraisal process.
      *
      * @param appraisal Appraisal process to which the Evaluation Forms belong to
      * @param employee  Employee that's being evaluated

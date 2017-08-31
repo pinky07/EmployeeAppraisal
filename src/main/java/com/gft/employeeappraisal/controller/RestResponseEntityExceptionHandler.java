@@ -84,7 +84,7 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
     }
 
     /**
-     * Handles h2 other exceptions (RuntimeExceptions) coming from the controllers that support it.
+     * Handles all other exceptions (RuntimeExceptions) coming from the controllers that support it.
      * Until Swagger Codegen supports exceptions thrown from the controller methods, this will be handled this way.
      *
      * @param exception  Exception received from the controller.

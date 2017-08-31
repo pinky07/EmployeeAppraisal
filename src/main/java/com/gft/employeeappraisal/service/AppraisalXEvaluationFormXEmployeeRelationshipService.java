@@ -40,7 +40,7 @@ public interface AppraisalXEvaluationFormXEmployeeRelationshipService {
      * @param appraisal {@link Appraisal} First lookup filter.
      * @param employee {@link Employee} Source employee filter.
      * @param relationshipNames One or many relationship types to look up for the employee: SELF, MENTOR, PEER, etc.
-     * @return A stream of {@link AppraisalXEvaluationFormXEmployeeRelationship} with h2 values found.
+     * @return A stream of {@link AppraisalXEvaluationFormXEmployeeRelationship} with all values found.
      */
     Stream<AppraisalXEvaluationFormXEmployeeRelationship> findByAppraisalAndEmployeeAndSourceRelationships(
             Appraisal appraisal,
@@ -51,7 +51,7 @@ public interface AppraisalXEvaluationFormXEmployeeRelationshipService {
     /**
      * TODO Add parameter documentation!
      *
-     * Returns h2 AppraisalXEvaluationFormXEmployeeRelationship given an specific Appraisal and Employee being
+     * Returns all AppraisalXEvaluationFormXEmployeeRelationship given an specific Appraisal and Employee being
      * evaluated
      */
     Stream<AppraisalXEvaluationFormXEmployeeRelationship> findByAppraisalAndEmployee(

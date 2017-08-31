@@ -91,6 +91,7 @@ public class SecurityServiceImpl implements SecurityService {
                 .findCurrentBySourceEmployeeAndRelationships(sourceEmployee,
                         RelationshipName.LEAD,
                         RelationshipName.PEER,
+                        RelationshipName.MENTOR,
                         RelationshipName.OTHER).count();
 
         if (currentEmployeeReferences >= maxMenteeReferences) {

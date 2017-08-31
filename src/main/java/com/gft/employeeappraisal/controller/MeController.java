@@ -38,9 +38,9 @@ public class MeController implements MeApi {
     }
 
     /**
-     * Obtains h2 the employee info (delimited on the EmployeeAppraisal microservice) for the authenticated user.
+     * Obtains all the employee info (delimited on the EmployeeAppraisal microservice) for the authenticated user.
      *
-     * @return {@link EmployeeDTO} Entity with h2 the information pertinent to the authenticated user.
+     * @return {@link EmployeeDTO} Entity with all the information pertinent to the authenticated user.
      */
     @Override
     public ResponseEntity<EmployeeDTO> meGet() {
@@ -73,9 +73,9 @@ public class MeController implements MeApi {
     }
 
     /**
-     * Obtains h2 the mentor info associated to the authenticated user.
+     * Obtains all the mentor info associated to the authenticated user.
      *
-     * @return {@link EmployeeDTO} Entity with h2 the information pertinent to the mentor of the authenticated user.
+     * @return {@link EmployeeDTO} Entity with all the information pertinent to the mentor of the authenticated user.
      */
     @Override
     public ResponseEntity<EmployeeDTO> meMentorGet() {
@@ -97,7 +97,7 @@ public class MeController implements MeApi {
     }
 
     /**
-     * Obtains h2 the peers associated to the authenticated user.
+     * Obtains all the peers associated to the authenticated user.
      *
      * @return {@link List<EmployeeDTO>} List of peers associated to the authenticated user.
      */
