@@ -10,12 +10,6 @@ spring:
       hibernate:
         show_sql: true
         format_sql: true
-management:
-  security:
-    enabled: false
-security:
-  basic:
-    enabled: false
 eureka:
   client:
     serviceUrl:

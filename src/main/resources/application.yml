@@ -13,6 +13,8 @@ spring:
       ddl-auto: validate
 server:
   port: 11004
+flyway:
+  locations: db/migration/{vendor}
 logging:
   level:
     com:
