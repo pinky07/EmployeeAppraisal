@@ -7,6 +7,7 @@ import com.gft.employeeappraisal.model.Relationship;
 import org.mockito.Mockito;
 
 import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 
 import static org.mockito.Mockito.when;
 
@@ -21,8 +22,8 @@ public class EmployeeRelationshipBuilder implements ObjectBuilder<EmployeeRelati
     private int id;
     private Employee sourceEmployee;
     private Employee targetEmployee;
-    private LocalDateTime startDate;
-    private LocalDateTime endDate;
+    private OffsetDateTime startDate;
+    private OffsetDateTime endDate;
     private Relationship relationship;
 
     private boolean idSet;
@@ -53,13 +54,13 @@ public class EmployeeRelationshipBuilder implements ObjectBuilder<EmployeeRelati
         return this;
     }
 
-    public EmployeeRelationshipBuilder startDate(LocalDateTime startDate) {
+    public EmployeeRelationshipBuilder startDate(OffsetDateTime startDate) {
         this.startDate = startDate;
         this.startDateSet = true;
         return this;
     }
 
-    public EmployeeRelationshipBuilder endDate(LocalDateTime endDate) {
+    public EmployeeRelationshipBuilder endDate(OffsetDateTime endDate) {
         this.endDate = endDate;
         this.endDateSet = true;
         return this;
@@ -89,7 +90,7 @@ public class EmployeeRelationshipBuilder implements ObjectBuilder<EmployeeRelati
         if (this.idSet) obj.setId(this.id);
         obj.setSourceEmployee(this.sourceEmployeeSet ? this.sourceEmployee : new EmployeeBuilder().buildWithDefaults());
         obj.setTargetEmployee(this.targetEmployeeSet ? this.targetEmployee : new EmployeeBuilder().buildWithDefaults());
-        obj.setStartDate(this.startDateSet ? this.startDate : LocalDateTime.now().minusDays(1));
+        obj.setStartDate(this.startDateSet ? this.startDate : OffsetDateTime.now().minusDays(1));
         obj.setEndDate(this.endDateSet ? this.endDate : null);
         obj.setRelationship(this.relationshipSet ? this.relationship : new RelationshipBuilder().buildWithDefaults());
         return obj;

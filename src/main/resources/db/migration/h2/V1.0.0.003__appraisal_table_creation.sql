@@ -2,8 +2,8 @@ create table Appraisal (
     id SERIAL PRIMARY KEY,
     name VARCHAR(40) NOT NULL,
     description VARCHAR(500) NOT NULL,
-    startDate TIMESTAMP NOT NULL,
-    endDate TIMESTAMP NOT NULL
+    startDate TIMESTAMP,
+    endDate TIMESTAMP
 );
 
 create table EvaluationForm (

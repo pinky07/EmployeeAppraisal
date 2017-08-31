@@ -6,9 +6,6 @@ import ma.glasnost.orika.CustomMapper;
 import ma.glasnost.orika.MappingContext;
 import org.springframework.stereotype.Component;
 
-import java.time.OffsetDateTime;
-import java.time.ZoneOffset;
-
 /**
  * Defines a mapping structure to be used by {@link AppraisalDTOConverter}.
  *
@@ -22,9 +19,9 @@ public class AppraisalDTOMapper extends CustomMapper<Appraisal, AppraisalDTO> {
         appraisalDTO.setId(appraisal.getId());
         appraisalDTO.setName(appraisal.getName());
         appraisalDTO.setDescription(appraisal.getDescription());
-        appraisalDTO.setStartDate(OffsetDateTime.of(appraisal.getStartDate(), ZoneOffset.UTC));
+        appraisalDTO.setStartDate(appraisal.getStartDate());
         if (appraisal.getEndDate() != null) {
-            appraisalDTO.setEndDate(OffsetDateTime.of(appraisal.getEndDate(), ZoneOffset.UTC));
+            appraisalDTO.setEndDate(appraisal.getEndDate());
         }
     }
 
@@ -35,9 +32,9 @@ public class AppraisalDTOMapper extends CustomMapper<Appraisal, AppraisalDTO> {
         }
         appraisal.setName(appraisalDTO.getName());
         appraisal.setDescription(appraisalDTO.getDescription());
-        appraisal.setStartDate(appraisalDTO.getStartDate().toLocalDateTime());
+        appraisal.setStartDate(appraisalDTO.getStartDate());
         if (appraisalDTO.getEndDate() != null) {
-            appraisal.setEndDate(appraisalDTO.getEndDate().toLocalDateTime());
+            appraisal.setEndDate(appraisalDTO.getEndDate());
         }
     }
 }
