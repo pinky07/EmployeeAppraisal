@@ -14,6 +14,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.*;
 
 import static org.junit.Assert.assertTrue;
@@ -118,24 +119,24 @@ public class AppraisalXEvaluationFormXEmployeeRelationshipRepositoryTest {
         a2bEmployeeRelationship = new EmployeeRelationshipBuilder()
                 .sourceEmployee(employeeA)
                 .targetEmployee(employeeB)
-                .startDate(LocalDateTime.now().minusDays(1))
-                .endDate(LocalDateTime.now().plusDays(1))
+                .startDate(OffsetDateTime.now().minusDays(1))
+                .endDate(OffsetDateTime.now().plusDays(1))
                 .relationship(peerRelationship)
                 .build();
 
         a2aEmployeeRelationship = new EmployeeRelationshipBuilder()
                 .sourceEmployee(employeeA)
                 .targetEmployee(employeeA)
-                .startDate(LocalDateTime.now().minusDays(1))
-                .endDate(LocalDateTime.now().plusDays(1))
+                .startDate(OffsetDateTime.now().minusDays(1))
+                .endDate(OffsetDateTime.now().plusDays(1))
                 .relationship(selfRelationship)
                 .build();
 
         appraisal = new AppraisalBuilder()
                 .name("Appraisal Test")
                 .description("Appraisal Test Description")
-                .startDate(LocalDateTime.now().minusDays(1))
-                .endDate(LocalDateTime.now().plusDays(1))
+                .startDate(OffsetDateTime.now().minusDays(1))
+                .endDate(OffsetDateTime.now().plusDays(1))
                 .build();
 
         evaluationForm = new EvaluationFormBuilder()

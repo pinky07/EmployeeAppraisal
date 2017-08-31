@@ -1,5 +1,5 @@
-
 -- Fix: After inserting seeds, PostgreSQL requires the next Id to be set "manually". Otherwise it would start at 1
+
 -- Only do this for tables to which you inserted values!
 
 -- Employee Tables

@@ -27,6 +27,7 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.util.StringUtils;
 
 import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -399,7 +400,7 @@ public class EmployeesControllerRelationshipsTest extends BaseControllerTest {
                 .targetEmployee(mentorMock)
                 .relationship(testRelationship())
                 .startDate(LocalDateTime.now())
-                .endDate(withEndDate ? LocalDateTime.now() : null)
+                .endDate(withEndDate ? OffsetDateTime.now() : null)
                 .build();
     }
 

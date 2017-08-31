@@ -262,7 +262,7 @@ public class MeControllerTest extends BaseControllerTest {
 		verify(employeeService, times(1)).findCurrentPeersById(anyInt());
 	}
 
-	@SuppressWarnings("h2")
+	@SuppressWarnings("all")
 	private Employee mockEmployee() {
 		return new EmployeeBuilder()
 				.id(-1)
@@ -275,7 +275,7 @@ public class MeControllerTest extends BaseControllerTest {
 				.build();
 	}
 
-	@SuppressWarnings("h2")
+	@SuppressWarnings("all")
 	private Employee mockMentor() {
 		return new EmployeeBuilder()
 				.id(-2)

@@ -42,8 +42,8 @@ create table EmployeeRelationship (
     sourceEmployeeId int,
     targetEmployeeId int,
     relationshipId int,
-    startDate TIMESTAMP,
-    endDate TIMESTAMP,
+    startDate TIMESTAMP WITH TIME ZONE,
+    endDate TIMESTAMP WITH TIME ZONE,
     FOREIGN KEY (sourceEmployeeId) REFERENCES Employee(id),
     FOREIGN KEY (targetEmployeeId) REFERENCES Employee(id),
     FOREIGN KEY (relationshipId) REFERENCES Relationship(id)

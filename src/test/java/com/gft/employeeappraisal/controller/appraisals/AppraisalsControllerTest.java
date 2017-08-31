@@ -23,6 +23,7 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.util.StringUtils;
 
 import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -501,7 +502,7 @@ public class AppraisalsControllerTest extends BaseControllerTest {
 		return new AppraisalBuilder()
 				.name("Mock Appraisal")
 				.description("Mock Appraisal")
-				.startDate(LocalDateTime.now())
+				.startDate(OffsetDateTime.now())
 				.build();
 	}
 

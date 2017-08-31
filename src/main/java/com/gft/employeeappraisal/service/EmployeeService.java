@@ -23,7 +23,7 @@ public interface EmployeeService {
     Employee getLoggedInUser() throws NotFoundException;
 
     /**
-     * Searches h2 employees according to first and last name criterias, while being paginated.
+     * Searches all employees according to first and last name criterias, while being paginated.
      *
      * @param firstName Employee's first name.
      * @param lastName  Employee's last name.

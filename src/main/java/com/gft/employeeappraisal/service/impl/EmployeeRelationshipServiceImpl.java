@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
@@ -186,7 +187,7 @@ public class EmployeeRelationshipServiceImpl implements EmployeeRelationshipServ
         employeeRelationship.setSourceEmployee(sourceEmployee);
         employeeRelationship.setTargetEmployee(targetEmployee);
         employeeRelationship.setRelationship(relationship);
-        employeeRelationship.setStartDate(LocalDateTime.now());
+        employeeRelationship.setStartDate(OffsetDateTime.now());
         employeeRelationship.setEndDate(null);
         return this.saveAndFlush(employeeRelationship);
     }
@@ -196,7 +197,7 @@ public class EmployeeRelationshipServiceImpl implements EmployeeRelationshipServ
      */
     @Override
     public Optional<EmployeeRelationship> endEmployeeRelationship(EmployeeRelationship employeeRelationship) {
-        employeeRelationship.setEndDate(LocalDateTime.now());
+        employeeRelationship.setEndDate(OffsetDateTime.now());
         return this.saveAndFlush(employeeRelationship);
     }
 

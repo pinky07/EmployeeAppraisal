@@ -5,7 +5,7 @@ import org.hibernate.validator.constraints.NotEmpty;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.Set;
 
 /**
@@ -33,11 +33,11 @@ public class Appraisal {
 
     @NotNull
     @Column(name = "startDate", columnDefinition = "TIMESTAMP", nullable = false)
-    private LocalDateTime startDate;
+    private OffsetDateTime startDate;
 
     @NotNull
     @Column(name = "endDate", columnDefinition = "TIMESTAMP", nullable = false)
-    private LocalDateTime endDate;
+    private OffsetDateTime endDate;
 
     @OneToMany(mappedBy = "appraisal", fetch = FetchType.LAZY)
     private Set<AppraisalXEvaluationForm> appraisalXEvaluationForms;
@@ -66,19 +66,19 @@ public class Appraisal {
         this.description = description;
     }
 
-    public LocalDateTime getStartDate() {
+    public OffsetDateTime getStartDate() {
         return startDate;
     }
 
-    public void setStartDate(LocalDateTime startDate) {
+    public void setStartDate(OffsetDateTime startDate) {
         this.startDate = startDate;
     }
 
-    public LocalDateTime getEndDate() {
+    public OffsetDateTime getEndDate() {
         return endDate;
     }
 
-    public void setEndDate(LocalDateTime endDate) {
+    public void setEndDate(OffsetDateTime endDate) {
         this.endDate = endDate;
     }
 

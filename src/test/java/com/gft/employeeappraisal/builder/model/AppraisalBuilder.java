@@ -4,6 +4,7 @@ import com.gft.employeeappraisal.builder.ObjectBuilder;
 import com.gft.employeeappraisal.model.Appraisal;
 
 import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 
 /**
  * Builder object for the {@link Appraisal} object.
@@ -15,8 +16,8 @@ public class AppraisalBuilder implements ObjectBuilder<Appraisal> {
     private int id;
     private String name;
     private String description;
-    private LocalDateTime startDate;
-    private LocalDateTime endDate;
+    private OffsetDateTime startDate;
+    private OffsetDateTime endDate;
 
     private boolean idSet;
     private boolean nameSet;
@@ -45,13 +46,13 @@ public class AppraisalBuilder implements ObjectBuilder<Appraisal> {
         return this;
     }
 
-    public AppraisalBuilder startDate(LocalDateTime startDate) {
+    public AppraisalBuilder startDate(OffsetDateTime startDate) {
         this.startDate = startDate;
         this.startDateSet = true;
         return this;
     }
 
-    public AppraisalBuilder endDate(LocalDateTime endDate) {
+    public AppraisalBuilder endDate(OffsetDateTime endDate) {
         this.endDate = endDate;
         this.endDateSet = true;
         return this;
@@ -74,8 +75,8 @@ public class AppraisalBuilder implements ObjectBuilder<Appraisal> {
         if (this.idSet) obj.setId(this.id);
         obj.setName(this.nameSet ? this.name : "Name");
         obj.setDescription(this.descriptionSet ? this.description : "Description");
-        obj.setStartDate(this.startDateSet ? this.startDate : LocalDateTime.now().minusDays(1));
-        obj.setEndDate(this.endDateSet ? this.endDate : LocalDateTime.now().plusDays(1));
+        obj.setStartDate(this.startDateSet ? this.startDate : OffsetDateTime.now().minusDays(1));
+        obj.setEndDate(this.endDateSet ? this.endDate : OffsetDateTime.now().plusDays(1));
         return obj;
     }
 }

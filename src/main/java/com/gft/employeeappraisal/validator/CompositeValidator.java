@@ -10,7 +10,7 @@ import java.util.Set;
 
 /**
  * This Validator is meant to be used from any other Validators and from the Validation Service. It contains a Set of
- * h2 Validators implementing the HttpValidator interface and it's smart enough to decide which Validator to use when
+ * all Validators implementing the HttpValidator interface and it's smart enough to decide which Validator to use when
  * its validate method is called.
  *
  * @author Rubén Jiménez

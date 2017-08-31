@@ -1,8 +1,6 @@
 package com.gft.employeeappraisal.converter.employeerelationship;
 
-import com.gft.employeeappraisal.model.Employee;
 import com.gft.employeeappraisal.model.EmployeeRelationship;
-import com.gft.employeeappraisal.model.Relationship;
 import com.gft.employeeappraisal.service.EmployeeService;
 import com.gft.employeeappraisal.service.RelationshipService;
 import com.gft.swagger.employees.model.EmployeeDTO;
@@ -13,8 +11,6 @@ import ma.glasnost.orika.MappingContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.time.OffsetDateTime;
-import java.time.ZoneOffset;
 import java.util.Objects;
 
 /**
@@ -40,9 +36,9 @@ public class EmployeeRelationshipDTOMapper extends CustomMapper<EmployeeRelation
     public void mapAtoB(EmployeeRelationship employeeRelationship, EmployeeRelationshipDTO employeeRelationshipDTO,
                         MappingContext context) {
         employeeRelationshipDTO.setId(employeeRelationship.getId());
-        employeeRelationshipDTO.setStartDate(OffsetDateTime.of(employeeRelationship.getStartDate(), ZoneOffset.UTC));
+        employeeRelationshipDTO.setStartDate(employeeRelationship.getStartDate());
         if (employeeRelationship.getEndDate() != null) {
-            employeeRelationshipDTO.setEndDate(OffsetDateTime.of(employeeRelationship.getEndDate(), ZoneOffset.UTC));
+            employeeRelationshipDTO.setEndDate(employeeRelationship.getEndDate());
         }
         employeeRelationshipDTO.setReferred(mapperFacade.map(employeeRelationship.getTargetEmployee(),
                 EmployeeDTO.class));
@@ -57,10 +53,10 @@ public class EmployeeRelationshipDTOMapper extends CustomMapper<EmployeeRelation
             employeeRelationship.setId(employeeRelationshipDTO.getId());
         }
         if (Objects.nonNull(employeeRelationshipDTO.getStartDate())) {
-            employeeRelationship.setStartDate(employeeRelationshipDTO.getStartDate().toLocalDateTime());
+            employeeRelationship.setStartDate(employeeRelationshipDTO.getStartDate());
         }
         if (Objects.nonNull(employeeRelationshipDTO.getEndDate())) {
-            employeeRelationship.setEndDate(employeeRelationshipDTO.getEndDate().toLocalDateTime());
+            employeeRelationship.setEndDate(employeeRelationshipDTO.getEndDate());
         }
         employeeRelationship.setRelationship(this.relationshipService.getById(employeeRelationshipDTO.getRelationship().getId()));
         // Remember that the DTO doesn't have a Source Employee equivalent field.
