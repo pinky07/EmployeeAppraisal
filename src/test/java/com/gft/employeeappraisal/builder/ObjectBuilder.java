@@ -22,12 +22,4 @@ public interface ObjectBuilder<T> {
      * @return New Object
      */
     T buildWithDefaults();
-
-    /**
-     * Returns a mock of the Object that returns the values according to the setter methods called.
-     *
-     * @return New Mock
-     */
-    @Deprecated
-    T buildMock();
 }

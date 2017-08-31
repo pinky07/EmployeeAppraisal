@@ -5,11 +5,8 @@ import com.gft.employeeappraisal.builder.helper.GftIdentifierGenerator;
 import com.gft.employeeappraisal.model.ApplicationRole;
 import com.gft.employeeappraisal.model.Employee;
 import com.gft.employeeappraisal.model.JobLevel;
-import org.mockito.Mockito;
 
 import java.util.UUID;
-
-import static org.mockito.Mockito.when;
 
 /**
  * Builder object for the {@link Employee} object.
@@ -104,18 +101,5 @@ public class EmployeeBuilder implements ObjectBuilder<Employee> {
         obj.setApplicationRole(this.applicationRoleSet ? this.applicationRole : new ApplicationRoleBuilder().buildWithDefaults());
         obj.setJobLevel(this.jobLevelSet ? this.jobLevel : new JobLevelBuilder().buildWithDefaults());
         return obj;
-    }
-
-    @Override
-    public Employee buildMock() {
-        Employee mock = Mockito.mock(Employee.class);
-        when(mock.getId()).thenReturn(this.id);
-        when(mock.getFirstName()).thenReturn(this.firstName);
-        when(mock.getLastName()).thenReturn(this.lastName);
-        when(mock.getGftIdentifier()).thenReturn(this.gftIdentifier);
-        when(mock.getEmail()).thenReturn(this.email);
-        when(mock.getApplicationRole()).thenReturn(this.applicationRole);
-        when(mock.getJobLevel()).thenReturn(this.jobLevel);
-        return mock;
     }
 }

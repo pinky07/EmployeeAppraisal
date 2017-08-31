@@ -2,9 +2,6 @@ package com.gft.employeeappraisal.builder.model;
 
 import com.gft.employeeappraisal.builder.ObjectBuilder;
 import com.gft.employeeappraisal.model.JobFamily;
-import org.mockito.Mockito;
-
-import static org.mockito.Mockito.when;
 
 /**
  * Builder object for the {@link JobFamily} object.
@@ -59,14 +56,5 @@ public class JobFamilyBuilder implements ObjectBuilder<JobFamily> {
         obj.setName(this.nameSet ? this.name : "Name");
         obj.setDescription(this.descriptionSet ? this.description : "Description");
         return obj;
-    }
-
-    @Override
-    public JobFamily buildMock() {
-        JobFamily mock = Mockito.mock(JobFamily.class);
-        when(mock.getId()).thenReturn(this.id);
-        when(mock.getName()).thenReturn(this.name);
-        when(mock.getDescription()).thenReturn(this.description);
-        return mock;
     }
 }

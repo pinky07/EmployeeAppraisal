@@ -240,7 +240,8 @@ public class EmployeesController implements EmployeeApi {
                     employeeRelationshipId));
 
         // Security check
-        this.securityService.canWriteEmployeeRelationship(user, employeeRelationship.getSourceEmployee(), employeeRelationship.getTargetEmployee());
+        this.securityService.canWriteEmployeeRelationship(user, employeeRelationship.getSourceEmployee(),
+                employeeRelationship.getTargetEmployee());
 
         // End EmployeeRelationship
         // TODO Define what type of Exception should this throw?

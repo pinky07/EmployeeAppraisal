@@ -2,11 +2,8 @@ package com.gft.employeeappraisal.builder.model;
 
 import com.gft.employeeappraisal.builder.ObjectBuilder;
 import com.gft.employeeappraisal.model.Appraisal;
-import org.mockito.Mockito;
 
 import java.time.LocalDateTime;
-
-import static org.mockito.Mockito.when;
 
 /**
  * Builder object for the {@link Appraisal} object.
@@ -80,16 +77,5 @@ public class AppraisalBuilder implements ObjectBuilder<Appraisal> {
         obj.setStartDate(this.startDateSet ? this.startDate : LocalDateTime.now().minusDays(1));
         obj.setEndDate(this.endDateSet ? this.endDate : LocalDateTime.now().plusDays(1));
         return obj;
-    }
-
-    @Override
-    public Appraisal buildMock() {
-        Appraisal mock = Mockito.mock(Appraisal.class);
-        when(mock.getId()).thenReturn(this.id);
-        when(mock.getName()).thenReturn(this.name);
-        when(mock.getDescription()).thenReturn(this.description);
-        when(mock.getStartDate()).thenReturn(this.startDate);
-        when(mock.getEndDate()).thenReturn(this.endDate);
-        return mock;
     }
 }

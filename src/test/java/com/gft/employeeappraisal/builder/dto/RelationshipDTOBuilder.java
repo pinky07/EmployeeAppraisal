@@ -4,8 +4,6 @@ import com.gft.employeeappraisal.builder.ObjectBuilder;
 import com.gft.swagger.employees.model.RelationshipDTO;
 import org.apache.commons.lang.NotImplementedException;
 
-import static org.mockito.Mockito.when;
-
 /**
  * Builder object for the {@link RelationshipDTO} object.
  *
@@ -50,12 +48,4 @@ public class RelationshipDTOBuilder implements ObjectBuilder<RelationshipDTO> {
         throw new NotImplementedException();
     }
 
-    @Override
-    public RelationshipDTO buildMock() {
-        RelationshipDTO mock = new RelationshipDTO();
-        when(mock.getId()).thenReturn(this.id);
-        when(mock.getName()).thenReturn(this.name);
-        when(mock.getDescription()).thenReturn(this.description);
-        return mock;
-    }
 }

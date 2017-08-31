@@ -3,9 +3,6 @@ package com.gft.employeeappraisal.builder.dto;
 import com.gft.employeeappraisal.builder.ObjectBuilder;
 import com.gft.swagger.employees.model.ApplicationRoleDTO;
 import org.apache.commons.lang.NotImplementedException;
-import org.mockito.Mockito;
-
-import static org.mockito.Mockito.when;
 
 /**
  * Builder object for the {@link ApplicationRoleDTO} object.
@@ -49,14 +46,5 @@ public class ApplicationRoleDTOBuilder implements ObjectBuilder<ApplicationRoleD
     @Override
     public ApplicationRoleDTO buildWithDefaults() {
         throw new NotImplementedException();
-    }
-
-    @Override
-    public ApplicationRoleDTO buildMock() {
-        ApplicationRoleDTO mock = Mockito.mock(ApplicationRoleDTO.class);
-        when(mock.getId()).thenReturn(this.id);
-        when(mock.getName()).thenReturn(this.name);
-        when(mock.getDescription()).thenReturn(this.description);
-        return mock;
     }
 }

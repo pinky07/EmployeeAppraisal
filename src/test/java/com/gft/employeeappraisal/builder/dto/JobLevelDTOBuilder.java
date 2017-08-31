@@ -4,9 +4,6 @@ import com.gft.employeeappraisal.builder.ObjectBuilder;
 import com.gft.swagger.employees.model.JobFamilyDTO;
 import com.gft.swagger.employees.model.JobLevelDTO;
 import org.apache.commons.lang.NotImplementedException;
-import org.mockito.Mockito;
-
-import static org.mockito.Mockito.when;
 
 /**
  * Builder object for the {@link JobLevelDTO} object.
@@ -64,16 +61,5 @@ public class JobLevelDTOBuilder implements ObjectBuilder<JobLevelDTO> {
     @Override
     public JobLevelDTO buildWithDefaults() {
         throw new NotImplementedException();
-    }
-
-    @Override
-    public JobLevelDTO buildMock() {
-        JobLevelDTO mock = Mockito.mock(JobLevelDTO.class);
-        when(mock.getId()).thenReturn(this.id);
-        when(mock.getJobFamily()).thenReturn(this.jobFamilyDTO);
-        when(mock.getName()).thenReturn(this.name);
-        when(mock.getDescription()).thenReturn(this.description);
-        when(mock.getExpertise()).thenReturn(this.expertise);
-        return mock;
     }
 }

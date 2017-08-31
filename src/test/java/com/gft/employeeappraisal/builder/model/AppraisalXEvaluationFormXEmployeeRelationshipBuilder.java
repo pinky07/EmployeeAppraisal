@@ -5,9 +5,6 @@ import com.gft.employeeappraisal.model.AppraisalXEvaluationForm;
 import com.gft.employeeappraisal.model.AppraisalXEvaluationFormXEmployeeRelationship;
 import com.gft.employeeappraisal.model.EmployeeRelationship;
 import com.gft.employeeappraisal.model.EvaluationStatus;
-import org.mockito.Mockito;
-
-import static org.mockito.Mockito.when;
 
 /**
  * TODO: Document this!
@@ -70,15 +67,5 @@ public class AppraisalXEvaluationFormXEmployeeRelationshipBuilder implements Obj
                 new EmployeeRelationshipBuilder().buildWithDefaults());
         obj.setEvaluationStatus(this.evaluationStatusSet ? this.evaluationStatus : EvaluationStatus.PENDING);
         return obj;
-    }
-
-    @Override
-    public AppraisalXEvaluationFormXEmployeeRelationship buildMock() {
-        AppraisalXEvaluationFormXEmployeeRelationship mock = Mockito.mock(AppraisalXEvaluationFormXEmployeeRelationship.class);
-        when(mock.getId()).thenReturn(this.id);
-        when(mock.getAppraisalXEvaluationForm()).thenReturn(this.appraisalXEvaluationForm);
-        when(mock.getEmployeeRelationship()).thenReturn(this.employeeRelationship);
-        when(mock.getEvaluationStatus()).thenReturn(this.evaluationStatus);
-        return mock;
     }
 }

@@ -4,9 +4,6 @@ import com.gft.employeeappraisal.builder.ObjectBuilder;
 import com.gft.employeeappraisal.model.Appraisal;
 import com.gft.employeeappraisal.model.AppraisalXEvaluationForm;
 import com.gft.employeeappraisal.model.EvaluationForm;
-import org.mockito.Mockito;
-
-import static org.mockito.Mockito.when;
 
 /**
  * Builder object for the {@link AppraisalXEvaluationForm} object.
@@ -57,14 +54,5 @@ public class AppraisalXEvaluationFormBuilder implements ObjectBuilder<AppraisalX
         obj.setAppraisal(this.appraisalSet ? this.appraisal : new AppraisalBuilder().buildWithDefaults());
         obj.setEvaluationForm(this.evaluationFormSet ? this.evaluationForm : new EvaluationFormBuilder().buildWithDefaults());
         return obj;
-    }
-
-    @Override
-    public AppraisalXEvaluationForm buildMock() {
-        AppraisalXEvaluationForm mock = Mockito.mock(AppraisalXEvaluationForm.class);
-        when(mock.getId()).thenReturn(this.id);
-        when(mock.getAppraisal()).thenReturn(this.appraisal);
-        when(mock.getEvaluationForm()).thenReturn(this.evaluationForm);
-        return mock;
     }
 }

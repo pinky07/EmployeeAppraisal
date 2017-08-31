@@ -4,11 +4,8 @@ import com.gft.employeeappraisal.builder.ObjectBuilder;
 import com.gft.employeeappraisal.model.Employee;
 import com.gft.employeeappraisal.model.EmployeeRelationship;
 import com.gft.employeeappraisal.model.Relationship;
-import org.mockito.Mockito;
 
 import java.time.LocalDateTime;
-
-import static org.mockito.Mockito.when;
 
 /**
  * Builder object for the {@link EmployeeRelationship} object.
@@ -93,17 +90,5 @@ public class EmployeeRelationshipBuilder implements ObjectBuilder<EmployeeRelati
         obj.setEndDate(this.endDateSet ? this.endDate : null);
         obj.setRelationship(this.relationshipSet ? this.relationship : new RelationshipBuilder().buildWithDefaults());
         return obj;
-    }
-
-    @Override
-    public EmployeeRelationship buildMock() {
-        EmployeeRelationship mock = Mockito.mock(EmployeeRelationship.class);
-        when(mock.getId()).thenReturn(this.id);
-        when(mock.getSourceEmployee()).thenReturn(this.sourceEmployee);
-        when(mock.getTargetEmployee()).thenReturn(this.targetEmployee);
-        when(mock.getStartDate()).thenReturn(this.startDate);
-        when(mock.getEndDate()).thenReturn(this.endDate);
-        when(mock.getRelationship()).thenReturn(this.relationship);
-        return mock;
     }
 }

@@ -3,11 +3,8 @@ package com.gft.employeeappraisal.builder.dto;
 import com.gft.employeeappraisal.builder.ObjectBuilder;
 import com.gft.swagger.employees.model.AppraisalDTO;
 import org.apache.commons.lang.NotImplementedException;
-import org.mockito.Mockito;
 
 import java.time.OffsetDateTime;
-
-import static org.mockito.Mockito.when;
 
 /**
  * Builder object for the {@link AppraisalDTO} object.
@@ -63,17 +60,5 @@ public class AppraisalDTOBuilder implements ObjectBuilder<AppraisalDTO> {
 	@Override
 	public AppraisalDTO buildWithDefaults() {
 		throw new NotImplementedException();
-	}
-
-
-	@Override
-	public AppraisalDTO buildMock() {
-		AppraisalDTO mock = Mockito.mock(AppraisalDTO.class);
-		when(mock.getId()).thenReturn(this.id);
-		when(mock.getName()).thenReturn(this.name);
-		when(mock.getDescription()).thenReturn(this.description);
-		when(mock.getStartDate()).thenReturn(this.startDate);
-		when(mock.getEndDate()).thenReturn(this.endDate);
-		return mock;
 	}
 }

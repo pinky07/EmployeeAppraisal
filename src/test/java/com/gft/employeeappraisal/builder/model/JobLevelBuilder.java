@@ -3,9 +3,6 @@ package com.gft.employeeappraisal.builder.model;
 import com.gft.employeeappraisal.builder.ObjectBuilder;
 import com.gft.employeeappraisal.model.JobFamily;
 import com.gft.employeeappraisal.model.JobLevel;
-import org.mockito.Mockito;
-
-import static org.mockito.Mockito.when;
 
 /**
  * Builder object for the {@link JobLevel} object.
@@ -80,16 +77,5 @@ public class JobLevelBuilder implements ObjectBuilder<JobLevel> {
         obj.setExpertise(this.expertiseSet ? this.expertise : "Expertise");
         obj.setJobFamily(this.jobFamilySet ? this.jobFamily : new JobFamilyBuilder().buildWithDefaults());
         return obj;
-    }
-
-    @Override
-    public JobLevel buildMock() {
-        JobLevel mock = Mockito.mock(JobLevel.class);
-        when(mock.getId()).thenReturn(this.id);
-        when(mock.getName()).thenReturn(this.name);
-        when(mock.getDescription()).thenReturn(this.description);
-        when(mock.getExpertise()).thenReturn(this.expertise);
-        when(mock.getJobFamily()).thenReturn(this.jobFamily);
-        return mock;
     }
 }

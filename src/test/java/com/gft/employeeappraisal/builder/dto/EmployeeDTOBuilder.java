@@ -5,9 +5,6 @@ import com.gft.swagger.employees.model.ApplicationRoleDTO;
 import com.gft.swagger.employees.model.EmployeeDTO;
 import com.gft.swagger.employees.model.JobLevelDTO;
 import org.apache.commons.lang.NotImplementedException;
-import org.mockito.Mockito;
-
-import static org.mockito.Mockito.when;
 
 /**
  * Builder object for the {@link EmployeeDTO} object.
@@ -100,21 +97,5 @@ public class EmployeeDTOBuilder implements ObjectBuilder<EmployeeDTO> {
     @Override
     public EmployeeDTO buildWithDefaults() {
         throw new NotImplementedException();
-    }
-
-    @Override
-    public EmployeeDTO buildMock() {
-        EmployeeDTO mock = Mockito.mock(EmployeeDTO.class);
-        when(mock.getId()).thenReturn(this.id);
-        when(mock.getFirstName()).thenReturn(this.firstName);
-        when(mock.getLastName()).thenReturn(this.lastName);
-        when(mock.getEmail()).thenReturn(this.email);
-        when(mock.getGftIdentifier()).thenReturn(this.gftIdentifier);
-        when(mock.getIsAdmin()).thenReturn(this.isAdmin);
-        when(mock.getIsPeer()).thenReturn(this.isPeer);
-        when(mock.getIsMentor()).thenReturn(this.isMentor);
-        when(mock.getApplicationRole()).thenReturn(this.applicationRoleDTO);
-        when(mock.getJobLevel()).thenReturn(this.jobLevelDTO);
-        return mock;
     }
 }

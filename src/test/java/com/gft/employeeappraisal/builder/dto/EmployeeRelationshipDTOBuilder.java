@@ -5,11 +5,8 @@ import com.gft.swagger.employees.model.EmployeeDTO;
 import com.gft.swagger.employees.model.EmployeeRelationshipDTO;
 import com.gft.swagger.employees.model.RelationshipDTO;
 import org.apache.commons.lang.NotImplementedException;
-import org.mockito.Mockito;
 
 import java.time.OffsetDateTime;
-
-import static org.mockito.Mockito.when;
 
 /**
  * Builder object for the {@link EmployeeRelationshipDTO} object.
@@ -67,16 +64,5 @@ public class EmployeeRelationshipDTOBuilder implements ObjectBuilder<EmployeeRel
     @Override
     public EmployeeRelationshipDTO buildWithDefaults() {
         throw new NotImplementedException();
-    }
-
-    @Override
-    public EmployeeRelationshipDTO buildMock() {
-        EmployeeRelationshipDTO mock = Mockito.mock(EmployeeRelationshipDTO.class);
-        when(mock.getId()).thenReturn(this.id);
-        when(mock.getStartDate()).thenReturn(this.startDate);
-        when(mock.getEndDate()).thenReturn(this.endDate);
-        when(mock.getReferred()).thenReturn(this.reference);
-        when(mock.getRelationship()).thenReturn(this.relationshipDTO);
-        return mock;
     }
 }

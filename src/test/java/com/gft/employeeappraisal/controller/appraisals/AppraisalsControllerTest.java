@@ -1,7 +1,8 @@
-package com.gft.employeeappraisal.controller;
+package com.gft.employeeappraisal.controller.appraisals;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.gft.employeeappraisal.builder.model.*;
+import com.gft.employeeappraisal.controller.AppraisalsController;
+import com.gft.employeeappraisal.controller.BaseControllerTest;
 import com.gft.employeeappraisal.converter.appraisal.AppraisalDTOConverter;
 import com.gft.employeeappraisal.model.*;
 import com.gft.employeeappraisal.service.AppraisalService;
@@ -18,7 +19,6 @@ import org.springframework.boot.test.mock.mockito.MockReset;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.util.StringUtils;
 
@@ -49,9 +49,6 @@ public class AppraisalsControllerTest extends BaseControllerTest {
 
 	private static final String USER_EMAIL = "user@gft.com";
 
-	@Autowired
-	private MockMvc mockMvc;
-
 	@MockBean(reset = MockReset.AFTER)
 	private AppraisalService appraisalService;
 
@@ -64,9 +61,6 @@ public class AppraisalsControllerTest extends BaseControllerTest {
 	@Autowired
 	@SuppressWarnings("unused")
 	private AppraisalDTOConverter appraisalDTOConverter;
-
-	@Autowired
-	private ObjectMapper mapper;
 
 	private Employee userMock;
 

@@ -1,13 +1,15 @@
-package com.gft.employeeappraisal.controller;
+package com.gft.employeeappraisal.controller.relationships;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.gft.employeeappraisal.builder.model.*;
-import com.gft.employeeappraisal.converter.employee.EmployeeDTOConverter;
-import com.gft.employeeappraisal.converter.employeerelationship.EmployeeRelationshipDTOConverter;
-import com.gft.employeeappraisal.converter.relationship.RelationshipDTOConverter;
+import com.gft.employeeappraisal.controller.BaseControllerTest;
+import com.gft.employeeappraisal.controller.EmployeesController;
+import com.gft.employeeappraisal.controller.EntityDTOComparator;
 import com.gft.employeeappraisal.exception.NotFoundException;
 import com.gft.employeeappraisal.model.*;
-import com.gft.employeeappraisal.service.*;
+import com.gft.employeeappraisal.service.EmployeeRelationshipService;
+import com.gft.employeeappraisal.service.EmployeeService;
+import com.gft.employeeappraisal.service.RelationshipService;
+import com.gft.employeeappraisal.service.SecurityService;
 import com.gft.swagger.employees.model.EmployeeDTO;
 import com.gft.swagger.employees.model.EmployeeRelationshipDTO;
 import com.gft.swagger.employees.model.OperationResultDTO;
@@ -21,7 +23,6 @@ import org.springframework.boot.test.mock.mockito.MockReset;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.util.StringUtils;
 
@@ -32,64 +33,43 @@ import java.util.Optional;
 import java.util.stream.Stream;
 
 import static org.junit.Assert.*;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyInt;
 import static org.mockito.Mockito.*;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 /**
- * Integration test class for the {@link EmployeesController} controller class, GET endpoints.
+ * Integration test class for the {@link EmployeesController} controller class, Relationship endpoints.
  *
  * @author Manuel Yepez
  */
 @RunWith(SpringRunner.class)
-public class EmployeesControllerGetTest extends BaseControllerTest {
+public class EmployeesControllerRelationshipsTest extends BaseControllerTest {
 
     private static final String EMPLOYEES_URL = "/employees";
     private static final String RELATIONSHIP_URL = "/relationships";
-    private static final String USER_EMAIL = "user@gft.com";
 
     @MockBean
     private EmployeeService employeeService;
 
-    @MockBean
+    @MockBean(reset = MockReset.AFTER)
     @SuppressWarnings("unused")
     private EmployeeRelationshipService employeeRelationshipService;
-
-    @Autowired
-    private MockMvc mockMvc;
-
-    @Autowired
-    private EntityDTOComparator entityDTOComparator;
 
     @MockBean(reset = MockReset.AFTER)
     private RelationshipService relationshipService;
 
-    @MockBean
+    @MockBean(reset = MockReset.AFTER)
     private SecurityService securityService;
 
-    @MockBean
-    private ValidationService validationService;
-
     @Autowired
-    @SuppressWarnings("unused")
-    private EmployeeDTOConverter employeeDTOConverter;
-
-    @Autowired
-    @SuppressWarnings("unused")
-    private EmployeeRelationshipDTOConverter employeeRelationshipDTOConverter;
-
-    @Autowired
-    @SuppressWarnings("unused")
-    private RelationshipDTOConverter relationshipDTOConverter;
-
-    @Autowired
-    private ObjectMapper mapper;
-
+    private EntityDTOComparator entityDTOComparator;
 
     private Employee userMock;
-    private JobLevel jobLevelMock;
-    private ApplicationRole applicationRoleMock;
+    private Employee mentorMock;
 
 
     @Before
@@ -103,7 +83,7 @@ public class EmployeesControllerGetTest extends BaseControllerTest {
                 .description("Job Family Description")
                 .build();
 
-        jobLevelMock = new JobLevelBuilder()
+        JobLevel jobLevelMock = new JobLevelBuilder()
                 .id(1)
                 .name("Job Level")
                 .description("Job Level Description")
@@ -111,7 +91,7 @@ public class EmployeesControllerGetTest extends BaseControllerTest {
                 .jobFamily(jobFamilyMock)
                 .build();
 
-        applicationRoleMock = new ApplicationRoleBuilder()
+        ApplicationRole applicationRoleMock = new ApplicationRoleBuilder()
                 .id(1)
                 .name("Application Role")
                 .description("Application Role Description")
@@ -126,147 +106,15 @@ public class EmployeesControllerGetTest extends BaseControllerTest {
                 .applicationRole(applicationRoleMock)
                 .build();
 
-        when(employeeService.getLoggedInUser()).thenReturn(userMock);
-    }
-
-    /**
-     * TODO: This test will need to be updated later since current functionality only returns employees if there
-     * is a search term.
-     */
-    @Test
-    public void employeesGet() throws Exception {
-        when(employeeService.findPagedByFirstNameOrLastName(anyString(), anyString(), anyInt(), anyInt()))
-                .thenReturn(Stream.of(userMock));
-
-        // Execution
-        MvcResult result = mockMvc.perform(
-                get(String.format("%s",
-                        EMPLOYEES_URL))
-                        .param("searchTerm", "searchTermExample")
-                        .with(csrf())
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andReturn();
-
-        List<EmployeeDTO> employeeDTOList = Arrays.asList(mapper.readValue(result.getResponse().getContentAsString(),
-                EmployeeDTO[].class));
-
-        assertNotNull(employeeDTOList);
-        assertFalse(employeeDTOList.isEmpty());
-
-        verify(employeeService, times(1))
-                .findPagedByFirstNameOrLastName(anyString(), anyString(), anyInt(), anyInt());
-
-        entityDTOComparator.assertEqualsEmployee(userMock,  employeeDTOList.get(0));
-    }
-
-    /**
-     * TODO: This test will need to be updated later since current functionality only returns employees if there
-     * is a search term.
-     */
-    @Test
-    public void employeesGet_emptyList() throws Exception {
-        when(employeeService.findPagedByFirstNameOrLastName(anyString(), anyString(), anyInt(), anyInt()))
-                .thenReturn(Stream.empty());
-
-        // Execution
-        MvcResult result = mockMvc.perform(
-                get(String.format("%s",
-                        EMPLOYEES_URL))
-                        .param("searchTerm", "searchTerm")
-                        .with(csrf())
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andReturn();
-
-        List<EmployeeDTO> employeeDTOList = Arrays.asList(mapper.readValue(result.getResponse().getContentAsString(),
-                EmployeeDTO[].class));
-
-        assertNotNull(employeeDTOList);
-        assertTrue(employeeDTOList.isEmpty());
-
-        verify(employeeService, times(1))
-                .findPagedByFirstNameOrLastName(anyString(), anyString(), anyInt(), anyInt());
-    }
-
-    /**
-     * Tests {@link EmployeesController#employeesIdGet(Integer)}
-     *
-     * @throws Exception
-     */
-    @Test
-    @WithMockUser(USER_EMAIL)
-    public void employeesIdGet_Successful() throws Exception {
-        // Set-up
-        when(employeeService.getById(userMock.getId())).thenReturn(userMock);
-
-        // Execution
-        MvcResult result = mockMvc.perform(
-                get(String.format("%s/%d",
-                        EMPLOYEES_URL,
-                        this.userMock.getId()))
-                        .with(csrf())
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andReturn();
-
-        String resultString = result.getResponse().getContentAsString();
-        EmployeeDTO employeeDTO = mapper.readValue(resultString, EmployeeDTO.class);
-
-        // Verification
-        verify(securityService, times(1)).canReadEmployee(any(Employee.class), any(Employee.class));
-        verify(employeeService, times(1)).getById(userMock.getId());
-        entityDTOComparator.assertEqualsEmployee(userMock, employeeDTO);
-    }
-
-    /**
-     * Tests {@link EmployeesController#employeesIdGet(Integer)}
-     *
-     * @throws Exception
-     */
-    @Test
-    @WithMockUser(USER_EMAIL)
-    public void employeesIdGet_NotFound() throws Exception {
-        // Set-up
-        when(employeeService.getById(userMock.getId())).thenThrow(NotFoundException.class);
-
-        // Execution
-        MvcResult result = mockMvc.perform(
-                get(String.format("%s/%d",
-                        EMPLOYEES_URL,
-                        this.userMock.getId()))
-                        .with(csrf())
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isNotFound())
-                .andReturn();
-        String resultString = result.getResponse().getContentAsString();
-        OperationResultDTO operationResultDTO = mapper.readValue(resultString, OperationResultDTO.class);
-
-        // Verification
-        verify(employeeService, times(1)).getById(userMock.getId());
-        assertEquals(operationResultDTO.getMessage(), Constants.ERROR);
-    }
-
-    @Test
-    @WithMockUser(USER_EMAIL)
-    public void employeesEmployeeIdGet_badRequest() throws Exception {
-
-        // Execution
-
-        MvcResult result = mockMvc.perform(get(String.format("%s/%s", EMPLOYEES_URL, "null"))
-                .with(csrf())
-                .contentType(MediaType.APPLICATION_JSON)
-        ).andExpect(status().isBadRequest()).andReturn();
-
-        String resultString = result.getResponse().getContentAsString();
-
-        // Verification
-
-        verify(securityService, never()).canReadEmployee(any(Employee.class), any(Employee.class));
-
-        verify(employeeService, never()).findById(userMock.getId());
-
-        assertTrue(StringUtils.isEmpty(resultString));
+        mentorMock = new EmployeeBuilder()
+                .id(2)
+                .email("mock@gft.com")
+                .firstName("Mocker")
+                .lastName("Mockoo")
+                .gftIdentifier("MOCK")
+                .jobLevel(jobLevelMock)
+                .applicationRole(applicationRoleMock)
+                .build();
     }
 
     /**
@@ -278,7 +126,7 @@ public class EmployeesControllerGetTest extends BaseControllerTest {
     public void employeesIdRelationshipsGet_Successful() throws Exception {
         // Set up
         when(employeeService.getById(userMock.getId())).thenReturn(userMock);
-        doReturn(Stream.of(mockEmployeeRelationship()))
+        doReturn(Stream.of(testEmployeeRelationship(false)))
                 .when(employeeService).findCurrentRelationshipsBySourceEmployee(userMock,
                 RelationshipName.PEER, RelationshipName.LEAD, RelationshipName.OTHER);
 
@@ -308,7 +156,7 @@ public class EmployeesControllerGetTest extends BaseControllerTest {
         assertNotNull(employeeRelationshipDTO.getStartDate());
         assertNull(employeeRelationshipDTO.getEndDate());
         EmployeeDTO reference = employeeRelationshipDTO.getReferred();
-        entityDTOComparator.assertEqualsEmployee(mockMentor(), reference);
+        entityDTOComparator.assertEqualsEmployee(mentorMock, reference);
     }
 
     /**
@@ -406,7 +254,7 @@ public class EmployeesControllerGetTest extends BaseControllerTest {
         when(relationshipService.findRelationshipsByNames(RelationshipName.LEAD,
                 RelationshipName.PEER,
                 RelationshipName.OTHER))
-                .thenReturn(Stream.of(mockRelationship()));
+                .thenReturn(Stream.of(testRelationship()));
 
         MvcResult result = mockMvc.perform(
                 get(String.format("%s/",
@@ -427,7 +275,7 @@ public class EmployeesControllerGetTest extends BaseControllerTest {
                         RelationshipName.PEER,
                         RelationshipName.OTHER);
 
-        assertEquals(mockRelationship().getDescription(), relationshipDTOList.get(0).getDescription());
+        assertEquals(testRelationship().getDescription(), relationshipDTOList.get(0).getDescription());
     }
 
     @Test
@@ -459,12 +307,12 @@ public class EmployeesControllerGetTest extends BaseControllerTest {
 
     @Test
     public void relationshipsIdGet() throws Exception {
-        when(relationshipService.findById(anyInt())).thenReturn(Optional.of(mockRelationship()));
+        when(relationshipService.findById(anyInt())).thenReturn(Optional.of(testRelationship()));
 
         MvcResult result = mockMvc.perform(
                 get(String.format("%s/%d",
                         RELATIONSHIP_URL,
-                        mockRelationship().getId()))
+                        testRelationship().getId()))
                         .with(csrf())
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
@@ -474,7 +322,7 @@ public class EmployeesControllerGetTest extends BaseControllerTest {
                 .getResponse().getContentAsString(), RelationshipDTO.class);
 
         assertNotNull(relationshipDTO);
-        assertEquals(mockRelationship().getDescription(), relationshipDTO.getDescription());
+        assertEquals(testRelationship().getDescription(), relationshipDTO.getDescription());
 
         verify(relationshipService, times(1)).findById(anyInt());
     }
@@ -486,7 +334,7 @@ public class EmployeesControllerGetTest extends BaseControllerTest {
         MvcResult result = mockMvc.perform(
                 get(String.format("%s/%d",
                         RELATIONSHIP_URL,
-                        mockRelationship().getId()))
+                        testRelationship().getId()))
                         .with(csrf())
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNotFound())
@@ -516,30 +364,49 @@ public class EmployeesControllerGetTest extends BaseControllerTest {
         verify(relationshipService, never()).findById(anyInt());
     }
 
-    private EmployeeRelationship mockEmployeeRelationship() {
-        return new EmployeeRelationshipBuilder()
-                .sourceEmployee(userMock)
-                .targetEmployee(mockMentor())
-                .relationship(mockRelationship())
-                .startDate(LocalDateTime.now()).build();
+    @Test
+    @WithMockUser
+    public void employeesIdRelationshipsIdDelete() throws Exception {
+        when(employeeService.getLoggedInUser()).thenReturn(mentorMock);
+        when(employeeService.getById(anyInt())).thenReturn(userMock);
+        when(employeeRelationshipService.getById(anyInt())).thenReturn(testEmployeeRelationship(false));
+        when(employeeRelationshipService.endEmployeeRelationship(any(EmployeeRelationship.class)))
+                .thenReturn(Optional.of(testEmployeeRelationship(true)));
+
+        // Execution
+        mockMvc.perform(
+                delete(String.format("%s/%d%s/%d",
+                        EMPLOYEES_URL,
+                        this.userMock.getId(),
+                        RELATIONSHIP_URL,
+                        testEmployeeRelationship(false).getId()))
+                        .with(csrf())
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+
+        verify(employeeService, times(1)).getLoggedInUser();
+        verify(employeeService, times(1)).getById(anyInt());
+        verify(employeeRelationshipService, times(1)).getById(anyInt());
+        verify(securityService, times(1))
+                .canWriteEmployeeRelationship(any(Employee.class), any(Employee.class), any(Employee.class));
+        verify(employeeRelationshipService, times(1))
+                .endEmployeeRelationship(any(EmployeeRelationship.class));
     }
 
-    private Relationship mockRelationship() {
-        return new RelationshipBuilder()
-                .name(RelationshipName.OTHER.name())
-                .description("Mock Relationship")
+    private EmployeeRelationship testEmployeeRelationship(boolean withEndDate) {
+        return new EmployeeRelationshipBuilder()
+                .sourceEmployee(userMock)
+                .targetEmployee(mentorMock)
+                .relationship(testRelationship())
+                .startDate(LocalDateTime.now())
+                .endDate(withEndDate ? LocalDateTime.now() : null)
                 .build();
     }
 
-    private Employee mockMentor() {
-        return new EmployeeBuilder()
-                .id(2)
-                .email("mock@gft.com")
-                .firstName("Mocker")
-                .lastName("Mockoo")
-                .gftIdentifier("MOCK")
-                .jobLevel(jobLevelMock)
-                .applicationRole(applicationRoleMock)
+    private Relationship testRelationship() {
+        return new RelationshipBuilder()
+                .name(RelationshipName.OTHER.name())
+                .description("Mock Relationship")
                 .build();
     }
 }

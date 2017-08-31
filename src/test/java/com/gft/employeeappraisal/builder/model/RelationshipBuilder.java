@@ -4,8 +4,6 @@ import com.gft.employeeappraisal.builder.ObjectBuilder;
 import com.gft.employeeappraisal.model.Relationship;
 import com.gft.employeeappraisal.model.RelationshipName;
 
-import static org.mockito.Mockito.when;
-
 /**
  * Builder object for the {@link Relationship} object.
  *
@@ -59,14 +57,5 @@ public class RelationshipBuilder implements ObjectBuilder<Relationship> {
         obj.setName(this.nameSet ? this.name : RelationshipName.PEER.name());
         obj.setDescription(this.descriptionSet ? this.description : "Description");
         return obj;
-    }
-
-    @Override
-    public Relationship buildMock() {
-        Relationship mock = new Relationship();
-        when(mock.getId()).thenReturn(this.id);
-        when(mock.getName()).thenReturn(this.name);
-        when(mock.getDescription()).thenReturn(this.description);
-        return mock;
     }
 }

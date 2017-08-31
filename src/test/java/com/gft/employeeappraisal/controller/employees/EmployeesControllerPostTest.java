@@ -1,6 +1,5 @@
-package com.gft.employeeappraisal.controller;
+package com.gft.employeeappraisal.controller.employees;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.gft.employeeappraisal.builder.dto.ApplicationRoleDTOBuilder;
 import com.gft.employeeappraisal.builder.dto.EmployeeDTOBuilder;
 import com.gft.employeeappraisal.builder.dto.JobFamilyDTOBuilder;
@@ -9,6 +8,7 @@ import com.gft.employeeappraisal.builder.model.ApplicationRoleBuilder;
 import com.gft.employeeappraisal.builder.model.EmployeeBuilder;
 import com.gft.employeeappraisal.builder.model.JobFamilyBuilder;
 import com.gft.employeeappraisal.builder.model.JobLevelBuilder;
+import com.gft.employeeappraisal.controller.BaseControllerTest;
 import com.gft.employeeappraisal.converter.employee.EmployeeDTOConverter;
 import com.gft.employeeappraisal.model.ApplicationRole;
 import com.gft.employeeappraisal.model.Constants;
@@ -28,7 +28,6 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.mock.mockito.MockReset;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
 import java.util.Optional;
@@ -44,15 +43,14 @@ public class EmployeesControllerPostTest extends BaseControllerTest {
 
     private static final String EMPLOYEES_URL = "/employees";
     private static EmployeeDTO mockEmployeeDTO;
-    @Autowired
-    private MockMvc mockMvc;
-    @Autowired
-    private ObjectMapper mapper;
+
     @Autowired
     @SuppressWarnings("unused")
     private EmployeeDTOConverter employeeDTOConverter;
+
     @MockBean(reset = MockReset.AFTER)
     private EmployeeService employeeService;
+
     @MockBean(reset = MockReset.AFTER)
     @SuppressWarnings("unused")
     private EmployeeRelationshipService employeeRelationshipService;
