@@ -14,7 +14,7 @@ import org.springframework.test.web.servlet.MockMvc;
  */
 @AutoConfigureMockMvc
 @SpringBootTest
-@ActiveProfiles({ "default", "local", "test" })
+@ActiveProfiles({ "default", "local-h2", "test" })
 public abstract class BaseControllerTest {
 
     @Autowired

@@ -5,12 +5,6 @@ spring:
     username: postgres
     password: postgres
     driver-class-name: org.postgresql.Driver
-management:
-  security:
-    enabled: false
-security:
-  basic:
-    enabled: false
 eureka:
   instance:
     ipAddress: 10.200.220.130

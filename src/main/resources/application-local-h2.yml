@@ -24,4 +24,4 @@ logging:
   level:
     org:
       hibernate:
-        type: trace
+        type: TRACE

@@ -1,25 +1,7 @@
 spring:
-  jpa:
-    hibernate:
-      naming:
-        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
-      ddl-auto: validate
   h2:
     console:
       enabled: false
-logging:
-  level:
-    com:
-      gft: TRACE
-      netflix:
-        discovery: ERROR
-        eureka: ERROR
-management:
-  security:
-    enabled: false
-security:
-  basic:
-    enabled: false
 eureka:
   client:
     enabled: false
