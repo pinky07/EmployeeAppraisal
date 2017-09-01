@@ -114,13 +114,13 @@ cleanUpDocker
 
 # Stop application
 echo 'Removing previous app image and containers...'
-removeContainer 'com.gft.employee-appraisal.ci' 'latest'
-removeImage 'com.gft.employee-appraisal.ci' 'latest'
+removeContainer 'com.gft.employee-appraisal.qa' 'latest'
+removeImage 'com.gft.employee-appraisal.qa' 'latest'
 
 # Stop db
 echo 'Removing previous db image and containers...'
-removeContainer 'com.gft.employee-appraisal.db.ci' 'latest'
-removeImage 'com.gft.employee-appraisal.db.ci' 'latest'
+removeContainer 'com.gft.employee-appraisal.db.qa' 'latest'
+removeImage 'com.gft.employee-appraisal.db.qa' 'latest'
 
 #
 # References:

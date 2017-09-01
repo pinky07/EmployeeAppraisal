@@ -1,6 +1,6 @@
 spring:
   datasource:
-    url: jdbc:postgresql://10.200.220.130:11005/employeeappraisals
+    url: jdbc:postgresql://10.200.220.130:11025/employeeappraisals
     platform: postgres
     username: postgres
     password: postgres
@@ -11,4 +11,6 @@ eureka:
     preferIpAddress: true
   client:
     serviceUrl:
-      defaultZone: http://10.200.220.130:11001/eureka
+      defaultZone: http://10.200.220.130:11021/eureka
+server:
+  port: 11024
