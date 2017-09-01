@@ -1,7 +1,7 @@
 INSERT INTO Appraisal (id, name, description, startDate, endDate)
-VALUES  (1, 'Appraisal 2017', 'Appraisal 2017 Description', '2017-12-01 00:00:00', '2018-01-31 00:00:00'),
-        (2, 'Appraisal 2016', 'Appraisal 2017 Description', '2016-12-01 00:00:00', '2017-01-31 00:00:00'),
-        (3, 'Appraisal 2015', 'Appraisal 2017 Description', '2015-12-01 00:00:00', '2016-01-31 00:00:00');
+VALUES  (1, 'Appraisal 2017', 'Appraisal 2017 Description', '2017-12-01 00:00:00-06', '2018-01-31 00:00:00-06'),
+        (2, 'Appraisal 2016', 'Appraisal 2017 Description', '2016-12-01 00:00:00-06', '2017-01-31 00:00:00-06'),
+        (3, 'Appraisal 2015', 'Appraisal 2017 Description', '2015-12-01 00:00:00-06', '2016-01-31 00:00:00-06');
 
 INSERT INTO EvaluationForm (id, name, description)
 VALUES
