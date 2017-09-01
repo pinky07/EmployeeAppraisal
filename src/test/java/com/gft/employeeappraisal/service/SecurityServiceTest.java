@@ -10,6 +10,9 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.Optional;
@@ -23,11 +26,13 @@ import static org.mockito.Mockito.*;
  * @author Rubén Jiménez
  */
 @RunWith(SpringRunner.class)
+@SpringBootTest
+@ActiveProfiles("test")
 public class SecurityServiceTest {
 
     // Required to initialize the class under test
-
-    private int maxMenteeReferences = 5;
+    @Value("${com.gft.businessRules.maxMenteeReferences}")
+    private Integer maxMenteeReferences;
 
     @Mock
     private EmployeeRelationshipService employeeRelationshipService;

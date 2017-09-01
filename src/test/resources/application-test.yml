@@ -5,3 +5,7 @@ spring:
 eureka:
   client:
     enabled: false
+com:
+  gft:
+    businessRules:
+      maxMenteeReferences: 5
