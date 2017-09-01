@@ -4,6 +4,7 @@ import com.gft.employeeappraisal.builder.model.*;
 import com.gft.employeeappraisal.controller.AppraisalsController;
 import com.gft.employeeappraisal.controller.BaseControllerTest;
 import com.gft.employeeappraisal.converter.appraisal.AppraisalDTOConverter;
+import com.gft.employeeappraisal.exception.NotFoundException;
 import com.gft.employeeappraisal.model.*;
 import com.gft.employeeappraisal.service.AppraisalService;
 import com.gft.employeeappraisal.service.AppraisalXEvaluationFormXEmployeeRelationshipService;
@@ -111,7 +112,7 @@ public class AppraisalsControllerTest extends BaseControllerTest {
 
     @Test
     public void employeesIdAppraisalsIdGet() throws Exception {
-		when(employeeService.findById(userMock.getId())).thenReturn(Optional.of(userMock));
+		when(employeeService.getById(userMock.getId())).thenReturn(userMock);
 		doReturn(Stream.of(mockAppXEFXER())).when(appraisalXEvaluationFormXEmployeeRelationshipService)
 				.findByAppraisalAndEmployeeAndSourceRelationships(any(Appraisal.class), any(Employee.class),
 						any(RelationshipName.class));
@@ -130,7 +131,7 @@ public class AppraisalsControllerTest extends BaseControllerTest {
 		assertNotNull(appraisalDTO);
 		assertEquals(mockAppraisal().getName(), appraisalDTO.getName());
 
-		verify(employeeService, times(1)).findById(anyInt());
+		verify(employeeService, times(1)).getById(anyInt());
 		verify(appraisalService, times(1)).findById(anyInt());
 		verify(appraisalXEvaluationFormXEmployeeRelationshipService, times(1))
 				.findByAppraisalAndEmployeeAndSourceRelationships(any(Appraisal.class), any(Employee.class),
@@ -139,7 +140,7 @@ public class AppraisalsControllerTest extends BaseControllerTest {
 
 	@Test
 	public void employeesIdAppraisalsIdGet_emptyDTO() throws Exception {
-		when(employeeService.findById(userMock.getId())).thenReturn(Optional.of(userMock));
+		when(employeeService.getById(userMock.getId())).thenReturn(userMock);
 		doReturn(Stream.empty()).when(appraisalXEvaluationFormXEmployeeRelationshipService)
 				.findByAppraisalAndEmployeeAndSourceRelationships(any(Appraisal.class), any(Employee.class),
 						any(RelationshipName.class));
@@ -158,7 +159,7 @@ public class AppraisalsControllerTest extends BaseControllerTest {
 		assertNotNull(appraisalDTO);
 		assertNull(appraisalDTO.getName());
 
-		verify(employeeService, times(1)).findById(anyInt());
+		verify(employeeService, times(1)).getById(anyInt());
 		verify(appraisalService, times(1)).findById(anyInt());
 		verify(appraisalXEvaluationFormXEmployeeRelationshipService, times(1))
 				.findByAppraisalAndEmployeeAndSourceRelationships(any(Appraisal.class), any(Employee.class),
@@ -167,7 +168,7 @@ public class AppraisalsControllerTest extends BaseControllerTest {
 
 	@Test
 	public void employeesIdAppraisalsIdGet_AppNotFound() throws Exception {
-		when(employeeService.findById(userMock.getId())).thenReturn(Optional.of(userMock));
+		when(employeeService.getById(userMock.getId())).thenReturn(userMock);
 		doReturn(Stream.of(mockAppXEFXER())).when(appraisalXEvaluationFormXEmployeeRelationshipService)
 				.findByAppraisalAndEmployeeAndSourceRelationships(any(Appraisal.class), any(Employee.class),
 						any(RelationshipName.class));
@@ -187,7 +188,7 @@ public class AppraisalsControllerTest extends BaseControllerTest {
 		assertNotNull(operationResultDTO);
 		assertEquals(Constants.ERROR, operationResultDTO.getMessage());
 
-		verify(employeeService, times(1)).findById(anyInt());
+		verify(employeeService, times(1)).getById(anyInt());
 		verify(appraisalService, times(1)).findById(anyInt());
 		verify(appraisalXEvaluationFormXEmployeeRelationshipService, never())
 				.findByAppraisalAndEmployeeAndSourceRelationships(any(Appraisal.class), any(Employee.class),
@@ -196,7 +197,7 @@ public class AppraisalsControllerTest extends BaseControllerTest {
 
 	@Test
 	public void employeesIdAppraisalsIdGet_EmpNotFound() throws Exception {
-		when(employeeService.findById(userMock.getId())).thenReturn(Optional.empty());
+		when(employeeService.getById(userMock.getId())).thenThrow(new NotFoundException("Employee Not Found"));
 
 		MvcResult result = mockMvc.perform(get(String.format("%s/%d%s/%d", EMPLOYEES_URL, userMock.getId(),
 				APPRAISAL_URL, mockAppraisal().getId()))
@@ -211,7 +212,7 @@ public class AppraisalsControllerTest extends BaseControllerTest {
 		assertNotNull(operationResultDTO);
 		assertEquals(Constants.ERROR, operationResultDTO.getMessage());
 
-		verify(employeeService, times(1)).findById(anyInt());
+		verify(employeeService, times(1)).getById(anyInt());
 		verify(appraisalService, never()).findById(anyInt());
 		verify(appraisalXEvaluationFormXEmployeeRelationshipService, never())
 				.findByAppraisalAndEmployeeAndSourceRelationships(any(Appraisal.class), any(Employee.class),
@@ -396,7 +397,7 @@ public class AppraisalsControllerTest extends BaseControllerTest {
 
 	@Test
 	public void employeesIdAppraisalsGet() throws Exception {
-		when(employeeService.findById(userMock.getId())).thenReturn(Optional.of(userMock));
+		when(employeeService.getById(userMock.getId())).thenReturn(userMock);
 		doReturn(Stream.of(mockAppraisal())).when(appraisalService)
 				.findEmployeeAppraisals(any(Employee.class), isNull(EvaluationStatus.class));
 
@@ -419,14 +420,14 @@ public class AppraisalsControllerTest extends BaseControllerTest {
 		AppraisalDTO appraisalDTO = appraisalDTOList.get(0);
 		assertEquals(mockAppraisal().getName(), appraisalDTO.getName());
 
-		verify(employeeService, times(1)).findById(anyInt());
+		verify(employeeService, times(1)).getById(anyInt());
 		verify(appraisalService, times(1)).findEmployeeAppraisals(any(Employee.class),
 				isNull(EvaluationStatus.class));
 	}
 
 	@Test
 	public void employeesIdAppraisalsGet_emptyList() throws Exception {
-		when(employeeService.findById(userMock.getId())).thenReturn(Optional.of(userMock));
+		when(employeeService.getById(userMock.getId())).thenReturn(userMock);
 		doReturn(Stream.empty()).when(appraisalService)
 				.findEmployeeAppraisals(any(Employee.class), isNull(EvaluationStatus.class));
 
@@ -446,14 +447,14 @@ public class AppraisalsControllerTest extends BaseControllerTest {
 		assertNotNull(appraisalDTOList);
 		assertTrue(appraisalDTOList.isEmpty());
 
-		verify(employeeService, times(1)).findById(anyInt());
+		verify(employeeService, times(1)).getById(anyInt());
 		verify(appraisalService, times(1)).findEmployeeAppraisals(any(Employee.class),
 				isNull(EvaluationStatus.class));
 	}
 
 	@Test
 	public void employeesIdAppraisalsGet_employeeNotFound() throws Exception {
-		when(employeeService.findById(userMock.getId())).thenReturn(Optional.empty());
+		when(employeeService.getById(userMock.getId())).thenThrow(new NotFoundException("Employee Not Found"));
 
 		MvcResult result = mockMvc.perform(
 				get(String.format("%s/%d%s",
@@ -471,7 +472,7 @@ public class AppraisalsControllerTest extends BaseControllerTest {
 		assertNotNull(resultDTO);
 		assertEquals(resultDTO.getMessage(), Constants.ERROR);
 
-		verify(employeeService, times(1)).findById(anyInt());
+		verify(employeeService, times(1)).getById(anyInt());
 		verify(appraisalService, never()).findEmployeeAppraisals(any(Employee.class),
 				isNull(EvaluationStatus.class));
 	}

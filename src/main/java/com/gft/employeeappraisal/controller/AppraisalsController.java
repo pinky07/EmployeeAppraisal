@@ -58,9 +58,7 @@ public class AppraisalsController implements AppraisalApi {
     @Override
     public ResponseEntity<AppraisalDTO> employeesIdAppraisalsIdGet(@PathVariable Integer employeeId,
                                                                    @PathVariable Integer appraisalId) {
-        Employee employee = employeeService.findById(employeeId).orElseThrow(() -> new NotFoundException(
-                String.format("Employee with id %d was not found",
-                        employeeId)));
+        Employee employee = employeeService.getById(employeeId);
 
         // Get Appraisal
         Appraisal appraisal = appraisalService.findById(appraisalId)
@@ -115,9 +113,7 @@ public class AppraisalsController implements AppraisalApi {
         logger.debug("Called endpoint: GET /employees/{}/appraisals", employeeId);
 
         List<AppraisalDTO> result = new ArrayList<>();
-        Employee employee = employeeService.findById(employeeId).orElseThrow(() -> new NotFoundException(
-                String.format("Employee with id %d was not found",
-                        employeeId)));
+        Employee employee = employeeService.getById(employeeId);
 
         appraisalService.findEmployeeAppraisals(employee, null)
                 .forEach(ea -> result.add(appraisalDTOConverter.convert(ea)));

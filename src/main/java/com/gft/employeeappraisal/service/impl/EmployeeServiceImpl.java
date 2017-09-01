@@ -98,8 +98,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Override
     public Optional<Employee> findCurrentMentorById(int menteeId) throws NotFoundException {
         // Try to find the Mentee
-        Employee mentee = this.findById(menteeId).orElseThrow(() ->
-                new NotFoundException(String.format("Employee with id: %s was not found", menteeId)));
+        Employee mentee = this.getById(menteeId);
         // Try to get his Mentor
         return employeeRelationshipService
                 .findCurrentByTargetEmployeeAndRelationship(
@@ -125,8 +124,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Override
     public Stream<Employee> findCurrentMenteesById(int mentorId) throws NotFoundException {
         // Try to find the Mentor
-        Employee mentor = this.findById(mentorId).orElseThrow(() ->
-                new NotFoundException(String.format("Employee with id: %s was not found", mentorId)));
+        Employee mentor = this.getById(mentorId);
         // Try to get his Mentees
         return employeeRelationshipService
                 .findCurrentBySourceEmployeeAndRelationship(
@@ -141,8 +139,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Override
     public Stream<Employee> findCurrentPeersById(int employeeId) throws NotFoundException {
         // Try to find the Employee
-        Employee employee = this.findById(employeeId).orElseThrow(() ->
-                new NotFoundException(String.format("Employee with id: %s was not found", employeeId)));
+        Employee employee = this.getById(employeeId);
         // Try to get his Peers
         return employeeRelationshipService
                 .findCurrentBySourceEmployeeAndRelationship(
@@ -158,8 +155,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     public Stream<EmployeeRelationship> findCurrentRelationshipsById(int employeeId, RelationshipName... relationshipNames)
             throws NotFoundException {
         // Try to find the Employee
-        Employee employee = this.findById(employeeId).orElseThrow(() ->
-                new NotFoundException(String.format("Employee with id: %s was not found", employeeId)));
+        Employee employee = this.getById(employeeId);
         // Try to get his Peers
         return findCurrentRelationshipsBySourceEmployee(employee, relationshipNames);
     }

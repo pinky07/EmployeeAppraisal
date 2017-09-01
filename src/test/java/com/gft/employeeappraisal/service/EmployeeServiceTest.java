@@ -172,6 +172,83 @@ public class EmployeeServiceTest {
                 .buildWithDefaults());
     }
 
+    @Test
+    public void getById() throws Exception {
+        Employee retrieved = employeeService.getById(employeeA.getId());
+
+        assertNotNull(retrieved);
+        assertEquals(retrieved, employeeA);
+    }
+
+    @Test(expected = NotFoundException.class)
+    public void getById_NotFound() throws Exception {
+        employeeService.getById(-100);
+    }
+
+    @Test
+    public void getCurrentMentorById() throws Exception {
+        when(this.relationshipService.findByName(any(RelationshipName.class)))
+                .thenReturn(mentorRelationship);
+        when(this.employeeRelationshipService.findCurrentByTargetEmployeeAndRelationship(mentee, mentorRelationship))
+                .thenReturn(Stream.of(mentorEmployeeRelationship));
+
+        Employee retrieved = employeeService.getCurrentMentorById(mentee.getId());
+
+        assertNotNull(retrieved);
+        assertEquals(mentor, retrieved);
+    }
+
+    @Test(expected = NotFoundException.class)
+    public void getCurrentMentorById_noMentor() throws Exception {
+        when(this.relationshipService.findByName(any(RelationshipName.class)))
+                .thenReturn(mentorRelationship);
+        when(this.employeeRelationshipService.findCurrentByTargetEmployeeAndRelationship(employeeA, mentorRelationship))
+                .thenReturn(Stream.empty());
+
+        employeeService.getCurrentMentorById(employeeA.getId());
+    }
+
+    @Test(expected = NotFoundException.class)
+    public void getCurrentMentorById_invalidMentee() throws Exception {
+        employeeService.getCurrentMentorById(-100);
+    }
+
+    @Test
+    public void findCurrentRelationshipsById() throws Exception {
+        when(employeeRelationshipService.findCurrentBySourceEmployeeAndRelationships(mentor,
+                RelationshipName.MENTOR)).thenReturn(Stream.of(mentorEmployeeRelationship));
+
+        List<EmployeeRelationship> relationships = employeeService
+                .findCurrentRelationshipsById(mentor.getId(), RelationshipName.MENTOR).collect(Collectors.toList());
+
+        assertNotNull(relationships);
+        assertTrue(relationships.size() == 1);
+
+        EmployeeRelationship relationship = relationships.get(0);
+        assertEquals(relationship.getSourceEmployee(), mentor);
+        assertEquals(relationship.getTargetEmployee(), mentee);
+        assertEquals(relationship.getRelationship(), mentorRelationship);
+        assertNotNull(relationship.getStartDate());
+    }
+
+    @Test
+    public void findCurrentRelationshipsById_noRelationships() throws Exception {
+        when(employeeRelationshipService.findCurrentBySourceEmployeeAndRelationships(any(Employee.class),
+                any(RelationshipName.class))).thenReturn(Stream.empty());
+
+        List<EmployeeRelationship> relationships = employeeService
+                .findCurrentRelationshipsById(mentor.getId(), RelationshipName.MENTOR).collect(Collectors.toList());
+
+        assertNotNull(relationships);
+        assertTrue(relationships.isEmpty());
+    }
+
+    @Test(expected = NotFoundException.class)
+    public void findCurrentRelationshipsById_invalidEmployee() throws Exception {
+        employeeService
+                .findCurrentRelationshipsById(-100, RelationshipName.MENTOR);
+    }
+
     /**
      * Tests {@link EmployeeService#findById(Integer)}
      *

@@ -4,6 +4,7 @@ import com.gft.employeeappraisal.builder.model.EmployeeBuilder;
 import com.gft.employeeappraisal.builder.model.EmployeeRelationshipBuilder;
 import com.gft.employeeappraisal.builder.model.JobFamilyBuilder;
 import com.gft.employeeappraisal.builder.model.JobLevelBuilder;
+import com.gft.employeeappraisal.exception.NotFoundException;
 import com.gft.employeeappraisal.model.*;
 import com.gft.employeeappraisal.repository.*;
 import com.gft.employeeappraisal.service.impl.EmployeeRelationshipServiceImpl;
@@ -64,10 +65,6 @@ public class EmployeeRelationshipServiceTest {
     @Autowired
     private EmployeeRepository employeeRepository;
 
-    // Test Fixtures
-    private ApplicationRole userApplicationRole;
-    private JobFamily jobFamily;
-    private JobLevel jobLevel;
     private Employee employeeA;
     private Employee employeeB;
     private Employee employeeC;
@@ -76,6 +73,8 @@ public class EmployeeRelationshipServiceTest {
     private Relationship mentorRelationship;
     private Relationship peerRelationship;
     private Relationship leadRelationship;
+    private EmployeeRelationship mentorEmployeeRelationship;
+    private EmployeeRelationship peerEmployeeRelationship;
 
     /**
      * Set up. Objects that need to be reinitialized.
@@ -90,7 +89,7 @@ public class EmployeeRelationshipServiceTest {
                 this.relationshipService);
 
         // Retrieve the User Application Role
-        this.userApplicationRole = this.applicationRoleRepository
+        ApplicationRole userApplicationRole = this.applicationRoleRepository
                 .findByNameIgnoreCase(ApplicationRoleName.USER.name());
 
         // Retrieve the Mentor Relationship
@@ -112,11 +111,11 @@ public class EmployeeRelationshipServiceTest {
                 .thenReturn(this.leadRelationship);
 
         // Create a Job Family
-        this.jobFamily = this.jobFamilyRepository.saveAndFlush(new JobFamilyBuilder()
+        JobFamily jobFamily = this.jobFamilyRepository.saveAndFlush(new JobFamilyBuilder()
                 .buildWithDefaults());
 
         // Create a Job Level
-        this.jobLevel = this.jobLevelRepository.saveAndFlush(new JobLevelBuilder()
+        JobLevel jobLevel = this.jobLevelRepository.saveAndFlush(new JobLevelBuilder()
                 .jobFamily(jobFamily)
                 .buildWithDefaults());
 
@@ -148,14 +147,16 @@ public class EmployeeRelationshipServiceTest {
                 .buildWithDefaults());
 
         // Create an EmployeeRelationship: Mentor --> Mentee (MENTOR)
-        this.employeeRelationshipRepository.saveAndFlush(new EmployeeRelationshipBuilder()
+        this.mentorEmployeeRelationship = this.employeeRelationshipRepository
+                .saveAndFlush(new EmployeeRelationshipBuilder()
                 .sourceEmployee(mentor)
                 .targetEmployee(mentee)
                 .relationship(mentorRelationship)
                 .buildWithDefaults());
 
         // Create an EmployeeRelationship: EmployeeA --> EmployeeB (PEER)
-        this.employeeRelationshipRepository.saveAndFlush(new EmployeeRelationshipBuilder()
+        this.peerEmployeeRelationship = this.employeeRelationshipRepository
+                .saveAndFlush(new EmployeeRelationshipBuilder()
                 .sourceEmployee(employeeA)
                 .targetEmployee(employeeB)
                 .relationship(peerRelationship)
@@ -358,6 +359,68 @@ public class EmployeeRelationshipServiceTest {
         // Verification
         assertTrue(employeeRelationshipOptional.isPresent());
         assertNotNull(employeeRelationshipOptional.get().getEndDate());
+    }
+
+    @Test
+    public void findById() throws Exception {
+        Optional<EmployeeRelationship> retrieved = employeeRelationshipService
+                .findById(mentorEmployeeRelationship.getId());
+
+        assertTrue(retrieved.isPresent());
+        assertEquals(mentorEmployeeRelationship, retrieved.get());
+    }
+
+    @Test
+    public void findById_notFound() throws Exception {
+        Optional<EmployeeRelationship> retrieved = employeeRelationshipService
+                .findById(-100);
+
+        assertFalse(retrieved.isPresent());
+    }
+
+    @Test
+    public void getById() throws Exception {
+        EmployeeRelationship retrieved = employeeRelationshipService
+                .getById(mentorEmployeeRelationship.getId());
+
+        assertNotNull(retrieved);
+        assertEquals(mentorEmployeeRelationship, retrieved);
+    }
+
+    @Test(expected = NotFoundException.class)
+    public void getById_notFound() throws Exception {
+        this.employeeRelationshipService.getById(-100);
+    }
+
+    @Test
+    public void findBySourceEmployeeAndRelationships() throws Exception {
+        // Set up
+        when(this.relationshipService.findRelationshipsByNames(
+                eq(RelationshipName.PEER)))
+                .thenReturn(Stream.of(
+                        peerRelationship));
+
+        List<EmployeeRelationship> relationships = employeeRelationshipService
+                .findBySourceEmployeeAndRelationships(employeeA, RelationshipName.PEER).collect(Collectors.toList());
+
+        assertNotNull(relationships);
+        assertTrue(relationships.size() == 1);
+        assertEquals(peerEmployeeRelationship, relationships.get(0));
+    }
+
+    @Test
+    public void findBySourceEmployeeAndRelationships_noRelationships() throws Exception {
+        // Set up
+        when(this.relationshipService.findRelationshipsByNames(
+                eq(RelationshipName.PEER)))
+                .thenReturn(Stream.of(
+                        peerRelationship));
+
+        List<EmployeeRelationship> relationships = employeeRelationshipService
+                .findBySourceEmployeeAndRelationships(employeeC, RelationshipName.PEER).collect(Collectors.toList());
+
+        assertNotNull(relationships);
+        assertTrue(relationships.isEmpty());
     }
 
     /**

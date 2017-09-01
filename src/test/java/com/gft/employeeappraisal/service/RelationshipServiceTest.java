@@ -1,5 +1,6 @@
 package com.gft.employeeappraisal.service;
 
+import com.gft.employeeappraisal.exception.NotFoundException;
 import com.gft.employeeappraisal.model.Relationship;
 import com.gft.employeeappraisal.model.RelationshipName;
 import com.gft.employeeappraisal.repository.RelationshipRepository;
@@ -24,7 +25,7 @@ import static org.junit.Assert.*;
  * @author Rubén Jiménez
  */
 @RunWith(SpringRunner.class)
-@DataJpaTest()
+@DataJpaTest
 public class RelationshipServiceTest {
 
     @Autowired
@@ -40,9 +41,20 @@ public class RelationshipServiceTest {
     }
 
     @Test
-    public void findById() throws Exception {
-        Relationship relationship = relationshipService.findById(RelationshipName.OTHER.getId()).get();
+    public void getById() throws Exception {
+        Relationship relationship = relationshipService.getById(RelationshipName.PEER.getId());
         assertNotNull(relationship);
+    }
+
+    @Test(expected = NotFoundException.class)
+    public void getById_InvalidRelationshipId() throws Exception {
+        relationshipService.getById(-100);
+    }
+
+    @Test
+    public void findById() throws Exception {
+        Optional<Relationship> relationship = relationshipService.findById(RelationshipName.OTHER.getId());
+        assertTrue(relationship.isPresent());
     }
 
     @Test
