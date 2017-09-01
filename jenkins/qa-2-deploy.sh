@@ -1,8 +1,8 @@
 #!/bin/sh
 #
 
-IMAGE_DB='com.gft.employee-appraisal.db.ci:latest'
-IMAGE_APP='com.gft.employee-appraisal.ci:latest'
+IMAGE_DB='com.gft.employee-appraisal.db.qa:latest'
+IMAGE_APP='com.gft.employee-appraisal.qa:latest'
 
 echo 'Launch new DB container based on' ${IMAGE_DB} '...'
 docker run \
