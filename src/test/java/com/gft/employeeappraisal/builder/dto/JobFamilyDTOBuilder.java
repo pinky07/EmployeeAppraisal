@@ -2,7 +2,6 @@ package com.gft.employeeappraisal.builder.dto;
 
 import com.gft.employeeappraisal.builder.ObjectBuilder;
 import com.gft.swagger.employees.model.JobFamilyDTO;
-import org.apache.commons.lang.NotImplementedException;
 
 /**
  * Builder object for the {@link JobFamilyDTO} object.
@@ -16,21 +15,28 @@ public class JobFamilyDTOBuilder implements ObjectBuilder<JobFamilyDTO> {
     private String name;
     private String description;
 
+    private boolean idSet;
+    private boolean nameSet;
+    private boolean descriptionSet;
+
     public JobFamilyDTOBuilder() {
     }
 
     public JobFamilyDTOBuilder id(int id) {
         this.id = id;
+        this.idSet = true;
         return this;
     }
 
     public JobFamilyDTOBuilder name(String name) {
         this.name = name;
+        this.nameSet = true;
         return this;
     }
 
     public JobFamilyDTOBuilder description(String description) {
         this.description = description;
+        this.descriptionSet = true;
         return this;
     }
 
@@ -45,6 +51,10 @@ public class JobFamilyDTOBuilder implements ObjectBuilder<JobFamilyDTO> {
 
     @Override
     public JobFamilyDTO buildWithDefaults() {
-        throw new NotImplementedException();
+        JobFamilyDTO dto = new JobFamilyDTO();
+        if (this.idSet) dto.setId(this.id);
+        dto.setName(this.nameSet ? this.name : "Name");
+        dto.setDescription(this.descriptionSet ? this.description : "Description");
+        return dto;
     }
 }

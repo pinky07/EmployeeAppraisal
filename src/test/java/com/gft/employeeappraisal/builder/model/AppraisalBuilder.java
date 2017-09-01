@@ -3,7 +3,6 @@ package com.gft.employeeappraisal.builder.model;
 import com.gft.employeeappraisal.builder.ObjectBuilder;
 import com.gft.employeeappraisal.model.Appraisal;
 
-import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
 
 /**

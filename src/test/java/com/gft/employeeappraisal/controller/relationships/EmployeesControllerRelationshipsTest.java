@@ -1,9 +1,13 @@
 package com.gft.employeeappraisal.controller.relationships;
 
+import com.gft.employeeappraisal.builder.dto.EmployeeDTOBuilder;
+import com.gft.employeeappraisal.builder.dto.EmployeeRelationshipDTOBuilder;
+import com.gft.employeeappraisal.builder.dto.RelationshipDTOBuilder;
 import com.gft.employeeappraisal.builder.model.*;
 import com.gft.employeeappraisal.controller.BaseControllerTest;
 import com.gft.employeeappraisal.controller.EmployeesController;
 import com.gft.employeeappraisal.controller.EntityDTOComparator;
+import com.gft.employeeappraisal.exception.AccessDeniedException;
 import com.gft.employeeappraisal.exception.NotFoundException;
 import com.gft.employeeappraisal.model.*;
 import com.gft.employeeappraisal.service.EmployeeRelationshipService;
@@ -37,8 +41,7 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyInt;
 import static org.mockito.Mockito.*;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 /**
@@ -70,7 +73,7 @@ public class EmployeesControllerRelationshipsTest extends BaseControllerTest {
 
     private Employee userMock;
     private Employee mentorMock;
-
+    private EmployeeDTO testMentorDTO;
 
     @Before
     public void sharedSetUp() {
@@ -115,6 +118,14 @@ public class EmployeesControllerRelationshipsTest extends BaseControllerTest {
                 .jobLevel(jobLevelMock)
                 .applicationRole(applicationRoleMock)
                 .build();
+
+        testMentorDTO = new EmployeeDTOBuilder()
+                .id(2)
+                .email("mock@gft.com")
+                .firstName("Mocker")
+                .lastName("Mockoo")
+                .gftIdentifier("MOCK")
+                .buildWithDefaults();
     }
 
     /**
@@ -202,7 +213,7 @@ public class EmployeesControllerRelationshipsTest extends BaseControllerTest {
     @Test
     public void employeesIdRelationshipsGet_requestedNotExists() throws Exception {
         // Set up
-        when(employeeService.getById(anyInt())).thenThrow(NotFoundException.class);
+        when(employeeService.getById(anyInt())).thenThrow(new NotFoundException("Invalid Employee"));
 
         // Execution
         MvcResult result = mockMvc.perform(
@@ -219,7 +230,6 @@ public class EmployeesControllerRelationshipsTest extends BaseControllerTest {
         // Verification
         assertNotNull(resultDTO);
         assertEquals(Constants.ERROR, resultDTO.getMessage());
-        assertNull(resultDTO.getData());
         assertNull(resultDTO.getErrors());
         verify(employeeService, times(1)).getLoggedInUser();
         verify(employeeService, times(1)).getById(anyInt());
@@ -391,6 +401,454 @@ public class EmployeesControllerRelationshipsTest extends BaseControllerTest {
                 .canWriteEmployeeRelationship(any(Employee.class), any(Employee.class), any(Employee.class));
         verify(employeeRelationshipService, times(1))
                 .endEmployeeRelationship(any(EmployeeRelationship.class));
+    }
+
+    @Test
+    @WithMockUser
+    public void employeesIdRelationshipsIdDelete_invalidEmployee() throws Exception {
+        when(employeeService.getLoggedInUser()).thenReturn(mentorMock);
+        when(employeeService.getById(anyInt())).thenThrow(new NotFoundException("Invalid Employee"));
+
+        // Execution
+        MvcResult result = mockMvc.perform(
+                delete(String.format("%s/%d%s/%d",
+                        EMPLOYEES_URL,
+                        this.userMock.getId(),
+                        RELATIONSHIP_URL,
+                        testEmployeeRelationship(false).getId()))
+                        .with(csrf())
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNotFound())
+                .andReturn();
+
+        OperationResultDTO resultDTO = mapper.readValue(result.getResponse().getContentAsString(),
+                OperationResultDTO.class);
+
+        assertNotNull(resultDTO);
+        assertEquals(Constants.ERROR, resultDTO.getMessage());
+
+        verify(employeeService, times(1)).getLoggedInUser();
+        verify(employeeService, times(1)).getById(anyInt());
+        verify(employeeRelationshipService, never()).getById(anyInt());
+        verify(securityService, never())
+                .canWriteEmployeeRelationship(any(Employee.class), any(Employee.class), any(Employee.class));
+        verify(employeeRelationshipService, never())
+                .endEmployeeRelationship(any(EmployeeRelationship.class));
+    }
+
+    @Test
+    @WithMockUser
+    public void employeesIdRelationshipsIdDelete_invalidRelationship() throws Exception {
+        when(employeeService.getLoggedInUser()).thenReturn(mentorMock);
+        when(employeeService.getById(anyInt())).thenReturn(userMock);
+        when(employeeRelationshipService.getById(anyInt())).thenThrow(new NotFoundException("Invalid Relationship"));
+
+        // Execution
+        MvcResult result = mockMvc.perform(
+                delete(String.format("%s/%d%s/%d",
+                        EMPLOYEES_URL,
+                        this.userMock.getId(),
+                        RELATIONSHIP_URL,
+                        testEmployeeRelationship(false).getId()))
+                        .with(csrf())
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNotFound())
+                .andReturn();
+
+        OperationResultDTO resultDTO = mapper.readValue(result.getResponse().getContentAsString(),
+                OperationResultDTO.class);
+
+        assertNotNull(resultDTO);
+        assertEquals(Constants.ERROR, resultDTO.getMessage());
+
+        verify(employeeService, times(1)).getLoggedInUser();
+        verify(employeeService, times(1)).getById(anyInt());
+        verify(employeeRelationshipService, times(1)).getById(anyInt());
+        verify(securityService, never())
+                .canWriteEmployeeRelationship(any(Employee.class), any(Employee.class), any(Employee.class));
+        verify(employeeRelationshipService, never())
+                .endEmployeeRelationship(any(EmployeeRelationship.class));
+    }
+
+    @Test
+    @WithMockUser
+    public void employeesIdRelationshipsIdDelete_endedRelationship() throws Exception {
+        when(employeeService.getLoggedInUser()).thenReturn(mentorMock);
+        when(employeeService.getById(anyInt())).thenReturn(userMock);
+        when(employeeRelationshipService.getById(anyInt())).thenReturn(testEmployeeRelationship(true));
+
+        // Execution
+        MvcResult result = mockMvc.perform(
+                delete(String.format("%s/%d%s/%d",
+                        EMPLOYEES_URL,
+                        this.userMock.getId(),
+                        RELATIONSHIP_URL,
+                        testEmployeeRelationship(false).getId()))
+                        .with(csrf())
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isInternalServerError())
+                .andReturn();
+
+        OperationResultDTO resultDTO = mapper.readValue(result.getResponse().getContentAsString(),
+                OperationResultDTO.class);
+
+        assertNotNull(resultDTO);
+        assertEquals(Constants.ERROR, resultDTO.getMessage());
+
+        verify(employeeService, times(1)).getLoggedInUser();
+        verify(employeeService, times(1)).getById(anyInt());
+        verify(employeeRelationshipService, times(1)).getById(anyInt());
+        verify(securityService, never())
+                .canWriteEmployeeRelationship(any(Employee.class), any(Employee.class), any(Employee.class));
+        verify(employeeRelationshipService, never())
+                .endEmployeeRelationship(any(EmployeeRelationship.class));
+    }
+
+    @Test
+    @WithMockUser
+    public void employeesIdRelationshipsIdDelete_sourceEmployeeNotMatching() throws Exception {
+        when(employeeService.getLoggedInUser()).thenReturn(mentorMock);
+        when(employeeService.getById(anyInt())).thenReturn(mentorMock);
+        when(employeeRelationshipService.getById(anyInt())).thenReturn(testEmployeeRelationship(false));
+
+        // Execution
+        MvcResult result = mockMvc.perform(
+                delete(String.format("%s/%d%s/%d",
+                        EMPLOYEES_URL,
+                        this.userMock.getId(),
+                        RELATIONSHIP_URL,
+                        testEmployeeRelationship(false).getId()))
+                        .with(csrf())
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isForbidden())
+                .andReturn();
+
+        OperationResultDTO resultDTO = mapper.readValue(result.getResponse().getContentAsString(),
+                OperationResultDTO.class);
+
+        assertNotNull(resultDTO);
+        assertEquals(Constants.ERROR, resultDTO.getMessage());
+
+        verify(employeeService, times(1)).getLoggedInUser();
+        verify(employeeService, times(1)).getById(anyInt());
+        verify(employeeRelationshipService, times(1)).getById(anyInt());
+        verify(securityService, never())
+                .canWriteEmployeeRelationship(any(Employee.class), any(Employee.class), any(Employee.class));
+        verify(employeeRelationshipService, never())
+                .endEmployeeRelationship(any(EmployeeRelationship.class));
+    }
+
+    @Test
+    @WithMockUser
+    public void employeesIdRelationshipsIdDelete_invalidMentor() throws Exception {
+        when(employeeService.getLoggedInUser()).thenReturn(mentorMock);
+        when(employeeService.getById(anyInt())).thenReturn(userMock);
+        when(employeeRelationshipService.getById(anyInt())).thenReturn(testEmployeeRelationship(false));
+        doThrow(new AccessDeniedException("Mentor without permission")).when(securityService)
+                .canWriteEmployeeRelationship(any(Employee.class), any(Employee.class), any(Employee.class));
+
+        // Execution
+        MvcResult result = mockMvc.perform(
+                delete(String.format("%s/%d%s/%d",
+                        EMPLOYEES_URL,
+                        this.userMock.getId(),
+                        RELATIONSHIP_URL,
+                        testEmployeeRelationship(false).getId()))
+                        .with(csrf())
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isForbidden())
+                .andReturn();
+
+        OperationResultDTO resultDTO = mapper.readValue(result.getResponse().getContentAsString(),
+                OperationResultDTO.class);
+
+        assertNotNull(resultDTO);
+        assertEquals(Constants.ERROR, resultDTO.getMessage());
+
+        verify(employeeService, times(1)).getLoggedInUser();
+        verify(employeeService, times(1)).getById(anyInt());
+        verify(employeeRelationshipService, times(1)).getById(anyInt());
+        verify(securityService, times(1))
+                .canWriteEmployeeRelationship(any(Employee.class), any(Employee.class), any(Employee.class));
+        verify(employeeRelationshipService, never())
+                .endEmployeeRelationship(any(EmployeeRelationship.class));
+    }
+
+    @Test
+    @WithMockUser
+    public void employeesIdRelationshipsIdDelete_savingError() throws Exception {
+        when(employeeService.getLoggedInUser()).thenReturn(mentorMock);
+        when(employeeService.getById(anyInt())).thenReturn(userMock);
+        when(employeeRelationshipService.getById(anyInt())).thenReturn(testEmployeeRelationship(false));
+        when(employeeRelationshipService.endEmployeeRelationship(any(EmployeeRelationship.class)))
+                .thenReturn(Optional.empty());
+
+        // Execution
+        MvcResult result = mockMvc.perform(
+                delete(String.format("%s/%d%s/%d",
+                        EMPLOYEES_URL,
+                        this.userMock.getId(),
+                        RELATIONSHIP_URL,
+                        testEmployeeRelationship(false).getId()))
+                        .with(csrf())
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isInternalServerError())
+                .andReturn();
+
+        OperationResultDTO resultDTO = mapper.readValue(result.getResponse().getContentAsString(),
+                OperationResultDTO.class);
+
+        assertNotNull(resultDTO);
+        assertEquals(Constants.ERROR, resultDTO.getMessage());
+
+        verify(employeeService, times(1)).getLoggedInUser();
+        verify(employeeService, times(1)).getById(anyInt());
+        verify(employeeRelationshipService, times(1)).getById(anyInt());
+        verify(securityService, times(1))
+                .canWriteEmployeeRelationship(any(Employee.class), any(Employee.class), any(Employee.class));
+        verify(employeeRelationshipService, times(1))
+                .endEmployeeRelationship(any(EmployeeRelationship.class));
+    }
+
+    @Test
+    @WithMockUser
+    public void employeesIdRelationshipsIdDelete_badRequest() throws Exception {
+        // Execution
+        MvcResult result = mockMvc.perform(
+                delete(String.format("%s/%d%s/null",
+                        EMPLOYEES_URL,
+                        this.userMock.getId(),
+                        RELATIONSHIP_URL))
+                        .with(csrf())
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest())
+                .andReturn();
+
+        String resultString = result.getResponse().getContentAsString();
+        assertTrue(StringUtils.isEmpty(resultString));
+
+        verify(employeeService, never()).getLoggedInUser();
+        verify(employeeService, never()).getById(anyInt());
+        verify(employeeRelationshipService, never()).getById(anyInt());
+        verify(securityService, never())
+                .canWriteEmployeeRelationship(any(Employee.class), any(Employee.class), any(Employee.class));
+        verify(employeeRelationshipService, never())
+                .endEmployeeRelationship(any(EmployeeRelationship.class));
+    }
+
+    @Test
+    public void employeesIdRelationshipsPost() throws Exception {
+        when(employeeService.getLoggedInUser()).thenReturn(mentorMock);
+        when(employeeService.getById(userMock.getId())).thenReturn(userMock);
+        when(employeeService.getById(mentorMock.getId())).thenReturn(mentorMock);
+        when(relationshipService.getById(anyInt())).thenReturn(testRelationship());
+        when(employeeRelationshipService
+                .startEmployeeRelationship(any(Employee.class), any(Employee.class), any(Relationship.class)))
+                .thenReturn(Optional.of(testEmployeeRelationship(false)));
+
+        // Execution
+        MvcResult result = mockMvc.perform(
+                post(String.format("%s/%d/relationships",
+                        EMPLOYEES_URL,
+                        this.userMock.getId()))
+                        .with(csrf())
+                        .content(mapper.writeValueAsString(testEmployeeRelationshipDTO()))
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isCreated())
+                .andReturn();
+
+        OperationResultDTO resultDTO = mapper.readValue(result.getResponse().getContentAsString(),
+                OperationResultDTO.class);
+
+        verify(employeeService, times(1)).getLoggedInUser();
+        verify(employeeService, times(2)).getById(anyInt());
+        verify(relationshipService, times(1)).getById(anyInt());
+        verify(securityService, times(1)).checkRelationshipCount(any(Employee.class));
+        verify(securityService, times(1))
+                .canWriteEmployeeRelationship(any(Employee.class), any(Employee.class), any(Employee.class));
+        verify(employeeRelationshipService, times(1))
+                .startEmployeeRelationship(any(Employee.class), any(Employee.class), any(Relationship.class));
+
+        assertNotNull(resultDTO);
+        assertEquals(Constants.SUCCESS, resultDTO.getMessage());
+        assertNull(resultDTO.getErrors());
+
+        EmployeeRelationshipDTO employeeRelationshipDTO = mapper.convertValue(resultDTO.getData(),
+                EmployeeRelationshipDTO.class);
+
+        assertNotNull(employeeRelationshipDTO);
+        assertEquals(mentorMock.getFirstName(), employeeRelationshipDTO.getReferred().getFirstName());
+    }
+
+    @Test
+    public void employeesIdRelationshipsPost_maxRelationshipsCount() throws Exception {
+        when(employeeService.getLoggedInUser()).thenReturn(mentorMock);
+        when(employeeService.getById(userMock.getId())).thenReturn(userMock);
+        when(employeeService.getById(mentorMock.getId())).thenReturn(mentorMock);
+        doThrow(new AccessDeniedException("Max relationships"))
+                .when(securityService).checkRelationshipCount(any(Employee.class));
+
+        // Execution
+        MvcResult result = mockMvc.perform(
+                post(String.format("%s/%d/relationships",
+                        EMPLOYEES_URL,
+                        this.userMock.getId()))
+                        .with(csrf())
+                        .content(mapper.writeValueAsString(testEmployeeRelationshipDTO()))
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isForbidden())
+                .andReturn();
+
+        OperationResultDTO resultDTO = mapper.readValue(result.getResponse().getContentAsString(),
+                OperationResultDTO.class);
+
+        verify(employeeService, times(1)).getLoggedInUser();
+        verify(employeeService, times(1)).getById(anyInt());
+        verify(relationshipService, never()).getById(anyInt());
+        verify(securityService, times(1)).checkRelationshipCount(any(Employee.class));
+        verify(securityService, never())
+                .canWriteEmployeeRelationship(any(Employee.class), any(Employee.class), any(Employee.class));
+        verify(employeeRelationshipService, never())
+                .startEmployeeRelationship(any(Employee.class), any(Employee.class), any(Relationship.class));
+
+        assertNotNull(resultDTO);
+        assertEquals(Constants.ERROR, resultDTO.getMessage());
+    }
+
+    @Test
+    public void employeesIdRelationshipsPost_invalidEmployee() throws Exception {
+        when(employeeService.getLoggedInUser()).thenReturn(mentorMock);
+        when(employeeService.getById(userMock.getId())).thenThrow(new NotFoundException("Invalid Employee"));
+
+        // Execution
+        MvcResult result = mockMvc.perform(
+                post(String.format("%s/%d/relationships",
+                        EMPLOYEES_URL,
+                        this.userMock.getId()))
+                        .with(csrf())
+                        .content(mapper.writeValueAsString(testEmployeeRelationshipDTO()))
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNotFound())
+                .andReturn();
+
+        OperationResultDTO resultDTO = mapper.readValue(result.getResponse().getContentAsString(),
+                OperationResultDTO.class);
+
+        verify(employeeService, times(1)).getLoggedInUser();
+        verify(employeeService, times(1)).getById(anyInt());
+        verify(relationshipService, never()).getById(anyInt());
+        verify(securityService, never()).checkRelationshipCount(any(Employee.class));
+        verify(securityService, never())
+                .canWriteEmployeeRelationship(any(Employee.class), any(Employee.class), any(Employee.class));
+        verify(employeeRelationshipService, never())
+                .startEmployeeRelationship(any(Employee.class), any(Employee.class), any(Relationship.class));
+
+        assertNotNull(resultDTO);
+        assertEquals(Constants.ERROR, resultDTO.getMessage());
+    }
+
+    @Test
+    public void employeesIdRelationshipsPost_invalidMentor() throws Exception {
+        when(employeeService.getLoggedInUser()).thenReturn(mentorMock);
+        when(employeeService.getById(userMock.getId())).thenReturn(userMock);
+        when(employeeService.getById(mentorMock.getId())).thenReturn(mentorMock);
+        doThrow(new AccessDeniedException("Invalid mentor")).when(securityService)
+                .canWriteEmployeeRelationship(any(Employee.class), any(Employee.class), any(Employee.class));
+
+        // Execution
+        MvcResult result = mockMvc.perform(
+                post(String.format("%s/%d/relationships",
+                        EMPLOYEES_URL,
+                        this.userMock.getId()))
+                        .with(csrf())
+                        .content(mapper.writeValueAsString(testEmployeeRelationshipDTO()))
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isForbidden())
+                .andReturn();
+
+        OperationResultDTO resultDTO = mapper.readValue(result.getResponse().getContentAsString(),
+                OperationResultDTO.class);
+
+        verify(employeeService, times(1)).getLoggedInUser();
+        verify(employeeService, times(2)).getById(anyInt());
+        verify(relationshipService, times(1)).getById(anyInt());
+        verify(securityService, times(1)).checkRelationshipCount(any(Employee.class));
+        verify(securityService, times(1))
+                .canWriteEmployeeRelationship(any(Employee.class), any(Employee.class), any(Employee.class));
+        verify(employeeRelationshipService, never())
+                .startEmployeeRelationship(any(Employee.class), any(Employee.class), any(Relationship.class));
+
+        assertNotNull(resultDTO);
+        assertEquals(Constants.ERROR, resultDTO.getMessage());
+    }
+
+    @Test
+    public void employeesIdRelationshipsPost_savingError() throws Exception {
+        when(employeeService.getLoggedInUser()).thenReturn(mentorMock);
+        when(employeeService.getById(userMock.getId())).thenReturn(userMock);
+        when(employeeService.getById(mentorMock.getId())).thenReturn(mentorMock);
+        when(relationshipService.getById(anyInt())).thenReturn(testRelationship());
+        when(employeeRelationshipService
+                .startEmployeeRelationship(any(Employee.class), any(Employee.class), any(Relationship.class)))
+                .thenReturn(Optional.empty());
+
+        // Execution
+        MvcResult result = mockMvc.perform(
+                post(String.format("%s/%d/relationships",
+                        EMPLOYEES_URL,
+                        this.userMock.getId()))
+                        .with(csrf())
+                        .content(mapper.writeValueAsString(testEmployeeRelationshipDTO()))
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isInternalServerError())
+                .andReturn();
+
+        OperationResultDTO resultDTO = mapper.readValue(result.getResponse().getContentAsString(),
+                OperationResultDTO.class);
+
+        verify(employeeService, times(1)).getLoggedInUser();
+        verify(employeeService, times(2)).getById(anyInt());
+        verify(relationshipService, times(1)).getById(anyInt());
+        verify(securityService, times(1)).checkRelationshipCount(any(Employee.class));
+        verify(securityService, times(1))
+                .canWriteEmployeeRelationship(any(Employee.class), any(Employee.class), any(Employee.class));
+        verify(employeeRelationshipService, times(1))
+                .startEmployeeRelationship(any(Employee.class), any(Employee.class), any(Relationship.class));
+
+        assertNotNull(resultDTO);
+        assertEquals(Constants.ERROR, resultDTO.getMessage());
+    }
+
+    @Test
+    public void employeesIdRelationshipsPost_badRequest() throws Exception {
+        // Execution
+        MvcResult result = mockMvc.perform(
+                post(String.format("%s/%d/relationships",
+                        EMPLOYEES_URL,
+                        this.userMock.getId()))
+                        .with(csrf())
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest())
+                .andReturn();
+
+        String resultString = result.getResponse().getContentAsString();
+        assertTrue(StringUtils.isEmpty(resultString));
+
+        verify(employeeService, never()).getLoggedInUser();
+        verify(employeeService, never()).getById(anyInt());
+        verify(relationshipService, never()).getById(anyInt());
+        verify(securityService, never()).checkRelationshipCount(any(Employee.class));
+        verify(securityService, never())
+                .canWriteEmployeeRelationship(any(Employee.class), any(Employee.class), any(Employee.class));
+        verify(employeeRelationshipService, never())
+                .startEmployeeRelationship(any(Employee.class), any(Employee.class), any(Relationship.class));
+    }
+
+    private EmployeeRelationshipDTO testEmployeeRelationshipDTO() {
+        return new EmployeeRelationshipDTOBuilder()
+                .reference(testMentorDTO)
+                .relationship(new RelationshipDTOBuilder().id(0).buildWithDefaults())
+                .buildWithDefaults();
     }
 
     private EmployeeRelationship testEmployeeRelationship(boolean withEndDate) {

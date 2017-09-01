@@ -2,7 +2,6 @@ package com.gft.employeeappraisal.builder.dto;
 
 import com.gft.employeeappraisal.builder.ObjectBuilder;
 import com.gft.swagger.employees.model.RelationshipDTO;
-import org.apache.commons.lang.NotImplementedException;
 
 /**
  * Builder object for the {@link RelationshipDTO} object.
@@ -16,21 +15,28 @@ public class RelationshipDTOBuilder implements ObjectBuilder<RelationshipDTO> {
     private String name;
     private String description;
 
+    private boolean idSet;
+    private boolean nameSet;
+    private boolean descriptionSet;
+
     public RelationshipDTOBuilder() {
     }
 
     public RelationshipDTOBuilder id(int id) {
         this.id = id;
+        this.idSet = true;
         return this;
     }
 
     public RelationshipDTOBuilder name(String name) {
         this.name = name;
+        this.nameSet = true;
         return this;
     }
 
     public RelationshipDTOBuilder description(String description) {
         this.description = description;
+        this.descriptionSet = true;
         return this;
     }
 
@@ -45,7 +51,11 @@ public class RelationshipDTOBuilder implements ObjectBuilder<RelationshipDTO> {
 
     @Override
     public RelationshipDTO buildWithDefaults() {
-        throw new NotImplementedException();
+        RelationshipDTO dto = new RelationshipDTO();
+        if (this.idSet) dto.setId(this.id);
+        dto.setName(this.nameSet ? this.name : "Name");
+        dto.setDescription(this.descriptionSet ? this.description : "Description");
+        return dto;
     }
 
 }

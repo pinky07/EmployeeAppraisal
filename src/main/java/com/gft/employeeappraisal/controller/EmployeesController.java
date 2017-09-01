@@ -269,16 +269,13 @@ public class EmployeesController implements EmployeeApi {
         // Find Employee who will be the Source Employee of the EmployeeRelationship
         Employee sourceEmployee = this.employeeService.getById(employeeId);
 
-        // Find Referred employee who will be the Target Employee of the EmployeeRelationship
-        Employee targetEmployee = this.employeeService.getById(employeeRelationshipDTO.getReferred().getId());
-
         securityService.checkRelationshipCount(sourceEmployee);
-
-        // Security check
-        this.securityService.canWriteEmployeeRelationship(user, sourceEmployee, targetEmployee);
 
         // Convert DTO to Entity
         EmployeeRelationship employeeRelationship = this.employeeRelationshipDTOConverter.convertBack(employeeRelationshipDTO);
+
+        // Security check
+        this.securityService.canWriteEmployeeRelationship(user, sourceEmployee, employeeRelationship.getTargetEmployee());
 
         // Create the new EmployeeRelationship
         EmployeeRelationship createdEmployeeRelationship = this.employeeRelationshipService.startEmployeeRelationship( // <-- This creates a new EmployeeRelationship and could be improved!
@@ -288,7 +285,7 @@ public class EmployeesController implements EmployeeApi {
                 .orElseThrow(() -> new EmployeeAppraisalMicroserviceException(String.format(
                         "EmployeeRelationship between Employee[%d] -> Employee[%d] of type %s",
                         sourceEmployee.getId(),
-                        targetEmployee.getId(),
+                        employeeRelationship.getTargetEmployee().getId(),
                         employeeRelationship.getRelationship().getName())));
 
         // Create Result DTO
