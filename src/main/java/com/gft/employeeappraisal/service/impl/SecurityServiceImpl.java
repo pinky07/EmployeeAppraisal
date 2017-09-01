@@ -21,16 +21,16 @@ import java.util.Optional;
 @Service
 public class SecurityServiceImpl implements SecurityService {
 
-    @Value("${com.gft.businessRules.maxMenteeReferences}")
-    private Integer maxMenteeReferences;
-
+    private int maxMenteeReferences;
     private EmployeeRelationshipService employeeRelationshipService;
     private EmployeeService employeeService;
 
     @Autowired
     public SecurityServiceImpl(
+            @Value("${com.gft.businessRules.maxMenteeReferences}") Integer maxMenteeReferences,
             EmployeeRelationshipService employeeRelationshipService,
             EmployeeService employeeService) {
+        this.maxMenteeReferences = maxMenteeReferences;
         this.employeeRelationshipService = employeeRelationshipService;
         this.employeeService = employeeService;
     }
@@ -87,16 +87,15 @@ public class SecurityServiceImpl implements SecurityService {
      */
     @Override
     public void checkRelationshipCount(Employee sourceEmployee) throws AccessDeniedException {
-        int currentEmployeeReferences = (int) employeeRelationshipService
-                .findCurrentBySourceEmployeeAndRelationships(sourceEmployee,
-                        RelationshipName.LEAD,
-                        RelationshipName.PEER,
-                        RelationshipName.OTHER).count();
+        int currentEmployeeReferences = (int) employeeRelationshipService.findCurrentBySourceEmployeeAndRelationships(sourceEmployee,
+                RelationshipName.LEAD,
+                RelationshipName.PEER,
+                RelationshipName.OTHER).count();
 
-        if (currentEmployeeReferences >= maxMenteeReferences) {
+        if (currentEmployeeReferences < 0 || maxMenteeReferences < currentEmployeeReferences) {
             throw new AccessDeniedException(String.format(
-               "Employee with Id %d has already %d references active and cannot add any more.",
-            sourceEmployee.getId(), currentEmployeeReferences));
+                    "Employee with Id %d has already %d references active and cannot add any more.",
+                    sourceEmployee.getId(), currentEmployeeReferences));
         }
     }
 }
