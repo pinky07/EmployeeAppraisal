@@ -125,7 +125,7 @@ public class AppraisalsControllerTest extends BaseControllerTest {
                 .andExpect(status().isOk())
                 .andReturn();
 
-        AppraisalDTO appraisalDTO = mapper.readValue(result.getResponse().getContentAsString(), AppraisalDTO.class);
+        AppraisalDTO appraisalDTO = objectMapper.readValue(result.getResponse().getContentAsString(), AppraisalDTO.class);
 
         assertNotNull(appraisalDTO);
         assertEquals(mockAppraisal().getName(), appraisalDTO.getName());
@@ -153,7 +153,7 @@ public class AppraisalsControllerTest extends BaseControllerTest {
                 .andExpect(status().isOk())
                 .andReturn();
 
-        AppraisalDTO appraisalDTO = mapper.readValue(result.getResponse().getContentAsString(), AppraisalDTO.class);
+        AppraisalDTO appraisalDTO = objectMapper.readValue(result.getResponse().getContentAsString(), AppraisalDTO.class);
 
         assertNotNull(appraisalDTO);
         assertNull(appraisalDTO.getName());
@@ -181,7 +181,7 @@ public class AppraisalsControllerTest extends BaseControllerTest {
                 .andExpect(status().isNotFound())
                 .andReturn();
 
-        OperationResultDTO operationResultDTO = mapper.readValue(result.getResponse().getContentAsString(),
+        OperationResultDTO operationResultDTO = objectMapper.readValue(result.getResponse().getContentAsString(),
                 OperationResultDTO.class);
 
         assertNotNull(operationResultDTO);
@@ -205,7 +205,7 @@ public class AppraisalsControllerTest extends BaseControllerTest {
                 .andExpect(status().isNotFound())
                 .andReturn();
 
-        OperationResultDTO operationResultDTO = mapper.readValue(result.getResponse().getContentAsString(),
+        OperationResultDTO operationResultDTO = objectMapper.readValue(result.getResponse().getContentAsString(),
                 OperationResultDTO.class);
 
         assertNotNull(operationResultDTO);
@@ -262,7 +262,7 @@ public class AppraisalsControllerTest extends BaseControllerTest {
                 .andExpect(status().isOk())
                 .andReturn();
 
-        AppraisalDTO appraisalDTO = mapper.readValue(result.getResponse().getContentAsString(), AppraisalDTO.class);
+        AppraisalDTO appraisalDTO = objectMapper.readValue(result.getResponse().getContentAsString(), AppraisalDTO.class);
 
         assertNotNull(appraisalDTO);
         assertEquals(mockAppraisal().getName(), appraisalDTO.getName());
@@ -289,7 +289,7 @@ public class AppraisalsControllerTest extends BaseControllerTest {
                 .andExpect(status().isOk())
                 .andReturn();
 
-        AppraisalDTO appraisalDTO = mapper.readValue(result.getResponse().getContentAsString(), AppraisalDTO.class);
+        AppraisalDTO appraisalDTO = objectMapper.readValue(result.getResponse().getContentAsString(), AppraisalDTO.class);
 
         assertNotNull(appraisalDTO);
         assertNull(appraisalDTO.getName());
@@ -312,7 +312,7 @@ public class AppraisalsControllerTest extends BaseControllerTest {
                 .andExpect(status().isNotFound())
                 .andReturn();
 
-        AppraisalDTO appraisalDTO = mapper.readValue(result.getResponse().getContentAsString(), AppraisalDTO.class);
+        AppraisalDTO appraisalDTO = objectMapper.readValue(result.getResponse().getContentAsString(), AppraisalDTO.class);
 
         assertNotNull(appraisalDTO);
         assertNull(appraisalDTO.getName());
@@ -357,7 +357,7 @@ public class AppraisalsControllerTest extends BaseControllerTest {
                 .andExpect(status().isOk())
                 .andReturn();
 
-        List<AppraisalDTO> appraisalDTOList = Arrays.asList(mapper.readValue(result
+        List<AppraisalDTO> appraisalDTOList = Arrays.asList(objectMapper.readValue(result
                 .getResponse().getContentAsString(), AppraisalDTO[].class));
 
         assertNotNull(appraisalDTOList);
@@ -383,7 +383,7 @@ public class AppraisalsControllerTest extends BaseControllerTest {
                 .andExpect(status().isOk())
                 .andReturn();
 
-        List<AppraisalDTO> appraisalDTOList = Arrays.asList(mapper.readValue(result
+        List<AppraisalDTO> appraisalDTOList = Arrays.asList(objectMapper.readValue(result
                 .getResponse().getContentAsString(), AppraisalDTO[].class));
 
         assertNotNull(appraisalDTOList);
@@ -410,7 +410,7 @@ public class AppraisalsControllerTest extends BaseControllerTest {
                 .andExpect(status().isOk())
                 .andReturn();
 
-        List<AppraisalDTO> appraisalDTOList = Arrays.asList(mapper.readValue(result
+        List<AppraisalDTO> appraisalDTOList = Arrays.asList(objectMapper.readValue(result
                 .getResponse().getContentAsString(), AppraisalDTO[].class));
 
         assertNotNull(appraisalDTOList);
@@ -440,7 +440,7 @@ public class AppraisalsControllerTest extends BaseControllerTest {
                 .andExpect(status().isOk())
                 .andReturn();
 
-        List<AppraisalDTO> appraisalDTOList = Arrays.asList(mapper.readValue(result
+        List<AppraisalDTO> appraisalDTOList = Arrays.asList(objectMapper.readValue(result
                 .getResponse().getContentAsString(), AppraisalDTO[].class));
 
         assertNotNull(appraisalDTOList);
@@ -465,7 +465,7 @@ public class AppraisalsControllerTest extends BaseControllerTest {
                 .andExpect(status().isNotFound())
                 .andReturn();
 
-        OperationResultDTO resultDTO = mapper.readValue(result
+        OperationResultDTO resultDTO = objectMapper.readValue(result
                 .getResponse().getContentAsString(), OperationResultDTO.class);
 
         assertNotNull(resultDTO);

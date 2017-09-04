@@ -5,3 +5,10 @@ spring:
 eureka:
   client:
     enabled: false
+logging:
+  level:
+    org:
+      springframework:
+        test:
+          context:
+            cache: DEBUG

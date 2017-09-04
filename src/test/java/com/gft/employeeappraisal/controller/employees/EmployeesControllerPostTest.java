@@ -89,15 +89,15 @@ public class EmployeesControllerPostTest extends BaseControllerTest {
         MvcResult result = mockMvc.perform(post(EMPLOYEES_URL)
                 .with(csrf())
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(mapper.writeValueAsString(mockEmployeeDTO))
+                .content(objectMapper.writeValueAsString(mockEmployeeDTO))
         ).andExpect(status().isCreated()).andReturn();
 
-        OperationResultDTO resultDTO = mapper.readValue(result.getResponse().getContentAsString(), OperationResultDTO.class);
+        OperationResultDTO resultDTO = objectMapper.readValue(result.getResponse().getContentAsString(), OperationResultDTO.class);
 
         verify(employeeService, times(1)).findByEmail(anyString());
         verify(employeeService, times(1)).saveAndFlush(any(Employee.class));
 
-        EmployeeDTO resultEmployeeDTO = mapper.convertValue(resultDTO.getData(), EmployeeDTO.class);
+        EmployeeDTO resultEmployeeDTO = objectMapper.convertValue(resultDTO.getData(), EmployeeDTO.class);
         assertEquals(Constants.SUCCESS, resultDTO.getMessage());
         assertEquals(resultEmployeeDTO.getFirstName(), mockEmployeeDTO.getFirstName());
         assertNull(resultDTO.getErrors());
@@ -110,13 +110,13 @@ public class EmployeesControllerPostTest extends BaseControllerTest {
         MvcResult result = mockMvc.perform(post(EMPLOYEES_URL)
                 .with(csrf())
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(mapper.writeValueAsString(mockEmployeeDTO))
+                .content(objectMapper.writeValueAsString(mockEmployeeDTO))
         ).andExpect(status().isUnprocessableEntity()).andReturn();
 
         verify(employeeService, times(1)).findByEmail(anyString());
         verify(employeeService, never()).saveAndFlush(any(Employee.class));
 
-        OperationResultDTO resultDTO = mapper.readValue(result.getResponse().getContentAsString(), OperationResultDTO.class);
+        OperationResultDTO resultDTO = objectMapper.readValue(result.getResponse().getContentAsString(), OperationResultDTO.class);
         assertEquals(Constants.ERROR, resultDTO.getMessage());
         assertNull(resultDTO.getData());
     }
@@ -128,13 +128,13 @@ public class EmployeesControllerPostTest extends BaseControllerTest {
         MvcResult result = mockMvc.perform(post(EMPLOYEES_URL)
                 .with(csrf())
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(mapper.writeValueAsString(badRequestEmployee))
+                .content(objectMapper.writeValueAsString(badRequestEmployee))
         ).andExpect(status().isBadRequest()).andReturn();
 
         verify(employeeService, never()).findByEmail(anyString());
         verify(employeeService, never()).saveAndFlush(any(Employee.class));
 
-        OperationResultDTO resultDTO = mapper.readValue(result.getResponse().getContentAsString(), OperationResultDTO.class);
+        OperationResultDTO resultDTO = objectMapper.readValue(result.getResponse().getContentAsString(), OperationResultDTO.class);
         assertNull(resultDTO.getData());
         assertFalse(resultDTO.getErrors().isEmpty());
     }

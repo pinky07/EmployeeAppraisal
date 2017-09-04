@@ -136,7 +136,7 @@ public class EmployeesControllerGetTest extends BaseControllerTest {
                 .andExpect(status().isOk())
                 .andReturn();
 
-        List<EmployeeDTO> employeeDTOList = Arrays.asList(mapper.readValue(result.getResponse().getContentAsString(),
+        List<EmployeeDTO> employeeDTOList = Arrays.asList(objectMapper.readValue(result.getResponse().getContentAsString(),
                 EmployeeDTO[].class));
 
         assertNotNull(employeeDTOList);
@@ -167,7 +167,7 @@ public class EmployeesControllerGetTest extends BaseControllerTest {
                 .andExpect(status().isOk())
                 .andReturn();
 
-        List<EmployeeDTO> employeeDTOList = Arrays.asList(mapper.readValue(result.getResponse().getContentAsString(),
+        List<EmployeeDTO> employeeDTOList = Arrays.asList(objectMapper.readValue(result.getResponse().getContentAsString(),
                 EmployeeDTO[].class));
 
         assertNotNull(employeeDTOList);
@@ -199,7 +199,7 @@ public class EmployeesControllerGetTest extends BaseControllerTest {
                 .andReturn();
 
         String resultString = result.getResponse().getContentAsString();
-        EmployeeDTO employeeDTO = mapper.readValue(resultString, EmployeeDTO.class);
+        EmployeeDTO employeeDTO = objectMapper.readValue(resultString, EmployeeDTO.class);
 
         // Verification
         verify(securityService, times(1)).canReadEmployee(any(Employee.class), any(Employee.class));
@@ -228,7 +228,7 @@ public class EmployeesControllerGetTest extends BaseControllerTest {
                 .andExpect(status().isNotFound())
                 .andReturn();
         String resultString = result.getResponse().getContentAsString();
-        OperationResultDTO operationResultDTO = mapper.readValue(resultString, OperationResultDTO.class);
+        OperationResultDTO operationResultDTO = objectMapper.readValue(resultString, OperationResultDTO.class);
 
         // Verification
         verify(employeeService, times(1)).getById(userMock.getId());

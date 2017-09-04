@@ -132,7 +132,7 @@ public class EmployeesControllerMentorTest extends BaseControllerTest {
 
         // Verification
         verify(employeeService, times(1)).getCurrentMentorById(anyInt());
-        EmployeeDTO resultDTO = mapper.readValue(result.getResponse().getContentAsString(),
+        EmployeeDTO resultDTO = objectMapper.readValue(result.getResponse().getContentAsString(),
                 EmployeeDTO.class);
         entityDTOComparator.assertEqualsEmployee(mockMentor, resultDTO);
     }
@@ -152,7 +152,7 @@ public class EmployeesControllerMentorTest extends BaseControllerTest {
                 .with(csrf())
                 .contentType(MediaType.APPLICATION_JSON)
         ).andExpect(status().isNotFound()).andReturn();
-        EmployeeDTO resultDTO = mapper.readValue(result.getResponse().getContentAsString(), EmployeeDTO.class);
+        EmployeeDTO resultDTO = objectMapper.readValue(result.getResponse().getContentAsString(), EmployeeDTO.class);
 
         // Verification
         assertNotNull(resultDTO);
@@ -193,9 +193,9 @@ public class EmployeesControllerMentorTest extends BaseControllerTest {
         MvcResult result = mockMvc.perform(put(String.format("%s/%d/mentor", EMPLOYEES_URL, mockEmployeeDTO.getId()))
                 .with(csrf())
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(mapper.writeValueAsString(mockMentorDTO)))
+                .content(objectMapper.writeValueAsString(mockMentorDTO)))
                 .andExpect(status().isOk()).andReturn();
-        OperationResultDTO resultDTO = mapper.readValue(result.getResponse().getContentAsString(), OperationResultDTO.class);
+        OperationResultDTO resultDTO = objectMapper.readValue(result.getResponse().getContentAsString(), OperationResultDTO.class);
 
         // Verification
         assertEquals(Constants.SUCCESS, resultDTO.getMessage());
@@ -223,9 +223,9 @@ public class EmployeesControllerMentorTest extends BaseControllerTest {
                 mockEmployeeDTO.getId()))
                 .with(csrf())
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(mapper.writeValueAsString(mockMentorDTO))
+                .content(objectMapper.writeValueAsString(mockMentorDTO))
         ).andExpect(status().isNotFound()).andReturn();
-        OperationResultDTO resultDTO = mapper.readValue(result.getResponse().getContentAsString(), OperationResultDTO.class);
+        OperationResultDTO resultDTO = objectMapper.readValue(result.getResponse().getContentAsString(), OperationResultDTO.class);
 
         // Verification
         assertNotNull(resultDTO);
@@ -251,9 +251,9 @@ public class EmployeesControllerMentorTest extends BaseControllerTest {
         MvcResult result = mockMvc.perform(put(String.format("%s/%d/mentor", EMPLOYEES_URL, mockEmployeeDTO.getId()))
                 .with(csrf())
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(mapper.writeValueAsString(mockMentorDTO))
+                .content(objectMapper.writeValueAsString(mockMentorDTO))
         ).andExpect(status().isNotFound()).andReturn();
-        OperationResultDTO resultDTO = mapper.readValue(result.getResponse().getContentAsString(), OperationResultDTO.class);
+        OperationResultDTO resultDTO = objectMapper.readValue(result.getResponse().getContentAsString(), OperationResultDTO.class);
 
         // Verification
         assertNotNull(resultDTO);
@@ -279,7 +279,7 @@ public class EmployeesControllerMentorTest extends BaseControllerTest {
         result = mockMvc.perform(put(String.format("%s/null/mentor", EMPLOYEES_URL))
                 .with(csrf())
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(mapper.writeValueAsString(mockMentorDTO)))
+                .content(objectMapper.writeValueAsString(mockMentorDTO)))
                 .andExpect(status().isBadRequest()).andReturn();
 
         assertTrue(StringUtils.isEmpty(result.getResponse().getContentAsString()));

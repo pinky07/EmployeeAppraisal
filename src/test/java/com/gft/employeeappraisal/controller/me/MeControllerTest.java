@@ -68,7 +68,7 @@ public class MeControllerTest extends BaseControllerTest {
 
         verify(employeeService, times(1)).getLoggedInUser();
 
-        EmployeeDTO resultDTO = mapper.readValue(result.getResponse().getContentAsString(),
+        EmployeeDTO resultDTO = objectMapper.readValue(result.getResponse().getContentAsString(),
                 EmployeeDTO.class);
 
         entityDTOComparator.assertEqualsEmployee(mockEmployee, resultDTO);
@@ -85,7 +85,7 @@ public class MeControllerTest extends BaseControllerTest {
 
         verify(employeeService, times(1)).getLoggedInUser();
 
-        OperationResultDTO resultDTO = mapper.readValue(result.getResponse().getContentAsString(),
+        OperationResultDTO resultDTO = objectMapper.readValue(result.getResponse().getContentAsString(),
                 OperationResultDTO.class);
 
         assertNotNull(resultDTO);
@@ -109,7 +109,7 @@ public class MeControllerTest extends BaseControllerTest {
         verify(employeeService, times(1)).getLoggedInUser();
         verify(employeeService, times(1)).findCurrentMentorById(anyInt());
 
-        EmployeeDTO resultDTO = mapper.readValue(result.getResponse().getContentAsString(),
+        EmployeeDTO resultDTO = objectMapper.readValue(result.getResponse().getContentAsString(),
                 EmployeeDTO.class);
 
         entityDTOComparator.assertEqualsEmployee(mockMentor, resultDTO);
@@ -127,7 +127,7 @@ public class MeControllerTest extends BaseControllerTest {
         verify(employeeService, times(1)).getLoggedInUser();
         verify(employeeService, never()).findCurrentMentorById(anyInt());
 
-        EmployeeDTO resultDTO = mapper.readValue(result.getResponse().getContentAsString(),
+        EmployeeDTO resultDTO = objectMapper.readValue(result.getResponse().getContentAsString(),
                 EmployeeDTO.class);
 
         assertNotNull(resultDTO);
@@ -157,7 +157,7 @@ public class MeControllerTest extends BaseControllerTest {
         verify(employeeService, times(1)).getLoggedInUser();
         verify(employeeService, times(1)).findCurrentMentorById(anyInt());
 
-        OperationResultDTO resultDTO = mapper.readValue(result.getResponse().getContentAsString(),
+        OperationResultDTO resultDTO = objectMapper.readValue(result.getResponse().getContentAsString(),
                 OperationResultDTO.class);
 
         assertNotNull(resultDTO);
@@ -180,7 +180,7 @@ public class MeControllerTest extends BaseControllerTest {
                         .andExpect(status().isOk())
                         .andReturn();
 
-        List<EmployeeDTO> resultDTO = Arrays.asList(mapper.readValue(result.getResponse().getContentAsString(),
+        List<EmployeeDTO> resultDTO = Arrays.asList(objectMapper.readValue(result.getResponse().getContentAsString(),
                 EmployeeDTO[].class));
 
         assertNotNull(resultDTO);
@@ -204,7 +204,7 @@ public class MeControllerTest extends BaseControllerTest {
                         .andExpect(status().isOk())
                         .andReturn();
 
-        List<EmployeeDTO> resultDTO = Arrays.asList(mapper.readValue(result.getResponse().getContentAsString(),
+        List<EmployeeDTO> resultDTO = Arrays.asList(objectMapper.readValue(result.getResponse().getContentAsString(),
                 EmployeeDTO[].class));
 
         assertNotNull(resultDTO);
@@ -227,7 +227,7 @@ public class MeControllerTest extends BaseControllerTest {
                         .andExpect(status().isOk())
                         .andReturn();
 
-        List<EmployeeDTO> resultDTO = Arrays.asList(mapper.readValue(result.getResponse().getContentAsString(),
+        List<EmployeeDTO> resultDTO = Arrays.asList(objectMapper.readValue(result.getResponse().getContentAsString(),
                 EmployeeDTO[].class));
 
         assertNotNull(resultDTO);
@@ -252,7 +252,7 @@ public class MeControllerTest extends BaseControllerTest {
                         .andExpect(status().isNotFound())
                         .andReturn();
 
-        List<EmployeeDTO> resultDTO = Arrays.asList(mapper.readValue(result.getResponse().getContentAsString(),
+        List<EmployeeDTO> resultDTO = Arrays.asList(objectMapper.readValue(result.getResponse().getContentAsString(),
                 EmployeeDTO[].class));
 
         assertNotNull(resultDTO);
