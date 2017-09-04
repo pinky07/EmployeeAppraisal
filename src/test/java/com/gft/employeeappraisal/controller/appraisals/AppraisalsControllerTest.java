@@ -1,6 +1,6 @@
 package com.gft.employeeappraisal.controller.appraisals;
 
-import com.gft.employeeappraisal.builder.model.*;
+import com.gft.employeeappraisal.helper.builder.model.*;
 import com.gft.employeeappraisal.controller.AppraisalsController;
 import com.gft.employeeappraisal.controller.BaseControllerTest;
 import com.gft.employeeappraisal.converter.appraisal.AppraisalDTOConverter;

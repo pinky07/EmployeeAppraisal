@@ -1,15 +1,15 @@
-package com.gft.employeeappraisal.builder.dto;
+package com.gft.employeeappraisal.helper.builder.dto;
 
-import com.gft.employeeappraisal.builder.ObjectBuilder;
-import com.gft.swagger.employees.model.RelationshipDTO;
+import com.gft.employeeappraisal.helper.builder.ObjectBuilder;
+import com.gft.swagger.employees.model.JobFamilyDTO;
 
 /**
- * Builder object for the {@link RelationshipDTO} object.
+ * Builder object for the {@link JobFamilyDTO} object.
  *
  * @author Manuel Yepez
  * @author Ruben Jimenez
  */
-public class RelationshipDTOBuilder implements ObjectBuilder<RelationshipDTO> {
+public class JobFamilyDTOBuilder implements ObjectBuilder<JobFamilyDTO> {
 
     private int id;
     private String name;
@@ -19,43 +19,42 @@ public class RelationshipDTOBuilder implements ObjectBuilder<RelationshipDTO> {
     private boolean nameSet;
     private boolean descriptionSet;
 
-    public RelationshipDTOBuilder() {
+    public JobFamilyDTOBuilder() {
     }
 
-    public RelationshipDTOBuilder id(int id) {
+    public JobFamilyDTOBuilder id(int id) {
         this.id = id;
         this.idSet = true;
         return this;
     }
 
-    public RelationshipDTOBuilder name(String name) {
+    public JobFamilyDTOBuilder name(String name) {
         this.name = name;
         this.nameSet = true;
         return this;
     }
 
-    public RelationshipDTOBuilder description(String description) {
+    public JobFamilyDTOBuilder description(String description) {
         this.description = description;
         this.descriptionSet = true;
         return this;
     }
 
     @Override
-    public RelationshipDTO build() {
-        RelationshipDTO dto = new RelationshipDTO();
+    public JobFamilyDTO build() {
+        JobFamilyDTO dto = new JobFamilyDTO();
         dto.setId(this.id);
         dto.setName(this.name);
-        dto.setDescription(this.description);
+        dto.description(this.description);
         return dto;
     }
 
     @Override
-    public RelationshipDTO buildWithDefaults() {
-        RelationshipDTO dto = new RelationshipDTO();
+    public JobFamilyDTO buildWithDefaults() {
+        JobFamilyDTO dto = new JobFamilyDTO();
         if (this.idSet) dto.setId(this.id);
         dto.setName(this.nameSet ? this.name : "Name");
         dto.setDescription(this.descriptionSet ? this.description : "Description");
         return dto;
     }
-
 }

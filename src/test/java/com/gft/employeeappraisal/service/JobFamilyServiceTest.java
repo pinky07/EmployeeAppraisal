@@ -1,6 +1,6 @@
 package com.gft.employeeappraisal.service;
 
-import com.gft.employeeappraisal.builder.model.JobFamilyBuilder;
+import com.gft.employeeappraisal.helper.builder.model.JobFamilyBuilder;
 import com.gft.employeeappraisal.model.JobFamily;
 import com.gft.employeeappraisal.repository.JobFamilyRepository;
 import com.gft.employeeappraisal.service.impl.JobFamilyServiceImpl;

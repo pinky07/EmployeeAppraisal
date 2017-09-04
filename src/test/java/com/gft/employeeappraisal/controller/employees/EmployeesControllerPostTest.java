@@ -1,13 +1,13 @@
 package com.gft.employeeappraisal.controller.employees;
 
-import com.gft.employeeappraisal.builder.dto.ApplicationRoleDTOBuilder;
-import com.gft.employeeappraisal.builder.dto.EmployeeDTOBuilder;
-import com.gft.employeeappraisal.builder.dto.JobFamilyDTOBuilder;
-import com.gft.employeeappraisal.builder.dto.JobLevelDTOBuilder;
-import com.gft.employeeappraisal.builder.model.ApplicationRoleBuilder;
-import com.gft.employeeappraisal.builder.model.EmployeeBuilder;
-import com.gft.employeeappraisal.builder.model.JobFamilyBuilder;
-import com.gft.employeeappraisal.builder.model.JobLevelBuilder;
+import com.gft.employeeappraisal.helper.builder.dto.ApplicationRoleDTOBuilder;
+import com.gft.employeeappraisal.helper.builder.dto.EmployeeDTOBuilder;
+import com.gft.employeeappraisal.helper.builder.dto.JobFamilyDTOBuilder;
+import com.gft.employeeappraisal.helper.builder.dto.JobLevelDTOBuilder;
+import com.gft.employeeappraisal.helper.builder.model.ApplicationRoleBuilder;
+import com.gft.employeeappraisal.helper.builder.model.EmployeeBuilder;
+import com.gft.employeeappraisal.helper.builder.model.JobFamilyBuilder;
+import com.gft.employeeappraisal.helper.builder.model.JobLevelBuilder;
 import com.gft.employeeappraisal.controller.BaseControllerTest;
 import com.gft.employeeappraisal.converter.employee.EmployeeDTOConverter;
 import com.gft.employeeappraisal.model.ApplicationRole;

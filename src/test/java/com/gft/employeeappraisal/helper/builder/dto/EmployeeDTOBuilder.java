@@ -1,7 +1,7 @@
-package com.gft.employeeappraisal.builder.dto;
+package com.gft.employeeappraisal.helper.builder.dto;
 
-import com.gft.employeeappraisal.builder.ObjectBuilder;
-import com.gft.employeeappraisal.builder.helper.GftIdentifierGenerator;
+import com.gft.employeeappraisal.helper.builder.ObjectBuilder;
+import com.gft.employeeappraisal.helper.builder.helper.GftIdentifierGenerator;
 import com.gft.swagger.employees.model.ApplicationRoleDTO;
 import com.gft.swagger.employees.model.EmployeeDTO;
 import com.gft.swagger.employees.model.JobLevelDTO;

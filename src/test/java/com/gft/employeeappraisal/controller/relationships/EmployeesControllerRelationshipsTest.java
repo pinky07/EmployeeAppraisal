@@ -1,12 +1,12 @@
 package com.gft.employeeappraisal.controller.relationships;
 
-import com.gft.employeeappraisal.builder.dto.EmployeeDTOBuilder;
-import com.gft.employeeappraisal.builder.dto.EmployeeRelationshipDTOBuilder;
-import com.gft.employeeappraisal.builder.dto.RelationshipDTOBuilder;
-import com.gft.employeeappraisal.builder.model.*;
+import com.gft.employeeappraisal.helper.builder.dto.EmployeeDTOBuilder;
+import com.gft.employeeappraisal.helper.builder.dto.EmployeeRelationshipDTOBuilder;
+import com.gft.employeeappraisal.helper.builder.dto.RelationshipDTOBuilder;
+import com.gft.employeeappraisal.helper.builder.model.*;
 import com.gft.employeeappraisal.controller.BaseControllerTest;
 import com.gft.employeeappraisal.controller.EmployeesController;
-import com.gft.employeeappraisal.controller.EntityDTOComparator;
+import com.gft.employeeappraisal.helper.comparator.EntityDTOComparator;
 import com.gft.employeeappraisal.exception.AccessDeniedException;
 import com.gft.employeeappraisal.exception.NotFoundException;
 import com.gft.employeeappraisal.model.*;

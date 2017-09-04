@@ -1,6 +1,6 @@
 package com.gft.employeeappraisal.repository;
 
-import com.gft.employeeappraisal.builder.model.*;
+import com.gft.employeeappraisal.helper.builder.model.*;
 import com.gft.employeeappraisal.exception.EmployeeAppraisalMicroserviceTestException;
 import com.gft.employeeappraisal.model.*;
 import org.junit.Test;

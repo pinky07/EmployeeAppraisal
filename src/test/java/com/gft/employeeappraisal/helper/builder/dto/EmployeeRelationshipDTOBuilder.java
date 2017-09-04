@@ -1,6 +1,6 @@
-package com.gft.employeeappraisal.builder.dto;
+package com.gft.employeeappraisal.helper.builder.dto;
 
-import com.gft.employeeappraisal.builder.ObjectBuilder;
+import com.gft.employeeappraisal.helper.builder.ObjectBuilder;
 import com.gft.swagger.employees.model.EmployeeDTO;
 import com.gft.swagger.employees.model.EmployeeRelationshipDTO;
 import com.gft.swagger.employees.model.RelationshipDTO;

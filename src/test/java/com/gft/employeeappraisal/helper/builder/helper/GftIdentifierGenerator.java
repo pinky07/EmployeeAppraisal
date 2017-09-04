@@ -1,4 +1,4 @@
-package com.gft.employeeappraisal.builder.helper;
+package com.gft.employeeappraisal.helper.builder.helper;
 
 /**
  * Generates unique GFT identifiers for testing

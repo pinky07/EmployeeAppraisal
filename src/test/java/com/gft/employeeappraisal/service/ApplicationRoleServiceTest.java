@@ -1,6 +1,6 @@
 package com.gft.employeeappraisal.service;
 
-import com.gft.employeeappraisal.builder.model.ApplicationRoleBuilder;
+import com.gft.employeeappraisal.helper.builder.model.ApplicationRoleBuilder;
 import com.gft.employeeappraisal.model.ApplicationRole;
 import com.gft.employeeappraisal.model.ApplicationRoleName;
 import com.gft.employeeappraisal.repository.ApplicationRoleRepository;

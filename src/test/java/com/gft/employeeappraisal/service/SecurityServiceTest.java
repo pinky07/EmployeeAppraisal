@@ -1,7 +1,7 @@
 package com.gft.employeeappraisal.service;
 
-import com.gft.employeeappraisal.builder.model.EmployeeBuilder;
-import com.gft.employeeappraisal.builder.model.EmployeeRelationshipBuilder;
+import com.gft.employeeappraisal.helper.builder.model.EmployeeBuilder;
+import com.gft.employeeappraisal.helper.builder.model.EmployeeRelationshipBuilder;
 import com.gft.employeeappraisal.exception.AccessDeniedException;
 import com.gft.employeeappraisal.model.Employee;
 import com.gft.employeeappraisal.model.RelationshipName;
