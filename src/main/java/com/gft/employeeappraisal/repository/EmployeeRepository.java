@@ -20,7 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Repository
 @Transactional
 public interface EmployeeRepository extends JpaRepository<Employee, Integer> {
-    
+
     Employee findByEmailIgnoreCase(String email);
 
     Page<Employee> findByFirstNameContainsOrLastNameContainsAllIgnoreCase(String firstName,

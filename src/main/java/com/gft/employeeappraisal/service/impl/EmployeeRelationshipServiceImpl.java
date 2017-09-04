@@ -27,8 +27,8 @@ import java.util.stream.Stream;
 @Service
 public class EmployeeRelationshipServiceImpl implements EmployeeRelationshipService {
 
-    private EmployeeRelationshipRepository employeeRelationshipRepository;
-    private RelationshipService relationshipService;
+    private final EmployeeRelationshipRepository employeeRelationshipRepository;
+    private final RelationshipService relationshipService;
 
     @Autowired
     public EmployeeRelationshipServiceImpl(

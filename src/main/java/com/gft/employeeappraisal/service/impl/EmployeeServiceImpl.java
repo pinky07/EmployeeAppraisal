@@ -25,11 +25,11 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     private final Logger log = LoggerFactory.getLogger(EmployeeServiceImpl.class);
 
-    private ApplicationRoleService applicationRoleService;
-    private EmployeeRelationshipService employeeRelationshipService;
-    private JobLevelService jobLevelService;
-    private RelationshipService relationshipService;
-    private EmployeeRepository employeeRepository;
+    private final ApplicationRoleService applicationRoleService;
+    private final EmployeeRelationshipService employeeRelationshipService;
+    private final JobLevelService jobLevelService;
+    private final RelationshipService relationshipService;
+    private final EmployeeRepository employeeRepository;
 
     @Autowired
     public EmployeeServiceImpl(

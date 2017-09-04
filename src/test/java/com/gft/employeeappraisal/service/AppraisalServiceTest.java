@@ -63,10 +63,6 @@ public class AppraisalServiceTest {
     private Appraisal appraisal;
     private Employee employeeA;
     private EmployeeRelationship selfEmployeeRelationship;
-    private Relationship selfRelationship;
-    private ApplicationRole userApplicationRole;
-    private JobFamily jobFamily;
-    private JobLevel jobLevel;
 
     @Before
     public void setUp() throws Exception {
@@ -76,15 +72,15 @@ public class AppraisalServiceTest {
                 this.employeeRelationshipService);
 
         // Create an Application Role
-        this.userApplicationRole = this.applicationRoleRepository
+        ApplicationRole userApplicationRole = this.applicationRoleRepository
                 .findByNameIgnoreCase(ApplicationRoleName.USER.name());
 
         // Create a Job Family
-        this.jobFamily = this.jobFamilyRepository.saveAndFlush(new JobFamilyBuilder()
+        JobFamily jobFamily = this.jobFamilyRepository.saveAndFlush(new JobFamilyBuilder()
                 .buildWithDefaults());
 
         // Create a Job Level
-        this.jobLevel = this.jobLevelRepository.saveAndFlush(new JobLevelBuilder()
+        JobLevel jobLevel = this.jobLevelRepository.saveAndFlush(new JobLevelBuilder()
                 .jobFamily(jobFamily)
                 .buildWithDefaults());
 
@@ -97,16 +93,16 @@ public class AppraisalServiceTest {
                 .buildWithDefaults());
 
         // Retrieve the Mentor Relationship
-        this.selfRelationship = this.relationshipRepository
+        Relationship selfRelationship = this.relationshipRepository
                 .findByName(RelationshipName.SELF.name()).get();
 
         // Create a SELF EmployeeRelationship
         this.selfEmployeeRelationship = this.employeeRelationshipRepository
                 .saveAndFlush(new EmployeeRelationshipBuilder()
-                .sourceEmployee(employeeA)
-                .targetEmployee(employeeA)
-                .relationship(selfRelationship)
-                .buildWithDefaults());
+                        .sourceEmployee(employeeA)
+                        .targetEmployee(employeeA)
+                        .relationship(selfRelationship)
+                        .buildWithDefaults());
 
         this.appraisal = this.appraisalRepository.saveAndFlush(new AppraisalBuilder().buildWithDefaults());
     }
@@ -158,6 +154,6 @@ public class AppraisalServiceTest {
     private AppraisalXEvaluationFormXEmployeeRelationship mockAEFER() {
         return new AppraisalXEvaluationFormXEmployeeRelationshipBuilder()
                 .appraisalXEvaluationForm(new AppraisalXEvaluationFormBuilder()
-                .appraisal(appraisal).buildWithDefaults()).buildWithDefaults();
+                        .appraisal(appraisal).buildWithDefaults()).buildWithDefaults();
     }
 }

@@ -124,7 +124,7 @@ public class EmployeeDTOBuilder implements ObjectBuilder<EmployeeDTO> {
         dto.setIsMentor(this.isMentor);
         dto.setApplicationRole(this.applicationRoleSet ? this.applicationRoleDTO :
                 new ApplicationRoleDTOBuilder().buildWithDefaults());
-        dto.setJobLevel(this.jobLevelSet ? this.jobLevelDTO: new JobLevelDTOBuilder().buildWithDefaults());
+        dto.setJobLevel(this.jobLevelSet ? this.jobLevelDTO : new JobLevelDTOBuilder().buildWithDefaults());
         return dto;
     }
 }

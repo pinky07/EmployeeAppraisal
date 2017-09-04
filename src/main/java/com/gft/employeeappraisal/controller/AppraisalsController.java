@@ -35,11 +35,11 @@ public class AppraisalsController implements AppraisalApi {
 
     private final Logger logger = LoggerFactory.getLogger(AppraisalsController.class);
 
-    private AppraisalService appraisalService;
-    private EmployeeService employeeService;
-    private AppraisalXEvaluationFormXEmployeeRelationshipService appraisalXEvaluationFormXEmployeeRelationshipService;
-    private AppraisalDTOConverter appraisalDTOConverter;
-    private EvaluationFormDTOConverter evaluationFormDTOConverter;
+    private final AppraisalService appraisalService;
+    private final EmployeeService employeeService;
+    private final AppraisalXEvaluationFormXEmployeeRelationshipService appraisalXEvaluationFormXEmployeeRelationshipService;
+    private final AppraisalDTOConverter appraisalDTOConverter;
+    private final EvaluationFormDTOConverter evaluationFormDTOConverter;
 
     @Autowired
     public AppraisalsController(
@@ -109,7 +109,7 @@ public class AppraisalsController implements AppraisalApi {
     @Override
     public ResponseEntity<List<AppraisalDTO>> employeesIdAppraisalsGet(@PathVariable Integer employeeId,
                                                                        @RequestParam(value = "status", required = false)
-                                                                       List<String> statusList) {
+                                                                               List<String> statusList) {
         logger.debug("Called endpoint: GET /employees/{}/appraisals", employeeId);
 
         List<AppraisalDTO> result = new ArrayList<>();

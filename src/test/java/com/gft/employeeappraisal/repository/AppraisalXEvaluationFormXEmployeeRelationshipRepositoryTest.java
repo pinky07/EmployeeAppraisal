@@ -13,7 +13,6 @@ import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
 import java.util.*;
 
@@ -61,19 +60,11 @@ public class AppraisalXEvaluationFormXEmployeeRelationshipRepositoryTest {
 
     // Fixtures
 
-    private JobLevel jobLevel;
-    private ApplicationRole applicationRole;
     private Employee employeeA;
     private Employee employeeB;
-    private Relationship selfRelationship;
-    private Relationship peerRelationship;
     private Set<Relationship> selfRelationshipSet;
     private Set<Relationship> peerRelationshipSet;
-    private EmployeeRelationship a2bEmployeeRelationship;
-    private EmployeeRelationship a2aEmployeeRelationship;
     private Appraisal appraisal;
-    private EvaluationForm evaluationForm;
-    private AppraisalXEvaluationForm appraisalXEvaluationForm;
     private AppraisalXEvaluationFormXEmployeeRelationship a2bAppraisalXEvaluationFormXEmployeeRelationship;
     private AppraisalXEvaluationFormXEmployeeRelationship a2aAppraisalXEvaluationFormXEmployeeRelationship;
 
@@ -82,10 +73,10 @@ public class AppraisalXEvaluationFormXEmployeeRelationshipRepositoryTest {
      * TODO Determine if @Before annotation can work with this method and still rollback the changes
      */
     private void setUp() {
-        jobLevel = Optional.of(this.jobLevelRepository.findOne(1))
+        JobLevel jobLevel = Optional.of(this.jobLevelRepository.findOne(1))
                 .orElseThrow(() -> new EmployeeAppraisalMicroserviceTestException("Couldn't find Job Level with id 1"));
 
-        applicationRole = Optional.of(this.applicationRoleRepository.findOne(1))
+        ApplicationRole applicationRole = Optional.of(this.applicationRoleRepository.findOne(1))
                 .orElseThrow(() -> new EmployeeAppraisalMicroserviceTestException("Couldn't find Application Role with id 1"));
 
         employeeA = new EmployeeBuilder()
@@ -106,17 +97,17 @@ public class AppraisalXEvaluationFormXEmployeeRelationshipRepositoryTest {
                 .applicationRole(applicationRole)
                 .build();
 
-        selfRelationship = this.relationshipRepository.findByName(RelationshipName.SELF.name())
+        Relationship selfRelationship = this.relationshipRepository.findByName(RelationshipName.SELF.name())
                 .orElseThrow(() -> new EmployeeAppraisalMicroserviceTestException("Couldn't find Relationship Name PEER"));
 
-        peerRelationship = this.relationshipRepository.findByName(RelationshipName.PEER.name())
+        Relationship peerRelationship = this.relationshipRepository.findByName(RelationshipName.PEER.name())
                 .orElseThrow(() -> new EmployeeAppraisalMicroserviceTestException("Couldn't find Relationship Name PEER"));
 
         selfRelationshipSet = new HashSet<>(Collections.singletonList(selfRelationship));
 
         peerRelationshipSet = new HashSet<>(Collections.singletonList(peerRelationship));
 
-        a2bEmployeeRelationship = new EmployeeRelationshipBuilder()
+        EmployeeRelationship a2bEmployeeRelationship = new EmployeeRelationshipBuilder()
                 .sourceEmployee(employeeA)
                 .targetEmployee(employeeB)
                 .startDate(OffsetDateTime.now().minusDays(1))
@@ -124,7 +115,7 @@ public class AppraisalXEvaluationFormXEmployeeRelationshipRepositoryTest {
                 .relationship(peerRelationship)
                 .build();
 
-        a2aEmployeeRelationship = new EmployeeRelationshipBuilder()
+        EmployeeRelationship a2aEmployeeRelationship = new EmployeeRelationshipBuilder()
                 .sourceEmployee(employeeA)
                 .targetEmployee(employeeA)
                 .startDate(OffsetDateTime.now().minusDays(1))
@@ -139,12 +130,12 @@ public class AppraisalXEvaluationFormXEmployeeRelationshipRepositoryTest {
                 .endDate(OffsetDateTime.now().plusDays(1))
                 .build();
 
-        evaluationForm = new EvaluationFormBuilder()
+        EvaluationForm evaluationForm = new EvaluationFormBuilder()
                 .name("Test Evaluation Form")
                 .description("Test Description")
                 .build();
 
-        appraisalXEvaluationForm = new AppraisalXEvaluationFormBuilder()
+        AppraisalXEvaluationForm appraisalXEvaluationForm = new AppraisalXEvaluationFormBuilder()
                 .appraisal(appraisal)
                 .evaluationForm(evaluationForm)
                 .build();

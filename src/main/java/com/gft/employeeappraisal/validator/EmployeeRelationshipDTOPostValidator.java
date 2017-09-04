@@ -1,7 +1,6 @@
 package com.gft.employeeappraisal.validator;
 
 import com.gft.employeeappraisal.model.EmployeeRelationship;
-import com.gft.employeeappraisal.model.Relationship;
 import com.gft.employeeappraisal.service.EmployeeService;
 import com.gft.employeeappraisal.service.RelationshipService;
 import com.gft.swagger.employees.model.EmployeeRelationshipDTO;
@@ -26,8 +25,8 @@ public class EmployeeRelationshipDTOPostValidator implements HttpValidator {
     private static final String START_DATE_FIELD = "startDate";
     private static final String END_DATE_FIELD = "endDate";
 
-    private EmployeeService employeeService;
-    private RelationshipService relationshipService;
+    private final EmployeeService employeeService;
+    private final RelationshipService relationshipService;
 
     @Autowired
     public EmployeeRelationshipDTOPostValidator(

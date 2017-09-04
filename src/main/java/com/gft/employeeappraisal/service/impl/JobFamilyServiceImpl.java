@@ -16,7 +16,7 @@ import java.util.Optional;
 @Service
 public class JobFamilyServiceImpl implements JobFamilyService {
 
-    private JobFamilyRepository jobFamilyRepository;
+    private final JobFamilyRepository jobFamilyRepository;
 
     @Autowired
     public JobFamilyServiceImpl(JobFamilyRepository jobFamilyRepository) {

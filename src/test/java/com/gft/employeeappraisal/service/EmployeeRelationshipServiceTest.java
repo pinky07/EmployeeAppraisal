@@ -149,18 +149,18 @@ public class EmployeeRelationshipServiceTest {
         // Create an EmployeeRelationship: Mentor --> Mentee (MENTOR)
         this.mentorEmployeeRelationship = this.employeeRelationshipRepository
                 .saveAndFlush(new EmployeeRelationshipBuilder()
-                .sourceEmployee(mentor)
-                .targetEmployee(mentee)
-                .relationship(mentorRelationship)
-                .buildWithDefaults());
+                        .sourceEmployee(mentor)
+                        .targetEmployee(mentee)
+                        .relationship(mentorRelationship)
+                        .buildWithDefaults());
 
         // Create an EmployeeRelationship: EmployeeA --> EmployeeB (PEER)
         this.peerEmployeeRelationship = this.employeeRelationshipRepository
                 .saveAndFlush(new EmployeeRelationshipBuilder()
-                .sourceEmployee(employeeA)
-                .targetEmployee(employeeB)
-                .relationship(peerRelationship)
-                .buildWithDefaults());
+                        .sourceEmployee(employeeA)
+                        .targetEmployee(employeeB)
+                        .relationship(peerRelationship)
+                        .buildWithDefaults());
     }
 
     /**

@@ -6,6 +6,6 @@ package com.gft.employeeappraisal.model;
  * @author Manuel Yepez
  */
 public enum EvaluationStatus {
-	PENDING,
-	DONE
+    PENDING,
+    DONE
 }

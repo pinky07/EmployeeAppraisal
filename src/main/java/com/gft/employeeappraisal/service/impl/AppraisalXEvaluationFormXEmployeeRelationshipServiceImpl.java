@@ -24,8 +24,8 @@ import java.util.stream.Stream;
 public class AppraisalXEvaluationFormXEmployeeRelationshipServiceImpl implements
         AppraisalXEvaluationFormXEmployeeRelationshipService {
 
-    private RelationshipService relationshipService;
-    private AppraisalXEvaluationFormXEmployeeRelationshipRepository appraisalXEvaluationFormXEmployeeRelationshipRepository;
+    private final RelationshipService relationshipService;
+    private final AppraisalXEvaluationFormXEmployeeRelationshipRepository appraisalXEvaluationFormXEmployeeRelationshipRepository;
 
     @Autowired
     public AppraisalXEvaluationFormXEmployeeRelationshipServiceImpl(

@@ -18,7 +18,7 @@ import java.util.Set;
 @Component
 public class CompositeValidator implements HttpValidator {
 
-    private Set<HttpValidator> availableValidators;
+    private final Set<HttpValidator> availableValidators;
 
     @Autowired
     public CompositeValidator(@Lazy Set<HttpValidator> validatorSet) {

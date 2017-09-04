@@ -21,9 +21,9 @@ import java.util.stream.Stream;
 @Service
 public class AppraisalServiceImpl implements AppraisalService {
 
-    private AppraisalRepository appraisalRepository;
-    private AppraisalXEvaluationFormXEmployeeRelationshipService appraisalXEvaluationFormXEmployeeRelationshipService;
-    private EmployeeRelationshipService employeeRelationshipService;
+    private final AppraisalRepository appraisalRepository;
+    private final AppraisalXEvaluationFormXEmployeeRelationshipService appraisalXEvaluationFormXEmployeeRelationshipService;
+    private final EmployeeRelationshipService employeeRelationshipService;
 
     @Autowired
     public AppraisalServiceImpl(

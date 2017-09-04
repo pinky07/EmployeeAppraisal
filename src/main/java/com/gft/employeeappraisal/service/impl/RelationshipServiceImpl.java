@@ -21,7 +21,7 @@ import java.util.stream.Stream;
 @Service
 public class RelationshipServiceImpl implements RelationshipService {
 
-    private RelationshipRepository relationshipRepository;
+    private final RelationshipRepository relationshipRepository;
 
     @Autowired
     public RelationshipServiceImpl(

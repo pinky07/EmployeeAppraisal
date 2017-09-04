@@ -21,8 +21,8 @@ import java.util.stream.Stream;
 @Service
 public class EvaluationFormXSectionXQuestionServiceImpl implements EvaluationFormXSectionXQuestionService {
 
-    private RelationshipService relationshipService;
-    private AppraisalXEvaluationFormXEmployeeRelationshipRepository appraisalXEvaluationFormXEmployeeRelationshipRepository;
+    private final RelationshipService relationshipService;
+    private final AppraisalXEvaluationFormXEmployeeRelationshipRepository appraisalXEvaluationFormXEmployeeRelationshipRepository;
 
     @Autowired
     public EvaluationFormXSectionXQuestionServiceImpl(

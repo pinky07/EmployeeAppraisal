@@ -68,28 +68,13 @@ public class AppraisalXEvaluationFormXEmployeeRelationshipServiceTest {
     @Autowired
     private EmployeeRelationshipRepository employeeRelationshipRepository;
 
-    // Test Fixtures
-    private ApplicationRole userApplicationRole;
     private Relationship selfRelationship;
     private Relationship peerRelationship;
     private Relationship leadRelationship;
     private Relationship otherRelationship;
     private Relationship mentorRelationship;
-    private JobFamily jobFamily;
-    private JobLevel jobLevel;
     private Appraisal appraisal;
-    private EvaluationForm evaluationForm;
-    private AppraisalXEvaluationForm appraisalXEvaluationForm;
     private Employee employee;
-    private Employee employeePeer;
-    private Employee employeeLead;
-    private Employee employeeOther;
-    private Employee employeeMentor;
-    private EmployeeRelationship selfEmployeeRelationship;
-    private EmployeeRelationship peerEmployeeRelationship;
-    private EmployeeRelationship leadEmployeeRelationship;
-    private EmployeeRelationship otherEmployeeRelationship;
-    private EmployeeRelationship mentorEmployeeRelationship;
     private AppraisalXEvaluationFormXEmployeeRelationship selfAppraisalXEvaluationFormXEmployeeRelationship;
     private AppraisalXEvaluationFormXEmployeeRelationship peerfAppraisalXEvaluationFormXEmployeeRelationship;
     private AppraisalXEvaluationFormXEmployeeRelationship leadAppraisalXEvaluationFormXEmployeeRelationship;
@@ -109,7 +94,7 @@ public class AppraisalXEvaluationFormXEmployeeRelationshipServiceTest {
                 this.appraisalXEvaluationFormXEmployeeRelationshipRepository);
 
         // Retrieve the User Application Role
-        this.userApplicationRole = this.applicationRoleRepository
+        ApplicationRole userApplicationRole = this.applicationRoleRepository
                 .findByNameIgnoreCase(ApplicationRoleName.USER.name());
 
         // Retrieve Relationships
@@ -125,9 +110,9 @@ public class AppraisalXEvaluationFormXEmployeeRelationshipServiceTest {
                 .findByName(RelationshipName.MENTOR.name()).get();
 
         // Test Job Family & Job Level
-        this.jobFamily = this.jobFamilyRepository.saveAndFlush(new JobFamilyBuilder()
+        JobFamily jobFamily = this.jobFamilyRepository.saveAndFlush(new JobFamilyBuilder()
                 .buildWithDefaults());
-        this.jobLevel = this.jobLevelRepository.saveAndFlush(new JobLevelBuilder()
+        JobLevel jobLevel = this.jobLevelRepository.saveAndFlush(new JobLevelBuilder()
                 .jobFamily(jobFamily)
                 .buildWithDefaults());
 
@@ -136,13 +121,13 @@ public class AppraisalXEvaluationFormXEmployeeRelationshipServiceTest {
                 .buildWithDefaults());
 
         // Test Evaluation Form
-        this.evaluationForm = this.evaluationFormRepository.saveAndFlush(new EvaluationFormBuilder()
+        EvaluationForm evaluationForm = this.evaluationFormRepository.saveAndFlush(new EvaluationFormBuilder()
                 .buildWithDefaults());
 
         // Test
-        this.appraisalXEvaluationForm = this.appraisalXEvaluationFormRepository.saveAndFlush(new AppraisalXEvaluationFormBuilder()
+        AppraisalXEvaluationForm appraisalXEvaluationForm = this.appraisalXEvaluationFormRepository.saveAndFlush(new AppraisalXEvaluationFormBuilder()
                 .appraisal(this.appraisal)
-                .evaluationForm(this.evaluationForm)
+                .evaluationForm(evaluationForm)
                 .buildWithDefaults());
 
         // Test Employees
@@ -151,49 +136,49 @@ public class AppraisalXEvaluationFormXEmployeeRelationshipServiceTest {
                 .jobLevel(jobLevel)
                 .applicationRole(userApplicationRole)
                 .buildWithDefaults());
-        this.employeePeer = this.employeeRepository.saveAndFlush(new EmployeeBuilder()
+        Employee employeePeer = this.employeeRepository.saveAndFlush(new EmployeeBuilder()
                 .firstName("Peer")
                 .jobLevel(jobLevel)
                 .applicationRole(userApplicationRole)
                 .buildWithDefaults());
-        this.employeeLead = this.employeeRepository.saveAndFlush(new EmployeeBuilder()
+        Employee employeeLead = this.employeeRepository.saveAndFlush(new EmployeeBuilder()
                 .firstName("Lead")
                 .jobLevel(jobLevel)
                 .applicationRole(userApplicationRole)
                 .buildWithDefaults());
-        this.employeeOther = this.employeeRepository.saveAndFlush(new EmployeeBuilder()
+        Employee employeeOther = this.employeeRepository.saveAndFlush(new EmployeeBuilder()
                 .firstName("Lead")
                 .jobLevel(jobLevel)
                 .applicationRole(userApplicationRole)
                 .buildWithDefaults());
-        this.employeeMentor = this.employeeRepository.saveAndFlush(new EmployeeBuilder()
+        Employee employeeMentor = this.employeeRepository.saveAndFlush(new EmployeeBuilder()
                 .firstName("Mentor")
                 .jobLevel(jobLevel)
                 .applicationRole(userApplicationRole)
                 .buildWithDefaults());
 
         // Test Employee Relationships
-        this.selfEmployeeRelationship = this.employeeRelationshipRepository.saveAndFlush(new EmployeeRelationshipBuilder()
+        EmployeeRelationship selfEmployeeRelationship = this.employeeRelationshipRepository.saveAndFlush(new EmployeeRelationshipBuilder()
                 .sourceEmployee(employee)
                 .targetEmployee(employee)
                 .relationship(selfRelationship)
                 .buildWithDefaults());
-        this.peerEmployeeRelationship = this.employeeRelationshipRepository.saveAndFlush(new EmployeeRelationshipBuilder()
+        EmployeeRelationship peerEmployeeRelationship = this.employeeRelationshipRepository.saveAndFlush(new EmployeeRelationshipBuilder()
                 .sourceEmployee(employee)
                 .targetEmployee(employeePeer)
                 .relationship(peerRelationship)
                 .buildWithDefaults());
-        this.leadEmployeeRelationship = this.employeeRelationshipRepository.saveAndFlush(new EmployeeRelationshipBuilder()
+        EmployeeRelationship leadEmployeeRelationship = this.employeeRelationshipRepository.saveAndFlush(new EmployeeRelationshipBuilder()
                 .sourceEmployee(employee)
                 .targetEmployee(employeeLead)
                 .relationship(leadRelationship)
                 .buildWithDefaults());
-        this.otherEmployeeRelationship = this.employeeRelationshipRepository.saveAndFlush(new EmployeeRelationshipBuilder()
+        EmployeeRelationship otherEmployeeRelationship = this.employeeRelationshipRepository.saveAndFlush(new EmployeeRelationshipBuilder()
                 .sourceEmployee(employee)
                 .targetEmployee(employeeOther)
                 .relationship(otherRelationship)
                 .buildWithDefaults());
-        this.mentorEmployeeRelationship = this.employeeRelationshipRepository.saveAndFlush(new EmployeeRelationshipBuilder()
+        EmployeeRelationship mentorEmployeeRelationship = this.employeeRelationshipRepository.saveAndFlush(new EmployeeRelationshipBuilder()
                 .sourceEmployee(employeeMentor)
                 .targetEmployee(employee)
                 .relationship(mentorRelationship)

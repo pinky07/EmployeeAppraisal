@@ -16,7 +16,7 @@ import java.util.Optional;
 @Service
 public class JobLevelServiceImpl implements JobLevelService {
 
-    private JobLevelRepository jobLevelRepository;
+    private final JobLevelRepository jobLevelRepository;
 
     @Autowired
     public JobLevelServiceImpl(JobLevelRepository jobLevelRepository) {

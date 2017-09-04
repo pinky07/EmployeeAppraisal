@@ -24,7 +24,7 @@ public class EmployeeDTOPostValidator implements HttpValidator {
     private static final String APPLICATION_ROLE_FIELD = "applicationRole";
     private static final String JOB_LEVEL_FIELD = "jobLevel";
 
-    private CompositeValidator compositeValidator;
+    private final CompositeValidator compositeValidator;
 
     @Autowired
     public EmployeeDTOPostValidator(CompositeValidator compositeValidator) {

@@ -21,8 +21,8 @@ import java.util.Objects;
 @Component
 public class EmployeeRelationshipDTOMapper extends CustomMapper<EmployeeRelationship, EmployeeRelationshipDTO> {
 
-    private EmployeeService employeeService;
-    private RelationshipService relationshipService;
+    private final EmployeeService employeeService;
+    private final RelationshipService relationshipService;
 
     @Autowired
     public EmployeeRelationshipDTOMapper(

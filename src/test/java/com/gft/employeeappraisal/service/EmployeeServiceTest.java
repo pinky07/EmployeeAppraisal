@@ -75,8 +75,6 @@ public class EmployeeServiceTest {
 
     // Test Fixtures
     private ApplicationRole userApplicationRole;
-    private ApplicationRole adminApplicationRole;
-    private JobFamily jobFamily;
     private JobLevel jobLevel;
     private Employee employeeA;
     private Employee employeeB;
@@ -109,11 +107,11 @@ public class EmployeeServiceTest {
                 .findByNameIgnoreCase(ApplicationRoleName.USER.name());
 
         // Create and Admin Application Role
-        this.adminApplicationRole = this.applicationRoleRepository
+        ApplicationRole adminApplicationRole = this.applicationRoleRepository
                 .findByNameIgnoreCase(ApplicationRoleName.ADMIN.name());
 
         // Create a Job Family
-        this.jobFamily = this.jobFamilyRepository.saveAndFlush(new JobFamilyBuilder()
+        JobFamily jobFamily = this.jobFamilyRepository.saveAndFlush(new JobFamilyBuilder()
                 .buildWithDefaults());
 
         // Create a Job Level

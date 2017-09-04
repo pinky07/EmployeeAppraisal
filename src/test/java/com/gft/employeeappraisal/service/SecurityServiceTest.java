@@ -27,8 +27,6 @@ public class SecurityServiceTest {
 
     // Required to initialize the class under test
 
-    private int maxMenteeReferences = 5;
-
     @Mock
     private EmployeeRelationshipService employeeRelationshipService;
 
@@ -41,8 +39,9 @@ public class SecurityServiceTest {
 
     @Before
     public void setUp() throws Exception {
+        int maxMenteeReferences = 5;
         this.securityService = new SecurityServiceImpl(
-                this.maxMenteeReferences,
+                maxMenteeReferences,
                 this.employeeRelationshipService,
                 this.employeeService);
     }

@@ -145,7 +145,7 @@ public class EmployeesControllerGetTest extends BaseControllerTest {
         verify(employeeService, times(1))
                 .findPagedByFirstNameOrLastName(anyString(), anyString(), anyInt(), anyInt());
 
-        entityDTOComparator.assertEqualsEmployee(userMock,  employeeDTOList.get(0));
+        entityDTOComparator.assertEqualsEmployee(userMock, employeeDTOList.get(0));
     }
 
     /**
