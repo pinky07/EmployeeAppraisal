@@ -48,3 +48,6 @@ CREATE TABLE EmployeeEvaluationFormAnswer (
   FOREIGN KEY (employeeEvaluationFormId) REFERENCES EmployeeEvaluationForm(id),
   FOREIGN KEY (scoreValueId) REFERENCES ScoreValue(id)
 );
+
+SELECT pg_catalog.setval(pg_get_serial_sequence('EmployeeEvaluationForm', 'id'), MAX(id)) FROM EmployeeEvaluationForm;
+SELECT pg_catalog.setval(pg_get_serial_sequence('EmployeeEvaluationFormAnswer', 'id'), MAX(id)) FROM EmployeeEvaluationFormAnswer;
