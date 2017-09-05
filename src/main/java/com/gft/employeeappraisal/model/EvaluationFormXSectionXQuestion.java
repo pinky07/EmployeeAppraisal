@@ -33,7 +33,7 @@ public class EvaluationFormXSectionXQuestion {
     private EvaluationFormQuestion evaluationFormQuestion;
 
     @OneToMany(mappedBy = "evaluationFormXSectionXQuestion", fetch = FetchType.LAZY)
-    private Set<EvaluationFormXSectionXQuestionXAnswer> evaluationFormXSectionXQuestionXAnswers;
+    private Set<EmployeeEvaluationFormAnswer> employeeEvaluationFormAnswers;
 
     public int getId() {
         return id;
@@ -67,13 +67,13 @@ public class EvaluationFormXSectionXQuestion {
         this.evaluationFormQuestion = evaluationFormQuestion;
     }
 
-    public Set<EvaluationFormXSectionXQuestionXAnswer> getEvaluationFormXSectionXQuestionXAnswers() {
-        return evaluationFormXSectionXQuestionXAnswers;
+    public Set<EmployeeEvaluationFormAnswer> getEmployeeEvaluationFormAnswers() {
+        return employeeEvaluationFormAnswers;
     }
 
-    public void setEvaluationFormXSectionXQuestionXAnswers(
-            Set<EvaluationFormXSectionXQuestionXAnswer> evaluationFormXSectionXQuestionXAnswers) {
-        this.evaluationFormXSectionXQuestionXAnswers = evaluationFormXSectionXQuestionXAnswers;
+    public void setEmployeeEvaluationFormAnswers(
+            Set<EmployeeEvaluationFormAnswer> employeeEvaluationFormAnswers) {
+        this.employeeEvaluationFormAnswers = employeeEvaluationFormAnswers;
     }
 
     @Override

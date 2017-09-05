@@ -1,16 +1,17 @@
 package com.gft.employeeappraisal.service.impl;
 
-import com.gft.employeeappraisal.model.*;
+import com.gft.employeeappraisal.model.Appraisal;
+import com.gft.employeeappraisal.model.Employee;
+import com.gft.employeeappraisal.model.EmployeeEvaluationForm;
+import com.gft.employeeappraisal.model.EvaluationStatus;
 import com.gft.employeeappraisal.repository.AppraisalRepository;
 import com.gft.employeeappraisal.service.AppraisalService;
-import com.gft.employeeappraisal.service.AppraisalXEvaluationFormXEmployeeRelationshipService;
-import com.gft.employeeappraisal.service.EmployeeRelationshipService;
+import com.gft.employeeappraisal.service.AppraisalXEvaluationFormService;
+import com.gft.employeeappraisal.service.EmployeeEvaluationFormService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
@@ -22,17 +23,17 @@ import java.util.stream.Stream;
 public class AppraisalServiceImpl implements AppraisalService {
 
     private AppraisalRepository appraisalRepository;
-    private AppraisalXEvaluationFormXEmployeeRelationshipService appraisalXEvaluationFormXEmployeeRelationshipService;
-    private EmployeeRelationshipService employeeRelationshipService;
+    private EmployeeEvaluationFormService employeeEvaluationFormService;
+    private AppraisalXEvaluationFormService appraisalXEvaluationFormService;
 
     @Autowired
     public AppraisalServiceImpl(
             AppraisalRepository appraisalRepository,
-            AppraisalXEvaluationFormXEmployeeRelationshipService appraisalXEvaluationFormXEmployeeRelationshipService,
-            EmployeeRelationshipService employeeRelationshipService) {
+            EmployeeEvaluationFormService employeeEvaluationFormService,
+            AppraisalXEvaluationFormService appraisalXEvaluationFormService) {
         this.appraisalRepository = appraisalRepository;
-        this.appraisalXEvaluationFormXEmployeeRelationshipService = appraisalXEvaluationFormXEmployeeRelationshipService;
-        this.employeeRelationshipService = employeeRelationshipService;
+        this.employeeEvaluationFormService = employeeEvaluationFormService;
+        this.appraisalXEvaluationFormService = appraisalXEvaluationFormService;
     }
 
     /**
@@ -48,15 +49,16 @@ public class AppraisalServiceImpl implements AppraisalService {
      */
     @Override
     public Stream<Appraisal> findEmployeeAppraisals(Employee employee, EvaluationStatus evaluationStatus) {
-        // Find SELF relationships
-        List<EmployeeRelationship> employeeRelationships = employeeRelationshipService
-                .findBySourceEmployeeAndRelationships(employee, RelationshipName.SELF).collect(Collectors.toList());
 
-        Stream<AppraisalXEvaluationFormXEmployeeRelationship> evaluationFormXEmployeeRelationshipStream =
-                appraisalXEvaluationFormXEmployeeRelationshipService
-                        .findByEmployeeRelationshipsAndEvaluationStatus(employeeRelationships, evaluationStatus);
+        if (evaluationStatus == null) {
+            evaluationStatus = EvaluationStatus.PENDING;
+        }
 
-        return evaluationFormXEmployeeRelationshipStream
+        Stream<EmployeeEvaluationForm> employeeEvaluationFormStream =
+                employeeEvaluationFormService
+                        .findByEmployeeAndFilledByEmployeeId(employee, evaluationStatus);
+
+        return employeeEvaluationFormStream
                 .map(ef -> ef.getAppraisalXEvaluationForm().getAppraisal()).distinct();
     }
 

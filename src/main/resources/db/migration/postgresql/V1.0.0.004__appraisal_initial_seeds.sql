@@ -714,5 +714,5 @@ VALUES
         -- Career Goals
         (3, 8, 36);
 
--- INSERT INTO EvaluationFormXSectionXQuestionXAnswer (id, evaluationFormXSectionXQuestionId, appraisalXEvaluationFormXEmployeeRelationshipId, scoreValueId, comment)
+-- INSERT INTO EmployeeEvaluationFormAnswer (id, evaluationFormXSectionXQuestionId, appraisalXEvaluationFormXEmployeeRelationshipId, scoreValueId, comment)
 -- VALUES  ();

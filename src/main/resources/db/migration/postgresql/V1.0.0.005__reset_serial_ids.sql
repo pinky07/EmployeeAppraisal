@@ -21,4 +21,4 @@ SELECT pg_catalog.setval(pg_get_serial_sequence('AppraisalXEvaluationForm', 'id'
 SELECT pg_catalog.setval(pg_get_serial_sequence('EvaluationFormXJobLevel', 'id'), MAX(id)) FROM EvaluationFormXJobLevel;
 SELECT pg_catalog.setval(pg_get_serial_sequence('AppraisalXEvaluationFormXEmployeeRelationship', 'id'), MAX(id)) FROM AppraisalXEvaluationFormXEmployeeRelationship;
 SELECT pg_catalog.setval(pg_get_serial_sequence('EvaluationFormXSectionXQuestion', 'id'), MAX(id)) FROM EvaluationFormXSectionXQuestion;
--- SELECT pg_catalog.setval(pg_get_serial_sequence('EvaluationFormXSectionXQuestionXAnswer', 'id'), MAX(id)) FROM EvaluationFormXSectionXQuestionXAnswer;
+-- SELECT pg_catalog.setval(pg_get_serial_sequence('EmployeeEvaluationFormAnswer', 'id'), MAX(id)) FROM EmployeeEvaluationFormAnswer;

@@ -5,6 +5,7 @@ import org.hibernate.validator.constraints.NotEmpty;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.util.Set;
 
 /**
  * Entity persistent class that describes an ScoreValue table.
@@ -33,6 +34,9 @@ public class ScoreValue {
     @Size(max = 500)
     @Column(name = "description", nullable = false, length = 40)
     private String description;
+
+    @OneToMany(mappedBy = "scoreValue", fetch = FetchType.LAZY)
+    private Set<EmployeeEvaluationFormAnswer> employeeEvaluationFormAnswers;
 
     public int getId() {
         return id;
@@ -64,6 +68,14 @@ public class ScoreValue {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public Set<EmployeeEvaluationFormAnswer> getEmployeeEvaluationFormAnswers() {
+        return employeeEvaluationFormAnswers;
+    }
+
+    public void setEmployeeEvaluationFormAnswers(Set<EmployeeEvaluationFormAnswer> employeeEvaluationFormAnswers) {
+        this.employeeEvaluationFormAnswers = employeeEvaluationFormAnswers;
     }
 
     @Override

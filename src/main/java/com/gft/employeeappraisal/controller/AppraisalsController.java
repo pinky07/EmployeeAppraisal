@@ -3,9 +3,12 @@ package com.gft.employeeappraisal.controller;
 import com.gft.employeeappraisal.converter.appraisal.AppraisalDTOConverter;
 import com.gft.employeeappraisal.converter.evaluationform.EvaluationFormDTOConverter;
 import com.gft.employeeappraisal.exception.NotFoundException;
-import com.gft.employeeappraisal.model.*;
+import com.gft.employeeappraisal.model.Appraisal;
+import com.gft.employeeappraisal.model.AppraisalXEvaluationForm;
+import com.gft.employeeappraisal.model.Employee;
+import com.gft.employeeappraisal.model.EmployeeEvaluationForm;
 import com.gft.employeeappraisal.service.AppraisalService;
-import com.gft.employeeappraisal.service.AppraisalXEvaluationFormXEmployeeRelationshipService;
+import com.gft.employeeappraisal.service.EmployeeEvaluationFormService;
 import com.gft.employeeappraisal.service.EmployeeService;
 import com.gft.swagger.employees.api.AppraisalApi;
 import com.gft.swagger.employees.model.AppraisalDTO;
@@ -37,7 +40,7 @@ public class AppraisalsController implements AppraisalApi {
 
     private AppraisalService appraisalService;
     private EmployeeService employeeService;
-    private AppraisalXEvaluationFormXEmployeeRelationshipService appraisalXEvaluationFormXEmployeeRelationshipService;
+    private EmployeeEvaluationFormService employeeEvaluationFormService;
     private AppraisalDTOConverter appraisalDTOConverter;
     private EvaluationFormDTOConverter evaluationFormDTOConverter;
 
@@ -45,12 +48,12 @@ public class AppraisalsController implements AppraisalApi {
     public AppraisalsController(
             AppraisalService appraisalService,
             EmployeeService employeeService,
-            AppraisalXEvaluationFormXEmployeeRelationshipService appraisalXEvaluationFormXEmployeeRelationshipService,
+            EmployeeEvaluationFormService employeeEvaluationFormService,
             AppraisalDTOConverter appraisalDTOConverter,
             EvaluationFormDTOConverter evaluationFormDTOConverter) {
         this.appraisalService = appraisalService;
         this.employeeService = employeeService;
-        this.appraisalXEvaluationFormXEmployeeRelationshipService = appraisalXEvaluationFormXEmployeeRelationshipService;
+        this.employeeEvaluationFormService = employeeEvaluationFormService;
         this.appraisalDTOConverter = appraisalDTOConverter;
         this.evaluationFormDTOConverter = evaluationFormDTOConverter;
     }
@@ -66,9 +69,9 @@ public class AppraisalsController implements AppraisalApi {
                         "Appraisal with id %d was not found", appraisalId)));
 
         // Check if the employee was indeed part of the appraisal
-        AppraisalDTO result = appraisalXEvaluationFormXEmployeeRelationshipService
-                .findByAppraisalAndEmployeeAndSourceRelationships(appraisal, employee, RelationshipName.SELF)
-                .map(AppraisalXEvaluationFormXEmployeeRelationship::getAppraisalXEvaluationForm)
+        AppraisalDTO result = employeeEvaluationFormService
+                .findByAppraisalAndEmployee(appraisal, employee)
+                .map(EmployeeEvaluationForm::getAppraisalXEvaluationForm)
                 .map(AppraisalXEvaluationForm::getAppraisal)
                 .findFirst().map(a -> appraisalDTOConverter.convert(a)).orElse(new AppraisalDTO());
 
@@ -134,9 +137,9 @@ public class AppraisalsController implements AppraisalApi {
                         "Appraisal with id %d was not found", appraisalId)));
 
         // Check if the employee was indeed part of the appraisal
-        AppraisalDTO result = appraisalXEvaluationFormXEmployeeRelationshipService
-                .findByAppraisalAndEmployeeAndSourceRelationships(appraisal, user, RelationshipName.SELF)
-                .map(AppraisalXEvaluationFormXEmployeeRelationship::getAppraisalXEvaluationForm)
+        AppraisalDTO result = employeeEvaluationFormService
+                .findByAppraisalAndEmployee(appraisal, user)
+                .map(EmployeeEvaluationForm::getAppraisalXEvaluationForm)
                 .map(AppraisalXEvaluationForm::getAppraisal)
                 .findFirst().map(a -> appraisalDTOConverter.convert(a)).orElse(new AppraisalDTO());
 
@@ -179,10 +182,10 @@ public class AppraisalsController implements AppraisalApi {
                         "Appraisal with id %d was not found", appraisalId)));
 
         // Get Evaluation Forms
-        List<EvaluationFormDTO> result = this.appraisalXEvaluationFormXEmployeeRelationshipService.findByAppraisalAndEmployee(
+        List<EvaluationFormDTO> result = this.employeeEvaluationFormService.findByAppraisalAndEmployee(
                 appraisal,
                 user)
-                .map(AppraisalXEvaluationFormXEmployeeRelationship::getAppraisalXEvaluationForm)
+                .map(EmployeeEvaluationForm::getAppraisalXEvaluationForm)
                 .map(AppraisalXEvaluationForm::getEvaluationForm)
                 .map(evaluationForm -> evaluationFormDTOConverter.convert(evaluationForm))
                 .collect(Collectors.toList());

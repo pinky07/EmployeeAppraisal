@@ -3,7 +3,6 @@ package com.gft.employeeappraisal.model;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.time.OffsetDateTime;
-import java.util.Set;
 
 /**
  * Entity persistent class that describes an EmployeeRelationship table.
@@ -39,9 +38,6 @@ public class EmployeeRelationship {
 
     @Column(name = "endDate", columnDefinition = "TIMESTAMP")
     private OffsetDateTime endDate;
-
-    @OneToMany(mappedBy = "employeeRelationship", fetch = FetchType.LAZY)
-    private Set<AppraisalXEvaluationFormXEmployeeRelationship> appraisalXEvaluationFormXEmployeeRelationships;
 
     public int getId() {
         return id;
@@ -89,15 +85,6 @@ public class EmployeeRelationship {
 
     public void setRelationship(Relationship relationship) {
         this.relationship = relationship;
-    }
-
-    public Set<AppraisalXEvaluationFormXEmployeeRelationship> getAppraisalXEvaluationFormXEmployeeRelationships() {
-        return appraisalXEvaluationFormXEmployeeRelationships;
-    }
-
-    public void setAppraisalXEvaluationFormXEmployeeRelationships(
-            Set<AppraisalXEvaluationFormXEmployeeRelationship> appraisalXEvaluationFormXEmployeeRelationships) {
-        this.appraisalXEvaluationFormXEmployeeRelationships = appraisalXEvaluationFormXEmployeeRelationships;
     }
 
     @Override

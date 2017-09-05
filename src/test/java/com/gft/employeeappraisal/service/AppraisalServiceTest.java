@@ -12,7 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -40,51 +39,40 @@ public class AppraisalServiceTest {
     private ApplicationRoleRepository applicationRoleRepository;
 
     @Autowired
-    private EmployeeRelationshipRepository employeeRelationshipRepository;
-
-    @Autowired
     private JobFamilyRepository jobFamilyRepository;
 
     @Autowired
     private JobLevelRepository jobLevelRepository;
 
-    @Autowired
-    private RelationshipRepository relationshipRepository;
+    @Mock
+    private EmployeeEvaluationFormService employeeEvaluationFormService;
 
     @Mock
-    private AppraisalXEvaluationFormXEmployeeRelationshipService appraisalXEvaluationFormXEmployeeRelationshipService;
-
-    @Mock
-    private EmployeeRelationshipService employeeRelationshipService;
+    private AppraisalXEvaluationFormService appraisalXEvaluationFormService;
 
     // Class under test
     private AppraisalService appraisalService;
 
     private Appraisal appraisal;
     private Employee employeeA;
-    private EmployeeRelationship selfEmployeeRelationship;
-    private Relationship selfRelationship;
-    private ApplicationRole userApplicationRole;
-    private JobFamily jobFamily;
-    private JobLevel jobLevel;
 
     @Before
     public void setUp() throws Exception {
         this.appraisalService = new AppraisalServiceImpl(
                 this.appraisalRepository,
-                this.appraisalXEvaluationFormXEmployeeRelationshipService,
-                this.employeeRelationshipService);
+                this.employeeEvaluationFormService,
+                this.appraisalXEvaluationFormService);
 
         // Create an Application Role
-        this.userApplicationRole = this.applicationRoleRepository
+        ApplicationRole userApplicationRole = this.applicationRoleRepository
                 .findByNameIgnoreCase(ApplicationRoleName.USER.name());
 
         // Create a Job Family
-        this.jobFamily = this.jobFamilyRepository.saveAndFlush(new JobFamilyBuilder()
+        JobFamily jobFamily = this.jobFamilyRepository.saveAndFlush(new JobFamilyBuilder()
                 .buildWithDefaults());
 
         // Create a Job Level
-        this.jobLevel = this.jobLevelRepository.saveAndFlush(new JobLevelBuilder()
+        JobLevel jobLevel = this.jobLevelRepository.saveAndFlush(new JobLevelBuilder()
                 .jobFamily(jobFamily)
                 .buildWithDefaults());
 
@@ -94,18 +82,6 @@ public class AppraisalServiceTest {
                 .lastName("LastNameA")
                 .jobLevel(jobLevel)
                 .applicationRole(userApplicationRole)
-                .buildWithDefaults());
-
-        // Retrieve the Mentor Relationship
-        this.selfRelationship = this.relationshipRepository
-                .findByName(RelationshipName.SELF.name()).get();
-
-        // Create a SELF EmployeeRelationship
-        this.selfEmployeeRelationship = this.employeeRelationshipRepository
-                .saveAndFlush(new EmployeeRelationshipBuilder()
-                .sourceEmployee(employeeA)
-                .targetEmployee(employeeA)
-                .relationship(selfRelationship)
                 .buildWithDefaults());
 
         this.appraisal = this.appraisalRepository.saveAndFlush(new AppraisalBuilder().buildWithDefaults());
@@ -126,12 +102,9 @@ public class AppraisalServiceTest {
 
     @Test
     public void findEmployeeAppraisals() throws Exception {
-        when(employeeRelationshipService
-                .findBySourceEmployeeAndRelationships(employeeA, RelationshipName.SELF))
-                .thenReturn(Stream.of(selfEmployeeRelationship));
-        when(appraisalXEvaluationFormXEmployeeRelationshipService
-                .findByEmployeeRelationshipsAndEvaluationStatus(Collections.singletonList(selfEmployeeRelationship),
-                        null)).thenReturn(Stream.of(mockAEFER()));
+        when(employeeEvaluationFormService
+                .findByEmployeeAndFilledByEmployeeId(employeeA, EvaluationStatus.PENDING))
+                .thenReturn(Stream.of(testEmployeeEvaluationForm()));
 
         List<Appraisal> retrieved = appraisalService
                 .findEmployeeAppraisals(employeeA, null).collect(Collectors.toList());
@@ -155,8 +128,8 @@ public class AppraisalServiceTest {
         assertEquals(appraisal, retrieved.get());
     }
 
-    private AppraisalXEvaluationFormXEmployeeRelationship mockAEFER() {
-        return new AppraisalXEvaluationFormXEmployeeRelationshipBuilder()
+    private EmployeeEvaluationForm testEmployeeEvaluationForm() {
+        return new EmployeeEvaluationFormBuilder()
                 .appraisalXEvaluationForm(new AppraisalXEvaluationFormBuilder()
                 .appraisal(appraisal).buildWithDefaults()).buildWithDefaults();
     }

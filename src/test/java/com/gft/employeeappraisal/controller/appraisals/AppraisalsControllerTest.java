@@ -7,7 +7,7 @@ import com.gft.employeeappraisal.converter.appraisal.AppraisalDTOConverter;
 import com.gft.employeeappraisal.exception.NotFoundException;
 import com.gft.employeeappraisal.model.*;
 import com.gft.employeeappraisal.service.AppraisalService;
-import com.gft.employeeappraisal.service.AppraisalXEvaluationFormXEmployeeRelationshipService;
+import com.gft.employeeappraisal.service.EmployeeEvaluationFormService;
 import com.gft.employeeappraisal.service.EmployeeService;
 import com.gft.swagger.employees.model.AppraisalDTO;
 import com.gft.swagger.employees.model.OperationResultDTO;
@@ -57,7 +57,7 @@ public class AppraisalsControllerTest extends BaseControllerTest {
 	private EmployeeService employeeService;
 
 	@MockBean(reset = MockReset.AFTER)
-	private AppraisalXEvaluationFormXEmployeeRelationshipService appraisalXEvaluationFormXEmployeeRelationshipService;
+	private EmployeeEvaluationFormService employeeEvaluationFormService;
 
 	@Autowired
 	@SuppressWarnings("unused")
@@ -113,9 +113,8 @@ public class AppraisalsControllerTest extends BaseControllerTest {
     @Test
     public void employeesIdAppraisalsIdGet() throws Exception {
 		when(employeeService.getById(userMock.getId())).thenReturn(userMock);
-		doReturn(Stream.of(mockAppXEFXER())).when(appraisalXEvaluationFormXEmployeeRelationshipService)
-				.findByAppraisalAndEmployeeAndSourceRelationships(any(Appraisal.class), any(Employee.class),
-						any(RelationshipName.class));
+		doReturn(Stream.of(testEmployeeEvaluationForm())).when(employeeEvaluationFormService)
+				.findByAppraisalAndEmployee(any(Appraisal.class), any(Employee.class));
 
 		doReturn(Optional.of(mockAppraisal())).when(appraisalService).findById(anyInt());
 
@@ -133,17 +132,15 @@ public class AppraisalsControllerTest extends BaseControllerTest {
 
 		verify(employeeService, times(1)).getById(anyInt());
 		verify(appraisalService, times(1)).findById(anyInt());
-		verify(appraisalXEvaluationFormXEmployeeRelationshipService, times(1))
-				.findByAppraisalAndEmployeeAndSourceRelationships(any(Appraisal.class), any(Employee.class),
-						any(RelationshipName.class));
+		verify(employeeEvaluationFormService, times(1))
+				.findByAppraisalAndEmployee(any(Appraisal.class), any(Employee.class));
     }
 
 	@Test
 	public void employeesIdAppraisalsIdGet_emptyDTO() throws Exception {
 		when(employeeService.getById(userMock.getId())).thenReturn(userMock);
-		doReturn(Stream.empty()).when(appraisalXEvaluationFormXEmployeeRelationshipService)
-				.findByAppraisalAndEmployeeAndSourceRelationships(any(Appraisal.class), any(Employee.class),
-						any(RelationshipName.class));
+		doReturn(Stream.empty()).when(employeeEvaluationFormService)
+				.findByAppraisalAndEmployee(any(Appraisal.class), any(Employee.class));
 
 		doReturn(Optional.of(mockAppraisal())).when(appraisalService).findById(anyInt());
 
@@ -161,17 +158,15 @@ public class AppraisalsControllerTest extends BaseControllerTest {
 
 		verify(employeeService, times(1)).getById(anyInt());
 		verify(appraisalService, times(1)).findById(anyInt());
-		verify(appraisalXEvaluationFormXEmployeeRelationshipService, times(1))
-				.findByAppraisalAndEmployeeAndSourceRelationships(any(Appraisal.class), any(Employee.class),
-						any(RelationshipName.class));
+		verify(employeeEvaluationFormService, times(1))
+				.findByAppraisalAndEmployee(any(Appraisal.class), any(Employee.class));
 	}
 
 	@Test
 	public void employeesIdAppraisalsIdGet_AppNotFound() throws Exception {
 		when(employeeService.getById(userMock.getId())).thenReturn(userMock);
-		doReturn(Stream.of(mockAppXEFXER())).when(appraisalXEvaluationFormXEmployeeRelationshipService)
-				.findByAppraisalAndEmployeeAndSourceRelationships(any(Appraisal.class), any(Employee.class),
-						any(RelationshipName.class));
+		doReturn(Stream.of(testEmployeeEvaluationForm())).when(employeeEvaluationFormService)
+				.findByAppraisalAndEmployee(any(Appraisal.class), any(Employee.class));
 
 		doReturn(Optional.empty()).when(appraisalService).findById(anyInt());
 
@@ -190,9 +185,8 @@ public class AppraisalsControllerTest extends BaseControllerTest {
 
 		verify(employeeService, times(1)).getById(anyInt());
 		verify(appraisalService, times(1)).findById(anyInt());
-		verify(appraisalXEvaluationFormXEmployeeRelationshipService, never())
-				.findByAppraisalAndEmployeeAndSourceRelationships(any(Appraisal.class), any(Employee.class),
-						any(RelationshipName.class));
+		verify(employeeEvaluationFormService, never())
+				.findByAppraisalAndEmployee(any(Appraisal.class), any(Employee.class));
 	}
 
 	@Test
@@ -214,9 +208,8 @@ public class AppraisalsControllerTest extends BaseControllerTest {
 
 		verify(employeeService, times(1)).getById(anyInt());
 		verify(appraisalService, never()).findById(anyInt());
-		verify(appraisalXEvaluationFormXEmployeeRelationshipService, never())
-				.findByAppraisalAndEmployeeAndSourceRelationships(any(Appraisal.class), any(Employee.class),
-						any(RelationshipName.class));
+		verify(employeeEvaluationFormService, never())
+				.findByAppraisalAndEmployee(any(Appraisal.class), any(Employee.class));
 	}
 
 	@Test
@@ -235,9 +228,8 @@ public class AppraisalsControllerTest extends BaseControllerTest {
 
 		verify(employeeService, never()).findById(anyInt());
 		verify(appraisalService, never()).findById(anyInt());
-		verify(appraisalXEvaluationFormXEmployeeRelationshipService, never())
-				.findByAppraisalAndEmployeeAndSourceRelationships(any(Appraisal.class), any(Employee.class),
-						any(RelationshipName.class));
+		verify(employeeEvaluationFormService, never())
+				.findByAppraisalAndEmployee(any(Appraisal.class), any(Employee.class));
 	}
 
     @Test
@@ -251,9 +243,8 @@ public class AppraisalsControllerTest extends BaseControllerTest {
     @Test
 	@WithMockUser(USER_EMAIL)
     public void meAppraisalsIdGet() throws Exception {
-		doReturn(Stream.of(mockAppXEFXER())).when(appraisalXEvaluationFormXEmployeeRelationshipService)
-				.findByAppraisalAndEmployeeAndSourceRelationships(any(Appraisal.class), any(Employee.class),
-						any(RelationshipName.class));
+		doReturn(Stream.of(testEmployeeEvaluationForm())).when(employeeEvaluationFormService)
+				.findByAppraisalAndEmployee(any(Appraisal.class), any(Employee.class));
 
 		doReturn(Optional.of(mockAppraisal())).when(appraisalService).findById(anyInt());
 
@@ -270,17 +261,15 @@ public class AppraisalsControllerTest extends BaseControllerTest {
 
 		verify(employeeService, times(1)).getLoggedInUser();
 		verify(appraisalService, times(1)).findById(anyInt());
-		verify(appraisalXEvaluationFormXEmployeeRelationshipService, times(1))
-				.findByAppraisalAndEmployeeAndSourceRelationships(any(Appraisal.class), any(Employee.class),
-						any(RelationshipName.class));
+		verify(employeeEvaluationFormService, times(1))
+				.findByAppraisalAndEmployee(any(Appraisal.class), any(Employee.class));
     }
 
 	@Test
 	@WithMockUser(USER_EMAIL)
 	public void meAppraisalsIdGet_emptyResult() throws Exception {
-		doReturn(Stream.empty()).when(appraisalXEvaluationFormXEmployeeRelationshipService)
-				.findByAppraisalAndEmployeeAndSourceRelationships(any(Appraisal.class), any(Employee.class),
-						any(RelationshipName.class));
+		doReturn(Stream.empty()).when(employeeEvaluationFormService)
+				.findByAppraisalAndEmployee(any(Appraisal.class), any(Employee.class));
 
 		doReturn(Optional.of(mockAppraisal())).when(appraisalService).findById(anyInt());
 
@@ -297,9 +286,8 @@ public class AppraisalsControllerTest extends BaseControllerTest {
 
 		verify(employeeService, times(1)).getLoggedInUser();
 		verify(appraisalService, times(1)).findById(anyInt());
-		verify(appraisalXEvaluationFormXEmployeeRelationshipService, times(1))
-				.findByAppraisalAndEmployeeAndSourceRelationships(any(Appraisal.class), any(Employee.class),
-						any(RelationshipName.class));
+		verify(employeeEvaluationFormService, times(1))
+				.findByAppraisalAndEmployee(any(Appraisal.class), any(Employee.class));
 	}
 
 	@Test
@@ -320,9 +308,8 @@ public class AppraisalsControllerTest extends BaseControllerTest {
 
 		verify(employeeService, times(1)).getLoggedInUser();
 		verify(appraisalService, times(1)).findById(anyInt());
-		verify(appraisalXEvaluationFormXEmployeeRelationshipService, never())
-				.findByAppraisalAndEmployeeAndSourceRelationships(any(Appraisal.class), any(Employee.class),
-						any(RelationshipName.class));
+		verify(employeeEvaluationFormService, never())
+				.findByAppraisalAndEmployee(any(Appraisal.class), any(Employee.class));
 	}
 
 	@Test
@@ -341,9 +328,8 @@ public class AppraisalsControllerTest extends BaseControllerTest {
 
 		verify(employeeService, never()).getLoggedInUser();
 		verify(appraisalService, never()).findById(anyInt());
-		verify(appraisalXEvaluationFormXEmployeeRelationshipService, never())
-				.findByAppraisalAndEmployeeAndSourceRelationships(any(Appraisal.class), any(Employee.class),
-						any(RelationshipName.class));
+		verify(employeeEvaluationFormService, never())
+				.findByAppraisalAndEmployee(any(Appraisal.class), any(Employee.class));
 	}
 
 	@Test
@@ -506,8 +492,8 @@ public class AppraisalsControllerTest extends BaseControllerTest {
 				.build();
 	}
 
-	private AppraisalXEvaluationFormXEmployeeRelationship mockAppXEFXER() {
-		return new AppraisalXEvaluationFormXEmployeeRelationshipBuilder()
+	private EmployeeEvaluationForm testEmployeeEvaluationForm() {
+		return new EmployeeEvaluationFormBuilder()
 				.appraisalXEvaluationForm(new AppraisalXEvaluationFormBuilder()
 				.appraisal(mockAppraisal()).buildWithDefaults())
 				.buildWithDefaults();

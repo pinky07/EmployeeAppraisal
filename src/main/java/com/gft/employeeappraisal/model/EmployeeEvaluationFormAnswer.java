@@ -5,13 +5,13 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 /**
- * Entity persistent class that describes an EvaluationFormXSectionXQuestionXAnswer table.
+ * Entity persistent class that describes an EmployeeEvaluationFormAnswer table.
  *
  * @author Manuel Yepez
  */
 @Entity
-@Table(name = "EvaluationFormXSectionXQuestionXAnswer")
-public class EvaluationFormXSectionXQuestionXAnswer {
+@Table(name = "EmployeeEvaluationFormAnswer")
+public class EmployeeEvaluationFormAnswer {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,8 +24,8 @@ public class EvaluationFormXSectionXQuestionXAnswer {
 
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "appraisalXEvaluationFormXEmployeeRelationshipId", nullable = false)
-    private AppraisalXEvaluationFormXEmployeeRelationship appraisalXEvaluationFormXEmployeeRelationship;
+    @JoinColumn(name = "employeeEvaluationFormId", nullable = false)
+    private EmployeeEvaluationForm employeeEvaluationForm;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "scoreValueId")
@@ -51,13 +51,13 @@ public class EvaluationFormXSectionXQuestionXAnswer {
         this.evaluationFormXSectionXQuestion = evaluationFormXSectionXQuestion;
     }
 
-    public AppraisalXEvaluationFormXEmployeeRelationship getAppraisalXEvaluationFormXEmployeeRelationship() {
-        return appraisalXEvaluationFormXEmployeeRelationship;
+    public EmployeeEvaluationForm getEmployeeEvaluationForm() {
+        return employeeEvaluationForm;
     }
 
-    public void setAppraisalXEvaluationFormXEmployeeRelationship(
-            AppraisalXEvaluationFormXEmployeeRelationship appraisalXEvaluationFormXEmployeeRelationship) {
-        this.appraisalXEvaluationFormXEmployeeRelationship = appraisalXEvaluationFormXEmployeeRelationship;
+    public void setEmployeeEvaluationForm(
+            EmployeeEvaluationForm employeeEvaluationForm) {
+        this.employeeEvaluationForm = employeeEvaluationForm;
     }
 
     public ScoreValue getScoreValue() {
@@ -81,7 +81,7 @@ public class EvaluationFormXSectionXQuestionXAnswer {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        EvaluationFormXSectionXQuestionXAnswer that = (EvaluationFormXSectionXQuestionXAnswer) o;
+        EmployeeEvaluationFormAnswer that = (EmployeeEvaluationFormAnswer) o;
 
         return getId() == that.getId() &&
                 (getComment() != null ? getComment().equals(that.getComment()) : that.getComment() == null);
@@ -96,7 +96,7 @@ public class EvaluationFormXSectionXQuestionXAnswer {
 
     @Override
     public String toString() {
-        return "EvaluationFormXSectionXQuestionXAnswer{" +
+        return "EmployeeEvaluationFormAnswer{" +
                 "id=" + id +
                 ", comment='" + comment + '\'' +
                 '}';
