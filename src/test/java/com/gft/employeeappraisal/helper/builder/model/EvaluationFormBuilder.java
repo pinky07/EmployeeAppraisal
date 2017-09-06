@@ -1,15 +1,15 @@
-package com.gft.employeeappraisal.builder.model;
+package com.gft.employeeappraisal.helper.builder.model;
 
-import com.gft.employeeappraisal.builder.ObjectBuilder;
-import com.gft.employeeappraisal.model.JobFamily;
+import com.gft.employeeappraisal.helper.builder.ObjectBuilder;
+import com.gft.employeeappraisal.model.EvaluationForm;
+
 
 /**
- * Builder object for the {@link JobFamily} object.
+ * Builder object for the {@link EvaluationForm} object.
  *
- * @author Manuel Yepez
  * @author Ruben Jimenez
  */
-public class JobFamilyBuilder implements ObjectBuilder<JobFamily> {
+public class EvaluationFormBuilder implements ObjectBuilder<EvaluationForm> {
 
     private int id;
     private String name;
@@ -19,30 +19,27 @@ public class JobFamilyBuilder implements ObjectBuilder<JobFamily> {
     private boolean nameSet;
     private boolean descriptionSet;
 
-    public JobFamilyBuilder() {
-    }
-
-    public JobFamilyBuilder id(int id) {
+    public EvaluationFormBuilder id(int id) {
         this.id = id;
         this.idSet = true;
         return this;
     }
 
-    public JobFamilyBuilder name(String name) {
+    public EvaluationFormBuilder name(String name) {
         this.name = name;
         this.nameSet = true;
         return this;
     }
 
-    public JobFamilyBuilder description(String description) {
+    public EvaluationFormBuilder description(String description) {
         this.description = description;
         this.descriptionSet = true;
         return this;
     }
 
     @Override
-    public JobFamily build() {
-        JobFamily obj = new JobFamily();
+    public EvaluationForm build() {
+        EvaluationForm obj = new EvaluationForm();
         obj.setId(this.id);
         obj.setName(this.name);
         obj.setDescription(this.description);
@@ -50,8 +47,8 @@ public class JobFamilyBuilder implements ObjectBuilder<JobFamily> {
     }
 
     @Override
-    public JobFamily buildWithDefaults() {
-        JobFamily obj = new JobFamily();
+    public EvaluationForm buildWithDefaults() {
+        EvaluationForm obj = new EvaluationForm();
         if (this.idSet) obj.setId(this.id);
         obj.setName(this.nameSet ? this.name : "Name");
         obj.setDescription(this.descriptionSet ? this.description : "Description");

@@ -27,7 +27,7 @@ public abstract class EntityDTOConverter<S, D> {
      * @param source Source object to be converted.
      * @return Destination object, already processed.
      */
-    public S convertBack(D source){
+    public S convertBack(D source) {
         return boundMapper.mapReverse(source);
     }
 }

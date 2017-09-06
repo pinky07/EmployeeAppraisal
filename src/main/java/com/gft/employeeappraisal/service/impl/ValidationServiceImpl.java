@@ -24,8 +24,8 @@ import java.util.List;
 @Service
 public class ValidationServiceImpl implements ValidationService {
 
-    private MessageSource messageSource;
-    private CompositeValidator compositeValidator;
+    private final MessageSource messageSource;
+    private final CompositeValidator compositeValidator;
 
     @Autowired
     public ValidationServiceImpl(MessageSource messageSource, CompositeValidator compositeValidator) {

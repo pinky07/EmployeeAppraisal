@@ -1,9 +1,9 @@
 package com.gft.employeeappraisal.service;
 
-import com.gft.employeeappraisal.builder.model.EmployeeBuilder;
-import com.gft.employeeappraisal.builder.model.EmployeeRelationshipBuilder;
-import com.gft.employeeappraisal.builder.model.JobFamilyBuilder;
-import com.gft.employeeappraisal.builder.model.JobLevelBuilder;
+import com.gft.employeeappraisal.helper.builder.model.EmployeeBuilder;
+import com.gft.employeeappraisal.helper.builder.model.EmployeeRelationshipBuilder;
+import com.gft.employeeappraisal.helper.builder.model.JobFamilyBuilder;
+import com.gft.employeeappraisal.helper.builder.model.JobLevelBuilder;
 import com.gft.employeeappraisal.exception.NotFoundException;
 import com.gft.employeeappraisal.model.*;
 import com.gft.employeeappraisal.repository.*;
@@ -33,50 +33,13 @@ import static org.mockito.Mockito.when;
  * @author Rubén Jiménez
  */
 @RunWith(SpringRunner.class)
-@DataJpaTest
-public class EmployeeServiceTest {
-
-    // Required to initialize the class under test
-
-    @Autowired
-    private EmployeeRepository employeeRepository;
-
-    @Mock
-    private ApplicationRoleService applicationRoleService;
-
-    @Mock
-    private EmployeeRelationshipService employeeRelationshipService;
-
-    @Mock
-    private JobLevelService jobLevelService;
-
-    @Mock
-    private RelationshipService relationshipService;
+public class EmployeeServiceTest extends BaseServiceTest {
 
     // Class under test
     private EmployeeService employeeService;
 
-    // Other repositories
-
-    @Autowired
-    private ApplicationRoleRepository applicationRoleRepository;
-
-    @Autowired
-    private JobFamilyRepository jobFamilyRepository;
-
-    @Autowired
-    private JobLevelRepository jobLevelRepository;
-
-    @Autowired
-    private RelationshipRepository relationshipRepository;
-
-    @Autowired
-    private EmployeeRelationshipRepository employeeRelationshipRepository;
-
     // Test Fixtures
     private ApplicationRole userApplicationRole;
-    private ApplicationRole adminApplicationRole;
-    private JobFamily jobFamily;
     private JobLevel jobLevel;
     private Employee employeeA;
     private Employee employeeB;
@@ -109,11 +72,11 @@ public class EmployeeServiceTest {
                 .findByNameIgnoreCase(ApplicationRoleName.USER.name());
 
         // Create and Admin Application Role
-        this.adminApplicationRole = this.applicationRoleRepository
+        ApplicationRole adminApplicationRole = this.applicationRoleRepository
                 .findByNameIgnoreCase(ApplicationRoleName.ADMIN.name());
 
         // Create a Job Family
-        this.jobFamily = this.jobFamilyRepository.saveAndFlush(new JobFamilyBuilder()
+        JobFamily jobFamily = this.jobFamilyRepository.saveAndFlush(new JobFamilyBuilder()
                 .buildWithDefaults());
 
         // Create a Job Level

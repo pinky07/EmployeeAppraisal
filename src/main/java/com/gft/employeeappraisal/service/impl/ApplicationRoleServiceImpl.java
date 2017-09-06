@@ -16,7 +16,7 @@ import java.util.Optional;
 @Service
 public class ApplicationRoleServiceImpl implements ApplicationRoleService {
 
-    private ApplicationRoleRepository applicationRoleRepository;
+    private final ApplicationRoleRepository applicationRoleRepository;
 
     @Autowired
     public ApplicationRoleServiceImpl(

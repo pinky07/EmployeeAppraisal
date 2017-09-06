@@ -21,9 +21,9 @@ import java.util.Optional;
 @Service
 public class SecurityServiceImpl implements SecurityService {
 
-    private int maxMenteeReferences;
-    private EmployeeRelationshipService employeeRelationshipService;
-    private EmployeeService employeeService;
+    private final int maxMenteeReferences;
+    private final EmployeeRelationshipService employeeRelationshipService;
+    private final EmployeeService employeeService;
 
     @Autowired
     public SecurityServiceImpl(

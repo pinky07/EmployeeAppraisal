@@ -1,11 +1,10 @@
-package com.gft.employeeappraisal.builder.model;
+package com.gft.employeeappraisal.helper.builder.model;
 
-import com.gft.employeeappraisal.builder.ObjectBuilder;
+import com.gft.employeeappraisal.helper.builder.ObjectBuilder;
 import com.gft.employeeappraisal.model.Employee;
 import com.gft.employeeappraisal.model.EmployeeRelationship;
 import com.gft.employeeappraisal.model.Relationship;
 
-import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
 
 /**

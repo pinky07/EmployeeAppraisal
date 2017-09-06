@@ -44,14 +44,14 @@ public class EmployeesController implements EmployeeApi {
 
     private final Logger logger = LoggerFactory.getLogger(EmployeesController.class);
 
-    private EmployeeService employeeService;
-    private EmployeeDTOConverter employeeDTOConverter;
-    private EmployeeRelationshipDTOConverter employeeRelationshipDTOConverter;
-    private EmployeeRelationshipService employeeRelationshipService;
-    private RelationshipDTOConverter relationshipDTOConverter;
-    private RelationshipService relationshipService;
-    private SecurityService securityService;
-    private ValidationService validationService;
+    private final EmployeeService employeeService;
+    private final EmployeeDTOConverter employeeDTOConverter;
+    private final EmployeeRelationshipDTOConverter employeeRelationshipDTOConverter;
+    private final EmployeeRelationshipService employeeRelationshipService;
+    private final RelationshipDTOConverter relationshipDTOConverter;
+    private final RelationshipService relationshipService;
+    private final SecurityService securityService;
+    private final ValidationService validationService;
 
     @Autowired
     public EmployeesController(
@@ -87,7 +87,7 @@ public class EmployeesController implements EmployeeApi {
             logger.debug("Calling search term {}", term);
             // This is an OR search, so term must be on both first and last name.
             employeeService.findPagedByFirstNameOrLastName(term, term, page, size)
-                .forEach(e -> employeeDTOList.add(employeeDTOConverter.convert(e)));
+                    .forEach(e -> employeeDTOList.add(employeeDTOConverter.convert(e)));
         }
 
         return new ResponseEntity<>(employeeDTOList, HttpStatus.OK);

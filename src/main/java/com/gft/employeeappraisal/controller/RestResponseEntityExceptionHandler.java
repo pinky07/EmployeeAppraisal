@@ -27,7 +27,7 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
 
     private final Logger logger = LoggerFactory.getLogger(RestResponseEntityExceptionHandler.class);
 
-    private ValidationService validationService;
+    private final ValidationService validationService;
 
     @Autowired
     public RestResponseEntityExceptionHandler(ValidationService validationService) {

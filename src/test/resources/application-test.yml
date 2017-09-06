@@ -9,3 +9,10 @@ com:
   gft:
     businessRules:
       maxMenteeReferences: 5
+logging:
+  level:
+    org:
+      springframework:
+        test:
+          context:
+            cache: DEBUG

@@ -1,21 +1,20 @@
 package com.gft.employeeappraisal.controller.employees;
 
-import com.gft.employeeappraisal.builder.dto.ApplicationRoleDTOBuilder;
-import com.gft.employeeappraisal.builder.dto.EmployeeDTOBuilder;
-import com.gft.employeeappraisal.builder.dto.JobFamilyDTOBuilder;
-import com.gft.employeeappraisal.builder.dto.JobLevelDTOBuilder;
-import com.gft.employeeappraisal.builder.model.ApplicationRoleBuilder;
-import com.gft.employeeappraisal.builder.model.EmployeeBuilder;
-import com.gft.employeeappraisal.builder.model.JobFamilyBuilder;
-import com.gft.employeeappraisal.builder.model.JobLevelBuilder;
 import com.gft.employeeappraisal.controller.BaseControllerTest;
+import com.gft.employeeappraisal.controller.EmployeesController;
 import com.gft.employeeappraisal.converter.employee.EmployeeDTOConverter;
+import com.gft.employeeappraisal.helper.builder.dto.ApplicationRoleDTOBuilder;
+import com.gft.employeeappraisal.helper.builder.dto.EmployeeDTOBuilder;
+import com.gft.employeeappraisal.helper.builder.dto.JobFamilyDTOBuilder;
+import com.gft.employeeappraisal.helper.builder.dto.JobLevelDTOBuilder;
+import com.gft.employeeappraisal.helper.builder.model.ApplicationRoleBuilder;
+import com.gft.employeeappraisal.helper.builder.model.EmployeeBuilder;
+import com.gft.employeeappraisal.helper.builder.model.JobFamilyBuilder;
+import com.gft.employeeappraisal.helper.builder.model.JobLevelBuilder;
 import com.gft.employeeappraisal.model.ApplicationRole;
 import com.gft.employeeappraisal.model.Constants;
 import com.gft.employeeappraisal.model.Employee;
 import com.gft.employeeappraisal.model.JobLevel;
-import com.gft.employeeappraisal.service.EmployeeRelationshipService;
-import com.gft.employeeappraisal.service.EmployeeService;
 import com.gft.swagger.employees.model.ApplicationRoleDTO;
 import com.gft.swagger.employees.model.EmployeeDTO;
 import com.gft.swagger.employees.model.JobLevelDTO;
@@ -24,8 +23,6 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.boot.test.mock.mockito.MockReset;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MvcResult;
@@ -45,15 +42,7 @@ public class EmployeesControllerPostTest extends BaseControllerTest {
     private static EmployeeDTO mockEmployeeDTO;
 
     @Autowired
-    @SuppressWarnings("unused")
     private EmployeeDTOConverter employeeDTOConverter;
-
-    @MockBean(reset = MockReset.AFTER)
-    private EmployeeService employeeService;
-
-    @MockBean(reset = MockReset.AFTER)
-    @SuppressWarnings("unused")
-    private EmployeeRelationshipService employeeRelationshipService;
 
     @BeforeClass
     public static void setUp() {
@@ -89,15 +78,15 @@ public class EmployeesControllerPostTest extends BaseControllerTest {
         MvcResult result = mockMvc.perform(post(EMPLOYEES_URL)
                 .with(csrf())
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(mapper.writeValueAsString(mockEmployeeDTO))
+                .content(objectMapper.writeValueAsString(mockEmployeeDTO))
         ).andExpect(status().isCreated()).andReturn();
 
-        OperationResultDTO resultDTO = mapper.readValue(result.getResponse().getContentAsString(), OperationResultDTO.class);
+        OperationResultDTO resultDTO = objectMapper.readValue(result.getResponse().getContentAsString(), OperationResultDTO.class);
 
         verify(employeeService, times(1)).findByEmail(anyString());
         verify(employeeService, times(1)).saveAndFlush(any(Employee.class));
 
-        EmployeeDTO resultEmployeeDTO = mapper.convertValue(resultDTO.getData(), EmployeeDTO.class);
+        EmployeeDTO resultEmployeeDTO = objectMapper.convertValue(resultDTO.getData(), EmployeeDTO.class);
         assertEquals(Constants.SUCCESS, resultDTO.getMessage());
         assertEquals(resultEmployeeDTO.getFirstName(), mockEmployeeDTO.getFirstName());
         assertNull(resultDTO.getErrors());
@@ -110,31 +99,37 @@ public class EmployeesControllerPostTest extends BaseControllerTest {
         MvcResult result = mockMvc.perform(post(EMPLOYEES_URL)
                 .with(csrf())
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(mapper.writeValueAsString(mockEmployeeDTO))
+                .content(objectMapper.writeValueAsString(mockEmployeeDTO))
         ).andExpect(status().isUnprocessableEntity()).andReturn();
 
         verify(employeeService, times(1)).findByEmail(anyString());
         verify(employeeService, never()).saveAndFlush(any(Employee.class));
 
-        OperationResultDTO resultDTO = mapper.readValue(result.getResponse().getContentAsString(), OperationResultDTO.class);
+        OperationResultDTO resultDTO = objectMapper.readValue(result.getResponse().getContentAsString(), OperationResultDTO.class);
         assertEquals(Constants.ERROR, resultDTO.getMessage());
         assertNull(resultDTO.getData());
     }
 
+    /**
+     * Tests {@link EmployeesController#employeesPost(EmployeeDTO)}
+     *
+     * @throws Exception
+     */
     @Test
     public void employeesPost_BadRequest() throws Exception {
+
         EmployeeDTO badRequestEmployee = new EmployeeDTO();
 
         MvcResult result = mockMvc.perform(post(EMPLOYEES_URL)
                 .with(csrf())
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(mapper.writeValueAsString(badRequestEmployee))
+                .content(objectMapper.writeValueAsString(badRequestEmployee))
         ).andExpect(status().isBadRequest()).andReturn();
 
         verify(employeeService, never()).findByEmail(anyString());
         verify(employeeService, never()).saveAndFlush(any(Employee.class));
 
-        OperationResultDTO resultDTO = mapper.readValue(result.getResponse().getContentAsString(), OperationResultDTO.class);
+        OperationResultDTO resultDTO = objectMapper.readValue(result.getResponse().getContentAsString(), OperationResultDTO.class);
         assertNull(resultDTO.getData());
         assertFalse(resultDTO.getErrors().isEmpty());
     }

@@ -1,7 +1,7 @@
-package com.gft.employeeappraisal.builder.model;
+package com.gft.employeeappraisal.helper.builder.model;
 
-import com.gft.employeeappraisal.builder.ObjectBuilder;
-import com.gft.employeeappraisal.builder.helper.GftIdentifierGenerator;
+import com.gft.employeeappraisal.helper.builder.ObjectBuilder;
+import com.gft.employeeappraisal.helper.builder.helper.GftIdentifierGenerator;
 import com.gft.employeeappraisal.model.ApplicationRole;
 import com.gft.employeeappraisal.model.Employee;
 import com.gft.employeeappraisal.model.JobLevel;

@@ -1,15 +1,15 @@
-package com.gft.employeeappraisal.builder.dto;
+package com.gft.employeeappraisal.helper.builder.dto;
 
-import com.gft.employeeappraisal.builder.ObjectBuilder;
-import com.gft.swagger.employees.model.JobFamilyDTO;
+import com.gft.employeeappraisal.helper.builder.ObjectBuilder;
+import com.gft.swagger.employees.model.ApplicationRoleDTO;
 
 /**
- * Builder object for the {@link JobFamilyDTO} object.
+ * Builder object for the {@link ApplicationRoleDTO} object.
  *
  * @author Manuel Yepez
  * @author Ruben Jimenez
  */
-public class JobFamilyDTOBuilder implements ObjectBuilder<JobFamilyDTO> {
+public class ApplicationRoleDTOBuilder implements ObjectBuilder<ApplicationRoleDTO> {
 
     private int id;
     private String name;
@@ -19,39 +19,39 @@ public class JobFamilyDTOBuilder implements ObjectBuilder<JobFamilyDTO> {
     private boolean nameSet;
     private boolean descriptionSet;
 
-    public JobFamilyDTOBuilder() {
+    public ApplicationRoleDTOBuilder() {
     }
 
-    public JobFamilyDTOBuilder id(int id) {
+    public ApplicationRoleDTOBuilder id(int id) {
         this.id = id;
         this.idSet = true;
         return this;
     }
 
-    public JobFamilyDTOBuilder name(String name) {
+    public ApplicationRoleDTOBuilder name(String name) {
         this.name = name;
         this.nameSet = true;
         return this;
     }
 
-    public JobFamilyDTOBuilder description(String description) {
+    public ApplicationRoleDTOBuilder description(String description) {
         this.description = description;
         this.descriptionSet = true;
         return this;
     }
 
     @Override
-    public JobFamilyDTO build() {
-        JobFamilyDTO dto = new JobFamilyDTO();
+    public ApplicationRoleDTO build() {
+        ApplicationRoleDTO dto = new ApplicationRoleDTO();
         dto.setId(this.id);
         dto.setName(this.name);
-        dto.description(this.description);
+        dto.setDescription(this.description);
         return dto;
     }
 
     @Override
-    public JobFamilyDTO buildWithDefaults() {
-        JobFamilyDTO dto = new JobFamilyDTO();
+    public ApplicationRoleDTO buildWithDefaults() {
+        ApplicationRoleDTO dto = new ApplicationRoleDTO();
         if (this.idSet) dto.setId(this.id);
         dto.setName(this.nameSet ? this.name : "Name");
         dto.setDescription(this.descriptionSet ? this.description : "Description");

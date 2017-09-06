@@ -1,7 +1,7 @@
 package com.gft.employeeappraisal.service;
 
-import com.gft.employeeappraisal.builder.model.JobFamilyBuilder;
-import com.gft.employeeappraisal.builder.model.JobLevelBuilder;
+import com.gft.employeeappraisal.helper.builder.model.JobFamilyBuilder;
+import com.gft.employeeappraisal.helper.builder.model.JobLevelBuilder;
 import com.gft.employeeappraisal.model.JobFamily;
 import com.gft.employeeappraisal.model.JobLevel;
 import com.gft.employeeappraisal.repository.JobFamilyRepository;
@@ -26,18 +26,12 @@ import static org.junit.Assert.assertTrue;
  * @author Manuel Yepez
  */
 @RunWith(SpringRunner.class)
-@DataJpaTest
-public class JobLevelServiceTest {
-
-    @Autowired
-    private JobLevelRepository jobLevelRepository;
-
-    @Autowired
-    private JobFamilyRepository jobFamilyRepository;
+public class JobLevelServiceTest extends BaseServiceTest {
 
     // Class under test
     private JobLevelService jobLevelService;
 
+    // Test Fixtures
     private JobFamily jobFamily;
 
     @Before

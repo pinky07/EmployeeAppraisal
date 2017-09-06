@@ -28,8 +28,8 @@ public class MeController implements MeApi {
 
     private final Logger logger = LoggerFactory.getLogger(MeController.class);
 
-    private EmployeeService employeeService;
-    private EmployeeDTOConverter employeeDTOConverter;
+    private final EmployeeService employeeService;
+    private final EmployeeDTOConverter employeeDTOConverter;
 
     @Autowired
     public MeController(EmployeeService employeeService, EmployeeDTOConverter employeeDTOConverter) {

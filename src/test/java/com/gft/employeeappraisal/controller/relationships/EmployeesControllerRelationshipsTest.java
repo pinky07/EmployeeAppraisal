@@ -1,19 +1,15 @@
 package com.gft.employeeappraisal.controller.relationships;
 
-import com.gft.employeeappraisal.builder.dto.EmployeeDTOBuilder;
-import com.gft.employeeappraisal.builder.dto.EmployeeRelationshipDTOBuilder;
-import com.gft.employeeappraisal.builder.dto.RelationshipDTOBuilder;
-import com.gft.employeeappraisal.builder.model.*;
 import com.gft.employeeappraisal.controller.BaseControllerTest;
 import com.gft.employeeappraisal.controller.EmployeesController;
-import com.gft.employeeappraisal.controller.EntityDTOComparator;
 import com.gft.employeeappraisal.exception.AccessDeniedException;
 import com.gft.employeeappraisal.exception.NotFoundException;
+import com.gft.employeeappraisal.helper.builder.dto.EmployeeDTOBuilder;
+import com.gft.employeeappraisal.helper.builder.dto.EmployeeRelationshipDTOBuilder;
+import com.gft.employeeappraisal.helper.builder.dto.RelationshipDTOBuilder;
+import com.gft.employeeappraisal.helper.builder.model.*;
+import com.gft.employeeappraisal.helper.comparator.EntityDTOComparator;
 import com.gft.employeeappraisal.model.*;
-import com.gft.employeeappraisal.service.EmployeeRelationshipService;
-import com.gft.employeeappraisal.service.EmployeeService;
-import com.gft.employeeappraisal.service.RelationshipService;
-import com.gft.employeeappraisal.service.SecurityService;
 import com.gft.swagger.employees.model.EmployeeDTO;
 import com.gft.swagger.employees.model.EmployeeRelationshipDTO;
 import com.gft.swagger.employees.model.OperationResultDTO;
@@ -22,8 +18,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.boot.test.mock.mockito.MockReset;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -37,8 +31,6 @@ import java.util.Optional;
 import java.util.stream.Stream;
 
 import static org.junit.Assert.*;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyInt;
 import static org.mockito.Mockito.*;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -54,19 +46,6 @@ public class EmployeesControllerRelationshipsTest extends BaseControllerTest {
 
     private static final String EMPLOYEES_URL = "/employees";
     private static final String RELATIONSHIP_URL = "/relationships";
-
-    @MockBean
-    private EmployeeService employeeService;
-
-    @MockBean(reset = MockReset.AFTER)
-    @SuppressWarnings("unused")
-    private EmployeeRelationshipService employeeRelationshipService;
-
-    @MockBean(reset = MockReset.AFTER)
-    private RelationshipService relationshipService;
-
-    @MockBean(reset = MockReset.AFTER)
-    private SecurityService securityService;
 
     @Autowired
     private EntityDTOComparator entityDTOComparator;
@@ -150,7 +129,7 @@ public class EmployeesControllerRelationshipsTest extends BaseControllerTest {
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andReturn();
-        List<EmployeeRelationshipDTO> employeeRelationshipDTOList = Arrays.asList(mapper.readValue(result
+        List<EmployeeRelationshipDTO> employeeRelationshipDTOList = Arrays.asList(objectMapper.readValue(result
                 .getResponse().getContentAsString(), EmployeeRelationshipDTO[].class));
 
         // Verification
@@ -192,7 +171,7 @@ public class EmployeesControllerRelationshipsTest extends BaseControllerTest {
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andReturn();
-        List<EmployeeRelationshipDTO> employeeRelationshipDTOList = Arrays.asList(mapper.readValue(result
+        List<EmployeeRelationshipDTO> employeeRelationshipDTOList = Arrays.asList(objectMapper.readValue(result
                 .getResponse().getContentAsString(), EmployeeRelationshipDTO[].class));
 
         // Verification
@@ -224,7 +203,7 @@ public class EmployeesControllerRelationshipsTest extends BaseControllerTest {
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNotFound())
                 .andReturn();
-        OperationResultDTO resultDTO = mapper.readValue(result.getResponse().getContentAsString(),
+        OperationResultDTO resultDTO = objectMapper.readValue(result.getResponse().getContentAsString(),
                 OperationResultDTO.class);
 
         // Verification
@@ -274,7 +253,7 @@ public class EmployeesControllerRelationshipsTest extends BaseControllerTest {
                 .andExpect(status().isOk())
                 .andReturn();
 
-        List<RelationshipDTO> relationshipDTOList = Arrays.asList(mapper.readValue(result
+        List<RelationshipDTO> relationshipDTOList = Arrays.asList(objectMapper.readValue(result
                 .getResponse().getContentAsString(), RelationshipDTO[].class));
 
         assertNotNull(relationshipDTOList);
@@ -303,7 +282,7 @@ public class EmployeesControllerRelationshipsTest extends BaseControllerTest {
                 .andExpect(status().isOk())
                 .andReturn();
 
-        List<RelationshipDTO> relationshipDTOList = Arrays.asList(mapper.readValue(result
+        List<RelationshipDTO> relationshipDTOList = Arrays.asList(objectMapper.readValue(result
                 .getResponse().getContentAsString(), RelationshipDTO[].class));
 
         assertNotNull(relationshipDTOList);
@@ -328,7 +307,7 @@ public class EmployeesControllerRelationshipsTest extends BaseControllerTest {
                 .andExpect(status().isOk())
                 .andReturn();
 
-        RelationshipDTO relationshipDTO = mapper.readValue(result
+        RelationshipDTO relationshipDTO = objectMapper.readValue(result
                 .getResponse().getContentAsString(), RelationshipDTO.class);
 
         assertNotNull(relationshipDTO);
@@ -350,7 +329,7 @@ public class EmployeesControllerRelationshipsTest extends BaseControllerTest {
                 .andExpect(status().isNotFound())
                 .andReturn();
 
-        OperationResultDTO operationResultDTO = mapper.readValue(result.getResponse().getContentAsString(),
+        OperationResultDTO operationResultDTO = objectMapper.readValue(result.getResponse().getContentAsString(),
                 OperationResultDTO.class);
         assertNotNull(operationResultDTO);
         assertEquals(Constants.ERROR, operationResultDTO.getMessage());
@@ -421,7 +400,7 @@ public class EmployeesControllerRelationshipsTest extends BaseControllerTest {
                 .andExpect(status().isNotFound())
                 .andReturn();
 
-        OperationResultDTO resultDTO = mapper.readValue(result.getResponse().getContentAsString(),
+        OperationResultDTO resultDTO = objectMapper.readValue(result.getResponse().getContentAsString(),
                 OperationResultDTO.class);
 
         assertNotNull(resultDTO);
@@ -455,7 +434,7 @@ public class EmployeesControllerRelationshipsTest extends BaseControllerTest {
                 .andExpect(status().isNotFound())
                 .andReturn();
 
-        OperationResultDTO resultDTO = mapper.readValue(result.getResponse().getContentAsString(),
+        OperationResultDTO resultDTO = objectMapper.readValue(result.getResponse().getContentAsString(),
                 OperationResultDTO.class);
 
         assertNotNull(resultDTO);
@@ -489,7 +468,7 @@ public class EmployeesControllerRelationshipsTest extends BaseControllerTest {
                 .andExpect(status().isInternalServerError())
                 .andReturn();
 
-        OperationResultDTO resultDTO = mapper.readValue(result.getResponse().getContentAsString(),
+        OperationResultDTO resultDTO = objectMapper.readValue(result.getResponse().getContentAsString(),
                 OperationResultDTO.class);
 
         assertNotNull(resultDTO);
@@ -523,7 +502,7 @@ public class EmployeesControllerRelationshipsTest extends BaseControllerTest {
                 .andExpect(status().isForbidden())
                 .andReturn();
 
-        OperationResultDTO resultDTO = mapper.readValue(result.getResponse().getContentAsString(),
+        OperationResultDTO resultDTO = objectMapper.readValue(result.getResponse().getContentAsString(),
                 OperationResultDTO.class);
 
         assertNotNull(resultDTO);
@@ -559,7 +538,7 @@ public class EmployeesControllerRelationshipsTest extends BaseControllerTest {
                 .andExpect(status().isForbidden())
                 .andReturn();
 
-        OperationResultDTO resultDTO = mapper.readValue(result.getResponse().getContentAsString(),
+        OperationResultDTO resultDTO = objectMapper.readValue(result.getResponse().getContentAsString(),
                 OperationResultDTO.class);
 
         assertNotNull(resultDTO);
@@ -595,7 +574,7 @@ public class EmployeesControllerRelationshipsTest extends BaseControllerTest {
                 .andExpect(status().isInternalServerError())
                 .andReturn();
 
-        OperationResultDTO resultDTO = mapper.readValue(result.getResponse().getContentAsString(),
+        OperationResultDTO resultDTO = objectMapper.readValue(result.getResponse().getContentAsString(),
                 OperationResultDTO.class);
 
         assertNotNull(resultDTO);
@@ -652,12 +631,12 @@ public class EmployeesControllerRelationshipsTest extends BaseControllerTest {
                         EMPLOYEES_URL,
                         this.userMock.getId()))
                         .with(csrf())
-                        .content(mapper.writeValueAsString(testEmployeeRelationshipDTO()))
+                        .content(objectMapper.writeValueAsString(testEmployeeRelationshipDTO()))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isCreated())
                 .andReturn();
 
-        OperationResultDTO resultDTO = mapper.readValue(result.getResponse().getContentAsString(),
+        OperationResultDTO resultDTO = objectMapper.readValue(result.getResponse().getContentAsString(),
                 OperationResultDTO.class);
 
         verify(employeeService, times(1)).getLoggedInUser();
@@ -673,7 +652,7 @@ public class EmployeesControllerRelationshipsTest extends BaseControllerTest {
         assertEquals(Constants.SUCCESS, resultDTO.getMessage());
         assertNull(resultDTO.getErrors());
 
-        EmployeeRelationshipDTO employeeRelationshipDTO = mapper.convertValue(resultDTO.getData(),
+        EmployeeRelationshipDTO employeeRelationshipDTO = objectMapper.convertValue(resultDTO.getData(),
                 EmployeeRelationshipDTO.class);
 
         assertNotNull(employeeRelationshipDTO);
@@ -694,12 +673,12 @@ public class EmployeesControllerRelationshipsTest extends BaseControllerTest {
                         EMPLOYEES_URL,
                         this.userMock.getId()))
                         .with(csrf())
-                        .content(mapper.writeValueAsString(testEmployeeRelationshipDTO()))
+                        .content(objectMapper.writeValueAsString(testEmployeeRelationshipDTO()))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isForbidden())
                 .andReturn();
 
-        OperationResultDTO resultDTO = mapper.readValue(result.getResponse().getContentAsString(),
+        OperationResultDTO resultDTO = objectMapper.readValue(result.getResponse().getContentAsString(),
                 OperationResultDTO.class);
 
         verify(employeeService, times(1)).getLoggedInUser();
@@ -726,12 +705,12 @@ public class EmployeesControllerRelationshipsTest extends BaseControllerTest {
                         EMPLOYEES_URL,
                         this.userMock.getId()))
                         .with(csrf())
-                        .content(mapper.writeValueAsString(testEmployeeRelationshipDTO()))
+                        .content(objectMapper.writeValueAsString(testEmployeeRelationshipDTO()))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNotFound())
                 .andReturn();
 
-        OperationResultDTO resultDTO = mapper.readValue(result.getResponse().getContentAsString(),
+        OperationResultDTO resultDTO = objectMapper.readValue(result.getResponse().getContentAsString(),
                 OperationResultDTO.class);
 
         verify(employeeService, times(1)).getLoggedInUser();
@@ -761,12 +740,12 @@ public class EmployeesControllerRelationshipsTest extends BaseControllerTest {
                         EMPLOYEES_URL,
                         this.userMock.getId()))
                         .with(csrf())
-                        .content(mapper.writeValueAsString(testEmployeeRelationshipDTO()))
+                        .content(objectMapper.writeValueAsString(testEmployeeRelationshipDTO()))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isForbidden())
                 .andReturn();
 
-        OperationResultDTO resultDTO = mapper.readValue(result.getResponse().getContentAsString(),
+        OperationResultDTO resultDTO = objectMapper.readValue(result.getResponse().getContentAsString(),
                 OperationResultDTO.class);
 
         verify(employeeService, times(1)).getLoggedInUser();
@@ -798,12 +777,12 @@ public class EmployeesControllerRelationshipsTest extends BaseControllerTest {
                         EMPLOYEES_URL,
                         this.userMock.getId()))
                         .with(csrf())
-                        .content(mapper.writeValueAsString(testEmployeeRelationshipDTO()))
+                        .content(objectMapper.writeValueAsString(testEmployeeRelationshipDTO()))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isInternalServerError())
                 .andReturn();
 
-        OperationResultDTO resultDTO = mapper.readValue(result.getResponse().getContentAsString(),
+        OperationResultDTO resultDTO = objectMapper.readValue(result.getResponse().getContentAsString(),
                 OperationResultDTO.class);
 
         verify(employeeService, times(1)).getLoggedInUser();

@@ -16,7 +16,7 @@ import java.util.Optional;
 @Service
 public class EvaluationFormServiceImpl implements EvaluationFormService {
 
-    private EvaluationFormRepository evaluationFormRepository;
+    private final EvaluationFormRepository evaluationFormRepository;
 
     @Autowired
     public EvaluationFormServiceImpl(

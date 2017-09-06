@@ -1,24 +1,22 @@
 package com.gft.employeeappraisal.controller.employees;
 
-import com.gft.employeeappraisal.builder.dto.ApplicationRoleDTOBuilder;
-import com.gft.employeeappraisal.builder.dto.EmployeeDTOBuilder;
-import com.gft.employeeappraisal.builder.dto.JobFamilyDTOBuilder;
-import com.gft.employeeappraisal.builder.dto.JobLevelDTOBuilder;
-import com.gft.employeeappraisal.builder.model.ApplicationRoleBuilder;
-import com.gft.employeeappraisal.builder.model.EmployeeBuilder;
-import com.gft.employeeappraisal.builder.model.JobFamilyBuilder;
-import com.gft.employeeappraisal.builder.model.JobLevelBuilder;
 import com.gft.employeeappraisal.controller.BaseControllerTest;
 import com.gft.employeeappraisal.controller.EmployeesController;
-import com.gft.employeeappraisal.controller.EntityDTOComparator;
 import com.gft.employeeappraisal.converter.employee.EmployeeDTOConverter;
 import com.gft.employeeappraisal.exception.NotFoundException;
+import com.gft.employeeappraisal.helper.builder.dto.ApplicationRoleDTOBuilder;
+import com.gft.employeeappraisal.helper.builder.dto.EmployeeDTOBuilder;
+import com.gft.employeeappraisal.helper.builder.dto.JobFamilyDTOBuilder;
+import com.gft.employeeappraisal.helper.builder.dto.JobLevelDTOBuilder;
+import com.gft.employeeappraisal.helper.builder.model.ApplicationRoleBuilder;
+import com.gft.employeeappraisal.helper.builder.model.EmployeeBuilder;
+import com.gft.employeeappraisal.helper.builder.model.JobFamilyBuilder;
+import com.gft.employeeappraisal.helper.builder.model.JobLevelBuilder;
+import com.gft.employeeappraisal.helper.comparator.EntityDTOComparator;
 import com.gft.employeeappraisal.model.ApplicationRole;
 import com.gft.employeeappraisal.model.Constants;
 import com.gft.employeeappraisal.model.Employee;
 import com.gft.employeeappraisal.model.JobLevel;
-import com.gft.employeeappraisal.service.EmployeeRelationshipService;
-import com.gft.employeeappraisal.service.EmployeeService;
 import com.gft.swagger.employees.model.ApplicationRoleDTO;
 import com.gft.swagger.employees.model.EmployeeDTO;
 import com.gft.swagger.employees.model.JobLevelDTO;
@@ -29,8 +27,6 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.boot.test.mock.mockito.MockReset;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MvcResult;
@@ -65,14 +61,7 @@ public class EmployeesControllerMentorTest extends BaseControllerTest {
     private EntityDTOComparator entityDTOComparator;
 
     @Autowired
-    @SuppressWarnings("unused")
     private EmployeeDTOConverter employeeDTOConverter;
-
-    @MockBean(reset = MockReset.AFTER)
-    private EmployeeService employeeService;
-
-    @MockBean(reset = MockReset.AFTER)
-    private EmployeeRelationshipService employeeRelationshipService;
 
     @BeforeClass
     public static void setUp() {
@@ -132,7 +121,7 @@ public class EmployeesControllerMentorTest extends BaseControllerTest {
 
         // Verification
         verify(employeeService, times(1)).getCurrentMentorById(anyInt());
-        EmployeeDTO resultDTO = mapper.readValue(result.getResponse().getContentAsString(),
+        EmployeeDTO resultDTO = objectMapper.readValue(result.getResponse().getContentAsString(),
                 EmployeeDTO.class);
         entityDTOComparator.assertEqualsEmployee(mockMentor, resultDTO);
     }
@@ -152,7 +141,7 @@ public class EmployeesControllerMentorTest extends BaseControllerTest {
                 .with(csrf())
                 .contentType(MediaType.APPLICATION_JSON)
         ).andExpect(status().isNotFound()).andReturn();
-        EmployeeDTO resultDTO = mapper.readValue(result.getResponse().getContentAsString(), EmployeeDTO.class);
+        EmployeeDTO resultDTO = objectMapper.readValue(result.getResponse().getContentAsString(), EmployeeDTO.class);
 
         // Verification
         assertNotNull(resultDTO);
@@ -193,9 +182,9 @@ public class EmployeesControllerMentorTest extends BaseControllerTest {
         MvcResult result = mockMvc.perform(put(String.format("%s/%d/mentor", EMPLOYEES_URL, mockEmployeeDTO.getId()))
                 .with(csrf())
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(mapper.writeValueAsString(mockMentorDTO)))
+                .content(objectMapper.writeValueAsString(mockMentorDTO)))
                 .andExpect(status().isOk()).andReturn();
-        OperationResultDTO resultDTO = mapper.readValue(result.getResponse().getContentAsString(), OperationResultDTO.class);
+        OperationResultDTO resultDTO = objectMapper.readValue(result.getResponse().getContentAsString(), OperationResultDTO.class);
 
         // Verification
         assertEquals(Constants.SUCCESS, resultDTO.getMessage());
@@ -223,9 +212,9 @@ public class EmployeesControllerMentorTest extends BaseControllerTest {
                 mockEmployeeDTO.getId()))
                 .with(csrf())
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(mapper.writeValueAsString(mockMentorDTO))
+                .content(objectMapper.writeValueAsString(mockMentorDTO))
         ).andExpect(status().isNotFound()).andReturn();
-        OperationResultDTO resultDTO = mapper.readValue(result.getResponse().getContentAsString(), OperationResultDTO.class);
+        OperationResultDTO resultDTO = objectMapper.readValue(result.getResponse().getContentAsString(), OperationResultDTO.class);
 
         // Verification
         assertNotNull(resultDTO);
@@ -251,9 +240,9 @@ public class EmployeesControllerMentorTest extends BaseControllerTest {
         MvcResult result = mockMvc.perform(put(String.format("%s/%d/mentor", EMPLOYEES_URL, mockEmployeeDTO.getId()))
                 .with(csrf())
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(mapper.writeValueAsString(mockMentorDTO))
+                .content(objectMapper.writeValueAsString(mockMentorDTO))
         ).andExpect(status().isNotFound()).andReturn();
-        OperationResultDTO resultDTO = mapper.readValue(result.getResponse().getContentAsString(), OperationResultDTO.class);
+        OperationResultDTO resultDTO = objectMapper.readValue(result.getResponse().getContentAsString(), OperationResultDTO.class);
 
         // Verification
         assertNotNull(resultDTO);
@@ -279,7 +268,7 @@ public class EmployeesControllerMentorTest extends BaseControllerTest {
         result = mockMvc.perform(put(String.format("%s/null/mentor", EMPLOYEES_URL))
                 .with(csrf())
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(mapper.writeValueAsString(mockMentorDTO)))
+                .content(objectMapper.writeValueAsString(mockMentorDTO)))
                 .andExpect(status().isBadRequest()).andReturn();
 
         assertTrue(StringUtils.isEmpty(result.getResponse().getContentAsString()));

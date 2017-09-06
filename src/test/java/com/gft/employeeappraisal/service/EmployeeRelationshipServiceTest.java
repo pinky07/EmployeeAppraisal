@@ -1,9 +1,9 @@
 package com.gft.employeeappraisal.service;
 
-import com.gft.employeeappraisal.builder.model.EmployeeBuilder;
-import com.gft.employeeappraisal.builder.model.EmployeeRelationshipBuilder;
-import com.gft.employeeappraisal.builder.model.JobFamilyBuilder;
-import com.gft.employeeappraisal.builder.model.JobLevelBuilder;
+import com.gft.employeeappraisal.helper.builder.model.EmployeeBuilder;
+import com.gft.employeeappraisal.helper.builder.model.EmployeeRelationshipBuilder;
+import com.gft.employeeappraisal.helper.builder.model.JobFamilyBuilder;
+import com.gft.employeeappraisal.helper.builder.model.JobLevelBuilder;
 import com.gft.employeeappraisal.exception.NotFoundException;
 import com.gft.employeeappraisal.model.*;
 import com.gft.employeeappraisal.repository.*;
@@ -33,38 +33,12 @@ import static org.mockito.Mockito.when;
  * @author Rubén Jiménez
  */
 @RunWith(SpringRunner.class)
-@DataJpaTest
-public class EmployeeRelationshipServiceTest {
-
-    // Required to initialize the class under test
-
-    @Autowired
-    private EmployeeRelationshipRepository employeeRelationshipRepository;
-
-    @Mock
-    private RelationshipService relationshipService;
+public class EmployeeRelationshipServiceTest extends BaseServiceTest {
 
     // Class under test
-
     private EmployeeRelationshipService employeeRelationshipService;
 
-    // Other repositories
-
-    @Autowired
-    private ApplicationRoleRepository applicationRoleRepository;
-
-    @Autowired
-    private JobFamilyRepository jobFamilyRepository;
-
-    @Autowired
-    private JobLevelRepository jobLevelRepository;
-
-    @Autowired
-    private RelationshipRepository relationshipRepository;
-
-    @Autowired
-    private EmployeeRepository employeeRepository;
-
+    // Test Fixtures
     private Employee employeeA;
     private Employee employeeB;
     private Employee employeeC;
@@ -149,18 +123,18 @@ public class EmployeeRelationshipServiceTest {
         // Create an EmployeeRelationship: Mentor --> Mentee (MENTOR)
         this.mentorEmployeeRelationship = this.employeeRelationshipRepository
                 .saveAndFlush(new EmployeeRelationshipBuilder()
-                .sourceEmployee(mentor)
-                .targetEmployee(mentee)
-                .relationship(mentorRelationship)
-                .buildWithDefaults());
+                        .sourceEmployee(mentor)
+                        .targetEmployee(mentee)
+                        .relationship(mentorRelationship)
+                        .buildWithDefaults());
 
         // Create an EmployeeRelationship: EmployeeA --> EmployeeB (PEER)
         this.peerEmployeeRelationship = this.employeeRelationshipRepository
                 .saveAndFlush(new EmployeeRelationshipBuilder()
-                .sourceEmployee(employeeA)
-                .targetEmployee(employeeB)
-                .relationship(peerRelationship)
-                .buildWithDefaults());
+                        .sourceEmployee(employeeA)
+                        .targetEmployee(employeeB)
+                        .relationship(peerRelationship)
+                        .buildWithDefaults());
     }
 
     /**

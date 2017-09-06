@@ -1,4 +1,4 @@
-package com.gft.employeeappraisal.builder;
+package com.gft.employeeappraisal.helper.builder;
 
 /**
  * Interface that specifies a build() method to be implemented by object builders,

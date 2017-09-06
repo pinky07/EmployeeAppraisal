@@ -17,7 +17,7 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
  * @author Ruben Jimenez
  */
 
-@Profile({"dev", "local-h2"})
+@Profile("swagger-ui")
 @EnableSwagger2
 @Configuration
 public class SwaggerConfiguration {
@@ -30,12 +30,12 @@ public class SwaggerConfiguration {
                 .licenseUrl("http://unlicense.org")
                 .termsOfServiceUrl("")
                 .version("1.0.0")
-                .contact(new Contact("","", ""))
+                .contact(new Contact("", "", ""))
                 .build();
     }
 
     @Bean
-    public Docket customImplementation(){
+    public Docket customImplementation() {
         return new Docket(DocumentationType.SWAGGER_2)
                 .select()
                 .apis(RequestHandlerSelectors.basePackage("com.gft.employeeappraisal"))

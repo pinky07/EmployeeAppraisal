@@ -1,4 +1,4 @@
-package com.gft.employeeappraisal.builder.helper;
+package com.gft.employeeappraisal.helper.builder.helper;
 
 /**
  * Generates unique GFT identifiers for testing
@@ -12,7 +12,7 @@ public class GftIdentifierGenerator {
 
     private static GftIdentifierGenerator instance;
 
-    private Counter counter = new Counter(SIZE, chars.length);
+    private final Counter counter = new Counter(SIZE, chars.length);
 
     private GftIdentifierGenerator() {
     }
@@ -25,11 +25,11 @@ public class GftIdentifierGenerator {
     }
 
     private synchronized String getNext() {
-        String next = "";
+        StringBuilder next = new StringBuilder();
         for (int j = SIZE - 1; 0 <= j; j--) {
-            next += chars[counter.get(j)];
+            next.append(chars[counter.get(j)]);
         }
         counter.increase();
-        return next;
+        return next.toString();
     }
 }

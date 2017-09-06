@@ -1,22 +1,20 @@
 package com.gft.employeeappraisal.configuration;
 
-import com.gft.employeeappraisal.controller.EntityDTOComparator;
-import org.codehaus.jackson.map.ObjectMapper;
+import com.gft.employeeappraisal.helper.comparator.EntityDTOComparator;
+import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 
 /**
- * Configuration for Controller Tests
+ * Test Beans
  *
  * @author Rubén Jiménez
  */
-@Configuration
-public class ControllerConfiguration {
 
-    @Bean
-    public ObjectMapper getObjectMapper() {
-        return new ObjectMapper();
-    }
+@Profile("test")
+@Configuration
+public class TestBeanConfiguration {
 
     @Bean
     public EntityDTOComparator getEntityDTOComparator() {

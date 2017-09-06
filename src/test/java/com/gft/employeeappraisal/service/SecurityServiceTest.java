@@ -1,8 +1,8 @@
 package com.gft.employeeappraisal.service;
 
-import com.gft.employeeappraisal.builder.model.EmployeeBuilder;
-import com.gft.employeeappraisal.builder.model.EmployeeRelationshipBuilder;
 import com.gft.employeeappraisal.exception.AccessDeniedException;
+import com.gft.employeeappraisal.helper.builder.model.EmployeeBuilder;
+import com.gft.employeeappraisal.helper.builder.model.EmployeeRelationshipBuilder;
 import com.gft.employeeappraisal.model.Employee;
 import com.gft.employeeappraisal.model.RelationshipName;
 import com.gft.employeeappraisal.service.impl.SecurityServiceImpl;
@@ -26,22 +26,13 @@ import static org.mockito.Mockito.*;
  * @author Rubén Jiménez
  */
 @RunWith(SpringRunner.class)
-@SpringBootTest
-@ActiveProfiles("test")
-public class SecurityServiceTest {
+public class SecurityServiceTest extends BaseServiceTest {
 
     // Required to initialize the class under test
     @Value("${com.gft.businessRules.maxMenteeReferences}")
     private Integer maxMenteeReferences;
 
-    @Mock
-    private EmployeeRelationshipService employeeRelationshipService;
-
-    @Mock
-    private EmployeeService employeeService;
-
     // Class under test
-
     private SecurityService securityService;
 
     @Before

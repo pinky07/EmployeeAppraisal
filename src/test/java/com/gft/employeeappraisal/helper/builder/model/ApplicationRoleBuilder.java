@@ -1,15 +1,15 @@
-package com.gft.employeeappraisal.builder.model;
+package com.gft.employeeappraisal.helper.builder.model;
 
-import com.gft.employeeappraisal.builder.ObjectBuilder;
-import com.gft.employeeappraisal.model.EvaluationForm;
-
+import com.gft.employeeappraisal.helper.builder.ObjectBuilder;
+import com.gft.employeeappraisal.model.ApplicationRole;
 
 /**
- * Builder object for the {@link EvaluationForm} object.
+ * Builder object for the {@link ApplicationRole} object.
  *
+ * @author Manuel Yepez
  * @author Ruben Jimenez
  */
-public class EvaluationFormBuilder implements ObjectBuilder<EvaluationForm> {
+public class ApplicationRoleBuilder implements ObjectBuilder<ApplicationRole> {
 
     private int id;
     private String name;
@@ -19,27 +19,30 @@ public class EvaluationFormBuilder implements ObjectBuilder<EvaluationForm> {
     private boolean nameSet;
     private boolean descriptionSet;
 
-    public EvaluationFormBuilder id(int id) {
+    public ApplicationRoleBuilder() {
+    }
+
+    public ApplicationRoleBuilder id(int id) {
         this.id = id;
         this.idSet = true;
         return this;
     }
 
-    public EvaluationFormBuilder name(String name) {
+    public ApplicationRoleBuilder name(String name) {
         this.name = name;
         this.nameSet = true;
         return this;
     }
 
-    public EvaluationFormBuilder description(String description) {
+    public ApplicationRoleBuilder description(String description) {
         this.description = description;
         this.descriptionSet = true;
         return this;
     }
 
     @Override
-    public EvaluationForm build() {
-        EvaluationForm obj = new EvaluationForm();
+    public ApplicationRole build() {
+        ApplicationRole obj = new ApplicationRole();
         obj.setId(this.id);
         obj.setName(this.name);
         obj.setDescription(this.description);
@@ -47,8 +50,8 @@ public class EvaluationFormBuilder implements ObjectBuilder<EvaluationForm> {
     }
 
     @Override
-    public EvaluationForm buildWithDefaults() {
-        EvaluationForm obj = new EvaluationForm();
+    public ApplicationRole buildWithDefaults() {
+        ApplicationRole obj = new ApplicationRole();
         if (this.idSet) obj.setId(this.id);
         obj.setName(this.nameSet ? this.name : "Name");
         obj.setDescription(this.descriptionSet ? this.description : "Description");

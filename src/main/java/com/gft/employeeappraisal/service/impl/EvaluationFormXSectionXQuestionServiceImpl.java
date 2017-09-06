@@ -19,7 +19,7 @@ import java.util.stream.Stream;
 @Service
 public class EvaluationFormXSectionXQuestionServiceImpl implements EvaluationFormXSectionXQuestionService {
 
-    private EmployeeEvaluationFormService employeeEvaluationFormService;
+    private final EmployeeEvaluationFormService employeeEvaluationFormService;
 
     @Autowired
     public EvaluationFormXSectionXQuestionServiceImpl(

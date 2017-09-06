@@ -1,28 +1,23 @@
 package com.gft.employeeappraisal.controller.employees;
 
-import com.gft.employeeappraisal.builder.model.ApplicationRoleBuilder;
-import com.gft.employeeappraisal.builder.model.EmployeeBuilder;
-import com.gft.employeeappraisal.builder.model.JobFamilyBuilder;
-import com.gft.employeeappraisal.builder.model.JobLevelBuilder;
 import com.gft.employeeappraisal.controller.BaseControllerTest;
 import com.gft.employeeappraisal.controller.EmployeesController;
-import com.gft.employeeappraisal.controller.EntityDTOComparator;
 import com.gft.employeeappraisal.converter.employee.EmployeeDTOConverter;
 import com.gft.employeeappraisal.converter.employeerelationship.EmployeeRelationshipDTOConverter;
 import com.gft.employeeappraisal.converter.relationship.RelationshipDTOConverter;
 import com.gft.employeeappraisal.exception.NotFoundException;
+import com.gft.employeeappraisal.helper.builder.model.ApplicationRoleBuilder;
+import com.gft.employeeappraisal.helper.builder.model.EmployeeBuilder;
+import com.gft.employeeappraisal.helper.builder.model.JobFamilyBuilder;
+import com.gft.employeeappraisal.helper.builder.model.JobLevelBuilder;
+import com.gft.employeeappraisal.helper.comparator.EntityDTOComparator;
 import com.gft.employeeappraisal.model.*;
-import com.gft.employeeappraisal.service.EmployeeRelationshipService;
-import com.gft.employeeappraisal.service.EmployeeService;
-import com.gft.employeeappraisal.service.SecurityService;
-import com.gft.employeeappraisal.service.ValidationService;
 import com.gft.swagger.employees.model.EmployeeDTO;
 import com.gft.swagger.employees.model.OperationResultDTO;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -50,32 +45,16 @@ public class EmployeesControllerGetTest extends BaseControllerTest {
     private static final String EMPLOYEES_URL = "/employees";
     private static final String USER_EMAIL = "user@gft.com";
 
-    @MockBean
-    private EmployeeService employeeService;
-
-    @MockBean
-    @SuppressWarnings("unused")
-    private EmployeeRelationshipService employeeRelationshipService;
-
     @Autowired
     private EntityDTOComparator entityDTOComparator;
 
-    @MockBean
-    private SecurityService securityService;
-
-    @MockBean
-    private ValidationService validationService;
-
     @Autowired
-    @SuppressWarnings("unused")
     private EmployeeDTOConverter employeeDTOConverter;
 
     @Autowired
-    @SuppressWarnings("unused")
     private EmployeeRelationshipDTOConverter employeeRelationshipDTOConverter;
 
     @Autowired
-    @SuppressWarnings("unused")
     private RelationshipDTOConverter relationshipDTOConverter;
 
     private Employee userMock;
@@ -136,7 +115,7 @@ public class EmployeesControllerGetTest extends BaseControllerTest {
                 .andExpect(status().isOk())
                 .andReturn();
 
-        List<EmployeeDTO> employeeDTOList = Arrays.asList(mapper.readValue(result.getResponse().getContentAsString(),
+        List<EmployeeDTO> employeeDTOList = Arrays.asList(objectMapper.readValue(result.getResponse().getContentAsString(),
                 EmployeeDTO[].class));
 
         assertNotNull(employeeDTOList);
@@ -145,7 +124,7 @@ public class EmployeesControllerGetTest extends BaseControllerTest {
         verify(employeeService, times(1))
                 .findPagedByFirstNameOrLastName(anyString(), anyString(), anyInt(), anyInt());
 
-        entityDTOComparator.assertEqualsEmployee(userMock,  employeeDTOList.get(0));
+        entityDTOComparator.assertEqualsEmployee(userMock, employeeDTOList.get(0));
     }
 
     /**
@@ -167,7 +146,7 @@ public class EmployeesControllerGetTest extends BaseControllerTest {
                 .andExpect(status().isOk())
                 .andReturn();
 
-        List<EmployeeDTO> employeeDTOList = Arrays.asList(mapper.readValue(result.getResponse().getContentAsString(),
+        List<EmployeeDTO> employeeDTOList = Arrays.asList(objectMapper.readValue(result.getResponse().getContentAsString(),
                 EmployeeDTO[].class));
 
         assertNotNull(employeeDTOList);
@@ -199,7 +178,7 @@ public class EmployeesControllerGetTest extends BaseControllerTest {
                 .andReturn();
 
         String resultString = result.getResponse().getContentAsString();
-        EmployeeDTO employeeDTO = mapper.readValue(resultString, EmployeeDTO.class);
+        EmployeeDTO employeeDTO = objectMapper.readValue(resultString, EmployeeDTO.class);
 
         // Verification
         verify(securityService, times(1)).canReadEmployee(any(Employee.class), any(Employee.class));
@@ -228,7 +207,7 @@ public class EmployeesControllerGetTest extends BaseControllerTest {
                 .andExpect(status().isNotFound())
                 .andReturn();
         String resultString = result.getResponse().getContentAsString();
-        OperationResultDTO operationResultDTO = mapper.readValue(resultString, OperationResultDTO.class);
+        OperationResultDTO operationResultDTO = objectMapper.readValue(resultString, OperationResultDTO.class);
 
         // Verification
         verify(employeeService, times(1)).getById(userMock.getId());

@@ -32,7 +32,7 @@ cleanUpDocker() {
 	then
 
 		echo 'Attempting to remove dangling volumes...'
-		DANGLING_VOLUMES_REMOVED=`docker volume rm $DANGLING_VOLUMES`
+		DANGLING_VOLUMES_REMOVED=`docker volume rm ${DANGLING_VOLUMES}`
 
 		if test  -n "$DANGLING_VOLUMES_REMOVED";
 		then 

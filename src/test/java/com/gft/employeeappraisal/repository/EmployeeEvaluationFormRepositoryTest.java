@@ -1,7 +1,11 @@
 package com.gft.employeeappraisal.repository;
 
-import com.gft.employeeappraisal.builder.model.*;
+import com.gft.employeeappraisal.builder.model.EmployeeEvaluationFormBuilder;
 import com.gft.employeeappraisal.exception.EmployeeAppraisalMicroserviceTestException;
+import com.gft.employeeappraisal.helper.builder.model.AppraisalBuilder;
+import com.gft.employeeappraisal.helper.builder.model.AppraisalXEvaluationFormBuilder;
+import com.gft.employeeappraisal.helper.builder.model.EmployeeBuilder;
+import com.gft.employeeappraisal.helper.builder.model.EvaluationFormBuilder;
 import com.gft.employeeappraisal.model.*;
 import org.junit.Test;
 import org.junit.runner.RunWith;

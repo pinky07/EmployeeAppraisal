@@ -58,9 +58,15 @@ repositories {
 }
 
 ext {
-    gVersion = '4.1'
-    springCloudVersion = 'Dalston.SR3'
     hibernateVersion = '5.2.10.Final'
+    flywayVersion = '4.2.0'
+    postgresqlVersion = '42.1.4'
+    springFoxSwaggerVersion = '2.7.0'
+    jacksonVersion = '2.9.0'
+    jsr310Version = '2.9.0'
+    orikaVersion = '1.5.1'
+    springCloudVersion = 'Dalston.SR3'
+    gradleWrapperVersion = '4.1'
 }
 
 dependencies {
@@ -81,28 +87,29 @@ dependencies {
 
     // Database
     compile('org.springframework.boot:spring-boot-starter-data-jpa') {
-        // Hibernate 5.0.12 does not support java.time properly.
-        exclude group: 'org.hibernate'
+        exclude group: 'org.hibernate' // Hibernate 5.0.12 does not support java.time properly.
     }
     compile("org.hibernate:hibernate-core:${hibernateVersion}")
     compile("org.hibernate:hibernate-entitymanager:${hibernateVersion}")
-    compile('org.flywaydb:flyway-core:4.2.0')
-
+    compile("org.flywaydb:flyway-core:${flywayVersion}")
     compile('com.h2database:h2') // Local development
-    compile group: 'org.postgresql', name: 'postgresql', version: '42.1.4' // CI DEV database
+    compile group: 'org.postgresql', name: 'postgresql', version: "${postgresqlVersion}" // CI DEV database
 
     // Swagger
-    compile('io.springfox:springfox-swagger2:2.7.0')
-    compile('io.springfox:springfox-swagger-ui:2.7.0')
-    compile('com.fasterxml.jackson.datatype:jackson-datatype-jsr310')
+    compile("io.springfox:springfox-swagger2:${springFoxSwaggerVersion}")
+    compile("io.springfox:springfox-swagger-ui:${springFoxSwaggerVersion}")
+    compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: "${jacksonVersion}"
+    compile group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: "${jacksonVersion}"
+    compile group: 'com.fasterxml.jackson.core', name: 'jackson-annotations', version: "${jacksonVersion}"
+    compile group: 'com.fasterxml.jackson.datatype', name: 'jackson-datatype-jsr310', version: "${jsr310Version}"
 
-    //Orika
-    compile('ma.glasnost.orika:orika-core:1.5.1')
+    // Orika
+    compile("ma.glasnost.orika:orika-core:${orikaVersion}")
 
     // Test
     testCompile('org.springframework.boot:spring-boot-starter-test')
-    testCompile('org.mockito:mockito-core:2.+')
     testCompile('org.springframework.security:spring-security-test')
+    testCompile('org.mockito:mockito-core:2.+')
 }
 
 dependencyManagement {
@@ -113,8 +120,14 @@ dependencyManagement {
 
 // The purpose of this is that every time that the code compiles, it will generate the Swagger auto generated classes,
 // preventing anyone from working directly on them.
-//
 tasks.compileJava.dependsOn 'swagger'
+
+test {
+    // Ensure all tests are run in a single JVM so that Spring's Application Context is cached and reused
+    // See https://docs.spring.io/spring/docs/current/spring-framework-reference/html/integration-testing.html#testcontext-ctx-management-caching
+    setForkEvery(null)
+    setMaxParallelForks(1)
+}
 
 task buildDockerCI(type: Docker, dependsOn: build) {
     tag = 'com.gft.employee-appraisal.ci'
@@ -143,5 +156,5 @@ task buildDockerQA(type: Docker, dependsOn: build) {
 }
 
 // Avoids distribution version to be changed from ALL to BIN in gradle-wrapper.properties
-wrapper.gradleVersion = gVersion
+wrapper.gradleVersion = gradleWrapperVersion
 wrapper.distributionType = Wrapper.DistributionType.ALL

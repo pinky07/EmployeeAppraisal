@@ -1,4 +1,4 @@
-package com.gft.employeeappraisal.controller;
+package com.gft.employeeappraisal.helper.comparator;
 
 
 import com.gft.employeeappraisal.model.ApplicationRole;

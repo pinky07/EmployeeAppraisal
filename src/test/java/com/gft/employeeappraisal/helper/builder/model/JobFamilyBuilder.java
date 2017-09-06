@@ -1,16 +1,15 @@
-package com.gft.employeeappraisal.builder.model;
+package com.gft.employeeappraisal.helper.builder.model;
 
-import com.gft.employeeappraisal.builder.ObjectBuilder;
-import com.gft.employeeappraisal.model.Relationship;
-import com.gft.employeeappraisal.model.RelationshipName;
+import com.gft.employeeappraisal.helper.builder.ObjectBuilder;
+import com.gft.employeeappraisal.model.JobFamily;
 
 /**
- * Builder object for the {@link Relationship} object.
+ * Builder object for the {@link JobFamily} object.
  *
  * @author Manuel Yepez
  * @author Ruben Jimenez
  */
-public class RelationshipBuilder implements ObjectBuilder<Relationship> {
+public class JobFamilyBuilder implements ObjectBuilder<JobFamily> {
 
     private int id;
     private String name;
@@ -20,30 +19,30 @@ public class RelationshipBuilder implements ObjectBuilder<Relationship> {
     private boolean nameSet;
     private boolean descriptionSet;
 
-    public RelationshipBuilder() {
+    public JobFamilyBuilder() {
     }
 
-    public RelationshipBuilder id(int id) {
+    public JobFamilyBuilder id(int id) {
         this.id = id;
         this.idSet = true;
         return this;
     }
 
-    public RelationshipBuilder name(String name) {
+    public JobFamilyBuilder name(String name) {
         this.name = name;
         this.nameSet = true;
         return this;
     }
 
-    public RelationshipBuilder description(String description) {
+    public JobFamilyBuilder description(String description) {
         this.description = description;
         this.descriptionSet = true;
         return this;
     }
 
     @Override
-    public Relationship build() {
-        Relationship obj = new Relationship();
+    public JobFamily build() {
+        JobFamily obj = new JobFamily();
         obj.setId(this.id);
         obj.setName(this.name);
         obj.setDescription(this.description);
@@ -51,10 +50,10 @@ public class RelationshipBuilder implements ObjectBuilder<Relationship> {
     }
 
     @Override
-    public Relationship buildWithDefaults() {
-        Relationship obj = new Relationship();
+    public JobFamily buildWithDefaults() {
+        JobFamily obj = new JobFamily();
         if (this.idSet) obj.setId(this.id);
-        obj.setName(this.nameSet ? this.name : RelationshipName.PEER.name());
+        obj.setName(this.nameSet ? this.name : "Name");
         obj.setDescription(this.descriptionSet ? this.description : "Description");
         return obj;
     }

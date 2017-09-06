@@ -13,12 +13,13 @@ import java.util.stream.Stream;
  * @author Manuel Yepez
  */
 public interface AppraisalService {
-	/**
-	 * Lookup method for an Appraisal, given an ID. Normally used for administrative tasks.
-	 * @param appraisalId ID to look up.
-	 * @return An Optional object that may or may not contain a {@link Appraisal} entity.
-	 */
-	Optional<Appraisal> findById(int appraisalId);
+    /**
+     * Lookup method for an Appraisal, given an ID. Normally used for administrative tasks.
+     *
+     * @param appraisalId ID to look up.
+     * @return An Optional object that may or may not contain a {@link Appraisal} entity.
+     */
+    Optional<Appraisal> findById(int appraisalId);
 
     /**
      * Given an employee and (optionally) an evaluation status, this method will return all the

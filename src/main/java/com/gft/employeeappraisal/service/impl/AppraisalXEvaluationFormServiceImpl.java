@@ -14,7 +14,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class AppraisalXEvaluationFormServiceImpl implements AppraisalXEvaluationFormService {
 
-    private AppraisalXEvaluationFormRepository appraisalXEvaluationFormRepository;
+    private final AppraisalXEvaluationFormRepository appraisalXEvaluationFormRepository;
 
     @Autowired
     public AppraisalXEvaluationFormServiceImpl(

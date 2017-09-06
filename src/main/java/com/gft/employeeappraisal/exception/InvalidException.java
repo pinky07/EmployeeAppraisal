@@ -9,7 +9,7 @@ import org.springframework.validation.Errors;
  */
 public class InvalidException extends EmployeeAppraisalMicroserviceException {
 
-    private Errors errors;
+    private final Errors errors;
 
     /**
      * Creates an instance of InvalidException.

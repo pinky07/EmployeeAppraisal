@@ -1,6 +1,7 @@
 package com.gft.employeeappraisal.service;
 
 import com.gft.employeeappraisal.builder.model.*;
+import com.gft.employeeappraisal.helper.builder.model.*;
 import com.gft.employeeappraisal.model.*;
 import com.gft.employeeappraisal.repository.*;
 import com.gft.employeeappraisal.service.impl.EmployeeEvaluationFormServiceImpl;
@@ -23,39 +24,12 @@ import static org.junit.Assert.assertTrue;
  */
 @RunWith(SpringRunner.class)
 @DataJpaTest
-public class EmployeeEvaluationFormServiceTest {
-
-    // Required to initialize the class under test
-
-    @Autowired
-    private EmployeeEvaluationFormRepository employeeEvaluationFormRepository;
+public class EmployeeEvaluationFormServiceTest extends BaseServiceTest {
 
     // Class under test
     private EmployeeEvaluationFormService employeeEvaluationFormService;
 
-    // Other repositories
-
-    @Autowired
-    private ApplicationRoleRepository applicationRoleRepository;
-
-    @Autowired
-    private JobFamilyRepository jobFamilyRepository;
-
-    @Autowired
-    private JobLevelRepository jobLevelRepository;
-
-    @Autowired
-    private AppraisalRepository appraisalRepository;
-
-    @Autowired
-    private EvaluationFormRepository evaluationFormRepository;
-
-    @Autowired
-    private AppraisalXEvaluationFormRepository appraisalXEvaluationFormRepository;
-
-    @Autowired
-    private EmployeeRepository employeeRepository;
-
+    // Test fixtures
     private Appraisal appraisal;
     private Employee employee;
     private EmployeeEvaluationForm selfEmployeeEvaluationForm;

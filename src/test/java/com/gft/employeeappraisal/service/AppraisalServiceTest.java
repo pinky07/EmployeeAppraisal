@@ -1,15 +1,12 @@
 package com.gft.employeeappraisal.service;
 
-import com.gft.employeeappraisal.builder.model.*;
+import com.gft.employeeappraisal.builder.model.EmployeeEvaluationFormBuilder;
+import com.gft.employeeappraisal.helper.builder.model.*;
 import com.gft.employeeappraisal.model.*;
-import com.gft.employeeappraisal.repository.*;
 import com.gft.employeeappraisal.service.impl.AppraisalServiceImpl;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mock;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.List;
@@ -26,35 +23,15 @@ import static org.mockito.Mockito.when;
  * @author Manuel Yepez
  */
 @RunWith(SpringRunner.class)
-@DataJpaTest
-public class AppraisalServiceTest {
-
-    @Autowired
-    private AppraisalRepository appraisalRepository;
-
-    @Autowired
-    private EmployeeRepository employeeRepository;
-
-    @Autowired
-    private ApplicationRoleRepository applicationRoleRepository;
-
-    @Autowired
-    private JobFamilyRepository jobFamilyRepository;
-
-    @Autowired
-    private JobLevelRepository jobLevelRepository;
-
-    @Mock
-    private EmployeeEvaluationFormService employeeEvaluationFormService;
-
-    @Mock
-    private AppraisalXEvaluationFormService appraisalXEvaluationFormService;
+public class AppraisalServiceTest extends BaseServiceTest {
 
     // Class under test
     private AppraisalService appraisalService;
 
+    // Test Fixtures
     private Appraisal appraisal;
     private Employee employeeA;
+    private EmployeeRelationship selfEmployeeRelationship;
 
     @Before
     public void setUp() throws Exception {
@@ -131,6 +108,6 @@ public class AppraisalServiceTest {
     private EmployeeEvaluationForm testEmployeeEvaluationForm() {
         return new EmployeeEvaluationFormBuilder()
                 .appraisalXEvaluationForm(new AppraisalXEvaluationFormBuilder()
-                .appraisal(appraisal).buildWithDefaults()).buildWithDefaults();
+                        .appraisal(appraisal).buildWithDefaults()).buildWithDefaults();
     }
 }

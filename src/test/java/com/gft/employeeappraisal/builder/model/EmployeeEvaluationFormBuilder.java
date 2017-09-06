@@ -1,6 +1,7 @@
 package com.gft.employeeappraisal.builder.model;
 
-import com.gft.employeeappraisal.builder.ObjectBuilder;
+import com.gft.employeeappraisal.helper.builder.ObjectBuilder;
+import com.gft.employeeappraisal.helper.builder.model.AppraisalXEvaluationFormBuilder;
 import com.gft.employeeappraisal.model.AppraisalXEvaluationForm;
 import com.gft.employeeappraisal.model.EmployeeEvaluationForm;
 import com.gft.employeeappraisal.model.EvaluationStatus;
