@@ -9,6 +9,10 @@ import com.gft.employeeappraisal.service.impl.SecurityServiceImpl;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.Optional;
@@ -24,14 +28,17 @@ import static org.mockito.Mockito.*;
 @RunWith(SpringRunner.class)
 public class SecurityServiceTest extends BaseServiceTest {
 
+    // Required to initialize the class under test
+    @Value("${com.gft.businessRules.maxMenteeReferences}")
+    private Integer maxMenteeReferences;
+
     // Class under test
     private SecurityService securityService;
 
     @Before
     public void setUp() throws Exception {
-        int maxMenteeReferences = 5;
         this.securityService = new SecurityServiceImpl(
-                maxMenteeReferences,
+                this.maxMenteeReferences,
                 this.employeeRelationshipService,
                 this.employeeService);
     }
