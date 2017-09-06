@@ -132,6 +132,7 @@ public class EmployeesControllerMentorTest extends BaseControllerTest {
      * @throws Exception
      */
     @Test
+    @SuppressWarnings("unchecked")
     public void employeesIdMentorGet_MentorNotFound() throws Exception {
         // Set up
         when(employeeService.getCurrentMentorById(anyInt())).thenThrow(NotFoundException.class);
@@ -201,6 +202,7 @@ public class EmployeesControllerMentorTest extends BaseControllerTest {
      * @throws Exception
      */
     @Test
+    @SuppressWarnings("unchecked")
     public void employeesIdMentorPut_EmployeeNotFound() throws Exception {
         // Set up
         when(employeeService.getById(mockEmployeeDTO.getId())).thenThrow(NotFoundException.class);
@@ -230,6 +232,7 @@ public class EmployeesControllerMentorTest extends BaseControllerTest {
      * @throws Exception
      */
     @Test
+    @SuppressWarnings("unchecked")
     public void employeesIdMentorPut_MentorNotFound() throws Exception {
         // Set up
         Employee mockEmployee = mockEmployee();

@@ -70,7 +70,7 @@ public class AppraisalsController implements AppraisalApi {
                 .findByAppraisalAndEmployeeAndSourceRelationships(appraisal, employee, RelationshipName.SELF)
                 .map(AppraisalXEvaluationFormXEmployeeRelationship::getAppraisalXEvaluationForm)
                 .map(AppraisalXEvaluationForm::getAppraisal)
-                .findFirst().map(a -> appraisalDTOConverter.convert(a)).orElse(new AppraisalDTO());
+                .findFirst().map(appraisalDTOConverter::convert).orElse(new AppraisalDTO());
 
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
@@ -138,7 +138,7 @@ public class AppraisalsController implements AppraisalApi {
                 .findByAppraisalAndEmployeeAndSourceRelationships(appraisal, user, RelationshipName.SELF)
                 .map(AppraisalXEvaluationFormXEmployeeRelationship::getAppraisalXEvaluationForm)
                 .map(AppraisalXEvaluationForm::getAppraisal)
-                .findFirst().map(a -> appraisalDTOConverter.convert(a)).orElse(new AppraisalDTO());
+                .findFirst().map(appraisalDTOConverter::convert).orElse(new AppraisalDTO());
 
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
@@ -184,7 +184,7 @@ public class AppraisalsController implements AppraisalApi {
                 user)
                 .map(AppraisalXEvaluationFormXEmployeeRelationship::getAppraisalXEvaluationForm)
                 .map(AppraisalXEvaluationForm::getEvaluationForm)
-                .map(evaluationForm -> evaluationFormDTOConverter.convert(evaluationForm))
+                .map(evaluationFormDTOConverter::convert)
                 .collect(Collectors.toList());
 
         return new ResponseEntity<>(result, HttpStatus.OK);

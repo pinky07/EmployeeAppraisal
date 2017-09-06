@@ -66,7 +66,7 @@ public class MeController implements MeApi {
         // Find Mentees and set result
         List<EmployeeDTO> result = employeeService
                 .findCurrentMenteesById(user.getId())
-                .map(mentee -> employeeDTOConverter.convert(mentee))
+                .map(employeeDTOConverter::convert)
                 .collect(Collectors.toList());
 
         return new ResponseEntity<>(result, HttpStatus.OK);

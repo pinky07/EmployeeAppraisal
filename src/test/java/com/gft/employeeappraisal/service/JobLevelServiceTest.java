@@ -4,14 +4,10 @@ import com.gft.employeeappraisal.helper.builder.model.JobFamilyBuilder;
 import com.gft.employeeappraisal.helper.builder.model.JobLevelBuilder;
 import com.gft.employeeappraisal.model.JobFamily;
 import com.gft.employeeappraisal.model.JobLevel;
-import com.gft.employeeappraisal.repository.JobFamilyRepository;
-import com.gft.employeeappraisal.repository.JobLevelRepository;
 import com.gft.employeeappraisal.service.impl.JobLevelServiceImpl;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import javax.validation.ConstraintViolationException;
