@@ -46,11 +46,7 @@ public class MeControllerTest extends BaseControllerTest {
     @Autowired
     private EntityDTOComparator entityDTOComparator;
 
-    @MockBean(reset = MockReset.AFTER)
-    private EmployeeService employeeService;
-
     @Autowired
-    @SuppressWarnings("unused")
     private EmployeeDTOConverter employeeDTOConverter;
 
     private static final String URL_TEMPLATE = "/me";

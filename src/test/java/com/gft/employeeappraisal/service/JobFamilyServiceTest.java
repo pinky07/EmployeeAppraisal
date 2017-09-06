@@ -23,15 +23,12 @@ import static org.junit.Assert.assertTrue;
  * @author Manuel Yepez
  */
 @RunWith(SpringRunner.class)
-@DataJpaTest
-public class JobFamilyServiceTest {
-
-    @Autowired
-    private JobFamilyRepository jobFamilyRepository;
+public class JobFamilyServiceTest extends BaseServiceTest {
 
     // Class under test
     private JobFamilyService jobFamilyService;
 
+    // Test fixtures
     private JobFamily jobFamily;
 
     @Before

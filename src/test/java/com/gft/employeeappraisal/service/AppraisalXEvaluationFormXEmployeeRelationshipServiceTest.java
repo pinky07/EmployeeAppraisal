@@ -2,14 +2,10 @@ package com.gft.employeeappraisal.service;
 
 import com.gft.employeeappraisal.helper.builder.model.*;
 import com.gft.employeeappraisal.model.*;
-import com.gft.employeeappraisal.repository.*;
 import com.gft.employeeappraisal.service.impl.AppraisalXEvaluationFormXEmployeeRelationshipServiceImpl;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mock;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.List;
@@ -25,49 +21,12 @@ import static org.mockito.Mockito.when;
  * @author Rubén Jiménez
  */
 @RunWith(SpringRunner.class)
-@DataJpaTest
-public class AppraisalXEvaluationFormXEmployeeRelationshipServiceTest {
-
-    // Required to initialize the class under test
-
-    @Autowired
-    private AppraisalXEvaluationFormXEmployeeRelationshipRepository appraisalXEvaluationFormXEmployeeRelationshipRepository;
-
-    @Mock
-    private RelationshipService relationshipService;
+public class AppraisalXEvaluationFormXEmployeeRelationshipServiceTest extends BaseServiceTest {
 
     // Class under test
     private AppraisalXEvaluationFormXEmployeeRelationshipService appraisalXEvaluationFormXEmployeeRelationshipService;
 
-    // Other repositories
-
-    @Autowired
-    private ApplicationRoleRepository applicationRoleRepository;
-
-    @Autowired
-    private RelationshipRepository relationshipRepository;
-
-    @Autowired
-    private JobFamilyRepository jobFamilyRepository;
-
-    @Autowired
-    private JobLevelRepository jobLevelRepository;
-
-    @Autowired
-    private AppraisalRepository appraisalRepository;
-
-    @Autowired
-    private EvaluationFormRepository evaluationFormRepository;
-
-    @Autowired
-    private AppraisalXEvaluationFormRepository appraisalXEvaluationFormRepository;
-
-    @Autowired
-    private EmployeeRepository employeeRepository;
-
-    @Autowired
-    private EmployeeRelationshipRepository employeeRelationshipRepository;
-
+    // Test Fixtures
     private Relationship selfRelationship;
     private Relationship peerRelationship;
     private Relationship leadRelationship;

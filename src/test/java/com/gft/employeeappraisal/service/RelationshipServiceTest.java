@@ -25,11 +25,7 @@ import static org.junit.Assert.*;
  * @author Rubén Jiménez
  */
 @RunWith(SpringRunner.class)
-@DataJpaTest
-public class RelationshipServiceTest {
-
-    @Autowired
-    private RelationshipRepository relationshipRepository;
+public class RelationshipServiceTest extends BaseServiceTest {
 
     // Class under test
     private RelationshipService relationshipService;

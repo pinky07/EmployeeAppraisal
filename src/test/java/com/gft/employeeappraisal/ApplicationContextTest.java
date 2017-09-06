@@ -1,4 +1,4 @@
-package com.gft.employeeappraisal.model;
+package com.gft.employeeappraisal;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -8,10 +8,11 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-@ActiveProfiles("test")
-public class EmployeeAppraisalServerTests {
+@ActiveProfiles({"default", "oauth2", "local-postgresql"})
+public class ApplicationContextTest {
 
     @Test
-    public void contextLoads() {
+    public void applicationContextLoads() {
+        System.out.println("Application Context Loaded!");
     }
 }

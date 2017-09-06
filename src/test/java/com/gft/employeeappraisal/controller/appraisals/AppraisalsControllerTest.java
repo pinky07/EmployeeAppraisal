@@ -1,22 +1,17 @@
 package com.gft.employeeappraisal.controller.appraisals;
 
-import com.gft.employeeappraisal.helper.builder.model.*;
 import com.gft.employeeappraisal.controller.AppraisalsController;
 import com.gft.employeeappraisal.controller.BaseControllerTest;
 import com.gft.employeeappraisal.converter.appraisal.AppraisalDTOConverter;
 import com.gft.employeeappraisal.exception.NotFoundException;
+import com.gft.employeeappraisal.helper.builder.model.*;
 import com.gft.employeeappraisal.model.*;
-import com.gft.employeeappraisal.service.AppraisalService;
-import com.gft.employeeappraisal.service.AppraisalXEvaluationFormXEmployeeRelationshipService;
-import com.gft.employeeappraisal.service.EmployeeService;
 import com.gft.swagger.employees.model.AppraisalDTO;
 import com.gft.swagger.employees.model.OperationResultDTO;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.boot.test.mock.mockito.MockReset;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -48,15 +43,6 @@ public class AppraisalsControllerTest extends BaseControllerTest {
     private static final String APPRAISAL_URL = "/appraisals";
 
     private static final String USER_EMAIL = "user@gft.com";
-
-    @MockBean(reset = MockReset.AFTER)
-    private AppraisalService appraisalService;
-
-    @MockBean(reset = MockReset.AFTER)
-    private EmployeeService employeeService;
-
-    @MockBean(reset = MockReset.AFTER)
-    private AppraisalXEvaluationFormXEmployeeRelationshipService appraisalXEvaluationFormXEmployeeRelationshipService;
 
     @Autowired
     @SuppressWarnings("unused")

@@ -33,45 +33,10 @@ import static org.mockito.Mockito.when;
  * @author Rubén Jiménez
  */
 @RunWith(SpringRunner.class)
-@DataJpaTest
-public class EmployeeServiceTest {
-
-    // Required to initialize the class under test
-
-    @Autowired
-    private EmployeeRepository employeeRepository;
-
-    @Mock
-    private ApplicationRoleService applicationRoleService;
-
-    @Mock
-    private EmployeeRelationshipService employeeRelationshipService;
-
-    @Mock
-    private JobLevelService jobLevelService;
-
-    @Mock
-    private RelationshipService relationshipService;
+public class EmployeeServiceTest extends BaseServiceTest {
 
     // Class under test
     private EmployeeService employeeService;
-
-    // Other repositories
-
-    @Autowired
-    private ApplicationRoleRepository applicationRoleRepository;
-
-    @Autowired
-    private JobFamilyRepository jobFamilyRepository;
-
-    @Autowired
-    private JobLevelRepository jobLevelRepository;
-
-    @Autowired
-    private RelationshipRepository relationshipRepository;
-
-    @Autowired
-    private EmployeeRelationshipRepository employeeRelationshipRepository;
 
     // Test Fixtures
     private ApplicationRole userApplicationRole;

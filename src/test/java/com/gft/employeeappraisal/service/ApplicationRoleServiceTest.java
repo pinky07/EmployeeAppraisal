@@ -3,13 +3,10 @@ package com.gft.employeeappraisal.service;
 import com.gft.employeeappraisal.helper.builder.model.ApplicationRoleBuilder;
 import com.gft.employeeappraisal.model.ApplicationRole;
 import com.gft.employeeappraisal.model.ApplicationRoleName;
-import com.gft.employeeappraisal.repository.ApplicationRoleRepository;
 import com.gft.employeeappraisal.service.impl.ApplicationRoleServiceImpl;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import javax.validation.ConstraintViolationException;
@@ -25,11 +22,7 @@ import static org.junit.Assert.assertTrue;
  * @author Rubén Jiménez
  */
 @RunWith(SpringRunner.class)
-@DataJpaTest
-public class ApplicationRoleServiceTest {
-
-    @Autowired
-    private ApplicationRoleRepository applicationRoleRepository;
+public class ApplicationRoleServiceTest extends BaseServiceTest {
 
     // Class under test
     private ApplicationRoleService applicationRoleService;

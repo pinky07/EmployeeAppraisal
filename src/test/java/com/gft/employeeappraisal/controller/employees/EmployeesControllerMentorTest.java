@@ -1,5 +1,9 @@
 package com.gft.employeeappraisal.controller.employees;
 
+import com.gft.employeeappraisal.controller.BaseControllerTest;
+import com.gft.employeeappraisal.controller.EmployeesController;
+import com.gft.employeeappraisal.converter.employee.EmployeeDTOConverter;
+import com.gft.employeeappraisal.exception.NotFoundException;
 import com.gft.employeeappraisal.helper.builder.dto.ApplicationRoleDTOBuilder;
 import com.gft.employeeappraisal.helper.builder.dto.EmployeeDTOBuilder;
 import com.gft.employeeappraisal.helper.builder.dto.JobFamilyDTOBuilder;
@@ -8,17 +12,11 @@ import com.gft.employeeappraisal.helper.builder.model.ApplicationRoleBuilder;
 import com.gft.employeeappraisal.helper.builder.model.EmployeeBuilder;
 import com.gft.employeeappraisal.helper.builder.model.JobFamilyBuilder;
 import com.gft.employeeappraisal.helper.builder.model.JobLevelBuilder;
-import com.gft.employeeappraisal.controller.BaseControllerTest;
-import com.gft.employeeappraisal.controller.EmployeesController;
 import com.gft.employeeappraisal.helper.comparator.EntityDTOComparator;
-import com.gft.employeeappraisal.converter.employee.EmployeeDTOConverter;
-import com.gft.employeeappraisal.exception.NotFoundException;
 import com.gft.employeeappraisal.model.ApplicationRole;
 import com.gft.employeeappraisal.model.Constants;
 import com.gft.employeeappraisal.model.Employee;
 import com.gft.employeeappraisal.model.JobLevel;
-import com.gft.employeeappraisal.service.EmployeeRelationshipService;
-import com.gft.employeeappraisal.service.EmployeeService;
 import com.gft.swagger.employees.model.ApplicationRoleDTO;
 import com.gft.swagger.employees.model.EmployeeDTO;
 import com.gft.swagger.employees.model.JobLevelDTO;
@@ -29,8 +27,6 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.boot.test.mock.mockito.MockReset;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MvcResult;
@@ -65,14 +61,7 @@ public class EmployeesControllerMentorTest extends BaseControllerTest {
     private EntityDTOComparator entityDTOComparator;
 
     @Autowired
-    @SuppressWarnings("unused")
     private EmployeeDTOConverter employeeDTOConverter;
-
-    @MockBean(reset = MockReset.AFTER)
-    private EmployeeService employeeService;
-
-    @MockBean(reset = MockReset.AFTER)
-    private EmployeeRelationshipService employeeRelationshipService;
 
     @BeforeClass
     public static void setUp() {

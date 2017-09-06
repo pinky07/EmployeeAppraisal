@@ -17,7 +17,7 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
  * @author Ruben Jimenez
  */
 
-@Profile({"dev", "local-h2"})
+@Profile("swagger-ui")
 @EnableSwagger2
 @Configuration
 public class SwaggerConfiguration {

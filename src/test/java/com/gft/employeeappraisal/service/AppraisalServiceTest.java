@@ -2,14 +2,10 @@ package com.gft.employeeappraisal.service;
 
 import com.gft.employeeappraisal.helper.builder.model.*;
 import com.gft.employeeappraisal.model.*;
-import com.gft.employeeappraisal.repository.*;
 import com.gft.employeeappraisal.service.impl.AppraisalServiceImpl;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mock;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.Collections;
@@ -27,39 +23,12 @@ import static org.mockito.Mockito.when;
  * @author Manuel Yepez
  */
 @RunWith(SpringRunner.class)
-@DataJpaTest
-public class AppraisalServiceTest {
-
-    @Autowired
-    private AppraisalRepository appraisalRepository;
-
-    @Autowired
-    private EmployeeRepository employeeRepository;
-
-    @Autowired
-    private ApplicationRoleRepository applicationRoleRepository;
-
-    @Autowired
-    private EmployeeRelationshipRepository employeeRelationshipRepository;
-
-    @Autowired
-    private JobFamilyRepository jobFamilyRepository;
-
-    @Autowired
-    private JobLevelRepository jobLevelRepository;
-
-    @Autowired
-    private RelationshipRepository relationshipRepository;
-
-    @Mock
-    private AppraisalXEvaluationFormXEmployeeRelationshipService appraisalXEvaluationFormXEmployeeRelationshipService;
-
-    @Mock
-    private EmployeeRelationshipService employeeRelationshipService;
+public class AppraisalServiceTest extends BaseServiceTest {
 
     // Class under test
     private AppraisalService appraisalService;
 
+    // Test Fixtures
     private Appraisal appraisal;
     private Employee employeeA;
     private EmployeeRelationship selfEmployeeRelationship;

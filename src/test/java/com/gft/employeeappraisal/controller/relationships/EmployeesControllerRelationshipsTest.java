@@ -1,19 +1,15 @@
 package com.gft.employeeappraisal.controller.relationships;
 
+import com.gft.employeeappraisal.controller.BaseControllerTest;
+import com.gft.employeeappraisal.controller.EmployeesController;
+import com.gft.employeeappraisal.exception.AccessDeniedException;
+import com.gft.employeeappraisal.exception.NotFoundException;
 import com.gft.employeeappraisal.helper.builder.dto.EmployeeDTOBuilder;
 import com.gft.employeeappraisal.helper.builder.dto.EmployeeRelationshipDTOBuilder;
 import com.gft.employeeappraisal.helper.builder.dto.RelationshipDTOBuilder;
 import com.gft.employeeappraisal.helper.builder.model.*;
-import com.gft.employeeappraisal.controller.BaseControllerTest;
-import com.gft.employeeappraisal.controller.EmployeesController;
 import com.gft.employeeappraisal.helper.comparator.EntityDTOComparator;
-import com.gft.employeeappraisal.exception.AccessDeniedException;
-import com.gft.employeeappraisal.exception.NotFoundException;
 import com.gft.employeeappraisal.model.*;
-import com.gft.employeeappraisal.service.EmployeeRelationshipService;
-import com.gft.employeeappraisal.service.EmployeeService;
-import com.gft.employeeappraisal.service.RelationshipService;
-import com.gft.employeeappraisal.service.SecurityService;
 import com.gft.swagger.employees.model.EmployeeDTO;
 import com.gft.swagger.employees.model.EmployeeRelationshipDTO;
 import com.gft.swagger.employees.model.OperationResultDTO;
@@ -22,8 +18,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.boot.test.mock.mockito.MockReset;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -52,19 +46,6 @@ public class EmployeesControllerRelationshipsTest extends BaseControllerTest {
 
     private static final String EMPLOYEES_URL = "/employees";
     private static final String RELATIONSHIP_URL = "/relationships";
-
-    @MockBean
-    private EmployeeService employeeService;
-
-    @MockBean(reset = MockReset.AFTER)
-    @SuppressWarnings("unused")
-    private EmployeeRelationshipService employeeRelationshipService;
-
-    @MockBean(reset = MockReset.AFTER)
-    private RelationshipService relationshipService;
-
-    @MockBean(reset = MockReset.AFTER)
-    private SecurityService securityService;
 
     @Autowired
     private EntityDTOComparator entityDTOComparator;

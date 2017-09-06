@@ -1,5 +1,8 @@
 package com.gft.employeeappraisal.controller.employees;
 
+import com.gft.employeeappraisal.controller.BaseControllerTest;
+import com.gft.employeeappraisal.controller.EmployeesController;
+import com.gft.employeeappraisal.converter.employee.EmployeeDTOConverter;
 import com.gft.employeeappraisal.helper.builder.dto.ApplicationRoleDTOBuilder;
 import com.gft.employeeappraisal.helper.builder.dto.EmployeeDTOBuilder;
 import com.gft.employeeappraisal.helper.builder.dto.JobFamilyDTOBuilder;
@@ -8,14 +11,10 @@ import com.gft.employeeappraisal.helper.builder.model.ApplicationRoleBuilder;
 import com.gft.employeeappraisal.helper.builder.model.EmployeeBuilder;
 import com.gft.employeeappraisal.helper.builder.model.JobFamilyBuilder;
 import com.gft.employeeappraisal.helper.builder.model.JobLevelBuilder;
-import com.gft.employeeappraisal.controller.BaseControllerTest;
-import com.gft.employeeappraisal.converter.employee.EmployeeDTOConverter;
 import com.gft.employeeappraisal.model.ApplicationRole;
 import com.gft.employeeappraisal.model.Constants;
 import com.gft.employeeappraisal.model.Employee;
 import com.gft.employeeappraisal.model.JobLevel;
-import com.gft.employeeappraisal.service.EmployeeRelationshipService;
-import com.gft.employeeappraisal.service.EmployeeService;
 import com.gft.swagger.employees.model.ApplicationRoleDTO;
 import com.gft.swagger.employees.model.EmployeeDTO;
 import com.gft.swagger.employees.model.JobLevelDTO;
@@ -24,8 +23,6 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.boot.test.mock.mockito.MockReset;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MvcResult;
@@ -45,15 +42,7 @@ public class EmployeesControllerPostTest extends BaseControllerTest {
     private static EmployeeDTO mockEmployeeDTO;
 
     @Autowired
-    @SuppressWarnings("unused")
     private EmployeeDTOConverter employeeDTOConverter;
-
-    @MockBean(reset = MockReset.AFTER)
-    private EmployeeService employeeService;
-
-    @MockBean(reset = MockReset.AFTER)
-    @SuppressWarnings("unused")
-    private EmployeeRelationshipService employeeRelationshipService;
 
     @BeforeClass
     public static void setUp() {
@@ -121,8 +110,14 @@ public class EmployeesControllerPostTest extends BaseControllerTest {
         assertNull(resultDTO.getData());
     }
 
+    /**
+     * Tests {@link EmployeesController#employeesPost(EmployeeDTO)}
+     *
+     * @throws Exception
+     */
     @Test
     public void employeesPost_BadRequest() throws Exception {
+
         EmployeeDTO badRequestEmployee = new EmployeeDTO();
 
         MvcResult result = mockMvc.perform(post(EMPLOYEES_URL)
