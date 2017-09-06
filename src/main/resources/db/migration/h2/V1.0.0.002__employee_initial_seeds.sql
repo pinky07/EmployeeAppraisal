@@ -92,8 +92,8 @@ VALUES
         (1, 1, 1, 'admin@gft.com', 'John', 'Doe', 'JODO'),
 
         -- Actual employees
-        (2, 45, 2, 'ruben.jimenez@gft.com', 'Rubén', 'Jiménez', 'RNJZ'),
-        (3, 45, 2, 'manuel.yepez@gft.com', 'Manuel', 'Yepez', 'MLYZ'),
+        (2, 45, 1, 'ruben.jimenez@gft.com', 'Rubén', 'Jiménez', 'RNJZ'),
+        (3, 45, 1, 'manuel.yepez@gft.com', 'Manuel', 'Yepez', 'MLYZ'),
         (4, 47, 2, 'Mario.Leon@gft.com', 'Mario', 'Leon', 'MOLN'),
         (5, 47, 2, 'Eduardo.Herrera@gft.com', 'Eduardo', 'Herrera', 'EOHA'),
 

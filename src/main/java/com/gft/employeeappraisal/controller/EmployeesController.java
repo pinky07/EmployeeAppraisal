@@ -117,9 +117,25 @@ public class EmployeesController implements EmployeeApi {
     }
 
     @Override
-    public ResponseEntity<Void> employeesIdMenteesGet(
+    public ResponseEntity<List<EmployeeDTO>> employeesIdMenteesGet(
             @PathVariable("employeeId") Integer employeeId) {
-        return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
+        // Get the logged in Employee
+        Employee user = this.employeeService.getLoggedInUser();
+        List<EmployeeDTO> result = new ArrayList<>();
+
+        if (this.employeeService.isAdmin(user)) {
+            // Find provided employee
+            Employee mentor = this.employeeService.getById(employeeId);
+
+            // Fetch mentees
+            this.employeeService.findCurrentMenteesById(mentor.getId())
+                    .forEach(mentee -> result.add(employeeDTOConverter.convert(mentee)));
+        } else {
+            throw new AccessDeniedException(String.format("User %s is not an admin and cannot execute this operation.",
+                    user.getEmail()));
+        }
+
+        return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
     @Override

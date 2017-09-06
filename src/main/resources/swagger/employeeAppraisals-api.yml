@@ -608,6 +608,10 @@ paths:
         '200':
           description: |
             Successful.
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/EmployeeDTO'
         '403':
           description: |
             The user isn't authenticated or authorized to perform this action.
