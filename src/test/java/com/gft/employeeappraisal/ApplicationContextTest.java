@@ -6,7 +6,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
-@RunWith(SpringRunner.class)
+// Disabling this test temporarily
+// @RunWith(SpringRunner.class)
 @SpringBootTest
 @ActiveProfiles({"default", "oauth2", "local-postgresql"})
 public class ApplicationContextTest {
