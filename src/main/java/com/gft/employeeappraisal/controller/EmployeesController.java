@@ -138,12 +138,6 @@ public class EmployeesController implements EmployeeApi {
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
-    @Override
-    public ResponseEntity<Void> employeesIdMenteesPost(
-            @PathVariable("employeeId") Integer employeeId) {
-        return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
-    }
-
     /**
      * Given an employeeId, returns the current Mentor associated to that employee.
      *
@@ -189,6 +183,28 @@ public class EmployeesController implements EmployeeApi {
 
         // Change Mentor
         employeeRelationshipService.changeMentor(newMentor, employee);
+
+        // Return response
+        response.setMessage(Constants.SUCCESS);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    @Override
+    public ResponseEntity<OperationResultDTO> employeesIdMentorDelete(
+            @PathVariable("employeeId") Integer employeeId) {
+        // Get the logged in Employee
+        Employee user = this.employeeService.getLoggedInUser();
+        OperationResultDTO response = new OperationResultDTO();
+
+        if (this.employeeService.isAdmin(user)) {
+            // Fetch employee
+            Employee employee = this.employeeService.getById(employeeId);
+
+            this.employeeRelationshipService.removeMentor(employee);
+        } else {
+            throw new AccessDeniedException(String.format("User %s is not an admin and cannot execute this operation.",
+                    user.getEmail()));
+        }
 
         // Return response
         response.setMessage(Constants.SUCCESS);
