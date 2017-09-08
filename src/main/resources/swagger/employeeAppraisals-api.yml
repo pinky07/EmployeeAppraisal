@@ -720,8 +720,6 @@ paths:
       description: |
         Disassociates a mentor to an specified `Employee`. Can only be used by an user with the **Admin** applicationRole.
       operationId: employeesIdMentorDelete
-      consumes:
-        - application/json
       produces:
         - application/json
       parameters:
