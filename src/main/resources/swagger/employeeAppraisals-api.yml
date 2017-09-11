@@ -597,45 +597,16 @@ paths:
         '200':
           description: |
             Successful.
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/EmployeeDTO'
         '403':
           description: |
             The user isn't authenticated or authorized to perform this action.
         '404':
           description: |
             An `Employee` with the specified Id was not found.
-
-    ###########
-    # POST #####
-    ###########
-
-    post:
-      tags:
-      - Employee
-      summary: |
-        Add a mentee to an employee.
-      description: |
-        Adds a mentee to an `Employee`. Only users with the **Admin** can perform this action.
-      operationId: employeesIdMenteesPost
-      parameters:
-        - in: path
-          name: employeeId
-          type: integer
-          required: true
-          description: |
-            `Employee` Id.
-      responses:
-        '200':
-          description: |
-            Successful.
-        '403':
-          description: |
-            The user isn't authenticated or authorized to perform this action.
-        '404':
-          description: |
-            An `Employee` with the specified Id was not found.
-        '422':
-          description: |
-            Entity already exists.
 
 ########################################################################################################################
 # /employees/{employeeId}/mentor #######################################################################################
@@ -725,6 +696,52 @@ paths:
         '404':
           description: |
             An `Employee` with the specified Id was not found.
+
+   ###########
+    # DELETE #####
+    ###########
+
+    delete:
+      tags:
+      - Employee
+      summary: |
+        Disassociates a mentor to the employee.
+      description: |
+        Disassociates a mentor to an specified `Employee`. Can only be used by an user with the **Admin** applicationRole.
+      operationId: employeesIdMentorDelete
+      produces:
+        - application/json
+      parameters:
+        - in: path
+          name: employeeId
+          type: integer
+          required: true
+          description: |
+            `Employee` Id.
+      responses:
+        '200':
+          description: |
+            Successful.
+          schema:
+            $ref: '#/definitions/OperationResultDTO'
+        '400':
+          description: |
+            Input was malformed.
+          schema:
+            $ref: '#/definitions/OperationResultDTO'
+        '403':
+          description: |
+            The user isn't authenticated or authorized to perform this action.
+          schema:
+            $ref: '#/definitions/OperationResultDTO'
+        '404':
+          description: |
+            An `Employee` with the specified Id was not found.
+          schema:
+            $ref: '#/definitions/OperationResultDTO'
+        '422':
+          description: |
+            User does not have a mentor.
 
 ########################################################################################################################
 # /employees/{employeeId}/appraisals ###################################################################################

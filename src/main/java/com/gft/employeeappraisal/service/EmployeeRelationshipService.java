@@ -1,5 +1,6 @@
 package com.gft.employeeappraisal.service;
 
+import com.gft.employeeappraisal.exception.EmployeeAppraisalMicroserviceException;
 import com.gft.employeeappraisal.model.Employee;
 import com.gft.employeeappraisal.model.EmployeeRelationship;
 import com.gft.employeeappraisal.model.RelationshipType;
@@ -110,6 +111,14 @@ public interface EmployeeRelationshipService {
      * @param mentee Mentee to be
      */
     void changeMentor(Employee mentor, Employee mentee);
+
+    /**
+     * Ends the current MENTOR relationship of a Mentee.
+     *
+     * @param mentee Mentee that will not have a mentor
+     * @throws EmployeeAppraisalMicroserviceException if mentee has no mentor at the time the method was called.
+     */
+    void removeMentor(Employee mentee) throws EmployeeAppraisalMicroserviceException;
 
     /**
      * Starts a new PEER relationship from Employee to Peer

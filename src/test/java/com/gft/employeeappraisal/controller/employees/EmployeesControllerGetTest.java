@@ -176,6 +176,7 @@ public class EmployeesControllerGetTest extends BaseControllerTest {
      */
     @Test
     @WithMockUser(USER_EMAIL)
+    @SuppressWarnings("unchecked")
     public void employeesIdGet_NotFound() throws Exception {
         // Set-up
         when(employeeService.getById(userMock.getId())).thenThrow(new NotFoundException("Employee Not Found"));

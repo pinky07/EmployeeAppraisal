@@ -8,20 +8,17 @@ import org.springframework.security.oauth2.config.annotation.web.configuration.E
 import org.springframework.security.oauth2.config.annotation.web.configuration.ResourceServerConfigurerAdapter;
 import org.springframework.security.oauth2.config.annotation.web.configurers.ResourceServerSecurityConfigurer;
 import org.springframework.security.oauth2.provider.token.TokenStore;
-import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
 
 @Profile("oauth2")
 @EnableResourceServer
 @Configuration
 public class ResourceServerConfiguration extends ResourceServerConfigurerAdapter {
 
-    private final JwtAccessTokenConverter tokenConverter;
     private final TokenStore jwtTokenStore;
 
     @Autowired
-    public ResourceServerConfiguration(TokenStore jwtTokenStore, JwtAccessTokenConverter tokenConverter) {
+    public ResourceServerConfiguration(TokenStore jwtTokenStore) {
         this.jwtTokenStore = jwtTokenStore;
-        this.tokenConverter = tokenConverter;
     }
 
     @Override

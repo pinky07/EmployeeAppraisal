@@ -1,5 +1,6 @@
 package com.gft.employeeappraisal.service.impl;
 
+import com.gft.employeeappraisal.exception.EmployeeAppraisalMicroserviceException;
 import com.gft.employeeappraisal.exception.NotFoundException;
 import com.gft.employeeappraisal.model.Employee;
 import com.gft.employeeappraisal.model.EmployeeRelationship;
@@ -145,17 +146,29 @@ public class EmployeeRelationshipServiceImpl implements EmployeeRelationshipServ
      */
     @Override
     public void changeMentor(Employee mentor, Employee mentee) {
-        // End any previous MENTOR Relationships
-        this.findCurrentByTargetEmployeeAndRelationship(
-                mentee,
-                relationshipTypeService.findByName(RelationshipName.MENTOR)
-        ).forEach(this::endEmployeeRelationship);
+        if (hasMentor(mentee)) {
+            removeMentor(mentee); // If I'm _changing_ mentor, there's nothing wrong with it not having a mentor.
+        }
 
         // Start a new MENTOR Relationship
         startEmployeeRelationship(
                 mentor,
                 mentee,
                 relationshipTypeService.findByName(RelationshipName.MENTOR));
+    }
+
+    @Override
+    public void removeMentor(Employee mentee) throws EmployeeAppraisalMicroserviceException {
+        if (!hasMentor(mentee)) {
+            throw new EmployeeAppraisalMicroserviceException(String
+                    .format("User %s has no mentor.", mentee.getEmail()));
+        }
+
+        // End any previous MENTOR Relationships
+        this.findCurrentByTargetEmployeeAndRelationship(
+                mentee,
+                relationshipTypeService.findByName(RelationshipName.MENTOR))
+                .forEach(this::endEmployeeRelationship);
     }
 
     /**
