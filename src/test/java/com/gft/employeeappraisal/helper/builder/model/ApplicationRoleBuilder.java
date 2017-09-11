@@ -19,9 +19,6 @@ public class ApplicationRoleBuilder implements ObjectBuilder<ApplicationRole> {
     private boolean nameSet;
     private boolean descriptionSet;
 
-    public ApplicationRoleBuilder() {
-    }
-
     public ApplicationRoleBuilder id(int id) {
         this.id = id;
         this.idSet = true;

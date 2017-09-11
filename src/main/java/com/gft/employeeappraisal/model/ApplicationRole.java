@@ -20,9 +20,6 @@ public class ApplicationRole {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @OneToMany(mappedBy = "applicationRole", fetch = FetchType.LAZY)
-    private Set<Employee> employees;
-
     @NotEmpty
     @Size(max = 40)
     @Column(name = "name", unique = true, nullable = false, length = 40)
@@ -32,6 +29,9 @@ public class ApplicationRole {
     @Size(max = 500)
     @Column(name = "description", nullable = false, length = 500)
     private String description;
+
+    @OneToMany(mappedBy = "applicationRole", fetch = FetchType.LAZY)
+    private Set<Employee> employeeSet;
 
     public int getId() {
         return id;
@@ -57,12 +57,12 @@ public class ApplicationRole {
         this.description = description;
     }
 
-    public Set<Employee> getEmployees() {
-        return employees;
+    public Set<Employee> getEmployeeSet() {
+        return employeeSet;
     }
 
-    public void setEmployees(Set<Employee> employees) {
-        this.employees = employees;
+    public void setEmployeeSet(Set<Employee> employeeSet) {
+        this.employeeSet = employeeSet;
     }
 
     @Override

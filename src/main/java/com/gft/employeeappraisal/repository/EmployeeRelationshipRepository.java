@@ -2,7 +2,7 @@ package com.gft.employeeappraisal.repository;
 
 import com.gft.employeeappraisal.model.Employee;
 import com.gft.employeeappraisal.model.EmployeeRelationship;
-import com.gft.employeeappraisal.model.Relationship;
+import com.gft.employeeappraisal.model.RelationshipType;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -27,65 +27,65 @@ public interface EmployeeRelationshipRepository extends JpaRepository<EmployeeRe
 
     @Query("SELECT COUNT(er) from EmployeeRelationship er " +
             "WHERE er.sourceEmployee = :sourceEmployee " +
-            "AND er.relationship = :relationship " +
+            "AND er.relationshipType = :relationshipType " +
             "AND er.endDate = NULL")
-    int countCurrentBySourceEmployeeAndRelationship(
+    int countCurrentBySourceEmployeeAndRelationshipType(
             @Param("sourceEmployee") Employee sourceEmployee,
-            @Param("relationship") Relationship relationship);
+            @Param("relationshipType") RelationshipType relationshipType);
 
     @Query("SELECT er from EmployeeRelationship er " +
             "WHERE er.sourceEmployee = :sourceEmployee " +
-            "AND er.relationship = :relationship " +
+            "AND er.relationshipType = :relationshipType " +
             "AND er.endDate = NULL")
-    List<EmployeeRelationship> findCurrentBySourceEmployeeAndRelationship(
+    List<EmployeeRelationship> findCurrentBySourceEmployeeAndRelationshipType(
             @Param("sourceEmployee") Employee sourceEmployee,
-            @Param("relationship") Relationship relationship);
+            @Param("relationshipType") RelationshipType relationshipType);
 
-    List<EmployeeRelationship> findAllBySourceEmployeeAndRelationshipIn(
+    List<EmployeeRelationship> findAllBySourceEmployeeAndRelationshipTypeIn(
             Employee sourceEmployee,
-            Set<Relationship> relationships);
+            Set<RelationshipType> relationshipTypes);
 
     @Query("SELECT er from EmployeeRelationship er " +
             "WHERE er.sourceEmployee = :sourceEmployee " +
-            "AND er.relationship IN :relationships " +
+            "AND er.relationshipType IN :relationshipTypes " +
             "AND er.endDate = NULL")
-    List<EmployeeRelationship> findCurrentBySourceEmployeeAndRelationships(
+    List<EmployeeRelationship> findCurrentBySourceEmployeeAndRelationshipTypes(
             @Param("sourceEmployee") Employee sourceEmployee,
-            @Param("relationships") Set<Relationship> relationships);
+            @Param("relationshipTypes") Set<RelationshipType> relationshipTypes);
 
     @Query("SELECT COUNT(er) from EmployeeRelationship er " +
             "WHERE er.targetEmployee = :targetEmployee " +
-            "AND er.relationship = :relationship " +
+            "AND er.relationshipType = :relationshipType " +
             "AND er.endDate = NULL")
-    int countCurrentByTargetEmployeeAndRelationship(
+    int countCurrentByTargetEmployeeAndRelationshipType(
             @Param("targetEmployee") Employee targetEmployee,
-            @Param("relationship") Relationship relationship);
+            @Param("relationshipType") RelationshipType relationshipType);
 
     @Query("SELECT er from EmployeeRelationship er " +
             "WHERE er.targetEmployee = :targetEmployee " +
-            "AND er.relationship = :relationship " +
+            "AND er.relationshipType = :relationshipType " +
             "AND er.endDate = NULL")
-    List<EmployeeRelationship> findCurrentByTargetEmployeeAndRelationship(
+    List<EmployeeRelationship> findCurrentByTargetEmployeeAndRelationshipType(
             @Param("targetEmployee") Employee targetEmployee,
-            @Param("relationship") Relationship relationship);
+            @Param("relationshipType") RelationshipType relationshipType);
 
     @Query("SELECT COUNT(er) from EmployeeRelationship er " +
             "WHERE er.sourceEmployee = :sourceEmployee " +
             "AND er.targetEmployee = :targetEmployee " +
-            "AND er.relationship = :relationship " +
+            "AND er.relationshipType = :relationshipType " +
             "AND er.endDate = NULL")
-    int countCurrentBySourceEmployeeAndTargetEmployeeAndRelationship(
+    int countCurrentBySourceEmployeeAndTargetEmployeeAndRelationshipType(
             @Param("sourceEmployee") Employee sourceEmployee,
             @Param("targetEmployee") Employee targetEmployee,
-            @Param("relationship") Relationship relationship);
+            @Param("relationshipType") RelationshipType relationshipType);
 
     @Query("SELECT er from EmployeeRelationship er " +
             "WHERE er.sourceEmployee = :sourceEmployee " +
             "AND er.targetEmployee = :targetEmployee " +
-            "AND er.relationship = :relationship " +
+            "AND er.relationshipType = :relationshipType " +
             "AND er.endDate = NULL")
-    List<EmployeeRelationship> findCurrentBySourceEmployeeAndTargetEmployeeAndRelationship(
+    List<EmployeeRelationship> findCurrentBySourceEmployeeAndTargetEmployeeAndRelationshipType(
             @Param("sourceEmployee") Employee sourceEmployee,
             @Param("targetEmployee") Employee targetEmployee,
-            @Param("relationship") Relationship relationship);
+            @Param("relationshipType") RelationshipType relationshipType);
 }

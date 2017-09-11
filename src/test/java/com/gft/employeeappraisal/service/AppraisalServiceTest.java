@@ -1,6 +1,5 @@
 package com.gft.employeeappraisal.service;
 
-import com.gft.employeeappraisal.builder.model.EmployeeEvaluationFormBuilder;
 import com.gft.employeeappraisal.helper.builder.model.*;
 import com.gft.employeeappraisal.model.*;
 import com.gft.employeeappraisal.service.impl.AppraisalServiceImpl;
@@ -38,7 +37,7 @@ public class AppraisalServiceTest extends BaseServiceTest {
         this.appraisalService = new AppraisalServiceImpl(
                 this.appraisalRepository,
                 this.employeeEvaluationFormService,
-                this.appraisalXEvaluationFormService);
+                this.appraisalXEvaluationFormTemplateService);
 
         // Create an Application Role
         ApplicationRole userApplicationRole = this.applicationRoleRepository
@@ -79,12 +78,11 @@ public class AppraisalServiceTest extends BaseServiceTest {
 
     @Test
     public void findEmployeeAppraisals() throws Exception {
-        when(employeeEvaluationFormService
-                .findByEmployeeAndFilledByEmployeeId(employeeA, EvaluationStatus.PENDING))
+        when(employeeEvaluationFormService.findSelfByEmployee(employeeA))
                 .thenReturn(Stream.of(testEmployeeEvaluationForm()));
 
         List<Appraisal> retrieved = appraisalService
-                .findEmployeeAppraisals(employeeA, null).collect(Collectors.toList());
+                .findEmployeeAppraisals(employeeA).collect(Collectors.toList());
 
         assertFalse(retrieved.isEmpty());
         assertEquals(appraisal, retrieved.get(0));
@@ -107,7 +105,7 @@ public class AppraisalServiceTest extends BaseServiceTest {
 
     private EmployeeEvaluationForm testEmployeeEvaluationForm() {
         return new EmployeeEvaluationFormBuilder()
-                .appraisalXEvaluationForm(new AppraisalXEvaluationFormBuilder()
+                .appraisalXEvaluationForm(new AppraisalXEvaluationFormTemplateBuilder()
                         .appraisal(appraisal).buildWithDefaults()).buildWithDefaults();
     }
 }

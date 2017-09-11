@@ -6,18 +6,16 @@ import com.gft.employeeappraisal.exception.AccessDeniedException;
 import com.gft.employeeappraisal.exception.NotFoundException;
 import com.gft.employeeappraisal.helper.builder.dto.EmployeeDTOBuilder;
 import com.gft.employeeappraisal.helper.builder.dto.EmployeeRelationshipDTOBuilder;
-import com.gft.employeeappraisal.helper.builder.dto.RelationshipDTOBuilder;
+import com.gft.employeeappraisal.helper.builder.dto.RelationshipTypeDTOBuilder;
 import com.gft.employeeappraisal.helper.builder.model.*;
-import com.gft.employeeappraisal.helper.comparator.EntityDTOComparator;
 import com.gft.employeeappraisal.model.*;
 import com.gft.swagger.employees.model.EmployeeDTO;
 import com.gft.swagger.employees.model.EmployeeRelationshipDTO;
 import com.gft.swagger.employees.model.OperationResultDTO;
-import com.gft.swagger.employees.model.RelationshipDTO;
+import com.gft.swagger.employees.model.RelationshipTypeDTO;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -47,9 +45,7 @@ public class EmployeesControllerRelationshipsTest extends BaseControllerTest {
     private static final String EMPLOYEES_URL = "/employees";
     private static final String RELATIONSHIP_URL = "/relationships";
 
-    @Autowired
-    private EntityDTOComparator entityDTOComparator;
-
+    // Test fixtures
     private Employee userMock;
     private Employee mentorMock;
     private EmployeeDTO testMentorDTO;
@@ -142,7 +138,7 @@ public class EmployeesControllerRelationshipsTest extends BaseControllerTest {
                 RelationshipName.PEER, RelationshipName.LEAD, RelationshipName.OTHER);
         EmployeeRelationshipDTO employeeRelationshipDTO = employeeRelationshipDTOList.get(0);
         assertNotNull(employeeRelationshipDTO.getReferred());
-        assertNotNull(employeeRelationshipDTO.getRelationship());
+        assertNotNull(employeeRelationshipDTO.getRelationshipType());
         assertNotNull(employeeRelationshipDTO.getStartDate());
         assertNull(employeeRelationshipDTO.getEndDate());
         EmployeeDTO reference = employeeRelationshipDTO.getReferred();
@@ -240,7 +236,7 @@ public class EmployeesControllerRelationshipsTest extends BaseControllerTest {
 
     @Test
     public void relationshipsGet() throws Exception {
-        when(relationshipService.findRelationshipsByNames(RelationshipName.LEAD,
+        when(relationshipTypeService.findRelationshipsByNames(RelationshipName.LEAD,
                 RelationshipName.PEER,
                 RelationshipName.OTHER))
                 .thenReturn(Stream.of(testRelationship()));
@@ -253,13 +249,13 @@ public class EmployeesControllerRelationshipsTest extends BaseControllerTest {
                 .andExpect(status().isOk())
                 .andReturn();
 
-        List<RelationshipDTO> relationshipDTOList = Arrays.asList(objectMapper.readValue(result
-                .getResponse().getContentAsString(), RelationshipDTO[].class));
+        List<RelationshipTypeDTO> relationshipDTOList = Arrays.asList(objectMapper.readValue(result
+                .getResponse().getContentAsString(), RelationshipTypeDTO[].class));
 
         assertNotNull(relationshipDTOList);
         assertFalse(relationshipDTOList.isEmpty());
 
-        verify(relationshipService, times(1))
+        verify(relationshipTypeService, times(1))
                 .findRelationshipsByNames(RelationshipName.LEAD,
                         RelationshipName.PEER,
                         RelationshipName.OTHER);
@@ -269,7 +265,7 @@ public class EmployeesControllerRelationshipsTest extends BaseControllerTest {
 
     @Test
     public void relationshipsGet_emptyList() throws Exception {
-        when(relationshipService.findRelationshipsByNames(RelationshipName.LEAD,
+        when(relationshipTypeService.findRelationshipsByNames(RelationshipName.LEAD,
                 RelationshipName.PEER,
                 RelationshipName.OTHER))
                 .thenReturn(Stream.empty());
@@ -282,13 +278,13 @@ public class EmployeesControllerRelationshipsTest extends BaseControllerTest {
                 .andExpect(status().isOk())
                 .andReturn();
 
-        List<RelationshipDTO> relationshipDTOList = Arrays.asList(objectMapper.readValue(result
-                .getResponse().getContentAsString(), RelationshipDTO[].class));
+        List<RelationshipTypeDTO> relationshipDTOList = Arrays.asList(objectMapper.readValue(result
+                .getResponse().getContentAsString(), RelationshipTypeDTO[].class));
 
         assertNotNull(relationshipDTOList);
         assertTrue(relationshipDTOList.isEmpty());
 
-        verify(relationshipService, times(1))
+        verify(relationshipTypeService, times(1))
                 .findRelationshipsByNames(RelationshipName.LEAD,
                         RelationshipName.PEER,
                         RelationshipName.OTHER);
@@ -296,7 +292,7 @@ public class EmployeesControllerRelationshipsTest extends BaseControllerTest {
 
     @Test
     public void relationshipsIdGet() throws Exception {
-        when(relationshipService.findById(anyInt())).thenReturn(Optional.of(testRelationship()));
+        when(relationshipTypeService.findById(anyInt())).thenReturn(Optional.of(testRelationship()));
 
         MvcResult result = mockMvc.perform(
                 get(String.format("%s/%d",
@@ -307,18 +303,18 @@ public class EmployeesControllerRelationshipsTest extends BaseControllerTest {
                 .andExpect(status().isOk())
                 .andReturn();
 
-        RelationshipDTO relationshipDTO = objectMapper.readValue(result
-                .getResponse().getContentAsString(), RelationshipDTO.class);
+        RelationshipTypeDTO relationshipDTO = objectMapper.readValue(result
+                .getResponse().getContentAsString(), RelationshipTypeDTO.class);
 
         assertNotNull(relationshipDTO);
         assertEquals(testRelationship().getDescription(), relationshipDTO.getDescription());
 
-        verify(relationshipService, times(1)).findById(anyInt());
+        verify(relationshipTypeService, times(1)).findById(anyInt());
     }
 
     @Test
     public void relationshipsIdGet_notFound() throws Exception {
-        when(relationshipService.findById(anyInt())).thenReturn(Optional.empty());
+        when(relationshipTypeService.findById(anyInt())).thenReturn(Optional.empty());
 
         MvcResult result = mockMvc.perform(
                 get(String.format("%s/%d",
@@ -334,7 +330,7 @@ public class EmployeesControllerRelationshipsTest extends BaseControllerTest {
         assertNotNull(operationResultDTO);
         assertEquals(Constants.ERROR, operationResultDTO.getMessage());
 
-        verify(relationshipService, times(1)).findById(anyInt());
+        verify(relationshipTypeService, times(1)).findById(anyInt());
     }
 
     @Test
@@ -350,7 +346,7 @@ public class EmployeesControllerRelationshipsTest extends BaseControllerTest {
         String resultString = result.getResponse().getContentAsString();
         assertTrue(StringUtils.isEmpty(resultString));
 
-        verify(relationshipService, never()).findById(anyInt());
+        verify(relationshipTypeService, never()).findById(anyInt());
     }
 
     @Test
@@ -420,7 +416,7 @@ public class EmployeesControllerRelationshipsTest extends BaseControllerTest {
     public void employeesIdRelationshipsIdDelete_invalidRelationship() throws Exception {
         when(employeeService.getLoggedInUser()).thenReturn(mentorMock);
         when(employeeService.getById(anyInt())).thenReturn(userMock);
-        when(employeeRelationshipService.getById(anyInt())).thenThrow(new NotFoundException("Invalid Relationship"));
+        when(employeeRelationshipService.getById(anyInt())).thenThrow(new NotFoundException("Invalid RelationshipType"));
 
         // Execution
         MvcResult result = mockMvc.perform(
@@ -620,9 +616,9 @@ public class EmployeesControllerRelationshipsTest extends BaseControllerTest {
         when(employeeService.getLoggedInUser()).thenReturn(mentorMock);
         when(employeeService.getById(userMock.getId())).thenReturn(userMock);
         when(employeeService.getById(mentorMock.getId())).thenReturn(mentorMock);
-        when(relationshipService.getById(anyInt())).thenReturn(testRelationship());
+        when(relationshipTypeService.getById(anyInt())).thenReturn(testRelationship());
         when(employeeRelationshipService
-                .startEmployeeRelationship(any(Employee.class), any(Employee.class), any(Relationship.class)))
+                .startEmployeeRelationship(any(Employee.class), any(Employee.class), any(RelationshipType.class)))
                 .thenReturn(Optional.of(testEmployeeRelationship(false)));
 
         // Execution
@@ -641,12 +637,12 @@ public class EmployeesControllerRelationshipsTest extends BaseControllerTest {
 
         verify(employeeService, times(1)).getLoggedInUser();
         verify(employeeService, times(2)).getById(anyInt());
-        verify(relationshipService, times(1)).getById(anyInt());
+        verify(relationshipTypeService, times(1)).getById(anyInt());
         verify(securityService, times(1)).checkRelationshipCount(any(Employee.class));
         verify(securityService, times(1))
                 .canWriteEmployeeRelationship(any(Employee.class), any(Employee.class), any(Employee.class));
         verify(employeeRelationshipService, times(1))
-                .startEmployeeRelationship(any(Employee.class), any(Employee.class), any(Relationship.class));
+                .startEmployeeRelationship(any(Employee.class), any(Employee.class), any(RelationshipType.class));
 
         assertNotNull(resultDTO);
         assertEquals(Constants.SUCCESS, resultDTO.getMessage());
@@ -683,12 +679,12 @@ public class EmployeesControllerRelationshipsTest extends BaseControllerTest {
 
         verify(employeeService, times(1)).getLoggedInUser();
         verify(employeeService, times(1)).getById(anyInt());
-        verify(relationshipService, never()).getById(anyInt());
+        verify(relationshipTypeService, never()).getById(anyInt());
         verify(securityService, times(1)).checkRelationshipCount(any(Employee.class));
         verify(securityService, never())
                 .canWriteEmployeeRelationship(any(Employee.class), any(Employee.class), any(Employee.class));
         verify(employeeRelationshipService, never())
-                .startEmployeeRelationship(any(Employee.class), any(Employee.class), any(Relationship.class));
+                .startEmployeeRelationship(any(Employee.class), any(Employee.class), any(RelationshipType.class));
 
         assertNotNull(resultDTO);
         assertEquals(Constants.ERROR, resultDTO.getMessage());
@@ -715,12 +711,12 @@ public class EmployeesControllerRelationshipsTest extends BaseControllerTest {
 
         verify(employeeService, times(1)).getLoggedInUser();
         verify(employeeService, times(1)).getById(anyInt());
-        verify(relationshipService, never()).getById(anyInt());
+        verify(relationshipTypeService, never()).getById(anyInt());
         verify(securityService, never()).checkRelationshipCount(any(Employee.class));
         verify(securityService, never())
                 .canWriteEmployeeRelationship(any(Employee.class), any(Employee.class), any(Employee.class));
         verify(employeeRelationshipService, never())
-                .startEmployeeRelationship(any(Employee.class), any(Employee.class), any(Relationship.class));
+                .startEmployeeRelationship(any(Employee.class), any(Employee.class), any(RelationshipType.class));
 
         assertNotNull(resultDTO);
         assertEquals(Constants.ERROR, resultDTO.getMessage());
@@ -750,12 +746,12 @@ public class EmployeesControllerRelationshipsTest extends BaseControllerTest {
 
         verify(employeeService, times(1)).getLoggedInUser();
         verify(employeeService, times(2)).getById(anyInt());
-        verify(relationshipService, times(1)).getById(anyInt());
+        verify(relationshipTypeService, times(1)).getById(anyInt());
         verify(securityService, times(1)).checkRelationshipCount(any(Employee.class));
         verify(securityService, times(1))
                 .canWriteEmployeeRelationship(any(Employee.class), any(Employee.class), any(Employee.class));
         verify(employeeRelationshipService, never())
-                .startEmployeeRelationship(any(Employee.class), any(Employee.class), any(Relationship.class));
+                .startEmployeeRelationship(any(Employee.class), any(Employee.class), any(RelationshipType.class));
 
         assertNotNull(resultDTO);
         assertEquals(Constants.ERROR, resultDTO.getMessage());
@@ -766,9 +762,9 @@ public class EmployeesControllerRelationshipsTest extends BaseControllerTest {
         when(employeeService.getLoggedInUser()).thenReturn(mentorMock);
         when(employeeService.getById(userMock.getId())).thenReturn(userMock);
         when(employeeService.getById(mentorMock.getId())).thenReturn(mentorMock);
-        when(relationshipService.getById(anyInt())).thenReturn(testRelationship());
+        when(relationshipTypeService.getById(anyInt())).thenReturn(testRelationship());
         when(employeeRelationshipService
-                .startEmployeeRelationship(any(Employee.class), any(Employee.class), any(Relationship.class)))
+                .startEmployeeRelationship(any(Employee.class), any(Employee.class), any(RelationshipType.class)))
                 .thenReturn(Optional.empty());
 
         // Execution
@@ -787,12 +783,12 @@ public class EmployeesControllerRelationshipsTest extends BaseControllerTest {
 
         verify(employeeService, times(1)).getLoggedInUser();
         verify(employeeService, times(2)).getById(anyInt());
-        verify(relationshipService, times(1)).getById(anyInt());
+        verify(relationshipTypeService, times(1)).getById(anyInt());
         verify(securityService, times(1)).checkRelationshipCount(any(Employee.class));
         verify(securityService, times(1))
                 .canWriteEmployeeRelationship(any(Employee.class), any(Employee.class), any(Employee.class));
         verify(employeeRelationshipService, times(1))
-                .startEmployeeRelationship(any(Employee.class), any(Employee.class), any(Relationship.class));
+                .startEmployeeRelationship(any(Employee.class), any(Employee.class), any(RelationshipType.class));
 
         assertNotNull(resultDTO);
         assertEquals(Constants.ERROR, resultDTO.getMessage());
@@ -815,18 +811,18 @@ public class EmployeesControllerRelationshipsTest extends BaseControllerTest {
 
         verify(employeeService, never()).getLoggedInUser();
         verify(employeeService, never()).getById(anyInt());
-        verify(relationshipService, never()).getById(anyInt());
+        verify(relationshipTypeService, never()).getById(anyInt());
         verify(securityService, never()).checkRelationshipCount(any(Employee.class));
         verify(securityService, never())
                 .canWriteEmployeeRelationship(any(Employee.class), any(Employee.class), any(Employee.class));
         verify(employeeRelationshipService, never())
-                .startEmployeeRelationship(any(Employee.class), any(Employee.class), any(Relationship.class));
+                .startEmployeeRelationship(any(Employee.class), any(Employee.class), any(RelationshipType.class));
     }
 
     private EmployeeRelationshipDTO testEmployeeRelationshipDTO() {
         return new EmployeeRelationshipDTOBuilder()
-                .reference(testMentorDTO)
-                .relationship(new RelationshipDTOBuilder().id(0).buildWithDefaults())
+                .referred(testMentorDTO)
+                .relationship(new RelationshipTypeDTOBuilder().id(0).buildWithDefaults())
                 .buildWithDefaults();
     }
 
@@ -834,16 +830,16 @@ public class EmployeesControllerRelationshipsTest extends BaseControllerTest {
         return new EmployeeRelationshipBuilder()
                 .sourceEmployee(userMock)
                 .targetEmployee(mentorMock)
-                .relationship(testRelationship())
+                .relationshipType(testRelationship())
                 .startDate(OffsetDateTime.now())
                 .endDate(withEndDate ? OffsetDateTime.now() : null)
                 .build();
     }
 
-    private Relationship testRelationship() {
-        return new RelationshipBuilder()
+    private RelationshipType testRelationship() {
+        return new RelationshipTypeBuilder()
                 .name(RelationshipName.OTHER.name())
-                .description("Mock Relationship")
+                .description("Mock RelationshipType")
                 .build();
     }
 }

@@ -19,8 +19,8 @@ public class EmployeeEvaluationFormAnswer {
 
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "evaluationFormXSectionXQuestionId", nullable = false)
-    private EvaluationFormXSectionXQuestion evaluationFormXSectionXQuestion;
+    @JoinColumn(name = "evaluationFormTemplateXSectionXQuestion", nullable = false)
+    private EvaluationFormTemplateXSectionXQuestion evaluationFormTemplateXSectionXQuestion;
 
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY)
@@ -43,12 +43,12 @@ public class EmployeeEvaluationFormAnswer {
         this.id = id;
     }
 
-    public EvaluationFormXSectionXQuestion getEvaluationFormXSectionXQuestion() {
-        return evaluationFormXSectionXQuestion;
+    public EvaluationFormTemplateXSectionXQuestion getEvaluationFormTemplateXSectionXQuestion() {
+        return evaluationFormTemplateXSectionXQuestion;
     }
 
-    public void setEvaluationFormXSectionXQuestion(EvaluationFormXSectionXQuestion evaluationFormXSectionXQuestion) {
-        this.evaluationFormXSectionXQuestion = evaluationFormXSectionXQuestion;
+    public void setEvaluationFormTemplateXSectionXQuestion(EvaluationFormTemplateXSectionXQuestion evaluationFormTemplateXSectionXQuestion) {
+        this.evaluationFormTemplateXSectionXQuestion = evaluationFormTemplateXSectionXQuestion;
     }
 
     public EmployeeEvaluationForm getEmployeeEvaluationForm() {

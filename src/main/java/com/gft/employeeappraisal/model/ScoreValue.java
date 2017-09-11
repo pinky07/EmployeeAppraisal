@@ -36,7 +36,7 @@ public class ScoreValue {
     private String description;
 
     @OneToMany(mappedBy = "scoreValue", fetch = FetchType.LAZY)
-    private Set<EmployeeEvaluationFormAnswer> employeeEvaluationFormAnswers;
+    private Set<EmployeeEvaluationFormAnswer> employeeEvaluationFormAnswerSet;
 
     public int getId() {
         return id;
@@ -70,12 +70,12 @@ public class ScoreValue {
         this.description = description;
     }
 
-    public Set<EmployeeEvaluationFormAnswer> getEmployeeEvaluationFormAnswers() {
-        return employeeEvaluationFormAnswers;
+    public Set<EmployeeEvaluationFormAnswer> getEmployeeEvaluationFormAnswerSet() {
+        return employeeEvaluationFormAnswerSet;
     }
 
-    public void setEmployeeEvaluationFormAnswers(Set<EmployeeEvaluationFormAnswer> employeeEvaluationFormAnswers) {
-        this.employeeEvaluationFormAnswers = employeeEvaluationFormAnswers;
+    public void setEmployeeEvaluationFormAnswerSet(Set<EmployeeEvaluationFormAnswer> employeeEvaluationFormAnswerSet) {
+        this.employeeEvaluationFormAnswerSet = employeeEvaluationFormAnswerSet;
     }
 
     @Override

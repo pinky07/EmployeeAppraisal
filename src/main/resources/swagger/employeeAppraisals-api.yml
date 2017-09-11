@@ -84,17 +84,6 @@ paths:
       operationId: meAppraisalsGet
       produces:
         - application/json
-      parameters:
-        - in: query
-          name: status
-          required: false
-          type: array
-          collectionFormat: csv
-          items:
-            type: string
-          description: |
-            Filter for obtaining the appraisals in which the employee has participated or pending appraisals. Having no
-            parameter will return all the appraisals, both pending and done.
       responses:
         '200':
           description: |
@@ -184,7 +173,7 @@ paths:
           schema:
             type: array
             items:
-              $ref: '#/definitions/EvaluationFormDTO'
+              $ref: '#/definitions/EmployeeEvaluationFormDTO'
         '403':
           description: |
             The user isn't authenticated or authorized to perform this action.
@@ -230,7 +219,7 @@ paths:
           description: |
             Successful.
           schema:
-            $ref: '#/definitions/EvaluationFormDTO'
+            $ref: '#/definitions/EvaluationFormTemplateDTO'
         '403':
           description: |
             The user isn't authenticated or authorized to perform this action.
@@ -764,16 +753,6 @@ paths:
           type: integer
           description: |
             `Employee` Id.
-        - in: query
-          name: status
-          required: false
-          type: array
-          collectionFormat: csv
-          items:
-            type: string
-          description: |
-            Filter for obtaining the appraisals in which the employee has participated or pending appraisals.
-            Having no parameter will return all the appraisals, both pending and done.
       responses:
         '200':
           description: |
@@ -875,7 +854,7 @@ paths:
           schema:
             type: array
             items:
-              $ref: '#/definitions/EvaluationFormDTO'
+              $ref: '#/definitions/EmployeeEvaluationFormDTO'
         '403':
           description: |
             The user isn't authenticated or authorized to perform this action.
@@ -927,7 +906,7 @@ paths:
           description: |
             Successful.
           schema:
-            $ref: '#/definitions/EvaluationFormDTO'
+            $ref: '#/definitions/EvaluationFormTemplateDTO'
         '403':
           description: |
             The user isn't authenticated or authorized to perform this action.
@@ -1130,7 +1109,7 @@ paths:
           schema:
             type: array
             items:
-              $ref: '#/definitions/RelationshipDTO'
+              $ref: '#/definitions/RelationshipTypeDTO'
           description: |
             Successful.
         '403':
@@ -1162,7 +1141,7 @@ paths:
       responses:
         '200':
           schema:
-            $ref: '#/definitions/RelationshipDTO'
+            $ref: '#/definitions/RelationshipTypeDTO'
           description: |
             Successful.
         '403':
@@ -1176,7 +1155,23 @@ paths:
 # Definitions ##########################################################################################################
 ########################################################################################################################
 
+#
+# Note: Keep the definitions ordered alphabetically!
+#
+
 definitions:
+
+  ApplicationRoleDTO:
+    type: object
+    properties:
+      id:
+        type: integer
+      name:
+        type: string
+      description:
+        type: string
+    required:
+      - id
 
   AppraisalDTO:
     type: object
@@ -1201,13 +1196,17 @@ definitions:
     properties:
       id:
         type: integer
+      jobLevel:
+        $ref: '#/definitions/JobLevelDTO'
+      applicationRole:
+        $ref: '#/definitions/ApplicationRoleDTO'
       email:
+        type: string
+      gftIdentifier:
         type: string
       firstName:
         type: string
       lastName:
-        type: string
-      gftIdentifier:
         type: string
       isAdmin:
         type: boolean
@@ -1215,12 +1214,70 @@ definitions:
         type: boolean
       isPeer:
         type: boolean
-      applicationRole:
-        $ref: '#/definitions/ApplicationRoleDTO'
-      jobLevel:
-        $ref: '#/definitions/JobLevelDTO'
 
-  ApplicationRoleDTO:
+  EmployeeEvaluationFormDTO:
+    type: object
+    properties:
+      id:
+        type: integer
+      employee:
+        $ref: '#/definitions/EmployeeDTO'
+      filledByEmployee:
+        $ref: '#/definitions/EmployeeDTO'
+      mentor:
+        $ref: '#/definitions/EmployeeDTO'
+      createDate:
+        type: string
+        format: 'date-time'
+      submitDate:
+        type: string
+        format: 'date-time'
+      evaluationForms:
+        type: array
+        items:
+          type: integer
+
+  EmployeeRelationshipDTO:
+    type: object
+    properties:
+      id:
+        type: integer
+      referred:
+        $ref: '#/definitions/EmployeeDTO'
+      startDate:
+        type: string
+        format: 'date-time'
+      endDate:
+        type: string
+        format: 'date-time'
+      relationshipType:
+        $ref: '#/definitions/RelationshipTypeDTO'
+    required:
+      - id
+
+  EvaluationFormTemplateDTO:
+    type: object
+    properties:
+      id:
+        type: integer
+      name:
+        type: string
+      description:
+        type: string
+      sections:
+        type: array
+        items:
+          $ref: '#/definitions/SectionDTO'
+
+  FieldErrorDTO:
+    type: object
+    properties:
+      field:
+        type: string
+      message:
+        type: string
+
+  JobFamilyDTO:
     type: object
     properties:
       id:
@@ -1248,75 +1305,44 @@ definitions:
     required:
       - id
 
-  JobFamilyDTO:
+  Link:
     type: object
     properties:
-      id:
-        type: integer
-      name:
+      rel:
         type: string
-      description:
+      href:
         type: string
-    required:
-      - id
+    example:
+      rel: self
+      href: 'http://example.com/some/url/'
 
-  RelationshipDTO:
+  OperationResultDTO:
     type: object
     properties:
-      id:
-        type: integer
-      name:
+      message:
         type: string
-      description:
-        type: string
-
-  EmployeeRelationshipDTO:
-    type: object
-    properties:
-      id:
-        type: integer
-      referred:
-        $ref: '#/definitions/EmployeeDTO'
-      relationship:
-        $ref: '#/definitions/RelationshipDTO'
-      startDate:
-        type: string
-        format: 'date-time'
-      endDate:
-        type: string
-        format: 'date-time'
-    required:
-      - id
-
-  EvaluationFormDTO:
-    type: object
-    properties:
-      id:
-        type: integer
-      name:
-        type: string
-      description:
-        type: string
-      sections:
+      data:
+        type: object
+      errors:
         type: array
         items:
-          $ref: '#/definitions/EvaluationFormSectionDTO'
+          $ref: '#/definitions/FieldErrorDTO'
 
-  EvaluationFormSectionDTO:
-   type: object
-   properties:
-      id:
-        type: integer
-      name:
-        type: string
-      description:
-        type: string
-      questions:
-        type: array
-        items:
-          $ref: '#/definitions/EvaluationFormQuestionDTO'
+  Pagination:
+    type: array
+    items:
+      $ref: '#/definitions/Link'
+    example:
+      - rel: next
+        href: 'http://example.com/some/url?page=2'
+      - rel: prev
+        href: 'http://example.com/some/url?page=1'
+      - rel: first
+        href: 'http://example.com/some/url?page=1'
+      - rel: last
+        href: 'http://example.com/some/url?page=100'
 
-  EvaluationFormQuestionDTO:
+  QuestionDTO:
     type: object
     properties:
       id:
@@ -1325,8 +1351,18 @@ definitions:
         type: string
       description:
         type: string
-      scoreType:
-        $ref: '#/definitions/ScoreTypeDTO'
+      position:
+        type: integer
+
+  RelationshipTypeDTO:
+    type: object
+    properties:
+      id:
+        type: integer
+      name:
+        type: string
+      description:
+        type: string
 
   ScoreTypeDTO:
     type: object
@@ -1350,50 +1386,23 @@ definitions:
       description:
         type: string
 
-  Pagination:
-    type: array
-    items:
-      $ref: '#/definitions/Link'
-    example:
-      - rel: next
-        href: 'http://example.com/some/url?page=2'
-      - rel: prev
-        href: 'http://example.com/some/url?page=1'
-      - rel: first
-        href: 'http://example.com/some/url?page=1'
-      - rel: last
-        href: 'http://example.com/some/url?page=100'
-
-  Link:
-    type: object
-    properties:
-      rel:
+  SectionDTO:
+   type: object
+   properties:
+      id:
+        type: integer
+      scoreType:
+        $ref: '#/definitions/ScoreTypeDTO'
+      name:
         type: string
-      href:
+      description:
         type: string
-    example:
-      rel: self
-      href: 'http://example.com/some/url/'
-
-  FieldErrorDTO:
-    type: object
-    properties:
-      field:
-        type: string
-      message:
-        type: string
-
-  OperationResultDTO:
-    type: object
-    properties:
-      message:
-        type: string
-      data:
-        type: object
-      errors:
+      position:
+        type: integer
+      questions:
         type: array
         items:
-          $ref: '#/definitions/FieldErrorDTO'
+          $ref: '#/definitions/QuestionDTO'
 
 ########################################################################################################################
 # Tags #################################################################################################################
@@ -1403,6 +1412,6 @@ tags:
   - name: Me
     description: Part of the Me controller
   - name: Employee
-    description: Part of the Employee microservice
+    description: Part of the Employee controller
   - name: Appraisal
-    description: Part of the Appraisal microservice
+    description: Part of the Appraisal controller

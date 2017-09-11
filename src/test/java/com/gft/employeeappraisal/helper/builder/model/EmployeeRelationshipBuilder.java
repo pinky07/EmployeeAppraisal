@@ -3,7 +3,7 @@ package com.gft.employeeappraisal.helper.builder.model;
 import com.gft.employeeappraisal.helper.builder.ObjectBuilder;
 import com.gft.employeeappraisal.model.Employee;
 import com.gft.employeeappraisal.model.EmployeeRelationship;
-import com.gft.employeeappraisal.model.Relationship;
+import com.gft.employeeappraisal.model.RelationshipType;
 
 import java.time.OffsetDateTime;
 
@@ -20,17 +20,14 @@ public class EmployeeRelationshipBuilder implements ObjectBuilder<EmployeeRelati
     private Employee targetEmployee;
     private OffsetDateTime startDate;
     private OffsetDateTime endDate;
-    private Relationship relationship;
+    private RelationshipType relationshipType;
 
     private boolean idSet;
     private boolean sourceEmployeeSet;
     private boolean targetEmployeeSet;
     private boolean startDateSet;
     private boolean endDateSet;
-    private boolean relationshipSet;
-
-    public EmployeeRelationshipBuilder() {
-    }
+    private boolean relationshipTypeSet;
 
     public EmployeeRelationshipBuilder id(int id) {
         this.id = id;
@@ -62,9 +59,9 @@ public class EmployeeRelationshipBuilder implements ObjectBuilder<EmployeeRelati
         return this;
     }
 
-    public EmployeeRelationshipBuilder relationship(Relationship relationship) {
-        this.relationship = relationship;
-        this.relationshipSet = true;
+    public EmployeeRelationshipBuilder relationshipType(RelationshipType relationshipType) {
+        this.relationshipType = relationshipType;
+        this.relationshipTypeSet = true;
         return this;
     }
 
@@ -76,7 +73,7 @@ public class EmployeeRelationshipBuilder implements ObjectBuilder<EmployeeRelati
         obj.setTargetEmployee(this.targetEmployee);
         obj.setStartDate(this.startDate);
         obj.setEndDate(this.endDate);
-        obj.setRelationship(this.relationship);
+        obj.setRelationshipType(this.relationshipType);
         return obj;
     }
 
@@ -88,7 +85,7 @@ public class EmployeeRelationshipBuilder implements ObjectBuilder<EmployeeRelati
         obj.setTargetEmployee(this.targetEmployeeSet ? this.targetEmployee : new EmployeeBuilder().buildWithDefaults());
         obj.setStartDate(this.startDateSet ? this.startDate : OffsetDateTime.now().minusDays(1));
         obj.setEndDate(this.endDateSet ? this.endDate : null);
-        obj.setRelationship(this.relationshipSet ? this.relationship : new RelationshipBuilder().buildWithDefaults());
+        obj.setRelationshipType(this.relationshipTypeSet ? this.relationshipType : new RelationshipTypeBuilder().buildWithDefaults());
         return obj;
     }
 }

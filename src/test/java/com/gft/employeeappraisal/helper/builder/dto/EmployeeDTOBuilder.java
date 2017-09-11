@@ -17,26 +17,23 @@ import java.util.UUID;
 public class EmployeeDTOBuilder implements ObjectBuilder<EmployeeDTO> {
 
     private int id;
-    private String firstName;
-    private String lastName;
+    private JobLevelDTO jobLevelDTO;
+    private ApplicationRoleDTO applicationRoleDTO;
     private String email;
     private String gftIdentifier;
+    private String firstName;
+    private String lastName;
     private boolean isAdmin;
     private boolean isMentor;
     private boolean isPeer;
-    private ApplicationRoleDTO applicationRoleDTO;
-    private JobLevelDTO jobLevelDTO;
 
     private boolean idSet;
-    private boolean applicationRoleSet;
     private boolean jobLevelSet;
-    private boolean firstNameSet;
-    private boolean lastNameSet;
+    private boolean applicationRoleSet;
     private boolean emailSet;
     private boolean gftIdentifierSet;
-
-    public EmployeeDTOBuilder() {
-    }
+    private boolean firstNameSet;
+    private boolean lastNameSet;
 
     public EmployeeDTOBuilder id(int id) {
         this.id = id;
@@ -44,15 +41,15 @@ public class EmployeeDTOBuilder implements ObjectBuilder<EmployeeDTO> {
         return this;
     }
 
-    public EmployeeDTOBuilder firstName(String firstName) {
-        this.firstName = firstName;
-        this.firstNameSet = true;
+    public EmployeeDTOBuilder jobLevel(JobLevelDTO jobLevelDTO) {
+        this.jobLevelDTO = jobLevelDTO;
+        this.jobLevelSet = true;
         return this;
     }
 
-    public EmployeeDTOBuilder lastName(String lastName) {
-        this.lastName = lastName;
-        this.lastNameSet = true;
+    public EmployeeDTOBuilder applicationRole(ApplicationRoleDTO applicationRoleDTO) {
+        this.applicationRoleDTO = applicationRoleDTO;
+        this.applicationRoleSet = true;
         return this;
     }
 
@@ -65,6 +62,18 @@ public class EmployeeDTOBuilder implements ObjectBuilder<EmployeeDTO> {
     public EmployeeDTOBuilder gftIdentifier(String gftIdentifier) {
         this.gftIdentifier = gftIdentifier;
         this.gftIdentifierSet = true;
+        return this;
+    }
+
+    public EmployeeDTOBuilder firstName(String firstName) {
+        this.firstName = firstName;
+        this.firstNameSet = true;
+        return this;
+    }
+
+    public EmployeeDTOBuilder lastName(String lastName) {
+        this.lastName = lastName;
+        this.lastNameSet = true;
         return this;
     }
 
@@ -83,31 +92,19 @@ public class EmployeeDTOBuilder implements ObjectBuilder<EmployeeDTO> {
         return this;
     }
 
-    public EmployeeDTOBuilder applicationRole(ApplicationRoleDTO applicationRoleDTO) {
-        this.applicationRoleDTO = applicationRoleDTO;
-        this.applicationRoleSet = true;
-        return this;
-    }
-
-    public EmployeeDTOBuilder jobLevel(JobLevelDTO jobLevelDTO) {
-        this.jobLevelDTO = jobLevelDTO;
-        this.jobLevelSet = true;
-        return this;
-    }
-
     @Override
     public EmployeeDTO build() {
         EmployeeDTO dto = new EmployeeDTO();
         dto.setId(this.id);
-        dto.setFirstName(this.firstName);
-        dto.setLastName(this.lastName);
+        dto.setJobLevel(this.jobLevelDTO);
+        dto.setApplicationRole(this.applicationRoleDTO);
         dto.setEmail(this.email);
         dto.setGftIdentifier(this.gftIdentifier);
+        dto.setFirstName(this.firstName);
+        dto.setLastName(this.lastName);
         dto.setIsAdmin(this.isAdmin);
-        dto.setIsPeer(this.isPeer);
         dto.setIsMentor(this.isMentor);
-        dto.setApplicationRole(this.applicationRoleDTO);
-        dto.setJobLevel(this.jobLevelDTO);
+        dto.setIsPeer(this.isPeer);
         return dto;
     }
 
@@ -115,16 +112,16 @@ public class EmployeeDTOBuilder implements ObjectBuilder<EmployeeDTO> {
     public EmployeeDTO buildWithDefaults() {
         EmployeeDTO dto = new EmployeeDTO();
         if (this.idSet) dto.setId(this.id);
-        dto.setFirstName(this.firstNameSet ? this.firstName : "First Name");
-        dto.setLastName(this.lastNameSet ? this.lastName : "Last Name");
-        dto.setGftIdentifier(this.gftIdentifierSet ? this.gftIdentifier : GftIdentifierGenerator.next());
-        dto.setEmail(this.emailSet ? this.email : UUID.randomUUID().toString() + "@gft.com");
-        dto.setIsAdmin(this.isAdmin);
-        dto.setIsPeer(this.isPeer);
-        dto.setIsMentor(this.isMentor);
+        dto.setJobLevel(this.jobLevelSet ? this.jobLevelDTO : new JobLevelDTOBuilder().buildWithDefaults());
         dto.setApplicationRole(this.applicationRoleSet ? this.applicationRoleDTO :
                 new ApplicationRoleDTOBuilder().buildWithDefaults());
-        dto.setJobLevel(this.jobLevelSet ? this.jobLevelDTO : new JobLevelDTOBuilder().buildWithDefaults());
+        dto.setEmail(this.emailSet ? this.email : UUID.randomUUID().toString() + "@gft.com");
+        dto.setGftIdentifier(this.gftIdentifierSet ? this.gftIdentifier : GftIdentifierGenerator.next());
+        dto.setFirstName(this.firstNameSet ? this.firstName : "First Name");
+        dto.setLastName(this.lastNameSet ? this.lastName : "Last Name");
+        dto.setIsAdmin(this.isAdmin);
+        dto.setIsMentor(this.isMentor);
+        dto.setIsPeer(this.isPeer);
         return dto;
     }
 }

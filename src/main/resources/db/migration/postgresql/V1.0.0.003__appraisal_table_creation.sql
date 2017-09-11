@@ -1,4 +1,4 @@
-create table Appraisal (
+CREATE TABLE Appraisal (
     id SERIAL PRIMARY KEY,
     name VARCHAR(40) NOT NULL,
     description VARCHAR(500) NOT NULL,
@@ -6,79 +6,79 @@ create table Appraisal (
     endDate TIMESTAMP WITH TIME ZONE NOT NULL
 );
 
-create table EvaluationForm (
+CREATE TABLE EvaluationForm (
     id SERIAL PRIMARY KEY,
     name VARCHAR(100) NOT NULL,
     description VARCHAR(500) NOT NULL
 );
 
-create table EvaluationFormSection (
+CREATE TABLE EvaluationFormSection (
     id SERIAL PRIMARY KEY,
     name VARCHAR(40) NOT NULL,
     description VARCHAR(500) NOT NULL
 );
 
-create table ScoreType (
+CREATE TABLE ScoreType (
     id SERIAL PRIMARY KEY,
     definition VARCHAR(40) NOT NULL
 );
 
-create table ScoreValue (
+CREATE TABLE ScoreValue (
     id SERIAL PRIMARY KEY,
-    scoreTypeId int,
+    scoreTypeId INT,
     value VARCHAR(40),
     description VARCHAR(500) NOT NULL,
     FOREIGN KEY (scoreTypeId) REFERENCES ScoreType(id)
 );
 
-create table EvaluationFormQuestion (
+CREATE TABLE EvaluationFormQuestion (
     id SERIAL PRIMARY KEY,
-    scoreTypeId int,
+    scoreTypeId INT,
     name VARCHAR(40) NOT NULL,
     description VARCHAR(500) NOT NULL,
     FOREIGN KEY (scoreTypeId) REFERENCES ScoreType(id)
 );
 
-create table AppraisalXEvaluationForm (
+CREATE TABLE AppraisalXEvaluationForm (
     id SERIAL PRIMARY KEY,
-    appraisalId int,
-    evaluationFormId int,
+    appraisalId INT,
+    evaluationFormId INT,
     FOREIGN KEY (appraisalId) REFERENCES Appraisal(id),
     FOREIGN KEY (evaluationFormId) REFERENCES EvaluationForm(id)
 );
 
-create table EvaluationFormXJobLevel (
+CREATE TABLE EvaluationFormXJobLevel (
     id SERIAL PRIMARY KEY,
-    evaluationFormId int,
-    jobLevelId int,
+    evaluationFormId INT,
+    jobLevelId INT,
     FOREIGN KEY (evaluationFormId) REFERENCES EvaluationForm(id),
     FOREIGN KEY (jobLevelId) REFERENCES JobLevel(id)
 );
 
-create table AppraisalXEvaluationFormXEmployeeRelationship (
+CREATE TABLE AppraisalXEvaluationFormXEmployeeRelationship (
     id SERIAL PRIMARY KEY,
-    appraisalXEvaluationFormId int,
-    employeeRelationshipId int,
+    appraisalXEvaluationFormId INT,
+    employeeRelationshipId INT,
     evaluationStatus VARCHAR(40),
     FOREIGN KEY (appraisalXEvaluationFormId) REFERENCES AppraisalXEvaluationForm(id),
     FOREIGN KEY (employeeRelationshipId) REFERENCES EmployeeRelationship(id)
 );
 
-create table EvaluationFormXSectionXQuestion (
+CREATE TABLE EvaluationFormXSectionXQuestion (
     id SERIAL PRIMARY KEY,
-    evaluationFormId int,
-    evaluationFormSectionId int,
-    evaluationFormQuestionId int,
+    evaluationFormId INT,
+    evaluationFormSectionId INT,
+    evaluationFormQuestionId INT,
     FOREIGN KEY (evaluationFormId) REFERENCES EvaluationForm(id),
     FOREIGN KEY (evaluationFormSectionId) REFERENCES EvaluationFormSection(id),
     FOREIGN KEY (evaluationFormQuestionId) REFERENCES EvaluationFormQuestion(id)
 );
 
-create table EvaluationFormXSectionXQuestionXAnswer (
+CREATE TABLE EvaluationFormXSectionXQuestionXAnswer (
     id SERIAL PRIMARY KEY,
-    evaluationFormXSectionXQuestionId int,
-    appraisalXEvaluationFormXEmployeeRelationshipId int,
-    scoreValueId int,
+    evaluationFormXSectionXQuestionId INT,
+    appraisalXEvaluationFormXEmployeeRelationshipId INT,
+    scoreValueId INT,
     comment varchar(1000),
     FOREIGN KEY (evaluationFormXSectionXQuestionId) REFERENCES EvaluationFormXSectionXQuestion(id),
     FOREIGN KEY (appraisalXEvaluationFormXEmployeeRelationshipId) REFERENCES AppraisalXEvaluationFormXEmployeeRelationship(id),

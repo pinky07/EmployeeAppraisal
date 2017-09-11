@@ -1,6 +1,6 @@
 package com.gft.employeeappraisal.repository;
 
-import com.gft.employeeappraisal.model.EvaluationFormXSectionXQuestion;
+import com.gft.employeeappraisal.model.EvaluationFormTemplateXSectionXQuestion;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -12,5 +12,5 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Repository
 @Transactional
-public interface EvaluationFormXSectionXQuestionRepository extends JpaRepository<EvaluationFormXSectionXQuestion, Integer> {
+public interface EvaluationFormXSectionXQuestionRepository extends JpaRepository<EvaluationFormTemplateXSectionXQuestion, Integer> {
 }

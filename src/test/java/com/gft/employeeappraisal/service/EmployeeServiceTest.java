@@ -6,14 +6,10 @@ import com.gft.employeeappraisal.helper.builder.model.JobFamilyBuilder;
 import com.gft.employeeappraisal.helper.builder.model.JobLevelBuilder;
 import com.gft.employeeappraisal.exception.NotFoundException;
 import com.gft.employeeappraisal.model.*;
-import com.gft.employeeappraisal.repository.*;
 import com.gft.employeeappraisal.service.impl.EmployeeServiceImpl;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mock;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import javax.validation.ConstraintViolationException;
@@ -46,8 +42,8 @@ public class EmployeeServiceTest extends BaseServiceTest {
     private Employee mentee;
     private Employee mentor;
     private Employee admin;
-    private Relationship mentorRelationship;
-    private Relationship peerRelationship;
+    private RelationshipType mentorRelationshipType;
+    private RelationshipType peerRelationshipType;
     private EmployeeRelationship mentorEmployeeRelationship;
     private EmployeeRelationship peerEmployeeRelationship;
 
@@ -64,7 +60,7 @@ public class EmployeeServiceTest extends BaseServiceTest {
                 this.applicationRoleService,
                 this.employeeRelationshipService,
                 this.jobLevelService,
-                this.relationshipService,
+                this.relationshipTypeService,
                 this.employeeRepository);
 
         // Create an Application Role
@@ -113,25 +109,25 @@ public class EmployeeServiceTest extends BaseServiceTest {
                 .buildWithDefaults());
 
         // Retrieve the Mentor Relationship
-        this.mentorRelationship = this.relationshipRepository
+        this.mentorRelationshipType = this.relationshipTypeRepository
                 .findByName(RelationshipName.MENTOR.name()).get();
 
         // Retrieve the Peer Relationship
-        this.peerRelationship = this.relationshipRepository
+        this.peerRelationshipType = this.relationshipTypeRepository
                 .findByName(RelationshipName.PEER.name()).get();
 
         // Create an EmployeeRelationship: Mentor --> Mentee (MENTOR)
         this.mentorEmployeeRelationship = this.employeeRelationshipRepository.saveAndFlush(new EmployeeRelationshipBuilder()
                 .sourceEmployee(mentor)
                 .targetEmployee(mentee)
-                .relationship(mentorRelationship)
+                .relationshipType(mentorRelationshipType)
                 .buildWithDefaults());
 
         // Create an EmployeeRelationship: EmployeeA --> EmployeeB (PEER)
         this.peerEmployeeRelationship = this.employeeRelationshipRepository.saveAndFlush(new EmployeeRelationshipBuilder()
                 .sourceEmployee(employeeA)
                 .targetEmployee(employeeB)
-                .relationship(peerRelationship)
+                .relationshipType(peerRelationshipType)
                 .buildWithDefaults());
     }
 
@@ -150,9 +146,9 @@ public class EmployeeServiceTest extends BaseServiceTest {
 
     @Test
     public void getCurrentMentorById() throws Exception {
-        when(this.relationshipService.findByName(any(RelationshipName.class)))
-                .thenReturn(mentorRelationship);
-        when(this.employeeRelationshipService.findCurrentByTargetEmployeeAndRelationship(mentee, mentorRelationship))
+        when(this.relationshipTypeService.findByName(any(RelationshipName.class)))
+                .thenReturn(mentorRelationshipType);
+        when(this.employeeRelationshipService.findCurrentByTargetEmployeeAndRelationship(mentee, mentorRelationshipType))
                 .thenReturn(Stream.of(mentorEmployeeRelationship));
 
         Employee retrieved = employeeService.getCurrentMentorById(mentee.getId());
@@ -163,9 +159,9 @@ public class EmployeeServiceTest extends BaseServiceTest {
 
     @Test(expected = NotFoundException.class)
     public void getCurrentMentorById_noMentor() throws Exception {
-        when(this.relationshipService.findByName(any(RelationshipName.class)))
-                .thenReturn(mentorRelationship);
-        when(this.employeeRelationshipService.findCurrentByTargetEmployeeAndRelationship(employeeA, mentorRelationship))
+        when(this.relationshipTypeService.findByName(any(RelationshipName.class)))
+                .thenReturn(mentorRelationshipType);
+        when(this.employeeRelationshipService.findCurrentByTargetEmployeeAndRelationship(employeeA, mentorRelationshipType))
                 .thenReturn(Stream.empty());
 
         employeeService.getCurrentMentorById(employeeA.getId());
@@ -190,7 +186,7 @@ public class EmployeeServiceTest extends BaseServiceTest {
         EmployeeRelationship relationship = relationships.get(0);
         assertEquals(relationship.getSourceEmployee(), mentor);
         assertEquals(relationship.getTargetEmployee(), mentee);
-        assertEquals(relationship.getRelationship(), mentorRelationship);
+        assertEquals(relationship.getRelationshipType(), mentorRelationshipType);
         assertNotNull(relationship.getStartDate());
     }
 
@@ -282,9 +278,9 @@ public class EmployeeServiceTest extends BaseServiceTest {
     @Test
     public void findCurrentMentorById_Successful() throws Exception {
         // Set up
-        when(this.relationshipService.findByName(any(RelationshipName.class)))
-                .thenReturn(mentorRelationship);
-        when(this.employeeRelationshipService.findCurrentByTargetEmployeeAndRelationship(mentee, mentorRelationship))
+        when(this.relationshipTypeService.findByName(any(RelationshipName.class)))
+                .thenReturn(mentorRelationshipType);
+        when(this.employeeRelationshipService.findCurrentByTargetEmployeeAndRelationship(mentee, mentorRelationshipType))
                 .thenReturn(Stream.of(mentorEmployeeRelationship));
 
         // Execution
@@ -309,9 +305,9 @@ public class EmployeeServiceTest extends BaseServiceTest {
     @Test
     public void findCurrentMenteesById_Successful() throws Exception {
         // Set up
-        when(this.relationshipService.findByName(any(RelationshipName.class)))
-                .thenReturn(mentorRelationship);
-        when(this.employeeRelationshipService.findCurrentBySourceEmployeeAndRelationship(mentor, mentorRelationship))
+        when(this.relationshipTypeService.findByName(any(RelationshipName.class)))
+                .thenReturn(mentorRelationshipType);
+        when(this.employeeRelationshipService.findCurrentBySourceEmployeeAndRelationship(mentor, mentorRelationshipType))
                 .thenReturn(Stream.of(mentorEmployeeRelationship));
 
         // Execution
@@ -337,9 +333,9 @@ public class EmployeeServiceTest extends BaseServiceTest {
     @Test
     public void findCurrentPeersById_Successful() throws Exception {
         // Set up
-        when(this.relationshipService.findByName(any(RelationshipName.class)))
-                .thenReturn(peerRelationship);
-        when(this.employeeRelationshipService.findCurrentBySourceEmployeeAndRelationship(employeeA, peerRelationship))
+        when(this.relationshipTypeService.findByName(any(RelationshipName.class)))
+                .thenReturn(peerRelationshipType);
+        when(this.employeeRelationshipService.findCurrentBySourceEmployeeAndRelationship(employeeA, peerRelationshipType))
                 .thenReturn(Stream.of(peerEmployeeRelationship));
 
         // Execution

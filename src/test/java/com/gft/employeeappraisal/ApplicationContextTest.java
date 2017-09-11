@@ -10,7 +10,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-@ActiveProfiles({"default", "oauth2", "local-postgresql"})
+@ActiveProfiles({"default", "oauth2", "local-h2"})
 public class ApplicationContextTest {
 
     private final Logger logger = LoggerFactory.getLogger(ApplicationContextTest.class);

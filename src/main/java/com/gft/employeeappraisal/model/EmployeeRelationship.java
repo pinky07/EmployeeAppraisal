@@ -28,16 +28,16 @@ public class EmployeeRelationship {
     private Employee targetEmployee;
 
     @NotNull
-    @ManyToOne
-    @JoinColumn(name = "relationshipId", nullable = false)
-    private Relationship relationship;
-
-    @NotNull
     @Column(name = "startDate", columnDefinition = "TIMESTAMP", nullable = false)
     private OffsetDateTime startDate;
 
     @Column(name = "endDate", columnDefinition = "TIMESTAMP")
     private OffsetDateTime endDate;
+
+    @NotNull
+    @ManyToOne
+    @JoinColumn(name = "relationshipTypeId", nullable = false)
+    private RelationshipType relationshipType;
 
     public int getId() {
         return id;
@@ -79,12 +79,12 @@ public class EmployeeRelationship {
         this.endDate = endDate;
     }
 
-    public Relationship getRelationship() {
-        return relationship;
+    public RelationshipType getRelationshipType() {
+        return relationshipType;
     }
 
-    public void setRelationship(Relationship relationship) {
-        this.relationship = relationship;
+    public void setRelationshipType(RelationshipType relationshipType) {
+        this.relationshipType = relationshipType;
     }
 
     @Override

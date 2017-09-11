@@ -1,7 +1,9 @@
 package com.gft.employeeappraisal.service.impl;
 
 import com.gft.employeeappraisal.exception.AccessDeniedException;
+import com.gft.employeeappraisal.model.Appraisal;
 import com.gft.employeeappraisal.model.Employee;
+import com.gft.employeeappraisal.model.EmployeeEvaluationForm;
 import com.gft.employeeappraisal.model.RelationshipName;
 import com.gft.employeeappraisal.service.EmployeeRelationshipService;
 import com.gft.employeeappraisal.service.EmployeeService;
@@ -25,6 +27,13 @@ public class SecurityServiceImpl implements SecurityService {
     private final EmployeeRelationshipService employeeRelationshipService;
     private final EmployeeService employeeService;
 
+    /**
+     * Creates an instance of SecurityServiceImpl.
+     *
+     * @param maxMenteeReferences         Maximum number of references a mentee can have
+     * @param employeeRelationshipService EmployeeRelationship service
+     * @param employeeService             Employee service
+     */
     @Autowired
     public SecurityServiceImpl(
             @Value("${com.gft.businessRules.maxMenteeReferences}") Integer maxMenteeReferences,
@@ -33,6 +42,23 @@ public class SecurityServiceImpl implements SecurityService {
         this.maxMenteeReferences = maxMenteeReferences;
         this.employeeRelationshipService = employeeRelationshipService;
         this.employeeService = employeeService;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void canReadAppraisal(Employee reader, Employee employee, Appraisal appraisal) throws AccessDeniedException {
+        // The Employee can access his own information
+        if (!employee.equals(employee)) {
+
+            // Otherwise an Access Denied Exception is thrown
+            throw new AccessDeniedException(String.format(
+                    "Employee[%d] can't read Appraisal[%d] from Employee[%d]",
+                    reader.getId(),
+                    employee.getId(),
+                    appraisal.getId()));
+        }
     }
 
     /**
@@ -51,7 +77,7 @@ public class SecurityServiceImpl implements SecurityService {
 
                 // Otherwise an Access Denied Exception is thrown
                 throw new AccessDeniedException(String.format(
-                        "Employee with Id: %d can't read Employee with Id: %d",
+                        "Employee[%d] can't read Employee[%d]",
                         reader.getId(),
                         requested.getId()));
             }
@@ -62,7 +88,22 @@ public class SecurityServiceImpl implements SecurityService {
      * {@inheritDoc}
      */
     @Override
-    public void canWriteEmployeeRelationship(Employee writer, Employee sourceEmployee, Employee targetEmployee) throws AccessDeniedException {
+    public void canReadEmployeeEvaluationForm(Employee reader, EmployeeEvaluationForm employeeEvaluationForm) throws AccessDeniedException {
+        if (!reader.equals(employeeEvaluationForm.getEmployee())) {
+            // Otherwise an Access Denied Exception is thrown
+            throw new AccessDeniedException(String.format(
+                    "Employee[%d] can't read EmployeeEvaluationForm[%d]",
+                    reader.getId(),
+                    employeeEvaluationForm.getId()));
+        }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void canWriteEmployeeRelationship(Employee writer, Employee sourceEmployee, Employee targetEmployee) throws
+            AccessDeniedException {
         // The Employee can change his own information
         if (!writer.equals(sourceEmployee)) {
 
@@ -74,7 +115,7 @@ public class SecurityServiceImpl implements SecurityService {
 
                 // Otherwise an Access Denied Exception is thrown
                 throw new AccessDeniedException(String.format(
-                        "Employee with Id %d can't write an EmployeeRelationship from Employee with Id: %d to Employee with Id: %d",
+                        "Employee[%d] can't write an EmployeeRelationship from Employee[%d] to Employee[%d]",
                         writer.getId(),
                         sourceEmployee.getId(),
                         targetEmployee.getId()));
@@ -94,7 +135,7 @@ public class SecurityServiceImpl implements SecurityService {
 
         if (currentEmployeeReferences < 0 || maxMenteeReferences < currentEmployeeReferences) {
             throw new AccessDeniedException(String.format(
-                    "Employee with Id %d has already %d references active and cannot add any more.",
+                    "Employee[%d] has already %d references active and cannot add any more.",
                     sourceEmployee.getId(), currentEmployeeReferences));
         }
     }

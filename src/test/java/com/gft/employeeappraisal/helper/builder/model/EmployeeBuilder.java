@@ -17,23 +17,20 @@ import java.util.UUID;
 public class EmployeeBuilder implements ObjectBuilder<Employee> {
 
     private int id;
-    private ApplicationRole applicationRole;
     private JobLevel jobLevel;
-    private String firstName;
-    private String lastName;
+    private ApplicationRole applicationRole;
     private String email;
     private String gftIdentifier;
+    private String firstName;
+    private String lastName;
 
     private boolean idSet;
-    private boolean applicationRoleSet;
     private boolean jobLevelSet;
-    private boolean firstNameSet;
-    private boolean lastNameSet;
+    private boolean applicationRoleSet;
     private boolean emailSet;
     private boolean gftIdentifierSet;
-
-    public EmployeeBuilder() {
-    }
+    private boolean firstNameSet;
+    private boolean lastNameSet;
 
     public EmployeeBuilder id(int id) {
         this.id = id;
@@ -41,15 +38,15 @@ public class EmployeeBuilder implements ObjectBuilder<Employee> {
         return this;
     }
 
-    public EmployeeBuilder firstName(String firstName) {
-        this.firstName = firstName;
-        this.firstNameSet = true;
+    public EmployeeBuilder jobLevel(JobLevel jobLevel) {
+        this.jobLevel = jobLevel;
+        this.jobLevelSet = true;
         return this;
     }
 
-    public EmployeeBuilder lastName(String lastName) {
-        this.lastName = lastName;
-        this.lastNameSet = true;
+    public EmployeeBuilder applicationRole(ApplicationRole applicationRole) {
+        this.applicationRole = applicationRole;
+        this.applicationRoleSet = true;
         return this;
     }
 
@@ -65,15 +62,15 @@ public class EmployeeBuilder implements ObjectBuilder<Employee> {
         return this;
     }
 
-    public EmployeeBuilder applicationRole(ApplicationRole applicationRole) {
-        this.applicationRole = applicationRole;
-        this.applicationRoleSet = true;
+    public EmployeeBuilder firstName(String firstName) {
+        this.firstName = firstName;
+        this.firstNameSet = true;
         return this;
     }
 
-    public EmployeeBuilder jobLevel(JobLevel jobLevel) {
-        this.jobLevel = jobLevel;
-        this.jobLevelSet = true;
+    public EmployeeBuilder lastName(String lastName) {
+        this.lastName = lastName;
+        this.lastNameSet = true;
         return this;
     }
 
@@ -81,12 +78,12 @@ public class EmployeeBuilder implements ObjectBuilder<Employee> {
     public Employee build() {
         Employee obj = new Employee();
         obj.setId(this.id);
+        obj.setJobLevel(this.jobLevel);
+        obj.setApplicationRole(this.applicationRole);
+        obj.setEmail(this.email);
+        obj.setGftIdentifier(this.gftIdentifier);
         obj.setFirstName(this.firstName);
         obj.setLastName(this.lastName);
-        obj.setGftIdentifier(this.gftIdentifier);
-        obj.setEmail(this.email);
-        obj.setApplicationRole(this.applicationRole);
-        obj.setJobLevel(this.jobLevel);
         return obj;
     }
 
@@ -94,12 +91,12 @@ public class EmployeeBuilder implements ObjectBuilder<Employee> {
     public Employee buildWithDefaults() {
         Employee obj = new Employee();
         if (this.idSet) obj.setId(this.id);
+        obj.setJobLevel(this.jobLevelSet ? this.jobLevel : new JobLevelBuilder().buildWithDefaults());
+        obj.setApplicationRole(this.applicationRoleSet ? this.applicationRole : new ApplicationRoleBuilder().buildWithDefaults());
+        obj.setEmail(this.emailSet ? this.email : UUID.randomUUID().toString() + "@gft.com");
+        obj.setGftIdentifier(this.gftIdentifierSet ? this.gftIdentifier : GftIdentifierGenerator.next());
         obj.setFirstName(this.firstNameSet ? this.firstName : "First Name");
         obj.setLastName(this.lastNameSet ? this.lastName : "Last Name");
-        obj.setGftIdentifier(this.gftIdentifierSet ? this.gftIdentifier : GftIdentifierGenerator.next());
-        obj.setEmail(this.emailSet ? this.email : UUID.randomUUID().toString() + "@gft.com");
-        obj.setApplicationRole(this.applicationRoleSet ? this.applicationRole : new ApplicationRoleBuilder().buildWithDefaults());
-        obj.setJobLevel(this.jobLevelSet ? this.jobLevel : new JobLevelBuilder().buildWithDefaults());
         return obj;
     }
 }

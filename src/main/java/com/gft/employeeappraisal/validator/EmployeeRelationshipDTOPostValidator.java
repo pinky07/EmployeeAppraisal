@@ -2,7 +2,7 @@ package com.gft.employeeappraisal.validator;
 
 import com.gft.employeeappraisal.model.EmployeeRelationship;
 import com.gft.employeeappraisal.service.EmployeeService;
-import com.gft.employeeappraisal.service.RelationshipService;
+import com.gft.employeeappraisal.service.RelationshipTypeService;
 import com.gft.swagger.employees.model.EmployeeRelationshipDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpMethod;
@@ -26,14 +26,14 @@ public class EmployeeRelationshipDTOPostValidator implements HttpValidator {
     private static final String END_DATE_FIELD = "endDate";
 
     private final EmployeeService employeeService;
-    private final RelationshipService relationshipService;
+    private final RelationshipTypeService relationshipTypeService;
 
     @Autowired
     public EmployeeRelationshipDTOPostValidator(
             EmployeeService employeeService,
-            RelationshipService relationshipService) {
+            RelationshipTypeService relationshipTypeService) {
         this.employeeService = employeeService;
-        this.relationshipService = relationshipService;
+        this.relationshipTypeService = relationshipTypeService;
     }
 
     /**
@@ -73,8 +73,8 @@ public class EmployeeRelationshipDTOPostValidator implements HttpValidator {
 
         // Relationship Field
         ValidationUtils.rejectIfEmpty(errors, RELATIONSHIP_FIELD, "employeeRelationshipDTO.post.relationshipNotSet");
-        if (Objects.nonNull(employeeRelationshipDTO.getRelationship())
-                && !this.relationshipService.findById(employeeRelationshipDTO.getRelationship().getId()).isPresent()) {
+        if (Objects.nonNull(employeeRelationshipDTO.getRelationshipType())
+                && !this.relationshipTypeService.findById(employeeRelationshipDTO.getRelationshipType().getId()).isPresent()) {
             errors.rejectValue(RELATIONSHIP_FIELD, "employeeRelationshipDTO.post.relationshipNotFound");
         }
 

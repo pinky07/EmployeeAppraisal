@@ -30,7 +30,7 @@ public class BaseServiceTest {
     protected AppraisalRepository appraisalRepository;
 
     @Autowired
-    protected AppraisalXEvaluationFormRepository appraisalXEvaluationFormRepository;
+    protected AppraisalXEvaluationFormTemplateRepository appraisalXEvaluationFormTemplateRepository;
 
     @Autowired
     protected EmployeeEvaluationFormRepository employeeEvaluationFormRepository;
@@ -42,7 +42,7 @@ public class BaseServiceTest {
     protected EmployeeRepository employeeRepository;
 
     @Autowired
-    protected EvaluationFormRepository evaluationFormRepository;
+    protected EvaluationFormTemplateRepository evaluationFormTemplateRepository;
 
     @Autowired
     protected EvaluationFormXSectionXQuestionRepository evaluationFormXSectionXQuestionRepository;
@@ -54,7 +54,7 @@ public class BaseServiceTest {
     protected JobLevelRepository jobLevelRepository;
 
     @Autowired
-    protected RelationshipRepository relationshipRepository;
+    protected RelationshipTypeRepository relationshipTypeRepository;
 
     //
     // Note: Shadow the Service you're testing with a field in the your ServiceTest!
@@ -67,7 +67,7 @@ public class BaseServiceTest {
     protected AppraisalService appraisalService;
 
     @Mock
-    protected AppraisalXEvaluationFormService appraisalXEvaluationFormService;
+    protected AppraisalXEvaluationFormTemplateService appraisalXEvaluationFormTemplateService;
 
     @Mock
     protected EmployeeEvaluationFormService employeeEvaluationFormService;
@@ -79,7 +79,7 @@ public class BaseServiceTest {
     protected EmployeeService employeeService;
 
     @Mock
-    protected EvaluationFormService evaluationFormService;
+    protected EvaluationFormTemplateService evaluationFormTemplateService;
 
     @Mock
     protected EvaluationFormXSectionXQuestionService evaluationFormXSectionXQuestionService;
@@ -91,7 +91,7 @@ public class BaseServiceTest {
     protected JobLevelService jobLevelService;
 
     @Mock
-    protected RelationshipService relationshipService;
+    protected RelationshipTypeService relationshipTypeService;
 
     @Mock
     protected SecurityService securityService;

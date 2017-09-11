@@ -41,9 +41,6 @@ public class EmployeesControllerPostTest extends BaseControllerTest {
     private static final String EMPLOYEES_URL = "/employees";
     private static EmployeeDTO mockEmployeeDTO;
 
-    @Autowired
-    private EmployeeDTOConverter employeeDTOConverter;
-
     @BeforeClass
     public static void setUp() {
         mockEmployeeDTO = new EmployeeDTOBuilder()

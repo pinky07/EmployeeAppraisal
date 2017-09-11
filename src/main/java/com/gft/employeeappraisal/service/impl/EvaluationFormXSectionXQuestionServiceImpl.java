@@ -2,7 +2,7 @@ package com.gft.employeeappraisal.service.impl;
 
 import com.gft.employeeappraisal.model.Appraisal;
 import com.gft.employeeappraisal.model.Employee;
-import com.gft.employeeappraisal.model.EvaluationForm;
+import com.gft.employeeappraisal.model.EvaluationFormTemplate;
 import com.gft.employeeappraisal.service.EmployeeEvaluationFormService;
 import com.gft.employeeappraisal.service.EvaluationFormXSectionXQuestionService;
 import org.apache.commons.lang.NotImplementedException;
@@ -28,7 +28,7 @@ public class EvaluationFormXSectionXQuestionServiceImpl implements EvaluationFor
     }
 
     @Override
-    public Stream<EvaluationForm> findByAppraisalAndEmployee(Appraisal appraisal, Employee employee) {
+    public Stream<EvaluationFormTemplate> findByAppraisalAndEmployee(Appraisal appraisal, Employee employee) {
         // TODO Implement this method!
         throw new NotImplementedException();
     }

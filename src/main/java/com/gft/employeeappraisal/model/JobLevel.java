@@ -20,6 +20,11 @@ public class JobLevel {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
+    @NotNull
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "jobFamilyId", nullable = false)
+    private JobFamily jobFamily;
+
     @NotEmpty
     @Size(max = 2)
     @Column(name = "name", nullable = false, length = 2)
@@ -35,16 +40,11 @@ public class JobLevel {
     @Column(name = "expertise", nullable = false, length = 20)
     private String expertise;
 
-    @NotNull
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "jobFamilyId", nullable = false)
-    private JobFamily jobFamily;
-
     @OneToMany(mappedBy = "jobLevel", fetch = FetchType.LAZY, cascade = CascadeType.REFRESH)
-    private Set<Employee> employees;
+    private Set<Employee> employeeSet;
 
     @OneToMany(mappedBy = "jobLevel", fetch = FetchType.LAZY)
-    private Set<EvaluationFormXJobLevel> evaluationFormXJobLevels;
+    private Set<EvaluationFormTemplateXJobLevel> evaluationFormTemplateXJobLevelSet;
 
     public int getId() {
         return id;
@@ -52,6 +52,14 @@ public class JobLevel {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public JobFamily getJobFamily() {
+        return jobFamily;
+    }
+
+    public void setJobFamily(JobFamily jobFamily) {
+        this.jobFamily = jobFamily;
     }
 
     public String getName() {
@@ -78,28 +86,20 @@ public class JobLevel {
         this.expertise = expertise;
     }
 
-    public JobFamily getJobFamily() {
-        return jobFamily;
+    public Set<Employee> getEmployeeSet() {
+        return employeeSet;
     }
 
-    public void setJobFamily(JobFamily jobFamily) {
-        this.jobFamily = jobFamily;
+    public void setEmployeeSet(Set<Employee> employeeSet) {
+        this.employeeSet = employeeSet;
     }
 
-    public Set<Employee> getEmployees() {
-        return employees;
+    public Set<EvaluationFormTemplateXJobLevel> getEvaluationFormTemplateXJobLevelSet() {
+        return evaluationFormTemplateXJobLevelSet;
     }
 
-    public void setEmployees(Set<Employee> employees) {
-        this.employees = employees;
-    }
-
-    public Set<EvaluationFormXJobLevel> getEvaluationFormXJobLevels() {
-        return evaluationFormXJobLevels;
-    }
-
-    public void setEvaluationFormXJobLevels(Set<EvaluationFormXJobLevel> evaluationFormXJobLevels) {
-        this.evaluationFormXJobLevels = evaluationFormXJobLevels;
+    public void setEvaluationFormTemplateXJobLevelSet(Set<EvaluationFormTemplateXJobLevel> evaluationFormTemplateXJobLevelSet) {
+        this.evaluationFormTemplateXJobLevelSet = evaluationFormTemplateXJobLevelSet;
     }
 
     @Override

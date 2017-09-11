@@ -2,10 +2,10 @@ package com.gft.employeeappraisal.converter.employeerelationship;
 
 import com.gft.employeeappraisal.model.EmployeeRelationship;
 import com.gft.employeeappraisal.service.EmployeeService;
-import com.gft.employeeappraisal.service.RelationshipService;
+import com.gft.employeeappraisal.service.RelationshipTypeService;
 import com.gft.swagger.employees.model.EmployeeDTO;
 import com.gft.swagger.employees.model.EmployeeRelationshipDTO;
-import com.gft.swagger.employees.model.RelationshipDTO;
+import com.gft.swagger.employees.model.RelationshipTypeDTO;
 import ma.glasnost.orika.CustomMapper;
 import ma.glasnost.orika.MappingContext;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,14 +22,14 @@ import java.util.Objects;
 public class EmployeeRelationshipDTOMapper extends CustomMapper<EmployeeRelationship, EmployeeRelationshipDTO> {
 
     private final EmployeeService employeeService;
-    private final RelationshipService relationshipService;
+    private final RelationshipTypeService relationshipTypeService;
 
     @Autowired
     public EmployeeRelationshipDTOMapper(
             EmployeeService employeeService,
-            RelationshipService relationshipService) {
+            RelationshipTypeService relationshipTypeService) {
         this.employeeService = employeeService;
-        this.relationshipService = relationshipService;
+        this.relationshipTypeService = relationshipTypeService;
     }
 
     @Override
@@ -42,8 +42,8 @@ public class EmployeeRelationshipDTOMapper extends CustomMapper<EmployeeRelation
         }
         employeeRelationshipDTO.setReferred(mapperFacade.map(employeeRelationship.getTargetEmployee(),
                 EmployeeDTO.class));
-        employeeRelationshipDTO.setRelationship(mapperFacade.map(employeeRelationship.getRelationship(),
-                RelationshipDTO.class));
+        employeeRelationshipDTO.setRelationshipType(mapperFacade.map(employeeRelationship.getRelationshipType(),
+                RelationshipTypeDTO.class));
     }
 
     @Override
@@ -58,7 +58,7 @@ public class EmployeeRelationshipDTOMapper extends CustomMapper<EmployeeRelation
         if (Objects.nonNull(employeeRelationshipDTO.getEndDate())) {
             employeeRelationship.setEndDate(employeeRelationshipDTO.getEndDate());
         }
-        employeeRelationship.setRelationship(this.relationshipService.getById(employeeRelationshipDTO.getRelationship().getId()));
+        employeeRelationship.setRelationshipType(this.relationshipTypeService.getById(employeeRelationshipDTO.getRelationshipType().getId()));
         // Remember that the DTO doesn't have a Source Employee equivalent field.
         // This responsability is left for whoever is using the mapper.
         employeeRelationship.setTargetEmployee(this.employeeService.getById(employeeRelationshipDTO.getReferred().getId()));

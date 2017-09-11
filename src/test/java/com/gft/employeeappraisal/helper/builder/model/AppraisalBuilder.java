@@ -24,9 +24,6 @@ public class AppraisalBuilder implements ObjectBuilder<Appraisal> {
     private boolean startDateSet;
     private boolean endDateSet;
 
-    public AppraisalBuilder() {
-    }
-
     public AppraisalBuilder id(int id) {
         this.id = id;
         this.idSet = true;

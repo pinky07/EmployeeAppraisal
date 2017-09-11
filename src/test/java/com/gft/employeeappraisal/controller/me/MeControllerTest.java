@@ -43,12 +43,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @RunWith(SpringRunner.class)
 public class MeControllerTest extends BaseControllerTest {
 
-    @Autowired
-    private EntityDTOComparator entityDTOComparator;
-
-    @Autowired
-    private EmployeeDTOConverter employeeDTOConverter;
-
     private static final String URL_TEMPLATE = "/me";
 
     @Test

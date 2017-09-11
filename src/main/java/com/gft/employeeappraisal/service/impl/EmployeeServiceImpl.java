@@ -28,7 +28,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     private final ApplicationRoleService applicationRoleService;
     private final EmployeeRelationshipService employeeRelationshipService;
     private final JobLevelService jobLevelService;
-    private final RelationshipService relationshipService;
+    private final RelationshipTypeService relationshipTypeService;
     private final EmployeeRepository employeeRepository;
 
     @Autowired
@@ -36,12 +36,12 @@ public class EmployeeServiceImpl implements EmployeeService {
             ApplicationRoleService applicationRoleService,
             EmployeeRelationshipService employeeRelationshipService,
             JobLevelService jobLevelService,
-            RelationshipService relationshipService,
+            RelationshipTypeService relationshipTypeService,
             EmployeeRepository employeeRepository) {
         this.applicationRoleService = applicationRoleService;
         this.employeeRelationshipService = employeeRelationshipService;
         this.jobLevelService = jobLevelService;
-        this.relationshipService = relationshipService;
+        this.relationshipTypeService = relationshipTypeService;
         this.employeeRepository = employeeRepository;
     }
 
@@ -80,7 +80,7 @@ public class EmployeeServiceImpl implements EmployeeService {
      */
     public Employee getById(Integer id) throws NotFoundException {
         return this.findById(id).orElseThrow(() -> new NotFoundException(String.format(
-                "Employee with Id %d couldn't be found",
+                "Employee[%d] couldn't be found",
                 id)));
     }
 
@@ -103,7 +103,7 @@ public class EmployeeServiceImpl implements EmployeeService {
         return employeeRelationshipService
                 .findCurrentByTargetEmployeeAndRelationship(
                         mentee,
-                        relationshipService.findByName(RelationshipName.MENTOR))
+                        relationshipTypeService.findByName(RelationshipName.MENTOR))
                 .map(EmployeeRelationship::getSourceEmployee)
                 .findFirst();
     }
@@ -114,7 +114,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Override
     public Employee getCurrentMentorById(int menteeId) throws NotFoundException {
         return this.findCurrentMentorById(menteeId).orElseThrow(() -> new NotFoundException(String.format(
-                "Mentor for Employee with Id: %d was not found",
+                "Mentor for Employee[%d] was not found",
                 menteeId)));
     }
 
@@ -129,7 +129,7 @@ public class EmployeeServiceImpl implements EmployeeService {
         return employeeRelationshipService
                 .findCurrentBySourceEmployeeAndRelationship(
                         mentor,
-                        relationshipService.findByName(RelationshipName.MENTOR))
+                        relationshipTypeService.findByName(RelationshipName.MENTOR))
                 .map(EmployeeRelationship::getTargetEmployee);
     }
 
@@ -144,7 +144,7 @@ public class EmployeeServiceImpl implements EmployeeService {
         return employeeRelationshipService
                 .findCurrentBySourceEmployeeAndRelationship(
                         employee,
-                        relationshipService.findByName(RelationshipName.PEER))
+                        relationshipTypeService.findByName(RelationshipName.PEER))
                 .map(EmployeeRelationship::getTargetEmployee);
     }
 

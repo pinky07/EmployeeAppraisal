@@ -4,6 +4,7 @@ import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.persistence.*;
 import javax.validation.constraints.Size;
+import java.util.Set;
 
 /**
  * Entity persistent class that describes a JobFamily table.
@@ -28,6 +29,9 @@ public class JobFamily {
     @Column(name = "description", nullable = false, length = 500)
     private String description;
 
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "jobFamily")
+    private Set<JobLevel> jobLevelSet;
+
     public int getId() {
         return id;
     }
@@ -50,6 +54,14 @@ public class JobFamily {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public Set<JobLevel> getJobLevelSet() {
+        return jobLevelSet;
+    }
+
+    public void setJobLevelSet(Set<JobLevel> jobLevelSet) {
+        this.jobLevelSet = jobLevelSet;
     }
 
     @Override

@@ -1,8 +1,8 @@
 package com.gft.employeeappraisal.repository;
 
 import com.gft.employeeappraisal.model.Appraisal;
+import com.gft.employeeappraisal.model.Employee;
 import com.gft.employeeappraisal.model.EmployeeEvaluationForm;
-import com.gft.employeeappraisal.model.EvaluationStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -10,7 +10,6 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Set;
 
 /**
  * Repository for the EmployeeEvaluationform database table. See class hierarchy for methods already existing.
@@ -22,31 +21,54 @@ import java.util.Set;
 @Transactional
 public interface EmployeeEvaluationFormRepository extends JpaRepository<EmployeeEvaluationForm, Integer> {
 
+    // TODO Replace this with a queryless statement!
     @Query("SELECT employeeEvaluationForm " +
-            "FROM EmployeeEvaluationForm employeeEvaluationForm " +
-            "JOIN FETCH employeeEvaluationForm.appraisalXEvaluationForm appraisalXEvaluationForm " +
-            "WHERE appraisalXEvaluationForm.appraisal = :appraisal " +
-            "AND employeeEvaluationForm.employeeId = :employeeId ")
-    List<EmployeeEvaluationForm> findByAppraisalAndSourceEmployee(
-            @Param("appraisal") Appraisal appraisal,
-            @Param("employeeId") int sourceEmployeeId);
+            "FROM EmployeeEvaluationForm AS employeeEvaluationForm " +
+            "WHERE employeeEvaluationForm.employee = :employee ")
+    List<EmployeeEvaluationForm> findByEmployee(Employee employee);
+
+    // TODO Replace this with a queryless statement!
+    @Query("SELECT employeeEvaluationForm " +
+            "FROM EmployeeEvaluationForm AS employeeEvaluationForm " +
+            "WHERE employeeEvaluationForm.employee = :employee " +
+            "AND employeeEvaluationForm.filledByEmployee = :employee")
+    List<EmployeeEvaluationForm> findSelfByEmployee(
+            @Param("employee") Employee employee);
+
+    @Query("SELECT employeeEvaluationForm " +
+            "FROM EmployeeEvaluationForm AS employeeEvaluationForm " +
+            "JOIN FETCH employeeEvaluationForm.appraisalXEvaluationFormTemplate appraisalXEvaluationFormTemplate " +
+            "WHERE employeeEvaluationForm.employee = :employee " +
+            "AND employeeEvaluationForm.filledByEmployee = :employee " +
+            "AND appraisalXEvaluationFormTemplate.appraisal = :appraisal")
+    EmployeeEvaluationForm findSelfByEmployeeAndAppraisal(
+            @Param("employee") Employee employee,
+            @Param("appraisal") Appraisal appraisal);
 
     @Query("SELECT employeeEvaluationForm " +
             "FROM EmployeeEvaluationForm employeeEvaluationForm " +
-            "JOIN FETCH employeeEvaluationForm.appraisalXEvaluationForm appraisalXEvaluationForm " +
-            "WHERE appraisalXEvaluationForm.appraisal = :appraisal " +
-            "AND employeeEvaluationForm.filledByEmployeeId = :employeeId ")
-    List<EmployeeEvaluationForm> findByAppraisalAndTargetEmployee(
-            @Param("appraisal") Appraisal appraisal,
-            @Param("employeeId") int targetEmployeeId);
+            "JOIN FETCH employeeEvaluationForm.appraisalXEvaluationFormTemplate appraisalXEvaluationFormTemplate " +
+            "WHERE employeeEvaluationForm.employee = :employee " +
+            "AND appraisalXEvaluationFormTemplate.appraisal = :appraisal ")
+    List<EmployeeEvaluationForm> findByEmployeeAndAppraisal(
+            @Param("employee") Employee employee,
+            @Param("appraisal") Appraisal appraisal);
 
     @Query("SELECT employeeEvaluationForm " +
             "FROM EmployeeEvaluationForm employeeEvaluationForm " +
-            "JOIN FETCH employeeEvaluationForm.appraisalXEvaluationForm appraisalXEvaluationForm " +
-            "WHERE employeeEvaluationForm.employeeId = :employeeId " +
-            "AND employeeEvaluationForm.filledByEmployeeId = :employeeId " +
-            "AND employeeEvaluationForm.evaluationStatus = :evaluationStatus")
-    List<EmployeeEvaluationForm> findByAppraisalAndEmployeeAsSourceAndTarget(
-            @Param("employeeId") int employeeSourceAndTarget,
-            @Param("evaluationStatus") Set<EvaluationStatus> evaluationStatus);
+            "JOIN FETCH employeeEvaluationForm.appraisalXEvaluationFormTemplate appraisalXEvaluationFormTemplate " +
+            "WHERE employeeEvaluationForm.filledByEmployee = :filledByEmployee " +
+            "AND appraisalXEvaluationFormTemplate.appraisal = :appraisal ")
+    List<EmployeeEvaluationForm> findByFilledByEmployeeAndAppraisal(
+            @Param("filledByEmployee") Employee filledByEmployee,
+            @Param("appraisal") Appraisal appraisal);
+
+    @Query("SELECT employeeEvaluationForm " +
+            "FROM EmployeeEvaluationForm employeeEvaluationForm " +
+            "JOIN FETCH employeeEvaluationForm.appraisalXEvaluationFormTemplate appraisalXEvaluationFormTemplate " +
+            "WHERE employeeEvaluationForm.filledByEmployee = :mentor " +
+            "AND appraisalXEvaluationFormTemplate.appraisal = :appraisal ")
+    List<EmployeeEvaluationForm> findByMentorAndAppraisal(
+            @Param("mentor") Employee mentor,
+            @Param("appraisal") Appraisal appraisal);
 }

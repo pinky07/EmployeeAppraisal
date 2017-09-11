@@ -1,15 +1,15 @@
 package com.gft.employeeappraisal.helper.builder.model;
 
 import com.gft.employeeappraisal.helper.builder.ObjectBuilder;
-import com.gft.employeeappraisal.model.EvaluationForm;
+import com.gft.employeeappraisal.model.EvaluationFormTemplate;
 
 
 /**
- * Builder object for the {@link EvaluationForm} object.
+ * Builder object for the {@link EvaluationFormTemplate} object.
  *
  * @author Ruben Jimenez
  */
-public class EvaluationFormBuilder implements ObjectBuilder<EvaluationForm> {
+public class EvaluationFormBuilder implements ObjectBuilder<EvaluationFormTemplate> {
 
     private int id;
     private String name;
@@ -38,8 +38,8 @@ public class EvaluationFormBuilder implements ObjectBuilder<EvaluationForm> {
     }
 
     @Override
-    public EvaluationForm build() {
-        EvaluationForm obj = new EvaluationForm();
+    public EvaluationFormTemplate build() {
+        EvaluationFormTemplate obj = new EvaluationFormTemplate();
         obj.setId(this.id);
         obj.setName(this.name);
         obj.setDescription(this.description);
@@ -47,8 +47,8 @@ public class EvaluationFormBuilder implements ObjectBuilder<EvaluationForm> {
     }
 
     @Override
-    public EvaluationForm buildWithDefaults() {
-        EvaluationForm obj = new EvaluationForm();
+    public EvaluationFormTemplate buildWithDefaults() {
+        EvaluationFormTemplate obj = new EvaluationFormTemplate();
         if (this.idSet) obj.setId(this.id);
         obj.setName(this.nameSet ? this.name : "Name");
         obj.setDescription(this.descriptionSet ? this.description : "Description");

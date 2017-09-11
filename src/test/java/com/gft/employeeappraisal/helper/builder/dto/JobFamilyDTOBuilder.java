@@ -19,9 +19,6 @@ public class JobFamilyDTOBuilder implements ObjectBuilder<JobFamilyDTO> {
     private boolean nameSet;
     private boolean descriptionSet;
 
-    public JobFamilyDTOBuilder() {
-    }
-
     public JobFamilyDTOBuilder id(int id) {
         this.id = id;
         this.idSet = true;

@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
- * Converter init class for bidirectional transformation between {@link ScoreValue} and {@link ScoreValueDTO}
+ * Converter logic for bidirectional transformation between {@link ScoreValue} and {@link ScoreValueDTO}.
  *
  * @author Rubén Jiménez
  */

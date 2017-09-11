@@ -3,7 +3,7 @@ package com.gft.employeeappraisal.helper.builder.dto;
 import com.gft.employeeappraisal.helper.builder.ObjectBuilder;
 import com.gft.swagger.employees.model.EmployeeDTO;
 import com.gft.swagger.employees.model.EmployeeRelationshipDTO;
-import com.gft.swagger.employees.model.RelationshipDTO;
+import com.gft.swagger.employees.model.RelationshipTypeDTO;
 
 import java.time.OffsetDateTime;
 
@@ -16,19 +16,16 @@ import java.time.OffsetDateTime;
 public class EmployeeRelationshipDTOBuilder implements ObjectBuilder<EmployeeRelationshipDTO> {
 
     private int id;
-    private EmployeeDTO reference;
+    private EmployeeDTO referred;
     private OffsetDateTime startDate;
     private OffsetDateTime endDate;
-    private RelationshipDTO relationshipDTO;
+    private RelationshipTypeDTO relationshipTypeDTO;
 
     private boolean idSet;
-    private boolean referenceSet;
+    private boolean referredSet;
     private boolean startDateSet;
     private boolean endDateSet;
-    private boolean relationshipSet;
-
-    public EmployeeRelationshipDTOBuilder() {
-    }
+    private boolean relationshipTypeSet;
 
     public EmployeeRelationshipDTOBuilder id(int id) {
         this.id = id;
@@ -36,9 +33,9 @@ public class EmployeeRelationshipDTOBuilder implements ObjectBuilder<EmployeeRel
         return this;
     }
 
-    public EmployeeRelationshipDTOBuilder reference(EmployeeDTO reference) {
-        this.reference = reference;
-        this.referenceSet = true;
+    public EmployeeRelationshipDTOBuilder referred(EmployeeDTO reference) {
+        this.referred = reference;
+        this.referredSet = true;
         return this;
     }
 
@@ -54,9 +51,9 @@ public class EmployeeRelationshipDTOBuilder implements ObjectBuilder<EmployeeRel
         return this;
     }
 
-    public EmployeeRelationshipDTOBuilder relationship(RelationshipDTO relationshipDTO) {
-        this.relationshipDTO = relationshipDTO;
-        this.relationshipSet = true;
+    public EmployeeRelationshipDTOBuilder relationship(RelationshipTypeDTO relationshipDTO) {
+        this.relationshipTypeDTO = relationshipDTO;
+        this.relationshipTypeSet = true;
         return this;
     }
 
@@ -66,8 +63,8 @@ public class EmployeeRelationshipDTOBuilder implements ObjectBuilder<EmployeeRel
         dto.setId(this.id);
         dto.setStartDate(this.startDate);
         dto.setEndDate(this.endDate);
-        dto.setReferred(this.reference);
-        dto.setRelationship(this.relationshipDTO);
+        dto.setReferred(this.referred);
+        dto.setRelationshipType(this.relationshipTypeDTO);
         return dto;
     }
 
@@ -77,8 +74,8 @@ public class EmployeeRelationshipDTOBuilder implements ObjectBuilder<EmployeeRel
         if (this.idSet) dto.setId(this.id);
         dto.setStartDate(this.startDateSet ? this.startDate : OffsetDateTime.now().minusDays(1));
         dto.setEndDate(this.endDateSet ? this.endDate : null);
-        dto.setReferred(this.referenceSet ? this.reference : new EmployeeDTOBuilder().buildWithDefaults());
-        dto.setRelationship(this.relationshipSet ? this.relationshipDTO : new RelationshipDTOBuilder().buildWithDefaults());
+        dto.setReferred(this.referredSet ? this.referred : new EmployeeDTOBuilder().buildWithDefaults());
+        dto.setRelationshipType(this.relationshipTypeSet ? this.relationshipTypeDTO : new RelationshipTypeDTOBuilder().buildWithDefaults());
         return dto;
     }
 }

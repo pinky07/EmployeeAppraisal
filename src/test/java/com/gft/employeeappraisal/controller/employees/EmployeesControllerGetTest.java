@@ -2,22 +2,17 @@ package com.gft.employeeappraisal.controller.employees;
 
 import com.gft.employeeappraisal.controller.BaseControllerTest;
 import com.gft.employeeappraisal.controller.EmployeesController;
-import com.gft.employeeappraisal.converter.employee.EmployeeDTOConverter;
-import com.gft.employeeappraisal.converter.employeerelationship.EmployeeRelationshipDTOConverter;
-import com.gft.employeeappraisal.converter.relationship.RelationshipDTOConverter;
 import com.gft.employeeappraisal.exception.NotFoundException;
 import com.gft.employeeappraisal.helper.builder.model.ApplicationRoleBuilder;
 import com.gft.employeeappraisal.helper.builder.model.EmployeeBuilder;
 import com.gft.employeeappraisal.helper.builder.model.JobFamilyBuilder;
 import com.gft.employeeappraisal.helper.builder.model.JobLevelBuilder;
-import com.gft.employeeappraisal.helper.comparator.EntityDTOComparator;
 import com.gft.employeeappraisal.model.*;
 import com.gft.swagger.employees.model.EmployeeDTO;
 import com.gft.swagger.employees.model.OperationResultDTO;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -44,18 +39,6 @@ public class EmployeesControllerGetTest extends BaseControllerTest {
 
     private static final String EMPLOYEES_URL = "/employees";
     private static final String USER_EMAIL = "user@gft.com";
-
-    @Autowired
-    private EntityDTOComparator entityDTOComparator;
-
-    @Autowired
-    private EmployeeDTOConverter employeeDTOConverter;
-
-    @Autowired
-    private EmployeeRelationshipDTOConverter employeeRelationshipDTOConverter;
-
-    @Autowired
-    private RelationshipDTOConverter relationshipDTOConverter;
 
     private Employee userMock;
 
@@ -195,7 +178,7 @@ public class EmployeesControllerGetTest extends BaseControllerTest {
     @WithMockUser(USER_EMAIL)
     public void employeesIdGet_NotFound() throws Exception {
         // Set-up
-        when(employeeService.getById(userMock.getId())).thenThrow(NotFoundException.class);
+        when(employeeService.getById(userMock.getId())).thenThrow(new NotFoundException("Employee Not Found"));
 
         // Execution
         MvcResult result = mockMvc.perform(

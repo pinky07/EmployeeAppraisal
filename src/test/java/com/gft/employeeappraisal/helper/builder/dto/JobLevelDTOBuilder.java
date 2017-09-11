@@ -24,9 +24,6 @@ public class JobLevelDTOBuilder implements ObjectBuilder<JobLevelDTO> {
     private boolean descriptionSet;
     private boolean expertiseSet;
 
-    public JobLevelDTOBuilder() {
-    }
-
     public JobLevelDTOBuilder id(int id) {
         this.id = id;
         this.idSet = true;

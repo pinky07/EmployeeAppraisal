@@ -20,21 +20,23 @@ public class EmployeeEvaluationForm {
 
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "appraisalXEvaluationFormId", nullable = false)
-    private AppraisalXEvaluationForm appraisalXEvaluationForm;
-
-    // These fields will not be joined to the Employee table?
-    @NotNull
-    @Column(name = "employeeId", nullable = false)
-    private int employeeId;
+    @JoinColumn(name = "appraisalXEvaluationFormTemplateId", nullable = false)
+    private AppraisalXEvaluationFormTemplate appraisalXEvaluationFormTemplate;
 
     @NotNull
-    @Column(name = "filledByEmployeeId", nullable = false)
-    private int filledByEmployeeId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "employeeId", nullable = false)
+    private Employee employee;
 
     @NotNull
-    @Column(name = "mentorId", nullable = false)
-    private int mentorId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "filledByEmployeeId", nullable = false)
+    private Employee filledByEmployee;
+
+    @NotNull
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "mentorId", nullable = false)
+    private Employee mentor;
 
     @NotNull
     @Column(name = "createDate", columnDefinition = "TIMESTAMP", nullable = false)
@@ -44,12 +46,8 @@ public class EmployeeEvaluationForm {
     @Column(name = "submitDate", columnDefinition = "TIMESTAMP", nullable = false)
     private OffsetDateTime submitDate;
 
-    @NotNull
-    @Enumerated(EnumType.STRING)
-    private EvaluationStatus evaluationStatus;
-
     @OneToMany(mappedBy = "employeeEvaluationForm", fetch = FetchType.LAZY)
-    private Set<EmployeeEvaluationFormAnswer> employeeEvaluationFormAnswers;
+    private Set<EmployeeEvaluationFormAnswer> employeeEvaluationFormAnswerSet;
 
     public int getId() {
         return id;
@@ -59,36 +57,36 @@ public class EmployeeEvaluationForm {
         this.id = id;
     }
 
-    public AppraisalXEvaluationForm getAppraisalXEvaluationForm() {
-        return appraisalXEvaluationForm;
+    public AppraisalXEvaluationFormTemplate getAppraisalXEvaluationFormTemplate() {
+        return appraisalXEvaluationFormTemplate;
     }
 
-    public void setAppraisalXEvaluationForm(AppraisalXEvaluationForm appraisalXEvaluationForm) {
-        this.appraisalXEvaluationForm = appraisalXEvaluationForm;
+    public void setAppraisalXEvaluationFormTemplate(AppraisalXEvaluationFormTemplate appraisalXEvaluationFormTemplate) {
+        this.appraisalXEvaluationFormTemplate = appraisalXEvaluationFormTemplate;
     }
 
-    public int getEmployeeId() {
-        return employeeId;
+    public Employee getEmployee() {
+        return employee;
     }
 
-    public void setEmployeeId(int employeeId) {
-        this.employeeId = employeeId;
+    public void setEmployee(Employee employee) {
+        this.employee = employee;
     }
 
-    public int getFilledByEmployeeId() {
-        return filledByEmployeeId;
+    public Employee getFilledByEmployee() {
+        return filledByEmployee;
     }
 
-    public void setFilledByEmployeeId(int filledByEmployeeId) {
-        this.filledByEmployeeId = filledByEmployeeId;
+    public void setFilledByEmployee(Employee filledByEmployee) {
+        this.filledByEmployee = filledByEmployee;
     }
 
-    public int getMentorId() {
-        return mentorId;
+    public Employee getMentor() {
+        return mentor;
     }
 
-    public void setMentorId(int mentorId) {
-        this.mentorId = mentorId;
+    public void setMentor(Employee mentor) {
+        this.mentor = mentor;
     }
 
     public OffsetDateTime getCreateDate() {
@@ -107,21 +105,12 @@ public class EmployeeEvaluationForm {
         this.submitDate = submitDate;
     }
 
-    public EvaluationStatus getEvaluationStatus() {
-        return evaluationStatus;
+    public Set<EmployeeEvaluationFormAnswer> getEmployeeEvaluationFormAnswerSet() {
+        return employeeEvaluationFormAnswerSet;
     }
 
-    public void setEvaluationStatus(EvaluationStatus evaluationStatus) {
-        this.evaluationStatus = evaluationStatus;
-    }
-
-    public Set<EmployeeEvaluationFormAnswer> getEmployeeEvaluationFormAnswers() {
-        return employeeEvaluationFormAnswers;
-    }
-
-    public void setEmployeeEvaluationFormAnswers(
-            Set<EmployeeEvaluationFormAnswer> employeeEvaluationFormAnswers) {
-        this.employeeEvaluationFormAnswers = employeeEvaluationFormAnswers;
+    public void setEmployeeEvaluationFormAnswerSet(Set<EmployeeEvaluationFormAnswer> employeeEvaluationFormAnswerSet) {
+        this.employeeEvaluationFormAnswerSet = employeeEvaluationFormAnswerSet;
     }
 
     @Override
@@ -132,23 +121,21 @@ public class EmployeeEvaluationForm {
         EmployeeEvaluationForm that = (EmployeeEvaluationForm) o;
 
         return id == that.id &&
-                employeeId == that.employeeId &&
-                filledByEmployeeId == that.filledByEmployeeId &&
-                mentorId == that.mentorId &&
+                employee == that.employee &&
+                filledByEmployee == that.filledByEmployee &&
+                mentor == that.mentor &&
                 createDate.equals(that.createDate) &&
-                submitDate.equals(that.submitDate) &&
-                evaluationStatus == that.evaluationStatus;
+                submitDate.equals(that.submitDate);
     }
 
     @Override
     public int hashCode() {
         int result = id;
-        result = 31 * result + employeeId;
-        result = 31 * result + filledByEmployeeId;
-        result = 31 * result + mentorId;
+        result = 31 * result + employee.hashCode();
+        result = 31 * result + filledByEmployee.hashCode();
+        result = 31 * result + mentor.hashCode();
         result = 31 * result + createDate.hashCode();
         result = 31 * result + submitDate.hashCode();
-        result = 31 * result + evaluationStatus.hashCode();
         return result;
     }
 
@@ -156,12 +143,11 @@ public class EmployeeEvaluationForm {
     public String toString() {
         return "EmployeeEvaluationForm{" +
                 "id=" + id +
-                ", employeeId=" + employeeId +
-                ", filledByEmployeeId=" + filledByEmployeeId +
-                ", mentorId=" + mentorId +
+                ", employee=" + employee +
+                ", filledByEmployee=" + filledByEmployee +
+                ", mentor=" + mentor +
                 ", createDate=" + createDate +
                 ", submitDate=" + submitDate +
-                ", evaluationStatus=" + evaluationStatus +
                 '}';
     }
 }

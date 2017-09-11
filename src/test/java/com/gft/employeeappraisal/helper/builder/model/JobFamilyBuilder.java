@@ -19,9 +19,6 @@ public class JobFamilyBuilder implements ObjectBuilder<JobFamily> {
     private boolean nameSet;
     private boolean descriptionSet;
 
-    public JobFamilyBuilder() {
-    }
-
     public JobFamilyBuilder id(int id) {
         this.id = id;
         this.idSet = true;

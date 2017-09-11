@@ -25,10 +25,10 @@ public class ScoreType {
     private String definition;
 
     @OneToMany(mappedBy = "scoreType", fetch = FetchType.LAZY)
-    private Set<ScoreValue> scoreValues;
+    private Set<ScoreValue> scoreValueSet;
 
     @OneToMany(mappedBy = "scoreType", fetch = FetchType.LAZY)
-    private Set<EvaluationFormQuestion> evaluationFormQuestions;
+    private Set<Section> sectionSet;
 
     public int getId() {
         return id;
@@ -46,20 +46,20 @@ public class ScoreType {
         this.definition = definition;
     }
 
-    public Set<ScoreValue> getScoreValues() {
-        return scoreValues;
+    public Set<ScoreValue> getScoreValueSet() {
+        return scoreValueSet;
     }
 
-    public void setScoreValues(Set<ScoreValue> scoreValues) {
-        this.scoreValues = scoreValues;
+    public void setScoreValueSet(Set<ScoreValue> scoreValueSet) {
+        this.scoreValueSet = scoreValueSet;
     }
 
-    public Set<EvaluationFormQuestion> getEvaluationFormQuestions() {
-        return evaluationFormQuestions;
+    public Set<Section> getSectionSet() {
+        return sectionSet;
     }
 
-    public void setEvaluationFormQuestions(Set<EvaluationFormQuestion> evaluationFormQuestions) {
-        this.evaluationFormQuestions = evaluationFormQuestions;
+    public void setSectionSet(Set<Section> sectionSet) {
+        this.sectionSet = sectionSet;
     }
 
     @Override

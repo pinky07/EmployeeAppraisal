@@ -2,7 +2,7 @@ package com.gft.employeeappraisal.service;
 
 import com.gft.employeeappraisal.model.Employee;
 import com.gft.employeeappraisal.model.EmployeeRelationship;
-import com.gft.employeeappraisal.model.Relationship;
+import com.gft.employeeappraisal.model.RelationshipType;
 import com.gft.employeeappraisal.model.RelationshipName;
 
 import java.util.List;
@@ -39,7 +39,7 @@ public interface EmployeeRelationshipService {
      * @param mentor Possible mentor
      * @param mentee Possible mentee
      * @return Whether the relationship exists
-     * @see EmployeeRelationshipService#isCurrentRelationship(Employee, Employee, Relationship)
+     * @see EmployeeRelationshipService#isCurrentRelationship(Employee, Employee, RelationshipType)
      */
     boolean isCurrentMentor(Employee mentor, Employee mentee);
 
@@ -59,7 +59,7 @@ public interface EmployeeRelationshipService {
      * @param employeeB Right side of the possible relationship
      * @return Whether there is a current relationship (endDate == null) between the employees.
      */
-    boolean isCurrentRelationship(Employee employeeA, Employee employeeB, Relationship relationship);
+    boolean isCurrentRelationship(Employee employeeA, Employee employeeB, RelationshipType relationshipType);
 
     /**
      * Whether the Employee has a MENTOR.
@@ -89,19 +89,19 @@ public interface EmployeeRelationshipService {
      * Checks if the Employee has any relationships of the indicated type as the SOURCE.
      *
      * @param source       Employee to check
-     * @param relationship Type of relationship to check
+     * @param relationshipType Type of relationship to check
      * @return True if the Employee is a SOURCE of the type of Relationship indicated
      */
-    boolean hasRelationshipAsSourceEmployee(Employee source, Relationship relationship);
+    boolean hasRelationshipAsSourceEmployee(Employee source, RelationshipType relationshipType);
 
     /**
      * Checks if the Employee has any relationships of the indicated type as the TARGET.
      *
      * @param target       Employee to check
-     * @param relationship Type of relationship to check
+     * @param relationshipType Type of relationship to check
      * @return True if the Employee is a TARGET of the type of Relationship indicated
      */
-    boolean hasRelationshipAsTargetEmployee(Employee target, Relationship relationship);
+    boolean hasRelationshipAsTargetEmployee(Employee target, RelationshipType relationshipType);
 
     /**
      * Starts a new MENTOR relationship from Mentor to Mentee.
@@ -136,9 +136,9 @@ public interface EmployeeRelationshipService {
      *
      * @param sourceEmployee Left side of the relationship
      * @param targetEmployee Right side of the relationship
-     * @param relationship   Relationship that should be read from left to right
+     * @param relationshipType   Relationship that should be read from left to right
      */
-    Optional<EmployeeRelationship> startEmployeeRelationship(Employee sourceEmployee, Employee targetEmployee, Relationship relationship);
+    Optional<EmployeeRelationship> startEmployeeRelationship(Employee sourceEmployee, Employee targetEmployee, RelationshipType relationshipType);
 
     /**
      * Relationships shouldn't be deleted, rather it should be marked with an end date as this method does.
@@ -152,10 +152,10 @@ public interface EmployeeRelationshipService {
      * Finds a list of relationships, all of which should be the current valid relationships that source Employee has.
      *
      * @param sourceEmployee Source Employee in the Relationship
-     * @param relationship   Type of Relationship to look for
+     * @param relationshipType   Type of Relationship to look for
      * @return A stream of EmployeeRelationships, with no expiration date (current ones)
      */
-    Stream<EmployeeRelationship> findCurrentBySourceEmployeeAndRelationship(Employee sourceEmployee, Relationship relationship);
+    Stream<EmployeeRelationship> findCurrentBySourceEmployeeAndRelationship(Employee sourceEmployee, RelationshipType relationshipType);
 
     /**
      * Finds a list of relationships, all of which should be the valid relationships that source Employee has.
@@ -179,10 +179,10 @@ public interface EmployeeRelationshipService {
      * Finds a list of relationships, all of which should be the current valid relationships that target Employee has.
      *
      * @param targetEmployee Target Employee in the Relationship
-     * @param relationship   Type of Relationship to look for
+     * @param relationshipType   Type of Relationship to look for
      * @return A stream of EmployeeRelationships, with no expiration date (current ones)
      */
-    Stream<EmployeeRelationship> findCurrentByTargetEmployeeAndRelationship(Employee targetEmployee, Relationship relationship);
+    Stream<EmployeeRelationship> findCurrentByTargetEmployeeAndRelationship(Employee targetEmployee, RelationshipType relationshipType);
 
     /**
      * Finds a list of relationships, all of which should be the current valid relationships that
@@ -190,10 +190,10 @@ public interface EmployeeRelationshipService {
      *
      * @param sourceEmployee Source Employee in the Relationship
      * @param targetEmployee Target Employee in the Relationship
-     * @param relationship   Type of Relationship to look for
+     * @param relationshipType   Type of Relationship to look for
      * @return A stream of EmployeeRelationships, with no expiration date (current ones)
      */
-    Stream<EmployeeRelationship> findCurrentBySourceEmployeeAndTargetEmployeeAndRelationship(Employee sourceEmployee, Employee targetEmployee, Relationship relationship);
+    Stream<EmployeeRelationship> findCurrentBySourceEmployeeAndTargetEmployeeAndRelationship(Employee sourceEmployee, Employee targetEmployee, RelationshipType relationshipType);
 
     /**
      * Saves the EmployeeRelationship entity to the database. Returns the saved entity.

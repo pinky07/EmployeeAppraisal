@@ -1,18 +1,21 @@
 package com.gft.employeeappraisal.controller;
 
 import com.gft.employeeappraisal.converter.appraisal.AppraisalDTOConverter;
-import com.gft.employeeappraisal.converter.evaluationform.EvaluationFormDTOConverter;
+import com.gft.employeeappraisal.converter.employeeevaluationform.EmployeeEvaluationFormDTOConverter;
+import com.gft.employeeappraisal.converter.evaluationformtemplate.EvaluationFormTemplateDTOConverter;
 import com.gft.employeeappraisal.exception.NotFoundException;
 import com.gft.employeeappraisal.model.Appraisal;
-import com.gft.employeeappraisal.model.AppraisalXEvaluationForm;
+import com.gft.employeeappraisal.model.AppraisalXEvaluationFormTemplate;
 import com.gft.employeeappraisal.model.Employee;
 import com.gft.employeeappraisal.model.EmployeeEvaluationForm;
 import com.gft.employeeappraisal.service.AppraisalService;
 import com.gft.employeeappraisal.service.EmployeeEvaluationFormService;
 import com.gft.employeeappraisal.service.EmployeeService;
+import com.gft.employeeappraisal.service.SecurityService;
 import com.gft.swagger.employees.api.AppraisalApi;
 import com.gft.swagger.employees.model.AppraisalDTO;
-import com.gft.swagger.employees.model.EvaluationFormDTO;
+import com.gft.swagger.employees.model.EmployeeEvaluationFormDTO;
+import com.gft.swagger.employees.model.EvaluationFormTemplateDTO;
 import org.apache.commons.lang.NotImplementedException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,9 +24,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestParam;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -38,44 +39,61 @@ public class AppraisalsController implements AppraisalApi {
 
     private final Logger logger = LoggerFactory.getLogger(AppraisalsController.class);
 
+    // Services
     private final AppraisalService appraisalService;
     private final EmployeeService employeeService;
     private final EmployeeEvaluationFormService employeeEvaluationFormService;
-    private final AppraisalDTOConverter appraisalDTOConverter;
-    private final EvaluationFormDTOConverter evaluationFormDTOConverter;
+    private final SecurityService securityService;
 
+    // DTO converters
+    private final AppraisalDTOConverter appraisalDTOConverter;
+    private final EmployeeEvaluationFormDTOConverter employeeEvaluationFormDTOConverter;
+    private final EvaluationFormTemplateDTOConverter evaluationFormTemplateDTOConverter;
+
+    /**
+     * Creates an instance of this class.
+     *
+     * @param appraisalService                   Appraisal service
+     * @param employeeService                    Employee service
+     * @param employeeEvaluationFormService      EmployeeEvaluationForm service
+     * @param securityService                    Security service
+     * @param appraisalDTOConverter              Appraisal to AppraisalDTO bidirectional converter
+     * @param evaluationFormTemplateDTOConverter EvaluationFormTemplate to EvaluationFormTemplateDTO bidirectional converter
+     */
     @Autowired
     public AppraisalsController(
             AppraisalService appraisalService,
             EmployeeService employeeService,
             EmployeeEvaluationFormService employeeEvaluationFormService,
+            SecurityService securityService,
             AppraisalDTOConverter appraisalDTOConverter,
-            EvaluationFormDTOConverter evaluationFormDTOConverter) {
+            EmployeeEvaluationFormDTOConverter employeeEvaluationFormDTOConverter,
+            EvaluationFormTemplateDTOConverter evaluationFormTemplateDTOConverter) {
         this.appraisalService = appraisalService;
         this.employeeService = employeeService;
         this.employeeEvaluationFormService = employeeEvaluationFormService;
+        this.securityService = securityService;
         this.appraisalDTOConverter = appraisalDTOConverter;
-        this.evaluationFormDTOConverter = evaluationFormDTOConverter;
+        this.employeeEvaluationFormDTOConverter = employeeEvaluationFormDTOConverter;
+        this.evaluationFormTemplateDTOConverter = evaluationFormTemplateDTOConverter;
     }
 
+    /**
+     * Returns an {@link AppraisalDTO} if the {@link Employee} participated in the given {@link Appraisal}.
+     * GET /employees/:id/appraisals/:id
+     *
+     * @param employeeId  {@link Employee} to look up
+     * @param appraisalId {@link Appraisal} to look up
+     * @return An {@link AppraisalDTO} if the {@link Employee} was part of the given {@link Appraisal}
+     */
     @Override
-    public ResponseEntity<AppraisalDTO> employeesIdAppraisalsIdGet(@PathVariable Integer employeeId,
-                                                                   @PathVariable Integer appraisalId) {
-        Employee employee = employeeService.getById(employeeId);
-
-        // Get Appraisal
-        Appraisal appraisal = appraisalService.findById(appraisalId)
-                .orElseThrow(() -> new NotFoundException(String.format(
-                        "Appraisal with id %d was not found", appraisalId)));
-
-        // Check if the employee was indeed part of the appraisal
-        AppraisalDTO result = employeeEvaluationFormService
-                .findByAppraisalAndEmployee(appraisal, employee)
-                .map(EmployeeEvaluationForm::getAppraisalXEvaluationForm)
-                .map(AppraisalXEvaluationForm::getAppraisal)
-                .findFirst().map(a -> appraisalDTOConverter.convert(a)).orElse(new AppraisalDTO());
-
-        return new ResponseEntity<>(result, HttpStatus.OK);
+    public ResponseEntity<AppraisalDTO> employeesIdAppraisalsIdGet(
+            @PathVariable Integer employeeId,
+            @PathVariable Integer appraisalId) {
+        // Get logged in user
+        Employee user = this.employeeService.getLoggedInUser();
+        logger.debug("{} called endpoint: GET /employees/{}/appraisals/{}", user.getEmail(), employeeId, appraisalId);
+        return employeesIdAppraisalsIdGet(user, employeeId, appraisalId);
     }
 
     /**
@@ -87,79 +105,83 @@ public class AppraisalsController implements AppraisalApi {
      * @return List of desired EvaluationForm
      */
     @Override
-    public ResponseEntity<List<EvaluationFormDTO>> employeesIdAppraisalsIdFormsGet(
+    public ResponseEntity<List<EmployeeEvaluationFormDTO>> employeesIdAppraisalsIdFormsGet(
             @PathVariable("employeeId") Integer employeeId,
             @PathVariable("appraisalId") Integer appraisalId) {
-
         // Get logged in user
         Employee user = this.employeeService.getLoggedInUser();
         logger.debug("{} called endpoint: GET /employees/{}/appraisals/{}/forms", user.getEmail(), employeeId, appraisalId);
-
-        // TODO Implement this method!
-        throw new NotImplementedException();
+        return this.employeesIdAppraisalsIdFormsGet(user, employeeId, appraisalId);
     }
 
+    /**
+     * Returns an {@link EvaluationFormTemplateDTO} for an specific {@link Appraisal} and {@link Employee}.
+     * GET /employees/:id/appraisals/:id/forms/:id
+     *
+     * @param employeeId  {@link Employee} to look up
+     * @param appraisalId {@link Appraisal} to look up
+     * @param formId      {@link EvaluationFormTemplateDTO} to look up
+     * @return {@link EvaluationFormTemplateDTO} if the 3 parameters correspond to each other.
+     */
     @Override
-    public ResponseEntity<EvaluationFormDTO> employeesIdAppraisalsIdFormsIdGet(
+    public ResponseEntity<EvaluationFormTemplateDTO> employeesIdAppraisalsIdFormsIdGet(
             @PathVariable("employeeId") Integer employeeId,
             @PathVariable("appraisalId") Integer appraisalId,
             @PathVariable("formId") Integer formId) {
 
+        // Get logged in user
+        Employee user = this.employeeService.getLoggedInUser();
+        logger.debug("{} called endpoint: GET /employees/{}/appraisals/{}/forms/{}", user.getEmail(), employeeId, appraisalId, formId);
+
         // TODO Implement this method!
         throw new NotImplementedException();
     }
 
+
+    /**
+     * Returns all {@link Appraisal} objects for an specific {@link Employee}
+     * GET /employees/:id/appraisals
+     *
+     * @param employeeId {@link Employee} to look up
+     * @return A List of {@link AppraisalDTO} objects
+     */
     @Override
     public ResponseEntity<List<AppraisalDTO>> employeesIdAppraisalsGet(
-            @PathVariable Integer employeeId,
-            @RequestParam(value = "status", required = false) List<String> statusList) {
-
-        logger.debug("Called endpoint: GET /employees/{}/appraisals", employeeId);
-
-        List<AppraisalDTO> result = new ArrayList<>();
-        Employee employee = employeeService.getById(employeeId);
-
-        appraisalService.findEmployeeAppraisals(employee, null)
-                .forEach(ea -> result.add(appraisalDTOConverter.convert(ea)));
-
-        return new ResponseEntity<>(result, HttpStatus.OK);
+            @PathVariable Integer employeeId) {
+        // Get logged in user
+        Employee user = this.employeeService.getLoggedInUser();
+        logger.debug("{} called endpoint: GET /employees/:id/appraisals", user.getEmail(), employeeId);
+        return this.employeesIdAppraisalsGet(user, user.getId());
     }
 
+    /**
+     * Returns an {@link AppraisalDTO} if the logged in {@link Employee} participated in the given {@link Appraisal}.
+     * GET /me/:id/appraisals/:id
+     *
+     * @param appraisalId {@link Appraisal} to look up
+     * @return An {@link AppraisalDTO} if the logged in {@link Employee} was part of the given {@link Appraisal}
+     */
     @Override
-    public ResponseEntity<AppraisalDTO> meAppraisalsIdGet(@PathVariable Integer appraisalId) {
-
+    public ResponseEntity<AppraisalDTO> meAppraisalsIdGet(
+            @PathVariable Integer appraisalId) {
         // Get logged in user
         Employee user = this.employeeService.getLoggedInUser();
         logger.debug("{} called endpoint: GET /me/appraisals/{}", user.getEmail(), appraisalId);
-
-        // Get Appraisal
-        Appraisal appraisal = appraisalService.findById(appraisalId)
-                .orElseThrow(() -> new NotFoundException(String.format(
-                        "Appraisal with id %d was not found", appraisalId)));
-
-        // Check if the employee was indeed part of the appraisal
-        AppraisalDTO result = employeeEvaluationFormService
-                .findByAppraisalAndEmployee(appraisal, user)
-                .map(EmployeeEvaluationForm::getAppraisalXEvaluationForm)
-                .map(AppraisalXEvaluationForm::getAppraisal)
-                .findFirst().map(a -> appraisalDTOConverter.convert(a)).orElse(new AppraisalDTO());
-
-        return new ResponseEntity<>(result, HttpStatus.OK);
+        return employeesIdAppraisalsIdGet(user, user.getId(), appraisalId);
     }
 
+    /**
+     * Returns all {@link Appraisal} objects of the authenticated user.
+     * GET /me/appraisals
+     *
+     * @return A List of {@link AppraisalDTO} objects
+     */
     @Override
-    public ResponseEntity<List<AppraisalDTO>> meAppraisalsGet(@RequestParam(value = "status", required = false)
-                                                                      List<String> statusList) {
+    public ResponseEntity<List<AppraisalDTO>> meAppraisalsGet() {
         // Get logged in user
         Employee user = this.employeeService.getLoggedInUser();
         logger.debug("{} called endpoint: GET /me/appraisals", user.getEmail());
-
-        List<AppraisalDTO> result = new ArrayList<>();
-        appraisalService
-                .findEmployeeAppraisals(user, null)
-                .forEach(ea -> result.add(appraisalDTOConverter.convert(ea)));
-
-        return new ResponseEntity<>(result, HttpStatus.OK);
+        return this.employeesIdAppraisalsGet(user, user.getId());
     }
 
     /**
@@ -170,36 +192,125 @@ public class AppraisalsController implements AppraisalApi {
      * @return List of desired EvaluationForm
      */
     @Override
-    public ResponseEntity<List<EvaluationFormDTO>> meAppraisalsIdFormsGet(
+    public ResponseEntity<List<EmployeeEvaluationFormDTO>> meAppraisalsIdFormsGet(
             @PathVariable("appraisalId") Integer appraisalId) {
-
         // Get logged in user
         Employee user = this.employeeService.getLoggedInUser();
         logger.debug("{} called endpoint: GET /me/appraisals/{}/forms", user.getEmail(), appraisalId);
-
-        // Get Appraisal
-        Appraisal appraisal = appraisalService.findById(appraisalId)
-                .orElseThrow(() -> new NotFoundException(String.format(
-                        "Appraisal with id %d was not found", appraisalId)));
-
-        // Get Evaluation Forms
-        List<EvaluationFormDTO> result = this.employeeEvaluationFormService.findByAppraisalAndEmployee(
-                appraisal,
-                user)
-                .map(EmployeeEvaluationForm::getAppraisalXEvaluationForm)
-                .map(AppraisalXEvaluationForm::getEvaluationForm)
-                .map(evaluationForm -> evaluationFormDTOConverter.convert(evaluationForm))
-                .collect(Collectors.toList());
-
-        return new ResponseEntity<>(result, HttpStatus.OK);
+        return this.employeesIdAppraisalsIdFormsGet(user, user.getId(), appraisalId);
     }
 
     @Override
-    public ResponseEntity<EvaluationFormDTO> meAppraisalsIdFormsIdGet(
+    public ResponseEntity<EvaluationFormTemplateDTO> meAppraisalsIdFormsIdGet(
             @PathVariable("appraisalId") Integer appraisalId,
             @PathVariable("formId") Integer formId) {
 
         // TODO Implement this method!
         throw new NotImplementedException();
     }
+
+    /**
+     * Executes the logic for these endpoints:
+     * - GET /employees/:id/appraisals
+     * - GET /me/appraisals
+     *
+     * @param loggedInUser Logged in {@link Employee}
+     * @param employeeId   {@link Employee} Id
+     * @return A list of {@link AppraisalDTO} objects
+     */
+    private ResponseEntity<List<AppraisalDTO>> employeesIdAppraisalsGet(Employee loggedInUser, int employeeId) {
+
+        // Get Employee
+        Employee employee = employeeService.getById(employeeId);
+
+        // Get Appraisals
+        List<Appraisal> appraisalList = this.employeeEvaluationFormService
+                .findSelfByEmployee(employee)
+                .map(EmployeeEvaluationForm::getAppraisalXEvaluationFormTemplate)
+                .map(AppraisalXEvaluationFormTemplate::getAppraisal)
+                .collect(Collectors.toList());
+
+        // Security check
+        appraisalList.forEach(appraisal -> this.securityService.canReadAppraisal(loggedInUser, employee, appraisal));
+
+        // Get DTOs
+        List<AppraisalDTO> appraisalDTOList = appraisalList
+                .stream()
+                .map(appraisalDTOConverter::convert)
+                .collect(Collectors.toList());
+
+        return new ResponseEntity<>(appraisalDTOList, HttpStatus.OK);
+    }
+
+    /**
+     * Executes the logic for these endpoints:
+     * - GET /employees/:id/appraisals/:id
+     * - GET /me/:id/appraisals/:id
+     *
+     * @param loggedInUser Logged in {@link Employee}
+     * @param employeeId   {@link Employee} Id
+     * @param appraisalId  {@link Appraisal} Id
+     * @return A list of {@link AppraisalDTO} objects
+     */
+    private ResponseEntity<AppraisalDTO> employeesIdAppraisalsIdGet(Employee loggedInUser, int employeeId, int appraisalId) {
+
+        // Get Employee
+        Employee employee = employeeService.getById(employeeId);
+
+        // Get Appraisal
+        Appraisal appraisal = appraisalService.getById(appraisalId);
+
+        // Security check
+        this.securityService.canReadAppraisal(loggedInUser, employee, appraisal);
+
+        // Check if the employee was indeed part of the appraisal
+        if (!this.employeeEvaluationFormService
+                .findSelfByEmployeeAndAppraisal(employee, appraisal)
+                .isPresent()) {
+            throw new NotFoundException(String.format(
+                    "Employee[%d] was not part of Appraisal[%d]",
+                    employeeId,
+                    appraisalId));
+        }
+
+        return new ResponseEntity<>(appraisalDTOConverter.convert(appraisal), HttpStatus.OK);
+    }
+
+    /**
+     * Executes the logic for these endpoints:
+     * - GET /employees/:id/appraisals/:id/forms
+     * - GET /me/appraisals/:id/forms
+     *
+     * @param loggedInUser Logged in {@link Employee}
+     * @param employeeId   {@link Employee} Id
+     * @param appraisalId  {@link Appraisal} Id
+     * @return A list of {@link EmployeeEvaluationFormDTO} objects
+     */
+    private ResponseEntity<List<EmployeeEvaluationFormDTO>> employeesIdAppraisalsIdFormsGet(Employee loggedInUser, int employeeId, int appraisalId) {
+
+        // Get Employee
+        Employee employee = employeeService.getById(employeeId);
+
+        // Get Appraisal
+        Appraisal appraisal = appraisalService.getById(appraisalId);
+
+        // Get EmployeeEvaluationForm list
+        List<EmployeeEvaluationForm> employeeEvaluationFormList = this.employeeEvaluationFormService
+                .findByEmployeeAndAppraisal(employee, appraisal)
+                .collect(Collectors.toList());
+
+        // Security check
+        employeeEvaluationFormList
+                .stream()
+                .forEach(employeeEvaluationForm -> this.securityService.canReadEmployeeEvaluationForm(loggedInUser, employeeEvaluationForm));
+
+        // Get DTOs
+        List<EmployeeEvaluationFormDTO> result = employeeEvaluationFormList
+                .stream()
+                .map(employeeEvaluationForm -> employeeEvaluationFormDTOConverter.convert(employeeEvaluationForm))
+                .collect(Collectors.toList());
+
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
 }

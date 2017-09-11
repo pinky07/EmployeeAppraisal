@@ -8,8 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
- * Converter init class for bidirectional transformation between EmployeeRelationship and EmployeeRelationshipDTO.
- * Using a BoundMapper increases performance according to Orika's authors.
+ * Converter logic for bidirectional transformation between {@link EmployeeRelationship} and {@link EmployeeRelationshipDTO}.
  *
  * @author Manuel Yepez
  */

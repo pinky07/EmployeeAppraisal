@@ -1,49 +1,51 @@
-create table JobFamily (
+-- Create Tables
+
+CREATE TABLE JobFamily (
     id SERIAL PRIMARY KEY,
     name VARCHAR(40),
     description VARCHAR(500)
 );
 
-create table JobLevel (
+CREATE TABLE JobLevel (
     id SERIAL PRIMARY KEY,
-    jobFamilyId int,
+    jobFamilyId INT,
     name VARCHAR(2),
     description VARCHAR(500),
     expertise VARCHAR(20),
     FOREIGN KEY (jobFamilyId) REFERENCES JobFamily(id)
 );
 
-create table ApplicationRole (
+CREATE TABLE ApplicationRole (
     id SERIAL PRIMARY KEY,
     name VARCHAR(40) UNIQUE,
     description VARCHAR(500)
 );
 
-create table Employee (
+CREATE TABLE Employee (
     id SERIAL PRIMARY KEY,
-    jobLevelId int,
-    applicationRoleId int,
+    jobLevelId INT,
+    applicationRoleId INT,
     email VARCHAR(50),
+    gftIdentifier VARCHAR(4) UNIQUE,
     firstName VARCHAR(50),
     lastName VARCHAR(50),
-    gftIdentifier VARCHAR(4) UNIQUE,
     FOREIGN KEY (jobLevelId) REFERENCES JobLevel(id) ON UPDATE CASCADE,
     FOREIGN KEY (applicationRoleId) REFERENCES ApplicationRole(id)
 );
 
-create table Relationship (
+CREATE TABLE Relationship (
     id SERIAL PRIMARY KEY,
     name VARCHAR(20) UNIQUE,
     description VARCHAR(500)
 );
 
-create table EmployeeRelationship (
+CREATE TABLE EmployeeRelationship (
     id SERIAL PRIMARY KEY,
-    sourceEmployeeId int,
-    targetEmployeeId int,
-    relationshipId int,
+    sourceEmployeeId INT,
+    targetEmployeeId INT,
     startDate TIMESTAMP,
     endDate TIMESTAMP,
+    relationshipId INT,
     FOREIGN KEY (sourceEmployeeId) REFERENCES Employee(id),
     FOREIGN KEY (targetEmployeeId) REFERENCES Employee(id),
     FOREIGN KEY (relationshipId) REFERENCES Relationship(id)

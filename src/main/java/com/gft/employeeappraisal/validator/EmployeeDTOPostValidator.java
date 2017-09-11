@@ -1,5 +1,6 @@
 package com.gft.employeeappraisal.validator;
 
+import com.gft.employeeappraisal.model.Employee;
 import com.gft.swagger.employees.model.EmployeeDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpMethod;
@@ -8,8 +9,8 @@ import org.springframework.validation.Errors;
 import org.springframework.validation.ValidationUtils;
 
 /**
- * Class that describes validation rules for the conversion from an EmployeeDTO to an Employee entity,
- * specifically in the case of an Employee being created through a POST request.
+ * Class that describes validation rules for the conversion from an {@link EmployeeDTO} to an {@link Employee} entity,
+ * specifically in the case of an {@link Employee} being created through a POST request.
  *
  * @author Manuel Yepez
  * @author Rubén Jiménez

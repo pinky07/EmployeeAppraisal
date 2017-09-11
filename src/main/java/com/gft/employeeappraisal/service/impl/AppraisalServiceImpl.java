@@ -1,12 +1,13 @@
 package com.gft.employeeappraisal.service.impl;
 
+import com.gft.employeeappraisal.exception.NotFoundException;
 import com.gft.employeeappraisal.model.Appraisal;
+import com.gft.employeeappraisal.model.AppraisalXEvaluationFormTemplate;
 import com.gft.employeeappraisal.model.Employee;
 import com.gft.employeeappraisal.model.EmployeeEvaluationForm;
-import com.gft.employeeappraisal.model.EvaluationStatus;
 import com.gft.employeeappraisal.repository.AppraisalRepository;
 import com.gft.employeeappraisal.service.AppraisalService;
-import com.gft.employeeappraisal.service.AppraisalXEvaluationFormService;
+import com.gft.employeeappraisal.service.AppraisalXEvaluationFormTemplateService;
 import com.gft.employeeappraisal.service.EmployeeEvaluationFormService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -24,16 +25,16 @@ public class AppraisalServiceImpl implements AppraisalService {
 
     private final AppraisalRepository appraisalRepository;
     private final EmployeeEvaluationFormService employeeEvaluationFormService;
-    private final AppraisalXEvaluationFormService appraisalXEvaluationFormService;
+    private final AppraisalXEvaluationFormTemplateService appraisalXEvaluationFormTemplateService;
 
     @Autowired
     public AppraisalServiceImpl(
             AppraisalRepository appraisalRepository,
             EmployeeEvaluationFormService employeeEvaluationFormService,
-            AppraisalXEvaluationFormService appraisalXEvaluationFormService) {
+            AppraisalXEvaluationFormTemplateService appraisalXEvaluationFormTemplateService) {
         this.appraisalRepository = appraisalRepository;
         this.employeeEvaluationFormService = employeeEvaluationFormService;
-        this.appraisalXEvaluationFormService = appraisalXEvaluationFormService;
+        this.appraisalXEvaluationFormTemplateService = appraisalXEvaluationFormTemplateService;
     }
 
     /**
@@ -41,25 +42,27 @@ public class AppraisalServiceImpl implements AppraisalService {
      */
     @Override
     public Optional<Appraisal> findById(int appraisalId) {
-        return Optional.ofNullable(appraisalRepository.findOne(appraisalId));
+        return Optional.ofNullable(this.appraisalRepository.findOne(appraisalId));
     }
 
     /**
      * @inheritDoc
      */
     @Override
-    public Stream<Appraisal> findEmployeeAppraisals(Employee employee, EvaluationStatus evaluationStatus) {
+    public Appraisal getById(int appraisalId) throws NotFoundException {
+        return this.findById(appraisalId).orElseThrow(() -> new NotFoundException(String.format(
+                "Appraisal with id %d was not found", appraisalId)));
+    }
 
-        if (evaluationStatus == null) {
-            evaluationStatus = EvaluationStatus.PENDING;
-        }
-
-        Stream<EmployeeEvaluationForm> employeeEvaluationFormStream =
-                employeeEvaluationFormService
-                        .findByEmployeeAndFilledByEmployeeId(employee, evaluationStatus);
-
-        return employeeEvaluationFormStream
-                .map(ef -> ef.getAppraisalXEvaluationForm().getAppraisal()).distinct();
+    /**
+     * @inheritDoc
+     */
+    @Override
+    public Stream<Appraisal> findEmployeeAppraisals(Employee employee) {
+        return employeeEvaluationFormService
+                .findSelfByEmployee(employee)
+                .map(EmployeeEvaluationForm::getAppraisalXEvaluationFormTemplate)
+                .map(AppraisalXEvaluationFormTemplate::getAppraisal);
     }
 
     /**
@@ -67,6 +70,6 @@ public class AppraisalServiceImpl implements AppraisalService {
      */
     @Override
     public Optional<Appraisal> saveAndFlush(Appraisal appraisal) {
-        return Optional.ofNullable(appraisalRepository.saveAndFlush(appraisal));
+        return Optional.ofNullable(this.appraisalRepository.saveAndFlush(appraisal));
     }
 }

@@ -2,7 +2,7 @@ package com.gft.employeeappraisal.service;
 
 import com.gft.employeeappraisal.model.Appraisal;
 import com.gft.employeeappraisal.model.Employee;
-import com.gft.employeeappraisal.model.EvaluationForm;
+import com.gft.employeeappraisal.model.EvaluationFormTemplate;
 
 import java.util.stream.Stream;
 
@@ -15,6 +15,6 @@ public interface EvaluationFormXSectionXQuestionService {
      * @param employee  Employee that's being evaluated
      * @return
      */
-    Stream<EvaluationForm> findByAppraisalAndEmployee(Appraisal appraisal, Employee employee);
+    Stream<EvaluationFormTemplate> findByAppraisalAndEmployee(Appraisal appraisal, Employee employee);
 
 }

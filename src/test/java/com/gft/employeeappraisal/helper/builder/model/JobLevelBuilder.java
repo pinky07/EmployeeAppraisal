@@ -24,9 +24,6 @@ public class JobLevelBuilder implements ObjectBuilder<JobLevel> {
     private boolean descriptionSet;
     private boolean expertiseSet;
 
-    public JobLevelBuilder() {
-    }
-
     public JobLevelBuilder id(int id) {
         this.id = id;
         this.idSet = true;

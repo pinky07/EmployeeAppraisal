@@ -3,11 +3,11 @@ package com.gft.employeeappraisal.service.impl;
 import com.gft.employeeappraisal.exception.NotFoundException;
 import com.gft.employeeappraisal.model.Employee;
 import com.gft.employeeappraisal.model.EmployeeRelationship;
-import com.gft.employeeappraisal.model.Relationship;
+import com.gft.employeeappraisal.model.RelationshipType;
 import com.gft.employeeappraisal.model.RelationshipName;
 import com.gft.employeeappraisal.repository.EmployeeRelationshipRepository;
 import com.gft.employeeappraisal.service.EmployeeRelationshipService;
-import com.gft.employeeappraisal.service.RelationshipService;
+import com.gft.employeeappraisal.service.RelationshipTypeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -28,14 +28,14 @@ import java.util.stream.Stream;
 public class EmployeeRelationshipServiceImpl implements EmployeeRelationshipService {
 
     private final EmployeeRelationshipRepository employeeRelationshipRepository;
-    private final RelationshipService relationshipService;
+    private final RelationshipTypeService relationshipTypeService;
 
     @Autowired
     public EmployeeRelationshipServiceImpl(
             EmployeeRelationshipRepository employeeRelationshipRepository,
-            RelationshipService relationshipService) {
+            RelationshipTypeService relationshipTypeService) {
         this.employeeRelationshipRepository = employeeRelationshipRepository;
-        this.relationshipService = relationshipService;
+        this.relationshipTypeService = relationshipTypeService;
     }
 
     /**
@@ -52,7 +52,7 @@ public class EmployeeRelationshipServiceImpl implements EmployeeRelationshipServ
     @Override
     public EmployeeRelationship getById(Integer id) {
         return this.findById(id).orElseThrow(() -> new NotFoundException(String.format(
-                "EmployeeRelationship with Id %d couldn't be found",
+                "EmployeeRelationship[%d] couldn't be found",
                 id)));
     }
 
@@ -64,7 +64,7 @@ public class EmployeeRelationshipServiceImpl implements EmployeeRelationshipServ
         return this.isCurrentRelationship(
                 mentor,
                 mentee,
-                this.relationshipService.findByName(RelationshipName.MENTOR)
+                this.relationshipTypeService.findByName(RelationshipName.MENTOR)
         );
     }
 
@@ -76,18 +76,18 @@ public class EmployeeRelationshipServiceImpl implements EmployeeRelationshipServ
         return this.isCurrentRelationship(
                 employeeA,
                 employeeB,
-                this.relationshipService.findByName(RelationshipName.PEER));
+                this.relationshipTypeService.findByName(RelationshipName.PEER));
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public boolean isCurrentRelationship(Employee employeeA, Employee employeeB, Relationship relationship) {
-        return this.employeeRelationshipRepository.countCurrentBySourceEmployeeAndTargetEmployeeAndRelationship(
+    public boolean isCurrentRelationship(Employee employeeA, Employee employeeB, RelationshipType relationshipType) {
+        return this.employeeRelationshipRepository.countCurrentBySourceEmployeeAndTargetEmployeeAndRelationshipType(
                 employeeA,
                 employeeB,
-                relationship) > 0;
+                relationshipType) > 0;
     }
 
     /**
@@ -97,7 +97,7 @@ public class EmployeeRelationshipServiceImpl implements EmployeeRelationshipServ
     public boolean hasMentor(Employee employee) {
         return this.hasRelationshipAsTargetEmployee(
                 employee,
-                this.relationshipService.findByName(RelationshipName.MENTOR));
+                this.relationshipTypeService.findByName(RelationshipName.MENTOR));
     }
 
     /**
@@ -107,7 +107,7 @@ public class EmployeeRelationshipServiceImpl implements EmployeeRelationshipServ
     public boolean hasMentees(Employee employee) {
         return this.hasRelationshipAsSourceEmployee(
                 employee,
-                this.relationshipService.findByName(RelationshipName.MENTOR));
+                this.relationshipTypeService.findByName(RelationshipName.MENTOR));
     }
 
     /**
@@ -117,27 +117,27 @@ public class EmployeeRelationshipServiceImpl implements EmployeeRelationshipServ
     public boolean hasPeers(Employee employee) {
         return this.hasRelationshipAsSourceEmployee(
                 employee,
-                this.relationshipService.findByName(RelationshipName.PEER));
+                this.relationshipTypeService.findByName(RelationshipName.PEER));
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public boolean hasRelationshipAsSourceEmployee(Employee source, Relationship relationship) {
-        return this.employeeRelationshipRepository.countCurrentBySourceEmployeeAndRelationship(
+    public boolean hasRelationshipAsSourceEmployee(Employee source, RelationshipType relationshipType) {
+        return this.employeeRelationshipRepository.countCurrentBySourceEmployeeAndRelationshipType(
                 source,
-                relationship) > 0;
+                relationshipType) > 0;
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public boolean hasRelationshipAsTargetEmployee(Employee target, Relationship relationship) {
-        return this.employeeRelationshipRepository.countCurrentByTargetEmployeeAndRelationship(
+    public boolean hasRelationshipAsTargetEmployee(Employee target, RelationshipType relationshipType) {
+        return this.employeeRelationshipRepository.countCurrentByTargetEmployeeAndRelationshipType(
                 target,
-                relationship) > 0;
+                relationshipType) > 0;
     }
 
     /**
@@ -148,14 +148,14 @@ public class EmployeeRelationshipServiceImpl implements EmployeeRelationshipServ
         // End any previous MENTOR Relationships
         this.findCurrentByTargetEmployeeAndRelationship(
                 mentee,
-                relationshipService.findByName(RelationshipName.MENTOR)
+                relationshipTypeService.findByName(RelationshipName.MENTOR)
         ).forEach(this::endEmployeeRelationship);
 
         // Start a new MENTOR Relationship
         startEmployeeRelationship(
                 mentor,
                 mentee,
-                relationshipService.findByName(RelationshipName.MENTOR));
+                relationshipTypeService.findByName(RelationshipName.MENTOR));
     }
 
     /**
@@ -166,7 +166,7 @@ public class EmployeeRelationshipServiceImpl implements EmployeeRelationshipServ
         startEmployeeRelationship(
                 employee,
                 peer,
-                relationshipService.findByName(RelationshipName.PEER));
+                relationshipTypeService.findByName(RelationshipName.PEER));
     }
 
     /**
@@ -181,11 +181,11 @@ public class EmployeeRelationshipServiceImpl implements EmployeeRelationshipServ
      * {@inheritDoc}
      */
     @Override
-    public Optional<EmployeeRelationship> startEmployeeRelationship(Employee sourceEmployee, Employee targetEmployee, Relationship relationship) {
+    public Optional<EmployeeRelationship> startEmployeeRelationship(Employee sourceEmployee, Employee targetEmployee, RelationshipType relationshipType) {
         EmployeeRelationship employeeRelationship = new EmployeeRelationship();
         employeeRelationship.setSourceEmployee(sourceEmployee);
         employeeRelationship.setTargetEmployee(targetEmployee);
-        employeeRelationship.setRelationship(relationship);
+        employeeRelationship.setRelationshipType(relationshipType);
         employeeRelationship.setStartDate(OffsetDateTime.now());
         employeeRelationship.setEndDate(null);
         return this.saveAndFlush(employeeRelationship);
@@ -204,11 +204,11 @@ public class EmployeeRelationshipServiceImpl implements EmployeeRelationshipServ
      * {@inheritDoc}
      */
     @Override
-    public Stream<EmployeeRelationship> findCurrentBySourceEmployeeAndRelationship(Employee sourceEmployee, Relationship relationship) {
+    public Stream<EmployeeRelationship> findCurrentBySourceEmployeeAndRelationship(Employee sourceEmployee, RelationshipType relationshipType) {
         return employeeRelationshipRepository
-                .findCurrentBySourceEmployeeAndRelationship(
+                .findCurrentBySourceEmployeeAndRelationshipType(
                         sourceEmployee,
-                        relationship)
+                        relationshipType)
                 .stream();
     }
 
@@ -217,12 +217,12 @@ public class EmployeeRelationshipServiceImpl implements EmployeeRelationshipServ
      */
     @Override
     public Stream<EmployeeRelationship> findBySourceEmployeeAndRelationships(Employee sourceEmployee, RelationshipName... relationshipNames) {
-        List<Relationship> relationships = relationshipService.findRelationshipsByNames(relationshipNames).collect(Collectors.toList());
+        List<RelationshipType> relationshipTypes = relationshipTypeService.findRelationshipsByNames(relationshipNames).collect(Collectors.toList());
 
         return employeeRelationshipRepository
-                .findAllBySourceEmployeeAndRelationshipIn(
+                .findAllBySourceEmployeeAndRelationshipTypeIn(
                         sourceEmployee,
-                        new HashSet<>(relationships))
+                        new HashSet<>(relationshipTypes))
                 .stream();
     }
 
@@ -231,14 +231,14 @@ public class EmployeeRelationshipServiceImpl implements EmployeeRelationshipServ
      */
     @Override
     public Stream<EmployeeRelationship> findCurrentBySourceEmployeeAndRelationships(Employee sourceEmployee, RelationshipName... relationshipNames) {
-        List<Relationship> relationships = this.relationshipService
+        List<RelationshipType> relationshipTypes = this.relationshipTypeService
                 .findRelationshipsByNames(relationshipNames)
                 .collect(Collectors.toList());
 
         return this.employeeRelationshipRepository
-                .findCurrentBySourceEmployeeAndRelationships(
+                .findCurrentBySourceEmployeeAndRelationshipTypes(
                         sourceEmployee,
-                        new HashSet<>(relationships))
+                        new HashSet<>(relationshipTypes))
                 .stream();
     }
 
@@ -246,11 +246,11 @@ public class EmployeeRelationshipServiceImpl implements EmployeeRelationshipServ
      * {@inheritDoc}
      */
     @Override
-    public Stream<EmployeeRelationship> findCurrentByTargetEmployeeAndRelationship(Employee targetEmployee, Relationship relationship) {
+    public Stream<EmployeeRelationship> findCurrentByTargetEmployeeAndRelationship(Employee targetEmployee, RelationshipType relationshipType) {
         return employeeRelationshipRepository
-                .findCurrentByTargetEmployeeAndRelationship(
+                .findCurrentByTargetEmployeeAndRelationshipType(
                         targetEmployee,
-                        relationship)
+                        relationshipType)
                 .stream();
     }
 
@@ -258,12 +258,12 @@ public class EmployeeRelationshipServiceImpl implements EmployeeRelationshipServ
      * {@inheritDoc}
      */
     @Override
-    public Stream<EmployeeRelationship> findCurrentBySourceEmployeeAndTargetEmployeeAndRelationship(Employee sourceEmployee, Employee targetEmployee, Relationship relationship) {
+    public Stream<EmployeeRelationship> findCurrentBySourceEmployeeAndTargetEmployeeAndRelationship(Employee sourceEmployee, Employee targetEmployee, RelationshipType relationshipType) {
         return employeeRelationshipRepository
-                .findCurrentBySourceEmployeeAndTargetEmployeeAndRelationship(
+                .findCurrentBySourceEmployeeAndTargetEmployeeAndRelationshipType(
                         sourceEmployee,
                         targetEmployee,
-                        relationship)
+                        relationshipType)
                 .stream();
     }
 

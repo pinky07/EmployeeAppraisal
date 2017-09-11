@@ -24,9 +24,6 @@ public class AppraisalDTOBuilder implements ObjectBuilder<AppraisalDTO> {
     private boolean endDateSet;
     private boolean descriptionSet;
 
-    public AppraisalDTOBuilder() {
-    }
-
     public AppraisalDTOBuilder id(int id) {
         this.id = id;
         this.idSet = true;

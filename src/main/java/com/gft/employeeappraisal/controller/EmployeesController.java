@@ -2,7 +2,7 @@ package com.gft.employeeappraisal.controller;
 
 import com.gft.employeeappraisal.converter.employee.EmployeeDTOConverter;
 import com.gft.employeeappraisal.converter.employeerelationship.EmployeeRelationshipDTOConverter;
-import com.gft.employeeappraisal.converter.relationship.RelationshipDTOConverter;
+import com.gft.employeeappraisal.converter.relationshiptype.RelationshipTypeDTOConverter;
 import com.gft.employeeappraisal.exception.AccessDeniedException;
 import com.gft.employeeappraisal.exception.EmployeeAppraisalMicroserviceException;
 import com.gft.employeeappraisal.exception.NotFoundException;
@@ -15,7 +15,7 @@ import com.gft.swagger.employees.api.EmployeeApi;
 import com.gft.swagger.employees.model.EmployeeDTO;
 import com.gft.swagger.employees.model.EmployeeRelationshipDTO;
 import com.gft.swagger.employees.model.OperationResultDTO;
-import com.gft.swagger.employees.model.RelationshipDTO;
+import com.gft.swagger.employees.model.RelationshipTypeDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,8 +48,8 @@ public class EmployeesController implements EmployeeApi {
     private final EmployeeDTOConverter employeeDTOConverter;
     private final EmployeeRelationshipDTOConverter employeeRelationshipDTOConverter;
     private final EmployeeRelationshipService employeeRelationshipService;
-    private final RelationshipDTOConverter relationshipDTOConverter;
-    private final RelationshipService relationshipService;
+    private final RelationshipTypeDTOConverter relationshipTypeDTOConverter;
+    private final RelationshipTypeService relationshipTypeService;
     private final SecurityService securityService;
     private final ValidationService validationService;
 
@@ -59,16 +59,16 @@ public class EmployeesController implements EmployeeApi {
             EmployeeDTOConverter employeeDTOConverter,
             EmployeeRelationshipDTOConverter employeeRelationshipDTOConverter,
             EmployeeRelationshipService employeeRelationshipService,
-            RelationshipDTOConverter relationshipDTOConverter,
-            RelationshipService relationshipService,
+            RelationshipTypeDTOConverter relationshipTypeDTOConverter,
+            RelationshipTypeService relationshipTypeService,
             SecurityService securityService,
             ValidationService validationService) {
         this.employeeService = employeeService;
         this.employeeDTOConverter = employeeDTOConverter;
         this.employeeRelationshipDTOConverter = employeeRelationshipDTOConverter;
         this.employeeRelationshipService = employeeRelationshipService;
-        this.relationshipDTOConverter = relationshipDTOConverter;
-        this.relationshipService = relationshipService;
+        this.relationshipTypeDTOConverter = relationshipTypeDTOConverter;
+        this.relationshipTypeService = relationshipTypeService;
         this.securityService = securityService;
         this.validationService = validationService;
     }
@@ -228,14 +228,14 @@ public class EmployeesController implements EmployeeApi {
         // Is the relationship already ended?
         if (Objects.nonNull(employeeRelationship.getEndDate())) {
             throw new EmployeeAppraisalMicroserviceException(String.format(
-                    "EmployeeRelationship with Id: %d is already ended",
+                    "EmployeeRelationship[%d] is already ended",
                     employeeRelationship.getId()));
         }
 
         // The Employee must be the SourceEmployee of the EmployeeRelationship
         if (!employee.equals(employeeRelationship.getSourceEmployee()))
             throw new AccessDeniedException(String.format(
-                    "Employee with Id: %d is not the source employee of EmployeeRelationship with Id: %d",
+                    "Employee[%d] is not the source employee of EmployeeRelationship[%d]",
                     employeeId,
                     employeeRelationshipId));
 
@@ -247,7 +247,7 @@ public class EmployeesController implements EmployeeApi {
         // TODO Define what type of Exception should this throw?
         this.employeeRelationshipService.endEmployeeRelationship(employeeRelationship)
                 .orElseThrow(() -> new EmployeeAppraisalMicroserviceException(String.format(
-                        "EmployeeRelationship with Id: %d could not be terminated",
+                        "EmployeeRelationship[%d] could not be terminated",
                         employeeRelationshipId)));
 
         return new ResponseEntity<>(HttpStatus.OK);
@@ -281,12 +281,12 @@ public class EmployeesController implements EmployeeApi {
         EmployeeRelationship createdEmployeeRelationship = this.employeeRelationshipService.startEmployeeRelationship( // <-- This creates a new EmployeeRelationship and could be improved!
                 sourceEmployee,
                 employeeRelationship.getTargetEmployee(),
-                employeeRelationship.getRelationship())
+                employeeRelationship.getRelationshipType())
                 .orElseThrow(() -> new EmployeeAppraisalMicroserviceException(String.format(
                         "EmployeeRelationship between Employee[%d] -> Employee[%d] of type %s",
                         sourceEmployee.getId(),
                         employeeRelationship.getTargetEmployee().getId(),
-                        employeeRelationship.getRelationship().getName())));
+                        employeeRelationship.getRelationshipType().getName())));
 
         // Create Result DTO
         OperationResultDTO response = new OperationResultDTO();
@@ -340,27 +340,27 @@ public class EmployeesController implements EmployeeApi {
     }
 
     @Override
-    public ResponseEntity<List<RelationshipDTO>> relationshipsGet() {
+    public ResponseEntity<List<RelationshipTypeDTO>> relationshipsGet() {
         logger.debug("GET endpoint: /relationships/");
 
-        List<RelationshipDTO> relationshipDTOList = new ArrayList<>();
+        List<RelationshipTypeDTO> relationshipDTOList = new ArrayList<>();
 
         // We will omit other relationship types for now. Plus this might require a filter.
-        relationshipService.findRelationshipsByNames(RelationshipName.LEAD,
+        relationshipTypeService.findRelationshipsByNames(RelationshipName.LEAD,
                 RelationshipName.PEER,
                 RelationshipName.OTHER)
-                .forEach(r -> relationshipDTOList.add(relationshipDTOConverter.convert(r)));
+                .forEach(r -> relationshipDTOList.add(relationshipTypeDTOConverter.convert(r)));
 
         return new ResponseEntity<>(relationshipDTOList, HttpStatus.OK);
     }
 
     @Override
-    public ResponseEntity<RelationshipDTO> relationshipsIdGet(@PathVariable Integer relationshipId) {
+    public ResponseEntity<RelationshipTypeDTO> relationshipsIdGet(@PathVariable Integer relationshipId) {
         logger.debug("GET endpoint: /relationships/{}", relationshipId);
 
-        RelationshipDTO relationship = relationshipService.findById(relationshipId)
-                .map(r -> relationshipDTOConverter.convert(r))
-                .orElseThrow(() -> new NotFoundException(String.format("Relationship with id %d was not found",
+        RelationshipTypeDTO relationship = relationshipTypeService.findById(relationshipId)
+                .map(r -> relationshipTypeDTOConverter.convert(r))
+                .orElseThrow(() -> new NotFoundException(String.format("RelationshipType with id %d was not found",
                         relationshipId)));
 
         return new ResponseEntity<>(relationship, HttpStatus.OK);

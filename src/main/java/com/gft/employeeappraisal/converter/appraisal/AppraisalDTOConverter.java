@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
- * Converter logic for bidirectional transformation between Appraisal and AppraisalDTO.
+ * Converter logic for bidirectional transformation between {@link Appraisal} and {@link AppraisalDTO}.
  *
  * @author Manuel Yepez
  */

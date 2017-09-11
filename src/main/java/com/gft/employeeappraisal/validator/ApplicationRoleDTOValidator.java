@@ -1,5 +1,6 @@
 package com.gft.employeeappraisal.validator;
 
+import com.gft.employeeappraisal.model.ApplicationRole;
 import com.gft.swagger.employees.model.ApplicationRoleDTO;
 import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Component;
@@ -7,7 +8,8 @@ import org.springframework.validation.Errors;
 import org.springframework.validation.ValidationUtils;
 
 /**
- * Class that describes validation rules for the conversion from an ApplicationRoleDTO to an ApplicationRole entity.
+ * Class that describes validation rules for the conversion from an {@link ApplicationRoleDTO} to an
+ * {@link ApplicationRole} entity.
  *
  * @author Manuel Yepez
  * @author Rubén Jiménez

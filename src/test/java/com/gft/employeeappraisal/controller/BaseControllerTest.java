@@ -1,6 +1,17 @@
 package com.gft.employeeappraisal.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.gft.employeeappraisal.converter.appraisal.AppraisalDTOConverter;
+import com.gft.employeeappraisal.converter.employee.EmployeeDTOConverter;
+import com.gft.employeeappraisal.converter.employeeevaluationform.EmployeeEvaluationFormDTOConverter;
+import com.gft.employeeappraisal.converter.employeerelationship.EmployeeRelationshipDTOConverter;
+import com.gft.employeeappraisal.converter.evaluationformtemplate.EvaluationFormTemplateDTOConverter;
+import com.gft.employeeappraisal.converter.question.QuestionDTOConverter;
+import com.gft.employeeappraisal.converter.relationshiptype.RelationshipTypeDTOConverter;
+import com.gft.employeeappraisal.converter.scoretype.ScoreTypeDTOConverter;
+import com.gft.employeeappraisal.converter.scorevalue.ScoreValueDTOConverter;
+import com.gft.employeeappraisal.converter.section.SectionDTOConverter;
+import com.gft.employeeappraisal.helper.comparator.EntityDTOComparator;
 import com.gft.employeeappraisal.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -30,6 +41,40 @@ public abstract class BaseControllerTest {
     @Autowired
     protected MockMvc mockMvc;
 
+    @Autowired
+    protected EntityDTOComparator entityDTOComparator;
+
+    @Autowired
+    protected AppraisalDTOConverter appraisalDTOConverter;
+
+    @Autowired
+    protected EmployeeDTOConverter employeeDTOConverter;
+
+    @Autowired
+    protected EmployeeEvaluationFormDTOConverter employeeEvaluationFormDTOConverter;
+
+    @Autowired
+    protected EmployeeRelationshipDTOConverter employeeRelationshipDTOConverter;
+
+    @Autowired
+    protected EvaluationFormTemplateDTOConverter evaluationFormTemplateDTOConverter;
+
+    @Autowired
+    protected QuestionDTOConverter questionDTOConverter;
+
+    @Autowired
+    protected RelationshipTypeDTOConverter relationshipTypeDTOConverter;
+
+    @Autowired
+    protected ScoreTypeDTOConverter scoreTypeDTOConverter;
+
+    @Autowired
+    protected ScoreValueDTOConverter scoreValueDTOConverter;
+
+    @Autowired
+    protected SectionDTOConverter sectionDTOConverter;
+
+
     //
     // IMPORTANT!
     //
@@ -46,7 +91,7 @@ public abstract class BaseControllerTest {
     protected AppraisalService appraisalService;
 
     @MockBean
-    protected AppraisalXEvaluationFormService appraisalXEvaluationFormService;
+    protected AppraisalXEvaluationFormTemplateService appraisalXEvaluationFormTemplateService;
 
     @MockBean
     protected EmployeeEvaluationFormService employeeEvaluationFormService;
@@ -58,7 +103,7 @@ public abstract class BaseControllerTest {
     protected EmployeeService employeeService;
 
     @MockBean
-    protected EvaluationFormService evaluationFormService;
+    protected EvaluationFormTemplateService evaluationFormTemplateService;
 
     @MockBean
     protected EvaluationFormXSectionXQuestionService evaluationFormXSectionXQuestionService;
@@ -70,7 +115,7 @@ public abstract class BaseControllerTest {
     protected JobLevelService jobLevelService;
 
     @MockBean
-    protected RelationshipService relationshipService;
+    protected RelationshipTypeService relationshipTypeService;
 
     @MockBean
     protected SecurityService securityService;

@@ -5,6 +5,7 @@ import org.hibernate.validator.constraints.NotEmpty;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.util.Set;
 
 /**
  * Entity persistent class that describes an Employee table.
@@ -20,10 +21,25 @@ public class Employee {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
+    @NotNull
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "jobLevelId", nullable = false)
+    private JobLevel jobLevel;
+
+    @NotNull
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "applicationRoleId", nullable = false)
+    private ApplicationRole applicationRole;
+
     @NotEmpty
     @Size(max = 50)
     @Column(name = "email", nullable = false, length = 40)
     private String email;
+
+    @NotEmpty
+    @Size(min = 4, max = 4)
+    @Column(name = "GftIdentifier", nullable = false, length = 4, unique = true)
+    private String gftIdentifier;
 
     @NotEmpty
     @Size(max = 50)
@@ -35,20 +51,20 @@ public class Employee {
     @Column(name = "lastName", nullable = false, length = 50)
     private String lastName;
 
-    @NotEmpty
-    @Size(min = 4, max = 4)
-    @Column(name = "GFTIdentifier", nullable = false, length = 4, unique = true)
-    private String gftIdentifier;
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "sourceEmployee")
+    private Set<EmployeeRelationship> employeeRelationshipsAsSourceSet;
 
-    @NotNull
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "jobLevelId", nullable = false)
-    private JobLevel jobLevel;
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "targetEmployee")
+    private Set<EmployeeRelationship> employeeRelationshipsAsTargetSet;
 
-    @NotNull
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "applicationRoleId", nullable = false)
-    private ApplicationRole applicationRole;
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "employee")
+    private Set<EmployeeEvaluationForm> employeeEvaluationFormsAsSelfSet;
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "filledByEmployee")
+    private Set<EmployeeEvaluationForm> employeeEvaluationFormsAsFilledBySet;
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "mentor")
+    private Set<EmployeeEvaluationForm> employeeEvaluationFormsAsMentorSet;
 
     public int getId() {
         return id;
@@ -58,12 +74,36 @@ public class Employee {
         this.id = id;
     }
 
+    public JobLevel getJobLevel() {
+        return jobLevel;
+    }
+
+    public void setJobLevel(JobLevel jobLevel) {
+        this.jobLevel = jobLevel;
+    }
+
+    public ApplicationRole getApplicationRole() {
+        return applicationRole;
+    }
+
+    public void setApplicationRole(ApplicationRole applicationRole) {
+        this.applicationRole = applicationRole;
+    }
+
     public String getEmail() {
         return email;
     }
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public String getGftIdentifier() {
+        return gftIdentifier;
+    }
+
+    public void setGftIdentifier(String gftIdentifier) {
+        this.gftIdentifier = gftIdentifier;
     }
 
     public String getFirstName() {
@@ -82,28 +122,44 @@ public class Employee {
         this.lastName = lastName;
     }
 
-    public String getGftIdentifier() {
-        return gftIdentifier;
+    public Set<EmployeeRelationship> getEmployeeRelationshipsAsSourceSet() {
+        return employeeRelationshipsAsSourceSet;
     }
 
-    public void setGftIdentifier(String gftIdentifier) {
-        this.gftIdentifier = gftIdentifier;
+    public void setEmployeeRelationshipsAsSourceSet(Set<EmployeeRelationship> employeeRelationshipsAsSourceSet) {
+        this.employeeRelationshipsAsSourceSet = employeeRelationshipsAsSourceSet;
     }
 
-    public JobLevel getJobLevel() {
-        return jobLevel;
+    public Set<EmployeeRelationship> getEmployeeRelationshipsAsTargetSet() {
+        return employeeRelationshipsAsTargetSet;
     }
 
-    public void setJobLevel(JobLevel jobLevel) {
-        this.jobLevel = jobLevel;
+    public void setEmployeeRelationshipsAsTargetSet(Set<EmployeeRelationship> employeeRelationshipsAsTargetSet) {
+        this.employeeRelationshipsAsTargetSet = employeeRelationshipsAsTargetSet;
     }
 
-    public ApplicationRole getApplicationRole() {
-        return applicationRole;
+    public Set<EmployeeEvaluationForm> getEmployeeEvaluationFormsAsSelfSet() {
+        return employeeEvaluationFormsAsSelfSet;
     }
 
-    public void setApplicationRole(ApplicationRole applicationRole) {
-        this.applicationRole = applicationRole;
+    public void setEmployeeEvaluationFormsAsSelfSet(Set<EmployeeEvaluationForm> employeeEvaluationFormsAsSelfSet) {
+        this.employeeEvaluationFormsAsSelfSet = employeeEvaluationFormsAsSelfSet;
+    }
+
+    public Set<EmployeeEvaluationForm> getEmployeeEvaluationFormsAsFilledBySet() {
+        return employeeEvaluationFormsAsFilledBySet;
+    }
+
+    public void setEmployeeEvaluationFormsAsFilledBySet(Set<EmployeeEvaluationForm> employeeEvaluationFormsAsFilledBySet) {
+        this.employeeEvaluationFormsAsFilledBySet = employeeEvaluationFormsAsFilledBySet;
+    }
+
+    public Set<EmployeeEvaluationForm> getEmployeeEvaluationFormsAsMentorSet() {
+        return employeeEvaluationFormsAsMentorSet;
+    }
+
+    public void setEmployeeEvaluationFormsAsMentorSet(Set<EmployeeEvaluationForm> employeeEvaluationFormsAsMentorSet) {
+        this.employeeEvaluationFormsAsMentorSet = employeeEvaluationFormsAsMentorSet;
     }
 
     @Override
