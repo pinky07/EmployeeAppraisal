@@ -4,6 +4,7 @@ import com.gft.employeeappraisal.exception.AccessDeniedException;
 import com.gft.employeeappraisal.model.Appraisal;
 import com.gft.employeeappraisal.model.Employee;
 import com.gft.employeeappraisal.model.EmployeeEvaluationForm;
+import com.gft.employeeappraisal.model.EvaluationFormTemplate;
 
 /**
  * Service that verifies what actions can be performed by users.
@@ -40,11 +41,23 @@ public interface SecurityService {
      * Rules:
      * - An Employee can read his own information
      *
-     * @param reader                 Employee who want to read an {@link EmployeeEvaluationForm}
+     * @param reader                 Employee who wants to read an {@link EmployeeEvaluationForm}
      * @param employeeEvaluationForm Entity to be read
      * @throws AccessDeniedException If the access is denied
      */
     void canReadEmployeeEvaluationForm(Employee reader, EmployeeEvaluationForm employeeEvaluationForm) throws AccessDeniedException;
+
+    /**
+     * Determines if a certain person can obtain specific evaluation form template information.
+     * Rules:
+     * - An Employee can read his own information.
+     * TODO Determine if access should be restricted to Evaluation Form Templates the employee has/had to fill.
+     *
+     * @param reader   Employee who wants to read an {@link EvaluationFormTemplate}
+     * @param employee Employee who has to fill the {@link EvaluationFormTemplate}
+     * @throws AccessDeniedException If the access is denied
+     */
+    void canReadEvaluationFormTemplate(Employee reader, Employee employee) throws AccessDeniedException;
 
     /**
      * Determines if a certain person can create a certain Employee Relationship between two employees.

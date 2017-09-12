@@ -1249,10 +1249,8 @@ definitions:
       submitDate:
         type: string
         format: 'date-time'
-      evaluationForms:
-        type: array
-        items:
-          type: integer
+      evaluationFormId:
+        type: integer
 
   EmployeeRelationshipDTO:
     type: object

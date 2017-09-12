@@ -12,9 +12,7 @@ import ma.glasnost.orika.MappingContext;
 import org.apache.commons.lang.NotImplementedException;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -35,19 +33,20 @@ public class EvaluationFormTemplateDTOMapper extends CustomMapper<EvaluationForm
         evaluationFormTemplateDTO.setDescription(evaluationFormTemplate.getDescription());
 
         // Get questions by section
-        Map<Section, List<Question>> questionsBySection = evaluationFormTemplate.getEvaluationFormXSectionXQuestionSet()
+        Map<Section, Set<Question>> questionsBySection = evaluationFormTemplate.getEvaluationFormXSectionXQuestionSet()
                 .stream()
                 .collect(Collectors.toMap(
                         EvaluationFormTemplateXSectionXQuestion::getSection,
                         evaluationFormXSectionXQuestion -> {
-                            List<Question> question = new ArrayList<>();
+                            Set<Question> question = new TreeSet<>(Comparator.comparingInt(Question::getPosition));
                             question.add(evaluationFormXSectionXQuestion.getQuestion());
                             return question;
                         },
                         (l1, l2) -> {
                             l1.addAll(l2);
                             return l1;
-                        }));
+                        },
+                        () -> new TreeMap<>(Comparator.comparingInt(Section::getPosition))));
 
         // Map every section and question to a DTO
         evaluationFormTemplateDTO.setSections(questionsBySection.keySet()

@@ -49,10 +49,7 @@ public class SecurityServiceImpl implements SecurityService {
      */
     @Override
     public void canReadAppraisal(Employee reader, Employee employee, Appraisal appraisal) throws AccessDeniedException {
-        // The Employee can access his own information
         if (!employee.equals(employee)) {
-
-            // Otherwise an Access Denied Exception is thrown
             throw new AccessDeniedException(String.format(
                     "Employee[%d] can't read Appraisal[%d] from Employee[%d]",
                     reader.getId(),
@@ -90,11 +87,23 @@ public class SecurityServiceImpl implements SecurityService {
     @Override
     public void canReadEmployeeEvaluationForm(Employee reader, EmployeeEvaluationForm employeeEvaluationForm) throws AccessDeniedException {
         if (!reader.equals(employeeEvaluationForm.getEmployee())) {
-            // Otherwise an Access Denied Exception is thrown
             throw new AccessDeniedException(String.format(
                     "Employee[%d] can't read EmployeeEvaluationForm[%d]",
                     reader.getId(),
                     employeeEvaluationForm.getId()));
+        }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void canReadEvaluationFormTemplate(Employee reader, Employee employee) throws AccessDeniedException {
+        if (!reader.equals(employee)) {
+            throw new AccessDeniedException(String.format(
+                    "Employee[%d] can't read Employee[%d] EvaluationFormTemplate",
+                    reader.getId(),
+                    employee.getId()));
         }
     }
 
@@ -132,7 +141,6 @@ public class SecurityServiceImpl implements SecurityService {
                 RelationshipName.LEAD,
                 RelationshipName.PEER,
                 RelationshipName.OTHER).count();
-
         if (currentEmployeeReferences < 0 || maxMenteeReferences < currentEmployeeReferences) {
             throw new AccessDeniedException(String.format(
                     "Employee[%d] has already %d references active and cannot add any more.",

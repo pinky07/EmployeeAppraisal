@@ -1,6 +1,5 @@
 package com.gft.employeeappraisal.converter.employeeevaluationform;
 
-import com.gft.employeeappraisal.exception.NotFoundException;
 import com.gft.employeeappraisal.model.EmployeeEvaluationForm;
 import com.gft.employeeappraisal.service.EmployeeEvaluationFormService;
 import com.gft.employeeappraisal.service.EmployeeService;
@@ -38,7 +37,10 @@ public class EmployeeEvaluationFormDTOMapper extends CustomMapper<EmployeeEvalua
         employeeEvaluationFormDTO.setMentor(mapperFacade.map(employeeEvaluationForm.getMentor(), EmployeeDTO.class));
         employeeEvaluationFormDTO.setCreateDate(employeeEvaluationForm.getCreateDate());
         employeeEvaluationFormDTO.setSubmitDate(employeeEvaluationForm.getSubmitDate());
-
+        employeeEvaluationFormDTO.setEvaluationFormId(employeeEvaluationForm
+                .getAppraisalXEvaluationFormTemplate()
+                .getEvaluationFormTemplate()
+                .getId());
     }
 
     @Override
