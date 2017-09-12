@@ -87,7 +87,7 @@ public class AppraisalsController implements AppraisalApi {
             @PathVariable Integer employeeId) {
         // Get logged in user
         Employee user = this.employeeService.getLoggedInUser();
-        logger.debug("{} called endpoint: GET /employees/:id/appraisals", user.getEmail(), employeeId);
+        logger.debug("{} called endpoint: GET /employees/{}/appraisals", user.getEmail(), employeeId);
         return this.employeesIdAppraisalsGet(user, user.getId());
     }
 
