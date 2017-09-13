@@ -86,7 +86,9 @@ public class SecurityServiceImpl implements SecurityService {
      */
     @Override
     public void canReadEmployeeEvaluationForm(Employee reader, EmployeeEvaluationForm employeeEvaluationForm) throws AccessDeniedException {
-        if (!reader.equals(employeeEvaluationForm.getEmployee())) {
+        if (!reader.equals(employeeEvaluationForm.getEmployee())
+                && !reader.equals(employeeEvaluationForm.getFilledByEmployee())
+                && !reader.equals(employeeEvaluationForm.getMentor())) {
             throw new AccessDeniedException(String.format(
                     "Employee[%d] can't read EmployeeEvaluationForm[%d]",
                     reader.getId(),

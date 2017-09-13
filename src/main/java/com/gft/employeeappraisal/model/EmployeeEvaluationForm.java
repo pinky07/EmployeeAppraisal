@@ -112,7 +112,7 @@ public class EmployeeEvaluationForm {
     public void setEmployeeEvaluationFormAnswerSet(Set<EmployeeEvaluationFormAnswer> employeeEvaluationFormAnswerSet) {
         this.employeeEvaluationFormAnswerSet = employeeEvaluationFormAnswerSet;
     }
-
+    
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -120,22 +120,20 @@ public class EmployeeEvaluationForm {
 
         EmployeeEvaluationForm that = (EmployeeEvaluationForm) o;
 
-        return id == that.id &&
-                employee == that.employee &&
-                filledByEmployee == that.filledByEmployee &&
-                mentor == that.mentor &&
-                createDate.equals(that.createDate) &&
-                submitDate.equals(that.submitDate);
+        if (getId() != that.getId()) return false;
+        if (!getAppraisalXEvaluationFormTemplate().equals(that.getAppraisalXEvaluationFormTemplate())) return false;
+        if (!getEmployee().equals(that.getEmployee())) return false;
+        if (!getFilledByEmployee().equals(that.getFilledByEmployee())) return false;
+        return getMentor().equals(that.getMentor());
     }
 
     @Override
     public int hashCode() {
-        int result = id;
-        result = 31 * result + employee.hashCode();
-        result = 31 * result + filledByEmployee.hashCode();
-        result = 31 * result + mentor.hashCode();
-        result = 31 * result + createDate.hashCode();
-        result = 31 * result + submitDate.hashCode();
+        int result = getId();
+        result = 31 * result + getAppraisalXEvaluationFormTemplate().hashCode();
+        result = 31 * result + getEmployee().hashCode();
+        result = 31 * result + getFilledByEmployee().hashCode();
+        result = 31 * result + getMentor().hashCode();
         return result;
     }
 

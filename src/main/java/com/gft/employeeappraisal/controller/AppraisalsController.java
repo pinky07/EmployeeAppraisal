@@ -13,7 +13,6 @@ import com.gft.swagger.employees.api.AppraisalApi;
 import com.gft.swagger.employees.model.AppraisalDTO;
 import com.gft.swagger.employees.model.EmployeeEvaluationFormDTO;
 import com.gft.swagger.employees.model.EvaluationFormTemplateDTO;
-import org.apache.commons.lang.NotImplementedException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -267,9 +266,25 @@ public class AppraisalsController implements AppraisalApi {
         // Get Appraisal
         Appraisal appraisal = appraisalService.getById(appraisalId);
 
-        // Get EmployeeEvaluationForm list
+        // Add all EmployeeEvaluationForms where the Employee is the Employee
         List<EmployeeEvaluationForm> employeeEvaluationFormList = this.employeeEvaluationFormService
                 .findByEmployeeAndAppraisal(employee, appraisal)
+                .collect(Collectors.toList());
+
+        // Add all EmployeeEvaluationForms where the Employee is the FilledByEmployee
+        employeeEvaluationFormList.addAll(this.employeeEvaluationFormService
+                .findByFilledByEmployeeAndAppraisal(employee, appraisal)
+                .collect(Collectors.toList()));
+
+        // Add all EmployeeEvaluationForms where the Employee is the Mentor
+        employeeEvaluationFormList.addAll(this.employeeEvaluationFormService
+                .findByMentorAndAppraisal(employee, appraisal)
+                .collect(Collectors.toList()));
+
+        // Select distinct EmployeeEvaluationForms
+        employeeEvaluationFormList = employeeEvaluationFormList
+                .stream()
+                .distinct()
                 .collect(Collectors.toList());
 
         // Security check
