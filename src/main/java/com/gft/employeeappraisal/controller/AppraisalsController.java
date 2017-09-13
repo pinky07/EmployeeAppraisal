@@ -266,25 +266,9 @@ public class AppraisalsController implements AppraisalApi {
         // Get Appraisal
         Appraisal appraisal = appraisalService.getById(appraisalId);
 
-        // Add all EmployeeEvaluationForms where the Employee is the Employee
-        List<EmployeeEvaluationForm> employeeEvaluationFormList = this.employeeEvaluationFormService
-                .findByEmployeeAndAppraisal(employee, appraisal)
-                .collect(Collectors.toList());
-
         // Add all EmployeeEvaluationForms where the Employee is the FilledByEmployee
-        employeeEvaluationFormList.addAll(this.employeeEvaluationFormService
+        List<EmployeeEvaluationForm> employeeEvaluationFormList = this.employeeEvaluationFormService
                 .findByFilledByEmployeeAndAppraisal(employee, appraisal)
-                .collect(Collectors.toList()));
-
-        // Add all EmployeeEvaluationForms where the Employee is the Mentor
-        employeeEvaluationFormList.addAll(this.employeeEvaluationFormService
-                .findByMentorAndAppraisal(employee, appraisal)
-                .collect(Collectors.toList()));
-
-        // Select distinct EmployeeEvaluationForms
-        employeeEvaluationFormList = employeeEvaluationFormList
-                .stream()
-                .distinct()
                 .collect(Collectors.toList());
 
         // Security check
