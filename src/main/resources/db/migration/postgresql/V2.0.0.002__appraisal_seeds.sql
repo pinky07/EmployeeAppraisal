@@ -109,7 +109,29 @@ INSERT INTO EmployeeEvaluationForm (appraisalXEvaluationFormTemplateId, employee
     (1, 3, 5, 6, '2017-01-01 00:00:00-06', null),
 
     -- Manuel Yépez (id 3) - Mentor Evaluation
-    (1, 3, 6, 6, '2017-01-01 00:00:00-06', null);
+    (1, 3, 6, 6, '2017-01-01 00:00:00-06', null),
+
+    -- Mario León (id 4) - Self Evaluation
+    (1, 4, 4, 6, '2017-01-01 00:00:00-06', null),
+
+    -- Mario León (id 4) - Reference Evaluation
+    (1, 4, 2, 6, '2017-01-01 00:00:00-06', null),
+    (1, 4, 3, 6, '2017-01-01 00:00:00-06', null),
+    (1, 4, 5, 6, '2017-01-01 00:00:00-06', null),
+
+    -- Mario León (id 4) - Mentor Evaluation
+    (1, 4, 6, 6, '2017-01-01 00:00:00-06', null),
+
+    -- Eduardo Herrera (id 5) - Self Evaluation
+    (1, 5, 5, 6, '2017-01-01 00:00:00-06', null),
+
+    -- Eduardo Herrera (id 5) - Reference Evaluation
+    (1, 5, 2, 6, '2017-01-01 00:00:00-06', null),
+    (1, 5, 3, 6, '2017-01-01 00:00:00-06', null),
+    (1, 5, 7, 6, '2017-01-01 00:00:00-06', null),
+
+    -- Eduardo Herrera (id 5) - Mentor Evaluation
+    (1, 5, 6, 6, '2017-01-01 00:00:00-06', null);
 
 INSERT INTO EvaluationFormTemplateXSectionXQuestion (evaluationFormTemplateId, sectionId, questionId) VALUES
     -- Core Values Section
