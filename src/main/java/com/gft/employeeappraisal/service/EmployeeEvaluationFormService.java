@@ -67,7 +67,6 @@ public interface EmployeeEvaluationFormService {
             Employee employee,
             Appraisal appraisal);
 
-
     /**
      * Looks for all {@link EmployeeEvaluationForm} for a given Employee during a specific {@link Appraisal} process.
      *
@@ -82,12 +81,12 @@ public interface EmployeeEvaluationFormService {
     /**
      * Looks for all {@link EmployeeEvaluationForm} for a given Employee during a specific {@link Appraisal} process.
      *
-     * @param employee  {@link Employee} being evaluated
+     * @param mentor  {@link Employee} Mentor who filled the form
      * @param appraisal Specific {@link Appraisal} process
      * @return List of EmployeeEvaluationForm for the given {@link Employee}
      */
     Stream<EmployeeEvaluationForm> findByMentorAndAppraisal(
-            Employee employee,
+            Employee mentor,
             Appraisal appraisal);
 
 
@@ -96,5 +95,5 @@ public interface EmployeeEvaluationFormService {
      *
      * @param employeeEvaluationForm Appraisal Entity to saveAndFlush
      */
-    void saveAndFlush(EmployeeEvaluationForm employeeEvaluationForm);
+    Optional<EmployeeEvaluationForm> saveAndFlush(EmployeeEvaluationForm employeeEvaluationForm);
 }

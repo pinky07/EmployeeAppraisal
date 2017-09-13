@@ -1,9 +1,13 @@
 package com.gft.employeeappraisal.service;
 
 import com.gft.employeeappraisal.exception.AccessDeniedException;
+import com.gft.employeeappraisal.helper.builder.model.AppraisalBuilder;
 import com.gft.employeeappraisal.helper.builder.model.EmployeeBuilder;
+import com.gft.employeeappraisal.helper.builder.model.EmployeeEvaluationFormBuilder;
 import com.gft.employeeappraisal.helper.builder.model.EmployeeRelationshipBuilder;
+import com.gft.employeeappraisal.model.Appraisal;
 import com.gft.employeeappraisal.model.Employee;
+import com.gft.employeeappraisal.model.EmployeeEvaluationForm;
 import com.gft.employeeappraisal.model.RelationshipName;
 import com.gft.employeeappraisal.service.impl.SecurityServiceImpl;
 import org.junit.Before;
@@ -38,6 +42,27 @@ public class SecurityServiceTest extends BaseServiceTest {
                 this.maxMenteeReferences,
                 this.employeeRelationshipService,
                 this.employeeService);
+    }
+
+    @Test
+    public void canReadAppraisal() {
+        // Set up
+        Employee employee = new EmployeeBuilder().id(1).buildWithDefaults();
+        Appraisal appraisal = new AppraisalBuilder().id(1).buildWithDefaults();
+
+        // Execution
+        this.securityService.canReadAppraisal(employee, employee, appraisal);
+    }
+
+    @Test(expected = AccessDeniedException.class)
+    public void canReadAppraisal_accessDenied() {
+        // Set up
+        Employee employee = new EmployeeBuilder().id(1).buildWithDefaults();
+        Employee anotherEmployee = new EmployeeBuilder().id(2).buildWithDefaults();
+        Appraisal appraisal = new AppraisalBuilder().id(1).buildWithDefaults();
+
+        // Execution
+        this.securityService.canReadAppraisal(employee, anotherEmployee, appraisal);
     }
 
     /**
@@ -92,6 +117,62 @@ public class SecurityServiceTest extends BaseServiceTest {
 
         // Execution
         this.securityService.canReadEmployee(reader, requested);
+    }
+
+    @Test
+    public void canReadEmployeeEvaluationForm() {
+        // Set up
+        Employee employee = new EmployeeBuilder().id(1).buildWithDefaults();
+
+        EmployeeEvaluationForm employeeEvaluationForm = new EmployeeEvaluationFormBuilder()
+                .employee(employee)
+                .buildWithDefaults();
+
+        // Execution
+        this.securityService.canReadEmployeeEvaluationForm(employee, employeeEvaluationForm);
+
+        Employee filledByEmployee = new EmployeeBuilder().id(2).buildWithDefaults();
+        employeeEvaluationForm.setFilledByEmployee(filledByEmployee);
+
+        this.securityService.canReadEmployeeEvaluationForm(filledByEmployee, employeeEvaluationForm);
+
+        Employee mentor = new EmployeeBuilder().id(3).buildWithDefaults();
+        employeeEvaluationForm.setMentor(mentor);
+
+        this.securityService.canReadEmployeeEvaluationForm(mentor, employeeEvaluationForm);
+    }
+
+    @Test(expected = AccessDeniedException.class)
+    public void canReadEmployeeEvaluationForm_accessDenied() {
+        // Set up
+        Employee employee = new EmployeeBuilder().id(1).buildWithDefaults();
+        Employee another = new EmployeeBuilder().id(2).buildWithDefaults();
+
+        EmployeeEvaluationForm employeeEvaluationForm = new EmployeeEvaluationFormBuilder()
+                .employee(employee)
+                .buildWithDefaults();
+
+        // Execution
+        this.securityService.canReadEmployeeEvaluationForm(another, employeeEvaluationForm);
+    }
+
+    @Test
+    public void canReadEvaluationFormTemplate() {
+        // Set up
+        Employee employee = new EmployeeBuilder().id(1).buildWithDefaults();
+
+        // Execution
+        this.securityService.canReadEvaluationFormTemplate(employee, employee);
+    }
+
+    @Test(expected = AccessDeniedException.class)
+    public void canReadEvaluationFormTemplate_accessDenied() {
+        // Set up
+        Employee employee = new EmployeeBuilder().id(1).buildWithDefaults();
+        Employee another = new EmployeeBuilder().id(2).buildWithDefaults();
+
+        // Execution
+        this.securityService.canReadEvaluationFormTemplate(another, employee);
     }
 
     /**

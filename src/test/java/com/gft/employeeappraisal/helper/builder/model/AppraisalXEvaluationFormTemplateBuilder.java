@@ -32,7 +32,7 @@ public class AppraisalXEvaluationFormTemplateBuilder implements ObjectBuilder<Ap
         return this;
     }
 
-    public AppraisalXEvaluationFormTemplateBuilder evaluationForm(EvaluationFormTemplate evaluationFormTemplate) {
+    public AppraisalXEvaluationFormTemplateBuilder evaluationFormTemplate(EvaluationFormTemplate evaluationFormTemplate) {
         this.evaluationFormTemplate = evaluationFormTemplate;
         this.evaluationFormSet = true;
         return this;
@@ -52,7 +52,7 @@ public class AppraisalXEvaluationFormTemplateBuilder implements ObjectBuilder<Ap
         AppraisalXEvaluationFormTemplate obj = new AppraisalXEvaluationFormTemplate();
         if (this.idSet) obj.setId(this.id);
         obj.setAppraisal(this.appraisalSet ? this.appraisal : new AppraisalBuilder().buildWithDefaults());
-        obj.setEvaluationFormTemplate(this.evaluationFormSet ? this.evaluationFormTemplate : new EvaluationFormBuilder().buildWithDefaults());
+        obj.setEvaluationFormTemplate(this.evaluationFormSet ? this.evaluationFormTemplate : new EvaluationFormTemplateBuilder().buildWithDefaults());
         return obj;
     }
 }

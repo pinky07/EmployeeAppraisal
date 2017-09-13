@@ -21,19 +21,9 @@ import java.util.List;
 @Transactional
 public interface EmployeeEvaluationFormRepository extends JpaRepository<EmployeeEvaluationForm, Integer> {
 
-    // TODO Replace this with a queryless statement!
-    @Query("SELECT employeeEvaluationForm " +
-            "FROM EmployeeEvaluationForm AS employeeEvaluationForm " +
-            "WHERE employeeEvaluationForm.employee = :employee ")
     List<EmployeeEvaluationForm> findByEmployee(Employee employee);
 
-    // TODO Replace this with a queryless statement!
-    @Query("SELECT employeeEvaluationForm " +
-            "FROM EmployeeEvaluationForm AS employeeEvaluationForm " +
-            "WHERE employeeEvaluationForm.employee = :employee " +
-            "AND employeeEvaluationForm.filledByEmployee = :employee")
-    List<EmployeeEvaluationForm> findSelfByEmployee(
-            @Param("employee") Employee employee);
+    List<EmployeeEvaluationForm> findByEmployeeAndFilledByEmployee(Employee employee, Employee filledByEmployee);
 
     @Query("SELECT employeeEvaluationForm " +
             "FROM EmployeeEvaluationForm AS employeeEvaluationForm " +
@@ -66,7 +56,7 @@ public interface EmployeeEvaluationFormRepository extends JpaRepository<Employee
     @Query("SELECT employeeEvaluationForm " +
             "FROM EmployeeEvaluationForm employeeEvaluationForm " +
             "JOIN FETCH employeeEvaluationForm.appraisalXEvaluationFormTemplate appraisalXEvaluationFormTemplate " +
-            "WHERE employeeEvaluationForm.filledByEmployee = :mentor " +
+            "WHERE employeeEvaluationForm.mentor = :mentor " +
             "AND appraisalXEvaluationFormTemplate.appraisal = :appraisal ")
     List<EmployeeEvaluationForm> findByMentorAndAppraisal(
             @Param("mentor") Employee mentor,

@@ -1,5 +1,6 @@
 package com.gft.employeeappraisal.service;
 
+import com.gft.employeeappraisal.exception.NotFoundException;
 import com.gft.employeeappraisal.helper.builder.model.*;
 import com.gft.employeeappraisal.model.*;
 import com.gft.employeeappraisal.service.impl.AppraisalServiceImpl;
@@ -24,13 +25,9 @@ import static org.mockito.Mockito.when;
 @RunWith(SpringRunner.class)
 public class AppraisalServiceTest extends BaseServiceTest {
 
-    // Class under test
-    private AppraisalService appraisalService;
-
     // Test Fixtures
     private Appraisal appraisal;
     private Employee employeeA;
-    private EmployeeRelationship selfEmployeeRelationship;
 
     @Before
     public void setUp() throws Exception {
@@ -89,6 +86,19 @@ public class AppraisalServiceTest extends BaseServiceTest {
     }
 
     @Test
+    public void getById() throws Exception {
+        Appraisal retrieved = appraisalService.getById(appraisal.getId());
+
+        assertNotNull(retrieved);
+        assertEquals(appraisal, retrieved);
+    }
+
+    @Test(expected = NotFoundException.class)
+    public void getById_invalid() throws Exception {
+        appraisalService.getById(-100);
+    }
+
+    @Test
     public void saveAndFlush() throws Exception {
         Appraisal appraisal = new AppraisalBuilder()
                 .name("newAppraisal")
@@ -105,7 +115,7 @@ public class AppraisalServiceTest extends BaseServiceTest {
 
     private EmployeeEvaluationForm testEmployeeEvaluationForm() {
         return new EmployeeEvaluationFormBuilder()
-                .appraisalXEvaluationForm(new AppraisalXEvaluationFormTemplateBuilder()
+                .appraisalXEvaluationFormTemplate(new AppraisalXEvaluationFormTemplateBuilder()
                         .appraisal(appraisal).buildWithDefaults()).buildWithDefaults();
     }
 }

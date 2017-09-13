@@ -6,6 +6,8 @@ import com.gft.employeeappraisal.service.AppraisalXEvaluationFormTemplateService
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 /**
  * Service implementation of {@link AppraisalXEvaluationFormTemplateService}.
  *
@@ -23,7 +25,9 @@ public class AppraisalXEvaluationFormTemplateServiceImpl implements AppraisalXEv
     }
 
     @Override
-    public void saveAndFlush(AppraisalXEvaluationFormTemplate appraisalXEvaluationFormTemplate) {
-        this.appraisalXEvaluationFormTemplateRepository.saveAndFlush(appraisalXEvaluationFormTemplate);
+    public Optional<AppraisalXEvaluationFormTemplate> saveAndFlush(AppraisalXEvaluationFormTemplate
+                                                                               appraisalXEvaluationFormTemplate) {
+        return Optional.ofNullable(this.appraisalXEvaluationFormTemplateRepository
+                .saveAndFlush(appraisalXEvaluationFormTemplate));
     }
 }

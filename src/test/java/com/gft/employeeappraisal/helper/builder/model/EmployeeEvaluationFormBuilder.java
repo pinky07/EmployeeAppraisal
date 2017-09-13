@@ -37,7 +37,8 @@ public class EmployeeEvaluationFormBuilder implements ObjectBuilder<EmployeeEval
         return this;
     }
 
-    public EmployeeEvaluationFormBuilder appraisalXEvaluationForm(AppraisalXEvaluationFormTemplate appraisalXEvaluationFormTemplate) {
+    public EmployeeEvaluationFormBuilder appraisalXEvaluationFormTemplate(AppraisalXEvaluationFormTemplate
+                                                                                  appraisalXEvaluationFormTemplate) {
         this.appraisalXEvaluationFormTemplate = appraisalXEvaluationFormTemplate;
         this.appraisalXEvaluationFormSet = true;
         return this;

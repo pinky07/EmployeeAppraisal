@@ -74,7 +74,7 @@ public class AppraisalsControllerTest extends BaseControllerTest {
                 .buildWithDefaults();
 
         this.employeeEvaluationForm = new EmployeeEvaluationFormBuilder()
-                .appraisalXEvaluationForm(appraisalXEvaluationFormTemplate)
+                .appraisalXEvaluationFormTemplate(appraisalXEvaluationFormTemplate)
                 .buildWithDefaults();
 
         when(employeeService.getLoggedInUser()).thenReturn(this.user);
