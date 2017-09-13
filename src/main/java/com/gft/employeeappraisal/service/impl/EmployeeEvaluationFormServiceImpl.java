@@ -20,7 +20,7 @@ import java.util.stream.Stream;
 @Service
 public class EmployeeEvaluationFormServiceImpl implements EmployeeEvaluationFormService {
 
-    private EmployeeEvaluationFormRepository employeeEvaluationFormRepository;
+    private final EmployeeEvaluationFormRepository employeeEvaluationFormRepository;
 
     /**
      * @inheritDoc

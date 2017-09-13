@@ -1,8 +1,8 @@
 package com.gft.employeeappraisal.service;
 
 import com.gft.employeeappraisal.exception.NotFoundException;
-import com.gft.employeeappraisal.model.RelationshipType;
 import com.gft.employeeappraisal.model.RelationshipName;
+import com.gft.employeeappraisal.model.RelationshipType;
 
 import java.util.Optional;
 import java.util.stream.Stream;

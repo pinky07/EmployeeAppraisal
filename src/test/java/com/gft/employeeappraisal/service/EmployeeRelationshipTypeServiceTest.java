@@ -1,10 +1,10 @@
 package com.gft.employeeappraisal.service;
 
+import com.gft.employeeappraisal.exception.NotFoundException;
 import com.gft.employeeappraisal.helper.builder.model.EmployeeBuilder;
 import com.gft.employeeappraisal.helper.builder.model.EmployeeRelationshipBuilder;
 import com.gft.employeeappraisal.helper.builder.model.JobFamilyBuilder;
 import com.gft.employeeappraisal.helper.builder.model.JobLevelBuilder;
-import com.gft.employeeappraisal.exception.NotFoundException;
 import com.gft.employeeappraisal.model.*;
 import com.gft.employeeappraisal.service.impl.EmployeeRelationshipServiceImpl;
 import org.junit.Before;
@@ -49,7 +49,7 @@ public class EmployeeRelationshipTypeServiceTest extends BaseServiceTest {
     /**
      * Set up. Objects that need to be reinitialized.
      *
-     * @throws Exception
+     * @throws Exception If an error occurs
      */
     @Before
     public void setUp() throws Exception {

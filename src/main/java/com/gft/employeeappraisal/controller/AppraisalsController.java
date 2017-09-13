@@ -288,14 +288,12 @@ public class AppraisalsController implements AppraisalApi {
                 .collect(Collectors.toList());
 
         // Security check
-        employeeEvaluationFormList
-                .stream()
-                .forEach(employeeEvaluationForm -> this.securityService.canReadEmployeeEvaluationForm(loggedInUser, employeeEvaluationForm));
+        employeeEvaluationFormList.forEach(employeeEvaluationForm -> this.securityService.canReadEmployeeEvaluationForm(loggedInUser, employeeEvaluationForm));
 
         // Get DTOs
         List<EmployeeEvaluationFormDTO> result = employeeEvaluationFormList
                 .stream()
-                .map(employeeEvaluationForm -> employeeEvaluationFormDTOConverter.convert(employeeEvaluationForm))
+                .map(employeeEvaluationFormDTOConverter::convert)
                 .collect(Collectors.toList());
 
         return new ResponseEntity<>(result, HttpStatus.OK);
@@ -310,7 +308,7 @@ public class AppraisalsController implements AppraisalApi {
      * @param employeeId   {@link Employee} Id
      * @param appraisalId  {@link Appraisal} Id
      * @param formId       {@link EvaluationFormTemplate} Id
-     * @return
+     * @return An {@link EvaluationFormTemplateDTO}
      */
     private ResponseEntity<EvaluationFormTemplateDTO> employeesIdAppraisalsIdFormsIdGet(
             Employee loggedInUser,

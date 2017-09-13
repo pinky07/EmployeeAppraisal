@@ -1,8 +1,8 @@
 package com.gft.employeeappraisal.service.impl;
 
 import com.gft.employeeappraisal.exception.NotFoundException;
-import com.gft.employeeappraisal.model.RelationshipType;
 import com.gft.employeeappraisal.model.RelationshipName;
+import com.gft.employeeappraisal.model.RelationshipType;
 import com.gft.employeeappraisal.repository.RelationshipTypeRepository;
 import com.gft.employeeappraisal.service.RelationshipTypeService;
 import org.springframework.beans.factory.annotation.Autowired;

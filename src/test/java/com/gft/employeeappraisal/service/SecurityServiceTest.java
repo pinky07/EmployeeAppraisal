@@ -43,7 +43,7 @@ public class SecurityServiceTest extends BaseServiceTest {
     /**
      * Tests {@link SecurityService#canReadEmployee(Employee, Employee)}
      *
-     * @throws Exception
+     * @throws Exception If an errors occurs
      */
     @Test
     public void canReadEmployee_Successful_Self() throws Exception {
@@ -60,7 +60,7 @@ public class SecurityServiceTest extends BaseServiceTest {
     /**
      * Tests {@link SecurityService#canReadEmployee(Employee, Employee)}
      *
-     * @throws Exception
+     * @throws Exception If an errors occurs
      */
     @Test
     public void canReadEmployee_Successful_Mentee() throws Exception {
@@ -80,7 +80,7 @@ public class SecurityServiceTest extends BaseServiceTest {
     /**
      * Tests {@link SecurityService#canReadEmployee(Employee, Employee)}
      *
-     * @throws Exception
+     * @throws Exception If an errors occurs
      */
     @Test(expected = AccessDeniedException.class)
     public void canReadEmployee_RequestedNotMentee() throws Exception {
@@ -97,7 +97,7 @@ public class SecurityServiceTest extends BaseServiceTest {
     /**
      * Tests {@link SecurityService#canWriteEmployeeRelationship(Employee, Employee, Employee)}
      *
-     * @throws Exception
+     * @throws Exception If an errors occurs
      */
     @Test
     public void canWriteEmployeeRelationship_Successful_Self() throws Exception {
@@ -115,7 +115,7 @@ public class SecurityServiceTest extends BaseServiceTest {
     /**
      * Tests {@link SecurityService#canWriteEmployeeRelationship(Employee, Employee, Employee)}
      *
-     * @throws Exception
+     * @throws Exception If an errors occurs
      */
     @Test
     public void canWriteEmployeeRelationship_Successful_Mentee() throws Exception {
@@ -136,7 +136,7 @@ public class SecurityServiceTest extends BaseServiceTest {
     /**
      * Tests {@link SecurityService#canWriteEmployeeRelationship(Employee, Employee, Employee)}
      *
-     * @throws Exception
+     * @throws Exception If an errors occurs
      */
     @Test(expected = AccessDeniedException.class)
     public void canWriteEmployeeRelationship_RequestedNotMentee() throws Exception {
@@ -154,7 +154,7 @@ public class SecurityServiceTest extends BaseServiceTest {
     /**
      * Tests {@link SecurityService#checkRelationshipCount(Employee)}
      *
-     * @throws Exception
+     * @throws Exception If an errors occurs
      */
     @Test
     public void checkRelationshipCount_Successful() throws Exception {
@@ -181,7 +181,7 @@ public class SecurityServiceTest extends BaseServiceTest {
     /**
      * Tests {@link SecurityService#checkRelationshipCount(Employee)}
      *
-     * @throws Exception
+     * @throws Exception If an errors occurs
      */
     @Test(expected = AccessDeniedException.class)
     public void checkRelationshipCount_LimitExceeded() throws Exception {

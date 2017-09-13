@@ -88,7 +88,7 @@ public class EmployeesControllerMentorTest extends BaseControllerTest {
     /**
      * Tests {@link EmployeesController#employeesIdMentorGet(Integer)}
      *
-     * @throws Exception
+     * @throws Exception If an errors occurs
      */
     @Test
     public void employeesIdMentorGet_Successful() throws Exception {
@@ -115,7 +115,7 @@ public class EmployeesControllerMentorTest extends BaseControllerTest {
     /**
      * Tessts {@link EmployeesController#employeesIdMentorGet(Integer)}
      *
-     * @throws Exception
+     * @throws Exception If an errors occurs
      */
     @Test
     @SuppressWarnings("unchecked")
@@ -156,7 +156,7 @@ public class EmployeesControllerMentorTest extends BaseControllerTest {
     /**
      * Tests {@link EmployeesController#employeesIdMentorPut(Integer, EmployeeDTO)}
      *
-     * @throws Exception
+     * @throws Exception If an errors occurs
      */
     @Test
     public void employeesIdMentorPut() throws Exception {
@@ -185,7 +185,7 @@ public class EmployeesControllerMentorTest extends BaseControllerTest {
     /**
      * Tests {@link EmployeesController#employeesIdMentorPut(Integer, EmployeeDTO)}
      *
-     * @throws Exception
+     * @throws Exception If an errors occurs
      */
     @Test
     @SuppressWarnings("unchecked")
@@ -215,7 +215,7 @@ public class EmployeesControllerMentorTest extends BaseControllerTest {
     /**
      * Tests {@link EmployeesController#employeesIdMentorPut(Integer, EmployeeDTO)}
      *
-     * @throws Exception
+     * @throws Exception If an errors occurs
      */
     @Test
     @SuppressWarnings("unchecked")

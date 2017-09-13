@@ -7,7 +7,6 @@ import com.gft.employeeappraisal.model.Employee;
 import com.gft.employeeappraisal.model.EmployeeEvaluationForm;
 import com.gft.employeeappraisal.repository.AppraisalRepository;
 import com.gft.employeeappraisal.service.AppraisalService;
-import com.gft.employeeappraisal.service.AppraisalXEvaluationFormTemplateService;
 import com.gft.employeeappraisal.service.EmployeeEvaluationFormService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -25,16 +24,13 @@ public class AppraisalServiceImpl implements AppraisalService {
 
     private final AppraisalRepository appraisalRepository;
     private final EmployeeEvaluationFormService employeeEvaluationFormService;
-    private final AppraisalXEvaluationFormTemplateService appraisalXEvaluationFormTemplateService;
 
     @Autowired
     public AppraisalServiceImpl(
             AppraisalRepository appraisalRepository,
-            EmployeeEvaluationFormService employeeEvaluationFormService,
-            AppraisalXEvaluationFormTemplateService appraisalXEvaluationFormTemplateService) {
+            EmployeeEvaluationFormService employeeEvaluationFormService) {
         this.appraisalRepository = appraisalRepository;
         this.employeeEvaluationFormService = employeeEvaluationFormService;
-        this.appraisalXEvaluationFormTemplateService = appraisalXEvaluationFormTemplateService;
     }
 
     /**

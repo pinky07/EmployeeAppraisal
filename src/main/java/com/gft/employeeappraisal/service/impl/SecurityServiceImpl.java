@@ -49,7 +49,7 @@ public class SecurityServiceImpl implements SecurityService {
      */
     @Override
     public void canReadAppraisal(Employee reader, Employee employee, Appraisal appraisal) throws AccessDeniedException {
-        if (!employee.equals(employee)) {
+        if (!reader.equals(employee)) {
             throw new AccessDeniedException(String.format(
                     "Employee[%d] can't read Appraisal[%d] from Employee[%d]",
                     reader.getId(),

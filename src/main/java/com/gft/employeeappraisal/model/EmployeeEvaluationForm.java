@@ -112,7 +112,7 @@ public class EmployeeEvaluationForm {
     public void setEmployeeEvaluationFormAnswerSet(Set<EmployeeEvaluationFormAnswer> employeeEvaluationFormAnswerSet) {
         this.employeeEvaluationFormAnswerSet = employeeEvaluationFormAnswerSet;
     }
-    
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -123,8 +123,7 @@ public class EmployeeEvaluationForm {
         if (getId() != that.getId()) return false;
         if (!getAppraisalXEvaluationFormTemplate().equals(that.getAppraisalXEvaluationFormTemplate())) return false;
         if (!getEmployee().equals(that.getEmployee())) return false;
-        if (!getFilledByEmployee().equals(that.getFilledByEmployee())) return false;
-        return getMentor().equals(that.getMentor());
+        return getFilledByEmployee().equals(that.getFilledByEmployee()) && getMentor().equals(that.getMentor());
     }
 
     @Override

@@ -4,8 +4,8 @@ import com.gft.employeeappraisal.exception.EmployeeAppraisalMicroserviceExceptio
 import com.gft.employeeappraisal.exception.NotFoundException;
 import com.gft.employeeappraisal.model.Employee;
 import com.gft.employeeappraisal.model.EmployeeRelationship;
-import com.gft.employeeappraisal.model.RelationshipType;
 import com.gft.employeeappraisal.model.RelationshipName;
+import com.gft.employeeappraisal.model.RelationshipType;
 import com.gft.employeeappraisal.repository.EmployeeRelationshipRepository;
 import com.gft.employeeappraisal.service.EmployeeRelationshipService;
 import com.gft.employeeappraisal.service.RelationshipTypeService;

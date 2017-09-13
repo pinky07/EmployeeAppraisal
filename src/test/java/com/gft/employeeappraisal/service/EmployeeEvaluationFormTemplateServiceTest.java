@@ -38,10 +38,10 @@ public class EmployeeEvaluationFormTemplateServiceTest extends BaseServiceTest {
     /**
      * Set up. Objects that need to be reinitialized.
      *
-     * @throws Exception
+     * @throws Exception If an error occurs
      */
     @Before
-    public void setUp() {
+    public void setUp() throws Exception {
         // Initialize the class under test
         employeeEvaluationFormService = new EmployeeEvaluationFormServiceImpl(
                 this.employeeEvaluationFormRepository);
