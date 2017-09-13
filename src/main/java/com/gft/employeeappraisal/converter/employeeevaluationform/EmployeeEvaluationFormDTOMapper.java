@@ -1,7 +1,6 @@
 package com.gft.employeeappraisal.converter.employeeevaluationform;
 
 import com.gft.employeeappraisal.model.EmployeeEvaluationForm;
-import com.gft.employeeappraisal.service.EmployeeEvaluationFormService;
 import com.gft.employeeappraisal.service.EmployeeService;
 import com.gft.swagger.employees.model.EmployeeDTO;
 import com.gft.swagger.employees.model.EmployeeEvaluationFormDTO;
@@ -18,14 +17,11 @@ import org.springframework.stereotype.Component;
 @Component
 public class EmployeeEvaluationFormDTOMapper extends CustomMapper<EmployeeEvaluationForm, EmployeeEvaluationFormDTO> {
 
-    private final EmployeeEvaluationFormService employeeEvaluationFormService;
     private final EmployeeService employeeService;
 
     @Autowired
     public EmployeeEvaluationFormDTOMapper(
-            EmployeeEvaluationFormService employeeEvaluationFormService,
             EmployeeService employeeService) {
-        this.employeeEvaluationFormService = employeeEvaluationFormService;
         this.employeeService = employeeService;
     }
 

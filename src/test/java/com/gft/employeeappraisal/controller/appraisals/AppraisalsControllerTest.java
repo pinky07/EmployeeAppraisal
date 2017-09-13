@@ -81,22 +81,135 @@ public class AppraisalsControllerTest extends BaseControllerTest {
     }
 
     /**
-     * Tests {@link AppraisalsController}
+     * Tests {@link AppraisalsController#employeesIdAppraisalsGet(Integer)}
      *
      * @throws Exception If an error occurs
      */
-
     @Test
-    public void employeesEmployeeIdAppraisalsAppraisalIdFormsFormIdGet_Successful() throws Exception {
+    public void employeesIdAppraisalsGet_Successful() throws Exception {
+        // Set up
+        when(this.employeeService.getById(this.user.getId())).thenReturn(this.user);
+        when(this.employeeEvaluationFormService.findSelfByEmployee(this.user)).thenReturn(Stream.of(employeeEvaluationForm));
+
+        // Execution
+        MvcResult result = mockMvc.perform(
+                get(String.format(EMPLOYEES_ID_APPRAISALS_URL,
+                        this.user.getId()))
+                        .with(csrf())
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andReturn();
+        List<AppraisalDTO> appraisalDTOList = Arrays.asList(objectMapper.readValue(result
+                .getResponse().getContentAsString(), AppraisalDTO[].class));
+
+        // Verification
+        assertNotNull(appraisalDTOList);
+        assertEquals(appraisalDTOList.size(), 1);
+        AppraisalDTO appraisalDTO = appraisalDTOList.get(0);
+        assertEquals(this.appraisal.getName(), appraisalDTO.getName());
+        verify(this.employeeService, times(1)).getById(anyInt());
+        verify(this.employeeEvaluationFormService, times(1)).findSelfByEmployee(any(Employee.class));
     }
 
     /**
-     * Tests {@link AppraisalsController}
+     * Tests {@link AppraisalsController#employeesIdAppraisalsGet(Integer)}
      *
      * @throws Exception If an error occurs
      */
     @Test
-    public void employeesEmployeeIdAppraisalsAppraisalIdFormsGet_Successful() throws Exception {
+    public void employeesIdAppraisalsGet_Empty() throws Exception {
+        // Set up
+        when(this.employeeService.getById(this.user.getId())).thenReturn(this.user);
+        when(this.employeeEvaluationFormService.findSelfByEmployee(this.user)).thenReturn(Stream.empty());
+
+        // Execution
+        MvcResult result = mockMvc.perform(
+                get(String.format(EMPLOYEES_ID_APPRAISALS_URL,
+                        this.user.getId()))
+                        .with(csrf())
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andReturn();
+        List<AppraisalDTO> appraisalDTOList = Arrays.asList(objectMapper.readValue(result
+                .getResponse().getContentAsString(), AppraisalDTO[].class));
+
+        // Verification
+        assertNotNull(appraisalDTOList);
+        assertTrue(appraisalDTOList.isEmpty());
+        verify(this.employeeService, times(1)).getById(anyInt());
+        verify(this.employeeEvaluationFormService, times(1)).findSelfByEmployee(any(Employee.class));
+    }
+
+    /**
+     * Tests {@link AppraisalsController#employeesIdAppraisalsGet(Integer)}
+     *
+     * @throws Exception If an error occurs
+     */
+    @Test
+    public void employeesIdAppraisalsGet_EmployeeNotFound() throws Exception {
+        when(employeeService.getById(this.user.getId())).thenThrow(new NotFoundException("Employee Not Found"));
+
+        MvcResult result = mockMvc.perform(
+                get(String.format("%s/%d%s",
+                        EMPLOYEES_URL,
+                        this.user.getId(),
+                        APPRAISAL_URL))
+                        .with(csrf())
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNotFound())
+                .andReturn();
+
+        OperationResultDTO resultDTO = objectMapper.readValue(result
+                .getResponse().getContentAsString(), OperationResultDTO.class);
+
+        assertNotNull(resultDTO);
+        assertEquals(resultDTO.getMessage(), Constants.ERROR);
+
+        verify(this.employeeService, times(1)).getById(anyInt());
+        verify(this.appraisalService, never()).findEmployeeAppraisals(any(Employee.class));
+    }
+
+    /**
+     * Tests {@link AppraisalsController#employeesIdAppraisalsGet(Integer)}
+     *
+     * @throws Exception If an error occurs
+     */
+    @Test
+    public void employeesIdAppraisalsGet_BadRequest() throws Exception {
+
+        MvcResult result = mockMvc.perform(
+                get(String.format("%s/null%s",
+                        EMPLOYEES_URL,
+                        APPRAISAL_URL))
+                        .with(csrf())
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest())
+                .andReturn();
+
+        String resultString = result.getResponse().getContentAsString();
+
+        assertTrue(StringUtils.isEmpty(resultString));
+
+        verify(employeeService, never()).getById(anyInt());
+        verify(appraisalService, never()).findEmployeeAppraisals(any(Employee.class));
+    }
+
+    /**
+     * Tests {@link AppraisalsController#employeesIdAppraisalsIdFormsGet(Integer, Integer)}
+     *
+     * @throws Exception If an error occurs
+     */
+    @Test
+    public void employeesIdAppraisalsIdFormsGet_Successful() throws Exception {
+    }
+
+    /**
+     * Tests {@link AppraisalsController#employeesIdAppraisalsIdFormsIdGet(Integer, Integer, Integer)}
+     *
+     * @throws Exception If an error occurs
+     */
+    @Test
+    public void employeesIdAppraisalsIdFormsIdGet_Successful() throws Exception {
     }
 
     /**
@@ -250,22 +363,81 @@ public class AppraisalsControllerTest extends BaseControllerTest {
     }
 
     /**
-     * Tests {@link AppraisalsController}
+     * Tests {@link AppraisalsController#meAppraisalsGet()}
      *
      * @throws Exception If an error occurs
      */
-
     @Test
-    public void meAppraisalsAppraisalIdFormsFormIdGet_Successful() throws Exception {
+    public void meAppraisalsGet_Successful() throws Exception {
+        // Set up
+        when(this.employeeService.getById(this.user.getId())).thenReturn(this.user);
+        when(this.employeeEvaluationFormService.findSelfByEmployee(this.user))
+                .thenReturn(Stream.of(employeeEvaluationForm));
+
+        // Execution
+        MvcResult result = mockMvc.perform(get(
+                ME_APPRAISALS_URL)
+                .with(csrf())
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andReturn();
+        List<AppraisalDTO> appraisalDTOList = Arrays.asList(objectMapper.readValue(result
+                .getResponse().getContentAsString(), AppraisalDTO[].class));
+
+        // Verification
+        assertNotNull(appraisalDTOList);
+        assertEquals(appraisalDTOList.size(), 1);
+        AppraisalDTO appraisalDTO = appraisalDTOList.get(0);
+        assertEquals(this.appraisal.getName(), appraisalDTO.getName());
+        verify(this.employeeService, times(1)).getLoggedInUser();
+        verify(this.employeeEvaluationFormService, times(1)).findSelfByEmployee(any(Employee.class));
     }
 
     /**
-     * Tests {@link AppraisalsController}
+     * Tests {@link AppraisalsController#meAppraisalsGet()}
      *
      * @throws Exception If an error occurs
      */
     @Test
-    public void meAppraisalsAppraisalIdFormsGet_Successful() throws Exception {
+    public void meAppraisalsGet_Empty() throws Exception {
+        // Set up
+        when(this.employeeService.getById(this.user.getId())).thenReturn(this.user);
+        when(this.employeeEvaluationFormService.findSelfByEmployee(this.user))
+                .thenReturn(Stream.empty());
+
+        // Execution
+        MvcResult result = mockMvc.perform(get(
+                ME_APPRAISALS_URL)
+                .with(csrf())
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andReturn();
+        List<AppraisalDTO> appraisalDTOList = Arrays.asList(objectMapper.readValue(result
+                .getResponse().getContentAsString(), AppraisalDTO[].class));
+
+        // Verification
+        assertNotNull(appraisalDTOList);
+        assertTrue(appraisalDTOList.isEmpty());
+        verify(this.employeeService, times(1)).getLoggedInUser();
+        verify(this.employeeEvaluationFormService, times(1)).findSelfByEmployee(any(Employee.class));
+    }
+
+    /**
+     * Tests {@link AppraisalsController#meAppraisalsIdFormsGet(Integer)}
+     *
+     * @throws Exception If an error occurs
+     */
+    @Test
+    public void meAppraisalsIdFormsGet_Successful() throws Exception {
+    }
+
+    /**
+     * Tests {@link AppraisalsController#meAppraisalsIdFormsIdGet(Integer, Integer)}
+     *
+     * @throws Exception If an error occurs
+     */
+    @Test
+    public void meAppraisalsIdFormsIdGet_Successful() throws Exception {
     }
 
     /**
@@ -380,179 +552,5 @@ public class AppraisalsControllerTest extends BaseControllerTest {
         verify(this.employeeService, never()).getLoggedInUser();
         verify(this.appraisalService, never()).getById(anyInt());
         verify(this.employeeEvaluationFormService, never()).findSelfByEmployeeAndAppraisal(any(Employee.class), any(Appraisal.class));
-    }
-
-    /**
-     * Tests {@link AppraisalsController#meAppraisalsGet()}
-     *
-     * @throws Exception If an error occurs
-     */
-    @Test
-    public void meAppraisalsGet_Successful() throws Exception {
-        // Set up
-        when(this.employeeService.getById(this.user.getId())).thenReturn(this.user);
-        when(this.employeeEvaluationFormService.findSelfByEmployee(this.user))
-                .thenReturn(Stream.of(employeeEvaluationForm));
-
-        // Execution
-        MvcResult result = mockMvc.perform(get(
-                ME_APPRAISALS_URL)
-                .with(csrf())
-                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andReturn();
-        List<AppraisalDTO> appraisalDTOList = Arrays.asList(objectMapper.readValue(result
-                .getResponse().getContentAsString(), AppraisalDTO[].class));
-
-        // Verification
-        assertNotNull(appraisalDTOList);
-        assertEquals(appraisalDTOList.size(), 1);
-        AppraisalDTO appraisalDTO = appraisalDTOList.get(0);
-        assertEquals(this.appraisal.getName(), appraisalDTO.getName());
-        verify(this.employeeService, times(1)).getLoggedInUser();
-        verify(this.employeeEvaluationFormService, times(1)).findSelfByEmployee(any(Employee.class));
-    }
-
-    /**
-     * Tests {@link AppraisalsController#meAppraisalsGet()}
-     *
-     * @throws Exception If an error occurs
-     */
-    @Test
-    public void meAppraisalsGet_Empty() throws Exception {
-        // Set up
-        when(this.employeeService.getById(this.user.getId())).thenReturn(this.user);
-        when(this.employeeEvaluationFormService.findSelfByEmployee(this.user))
-                .thenReturn(Stream.empty());
-
-        // Execution
-        MvcResult result = mockMvc.perform(get(
-                ME_APPRAISALS_URL)
-                .with(csrf())
-                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andReturn();
-        List<AppraisalDTO> appraisalDTOList = Arrays.asList(objectMapper.readValue(result
-                .getResponse().getContentAsString(), AppraisalDTO[].class));
-
-        // Verification
-        assertNotNull(appraisalDTOList);
-        assertTrue(appraisalDTOList.isEmpty());
-        verify(this.employeeService, times(1)).getLoggedInUser();
-        verify(this.employeeEvaluationFormService, times(1)).findSelfByEmployee(any(Employee.class));
-    }
-
-    /**
-     * Tests {@link AppraisalsController#employeesIdAppraisalsGet(Integer)}
-     *
-     * @throws Exception If an error occurs
-     */
-    @Test
-    public void employeesIdAppraisalsGet_Successful() throws Exception {
-        // Set up
-        when(this.employeeService.getById(this.user.getId())).thenReturn(this.user);
-        when(this.employeeEvaluationFormService.findSelfByEmployee(this.user)).thenReturn(Stream.of(employeeEvaluationForm));
-
-        // Execution
-        MvcResult result = mockMvc.perform(
-                get(String.format(EMPLOYEES_ID_APPRAISALS_URL,
-                        this.user.getId()))
-                        .with(csrf())
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andReturn();
-        List<AppraisalDTO> appraisalDTOList = Arrays.asList(objectMapper.readValue(result
-                .getResponse().getContentAsString(), AppraisalDTO[].class));
-
-        // Verification
-        assertNotNull(appraisalDTOList);
-        assertEquals(appraisalDTOList.size(), 1);
-        AppraisalDTO appraisalDTO = appraisalDTOList.get(0);
-        assertEquals(this.appraisal.getName(), appraisalDTO.getName());
-        verify(this.employeeService, times(1)).getById(anyInt());
-        verify(this.employeeEvaluationFormService, times(1)).findSelfByEmployee(any(Employee.class));
-    }
-
-    /**
-     * Tests {@link AppraisalsController}
-     *
-     * @throws Exception If an error occurs
-     */
-    @Test
-    public void employeesIdAppraisalsGet_Empty() throws Exception {
-        // Set up
-        when(this.employeeService.getById(this.user.getId())).thenReturn(this.user);
-        when(this.employeeEvaluationFormService.findSelfByEmployee(this.user)).thenReturn(Stream.empty());
-
-        // Execution
-        MvcResult result = mockMvc.perform(
-                get(String.format(EMPLOYEES_ID_APPRAISALS_URL,
-                        this.user.getId()))
-                        .with(csrf())
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andReturn();
-        List<AppraisalDTO> appraisalDTOList = Arrays.asList(objectMapper.readValue(result
-                .getResponse().getContentAsString(), AppraisalDTO[].class));
-
-        // Verification
-        assertNotNull(appraisalDTOList);
-        assertTrue(appraisalDTOList.isEmpty());
-        verify(this.employeeService, times(1)).getById(anyInt());
-        verify(this.employeeEvaluationFormService, times(1)).findSelfByEmployee(any(Employee.class));
-    }
-
-    /**
-     * Tests {@link AppraisalsController}
-     *
-     * @throws Exception If an error occurs
-     */
-    @Test
-    public void employeesIdAppraisalsGet_EmployeeNotFound() throws Exception {
-        when(employeeService.getById(this.user.getId())).thenThrow(new NotFoundException("Employee Not Found"));
-
-        MvcResult result = mockMvc.perform(
-                get(String.format("%s/%d%s",
-                        EMPLOYEES_URL,
-                        this.user.getId(),
-                        APPRAISAL_URL))
-                        .with(csrf())
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isNotFound())
-                .andReturn();
-
-        OperationResultDTO resultDTO = objectMapper.readValue(result
-                .getResponse().getContentAsString(), OperationResultDTO.class);
-
-        assertNotNull(resultDTO);
-        assertEquals(resultDTO.getMessage(), Constants.ERROR);
-
-        verify(this.employeeService, times(1)).getById(anyInt());
-        verify(this.appraisalService, never()).findEmployeeAppraisals(any(Employee.class));
-    }
-
-    /**
-     * Tests {@link AppraisalsController}
-     *
-     * @throws Exception If an error occurs
-     */
-    @Test
-    public void employeesIdAppraisalsGet_BadRequest() throws Exception {
-
-        MvcResult result = mockMvc.perform(
-                get(String.format("%s/null%s",
-                        EMPLOYEES_URL,
-                        APPRAISAL_URL))
-                        .with(csrf())
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isBadRequest())
-                .andReturn();
-
-        String resultString = result.getResponse().getContentAsString();
-
-        assertTrue(StringUtils.isEmpty(resultString));
-
-        verify(employeeService, never()).getById(anyInt());
-        verify(appraisalService, never()).findEmployeeAppraisals(any(Employee.class));
     }
 }

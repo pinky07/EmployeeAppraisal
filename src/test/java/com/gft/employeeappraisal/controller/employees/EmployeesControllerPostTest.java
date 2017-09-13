@@ -2,7 +2,6 @@ package com.gft.employeeappraisal.controller.employees;
 
 import com.gft.employeeappraisal.controller.BaseControllerTest;
 import com.gft.employeeappraisal.controller.EmployeesController;
-import com.gft.employeeappraisal.converter.employee.EmployeeDTOConverter;
 import com.gft.employeeappraisal.helper.builder.dto.ApplicationRoleDTOBuilder;
 import com.gft.employeeappraisal.helper.builder.dto.EmployeeDTOBuilder;
 import com.gft.employeeappraisal.helper.builder.dto.JobFamilyDTOBuilder;
@@ -22,7 +21,6 @@ import com.gft.swagger.employees.model.OperationResultDTO;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MvcResult;
@@ -110,7 +108,7 @@ public class EmployeesControllerPostTest extends BaseControllerTest {
     /**
      * Tests {@link EmployeesController#employeesPost(EmployeeDTO)}
      *
-     * @throws Exception
+     * @throws Exception If an errors occurs
      */
     @Test
     public void employeesPost_BadRequest() throws Exception {

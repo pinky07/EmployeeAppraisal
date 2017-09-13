@@ -33,8 +33,7 @@ public class AppraisalServiceTest extends BaseServiceTest {
     public void setUp() throws Exception {
         this.appraisalService = new AppraisalServiceImpl(
                 this.appraisalRepository,
-                this.employeeEvaluationFormService,
-                this.appraisalXEvaluationFormTemplateService);
+                this.employeeEvaluationFormService);
 
         // Create an Application Role
         ApplicationRole userApplicationRole = this.applicationRoleRepository

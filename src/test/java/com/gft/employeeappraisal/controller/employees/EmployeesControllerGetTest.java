@@ -142,7 +142,7 @@ public class EmployeesControllerGetTest extends BaseControllerTest {
     /**
      * Tests {@link EmployeesController#employeesIdGet(Integer)}
      *
-     * @throws Exception
+     * @throws Exception If an errors occurs
      */
     @Test
     @WithMockUser(USER_EMAIL)
@@ -172,7 +172,7 @@ public class EmployeesControllerGetTest extends BaseControllerTest {
     /**
      * Tests {@link EmployeesController#employeesIdGet(Integer)}
      *
-     * @throws Exception
+     * @throws Exception If an errors occurs
      */
     @Test
     @WithMockUser(USER_EMAIL)

@@ -106,7 +106,7 @@ public class EmployeesControllerRelationshipsTest extends BaseControllerTest {
     /**
      * Tests {@link EmployeesController#employeesIdRelationshipsGet(Integer, List, String, String, Boolean)}
      *
-     * @throws Exception
+     * @throws Exception If an errors occurs
      */
     @Test
     public void employeesIdRelationshipsGet_Successful() throws Exception {
@@ -148,7 +148,7 @@ public class EmployeesControllerRelationshipsTest extends BaseControllerTest {
     /**
      * Tests {@link EmployeesController#employeesIdRelationshipsGet(Integer, List, String, String, Boolean)}
      *
-     * @throws Exception
+     * @throws Exception If an errors occurs
      */
     @Test
     public void employeesIdRelationshipsGet_emptyList() throws Exception {
@@ -183,7 +183,7 @@ public class EmployeesControllerRelationshipsTest extends BaseControllerTest {
     /**
      * Tests {@link EmployeesController#employeesIdRelationshipsGet(Integer, List, String, String, Boolean)}
      *
-     * @throws Exception
+     * @throws Exception If an errors occurs
      */
     @Test
     public void employeesIdRelationshipsGet_requestedNotExists() throws Exception {

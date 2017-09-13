@@ -391,7 +391,7 @@ public class EmployeesController implements EmployeeApi {
         logger.debug("GET endpoint: /relationships/{}", relationshipId);
 
         RelationshipTypeDTO relationship = relationshipTypeService.findById(relationshipId)
-                .map(r -> relationshipTypeDTOConverter.convert(r))
+                .map(relationshipTypeDTOConverter::convert)
                 .orElseThrow(() -> new NotFoundException(String.format("RelationshipType with id %d was not found",
                         relationshipId)));
 
