@@ -195,24 +195,6 @@ public class AppraisalsControllerTest extends BaseControllerTest {
     }
 
     /**
-     * Tests {@link AppraisalsController#employeesIdAppraisalsIdFormsGet(Integer, Integer)}
-     *
-     * @throws Exception If an error occurs
-     */
-    @Test
-    public void employeesIdAppraisalsIdFormsGet_Successful() throws Exception {
-    }
-
-    /**
-     * Tests {@link AppraisalsController#employeesIdAppraisalsIdFormsIdGet(Integer, Integer, Integer)}
-     *
-     * @throws Exception If an error occurs
-     */
-    @Test
-    public void employeesIdAppraisalsIdFormsIdGet_Successful() throws Exception {
-    }
-
-    /**
      * Tests {@link AppraisalsController#employeesIdAppraisalsIdGet(Integer, Integer)}
      *
      * @throws Exception If an error occurs
@@ -420,24 +402,6 @@ public class AppraisalsControllerTest extends BaseControllerTest {
         assertTrue(appraisalDTOList.isEmpty());
         verify(this.employeeService, times(1)).getLoggedInUser();
         verify(this.employeeEvaluationFormService, times(1)).findSelfByEmployee(any(Employee.class));
-    }
-
-    /**
-     * Tests {@link AppraisalsController#meAppraisalsIdFormsGet(Integer)}
-     *
-     * @throws Exception If an error occurs
-     */
-    @Test
-    public void meAppraisalsIdFormsGet_Successful() throws Exception {
-    }
-
-    /**
-     * Tests {@link AppraisalsController#meAppraisalsIdFormsIdGet(Integer, Integer)}
-     *
-     * @throws Exception If an error occurs
-     */
-    @Test
-    public void meAppraisalsIdFormsIdGet_Successful() throws Exception {
     }
 
     /**

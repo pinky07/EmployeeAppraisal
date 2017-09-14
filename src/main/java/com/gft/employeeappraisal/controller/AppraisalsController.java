@@ -124,7 +124,8 @@ public class AppraisalsController implements AppraisalApi {
             @PathVariable("formId") Integer formId) {
         // Get logged in user
         Employee user = this.employeeService.getLoggedInUser();
-        logger.debug("{} called endpoint: GET /employees/{}/appraisals/{}/forms/{}", user.getEmail(), employeeId, appraisalId, formId);
+        logger.debug("{} called endpoint: GET /employees/{}/appraisals/{}/forms/{}", user.getEmail(), employeeId,
+                appraisalId, formId);
         return this.employeesIdAppraisalsIdFormsIdGet(user, employeeId, appraisalId, formId);
     }
 
