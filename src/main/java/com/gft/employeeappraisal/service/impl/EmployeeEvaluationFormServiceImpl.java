@@ -62,7 +62,7 @@ public class EmployeeEvaluationFormServiceImpl implements EmployeeEvaluationForm
     @Override
     public Optional<EmployeeEvaluationForm> findSelfByEmployeeAndAppraisal(Employee employee, Appraisal appraisal) {
         return Optional.ofNullable(this.employeeEvaluationFormRepository
-                .findSelfByEmployeeAndAppraisal(employee, appraisal));
+                .findByEmployeeAndFilledByEmployeeAndAppraisal(employee, employee, appraisal));
     }
 
     /**
@@ -72,6 +72,17 @@ public class EmployeeEvaluationFormServiceImpl implements EmployeeEvaluationForm
     public Stream<EmployeeEvaluationForm> findByEmployeeAndAppraisal(Employee employee, Appraisal appraisal) {
         return this.employeeEvaluationFormRepository.findByEmployeeAndAppraisal(employee, appraisal)
                 .stream();
+    }
+
+    /**
+     * @inheritDoc
+     */
+    @Override
+    public Optional<EmployeeEvaluationForm> findByEmployeeAndFilledByEmployeeAndAppraisal(Employee employee,
+                                                                                          Employee filledByEmployee,
+                                                                                          Appraisal appraisal) {
+        return Optional.ofNullable(this.employeeEvaluationFormRepository
+                .findByEmployeeAndFilledByEmployeeAndAppraisal(employee, filledByEmployee, appraisal));
     }
 
     /**

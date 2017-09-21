@@ -55,9 +55,12 @@ public interface SecurityService {
      *
      * @param reader   Employee who wants to read an {@link EvaluationFormTemplate}
      * @param employee Employee who has to fill the {@link EvaluationFormTemplate}
+     * @param evaluationFormTemplate Provided {@link EvaluationFormTemplate}
+     * @param appraisal {@link Appraisal} Process in which the Evaluation Form template is used
      * @throws AccessDeniedException If the access is denied
      */
-    void canReadEvaluationFormTemplate(Employee reader, Employee employee) throws AccessDeniedException;
+    void canReadEvaluationFormTemplate(Employee reader, Employee employee,
+                                       EvaluationFormTemplate evaluationFormTemplate, Appraisal appraisal) throws AccessDeniedException;
 
     /**
      * Determines if a certain person can create a certain Employee Relationship between two employees.

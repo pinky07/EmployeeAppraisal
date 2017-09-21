@@ -48,10 +48,24 @@ public interface EmployeeEvaluationFormService {
      *
      * @param employee  {@link Employee} being evaluated
      * @param appraisal Specific {@link Appraisal} process
-     * @return List of EmployeeEvaluationForm for the given {@link Employee}
+     * @return EmployeeEvaluationForm for the given {@link Employee}
      */
     Optional<EmployeeEvaluationForm> findSelfByEmployeeAndAppraisal(
             Employee employee,
+            Appraisal appraisal);
+
+    /**
+     * Looks for all {@link EmployeeEvaluationForm} for a given Employee during a specific {@link Appraisal} process.
+     * Returns only the {@link EmployeeEvaluationForm} that needs to be filled by the {@link Employee}.
+     *
+     * @param employee  {@link Employee} being evaluated
+     * @param filledByEmployee {@link Employee} whoever is filling the evaluation form
+     * @param appraisal Specific {@link Appraisal} process
+     * @return EmployeeEvaluationForm for the given {@link Employee}
+     */
+    Optional<EmployeeEvaluationForm> findByEmployeeAndFilledByEmployeeAndAppraisal(
+            Employee employee,
+            Employee filledByEmployee,
             Appraisal appraisal);
 
     /**

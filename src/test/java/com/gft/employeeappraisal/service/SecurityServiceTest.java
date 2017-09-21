@@ -1,14 +1,8 @@
 package com.gft.employeeappraisal.service;
 
 import com.gft.employeeappraisal.exception.AccessDeniedException;
-import com.gft.employeeappraisal.helper.builder.model.AppraisalBuilder;
-import com.gft.employeeappraisal.helper.builder.model.EmployeeBuilder;
-import com.gft.employeeappraisal.helper.builder.model.EmployeeEvaluationFormBuilder;
-import com.gft.employeeappraisal.helper.builder.model.EmployeeRelationshipBuilder;
-import com.gft.employeeappraisal.model.Appraisal;
-import com.gft.employeeappraisal.model.Employee;
-import com.gft.employeeappraisal.model.EmployeeEvaluationForm;
-import com.gft.employeeappraisal.model.RelationshipName;
+import com.gft.employeeappraisal.helper.builder.model.*;
+import com.gft.employeeappraisal.model.*;
 import com.gft.employeeappraisal.service.impl.SecurityServiceImpl;
 import org.junit.Before;
 import org.junit.Test;
@@ -41,7 +35,9 @@ public class SecurityServiceTest extends BaseServiceTest {
         this.securityService = new SecurityServiceImpl(
                 this.maxMenteeReferences,
                 this.employeeRelationshipService,
-                this.employeeService);
+                this.employeeService,
+                this.employeeEvaluationFormService,
+                this.evaluationFormTemplateService);
     }
 
     @Test
@@ -79,7 +75,7 @@ public class SecurityServiceTest extends BaseServiceTest {
         this.securityService.canReadEmployee(employee, employee);
 
         // Verification
-        verify(this.employeeService, times(0)).findCurrentMentorById(anyInt());
+        verify(this.employeeService, never()).findCurrentMentorById(anyInt());
     }
 
     /**
@@ -161,8 +157,29 @@ public class SecurityServiceTest extends BaseServiceTest {
         // Set up
         Employee employee = new EmployeeBuilder().id(1).buildWithDefaults();
 
+        EvaluationFormTemplate evaluationFormTemplate = new EvaluationFormTemplateBuilder().buildWithDefaults();
+
+        Appraisal appraisal = new AppraisalBuilder().buildWithDefaults();
+
+        EmployeeEvaluationForm employeeEvaluationForm = new EmployeeEvaluationFormBuilder()
+                .employee(employee)
+                .buildWithDefaults();
+
+        when(employeeEvaluationFormService
+                        .findByEmployeeAndFilledByEmployeeAndAppraisal(any(Employee.class),
+                                any(Employee.class), any(Appraisal.class))).thenReturn(Optional.of(employeeEvaluationForm));
+
+        when(evaluationFormTemplateService
+                .findByIdAndFilledByEmployeeAndAppraisal(anyInt(), any(Employee.class), any(Appraisal.class)))
+        .thenReturn(Optional.of(evaluationFormTemplate));
+
         // Execution
-        this.securityService.canReadEvaluationFormTemplate(employee, employee);
+        this.securityService.canReadEvaluationFormTemplate(employee, employee, evaluationFormTemplate, appraisal);
+
+        verify(employeeEvaluationFormService, times(1))
+                .findByEmployeeAndFilledByEmployeeAndAppraisal(any(Employee.class), any(Employee.class), any(Appraisal.class));
+        verify(evaluationFormTemplateService, times(1))
+                .findByIdAndFilledByEmployeeAndAppraisal(anyInt(), any(Employee.class), any(Appraisal.class));
     }
 
     @Test(expected = AccessDeniedException.class)
@@ -171,8 +188,29 @@ public class SecurityServiceTest extends BaseServiceTest {
         Employee employee = new EmployeeBuilder().id(1).buildWithDefaults();
         Employee another = new EmployeeBuilder().id(2).buildWithDefaults();
 
+        EvaluationFormTemplate evaluationFormTemplate = new EvaluationFormTemplateBuilder().buildWithDefaults();
+
+        Appraisal appraisal = new AppraisalBuilder().buildWithDefaults();
+
+        EmployeeEvaluationForm employeeEvaluationForm = new EmployeeEvaluationFormBuilder()
+                .employee(employee)
+                .buildWithDefaults();
+
+        when(employeeEvaluationFormService
+                .findByEmployeeAndFilledByEmployeeAndAppraisal(any(Employee.class),
+                        any(Employee.class), any(Appraisal.class))).thenReturn(Optional.of(employeeEvaluationForm));
+
+        when(evaluationFormTemplateService
+                .findByIdAndFilledByEmployeeAndAppraisal(anyInt(), any(Employee.class), any(Appraisal.class)))
+                .thenThrow(new AccessDeniedException("AccessDenied"));
+
         // Execution
-        this.securityService.canReadEvaluationFormTemplate(another, employee);
+        this.securityService.canReadEvaluationFormTemplate(another, employee, evaluationFormTemplate, appraisal);
+
+        verify(employeeEvaluationFormService, times(1))
+                .findByEmployeeAndFilledByEmployeeAndAppraisal(any(Employee.class), any(Employee.class), any(Appraisal.class));
+        verify(evaluationFormTemplateService, times(1))
+                .findByIdAndFilledByEmployeeAndAppraisal(anyInt(), any(Employee.class), any(Appraisal.class));
     }
 
     /**

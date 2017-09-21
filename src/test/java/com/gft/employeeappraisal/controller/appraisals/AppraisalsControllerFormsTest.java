@@ -303,7 +303,8 @@ public class AppraisalsControllerFormsTest extends BaseControllerTest {
         verify(employeeEvaluationFormService, times(1))
                 .findByEmployeeAndAppraisal(any(Employee.class), any(Appraisal.class));
         verify(securityService, times(1))
-                .canReadEvaluationFormTemplate(any(Employee.class), any(Employee.class));
+                .canReadEvaluationFormTemplate(any(Employee.class), any(Employee.class),
+                        any(EvaluationFormTemplate.class), any(Appraisal.class));
 
         assertNotNull(employeeEvaluationFormDTO);
     }
@@ -334,7 +335,8 @@ public class AppraisalsControllerFormsTest extends BaseControllerTest {
         verify(employeeEvaluationFormService, times(1))
                 .findByEmployeeAndAppraisal(any(Employee.class), any(Appraisal.class));
         verify(securityService, times(1))
-                .canReadEvaluationFormTemplate(any(Employee.class), any(Employee.class));
+                .canReadEvaluationFormTemplate(any(Employee.class), any(Employee.class),
+                        any(EvaluationFormTemplate.class), any(Appraisal.class));
 
         assertNotNull(employeeEvaluationFormDTO); /// ??? returns a DTO with null values, not an OperationResultDTO
     }
@@ -361,8 +363,9 @@ public class AppraisalsControllerFormsTest extends BaseControllerTest {
         verify(appraisalService, times(1)).getById(anyInt());
         verify(employeeEvaluationFormService, never())
                 .findByEmployeeAndAppraisal(any(Employee.class), any(Appraisal.class));
-        verify(securityService, times(1))
-                .canReadEvaluationFormTemplate(any(Employee.class), any(Employee.class));
+        verify(securityService, never())
+                .canReadEvaluationFormTemplate(any(Employee.class), any(Employee.class),
+                        any(EvaluationFormTemplate.class), any(Appraisal.class));
 
         assertNotNull(response);
         assertEquals(Constants.ERROR, response.getMessage());
@@ -390,7 +393,8 @@ public class AppraisalsControllerFormsTest extends BaseControllerTest {
         verify(employeeEvaluationFormService, never())
                 .findByEmployeeAndAppraisal(any(Employee.class), any(Appraisal.class));
         verify(securityService, never())
-                .canReadEvaluationFormTemplate(any(Employee.class), any(Employee.class));
+                .canReadEvaluationFormTemplate(any(Employee.class), any(Employee.class),
+                        any(EvaluationFormTemplate.class), any(Appraisal.class));
 
         assertNotNull(response);
         assertEquals(Constants.ERROR, response.getMessage());
@@ -400,7 +404,8 @@ public class AppraisalsControllerFormsTest extends BaseControllerTest {
     public void employeesIdAppraisalsIdFormsIdGet_securityCheckFailed() throws Exception {
         when(employeeService.getById(anyInt())).thenReturn(user);
         doThrow(new AccessDeniedException("Access Denied")).when(securityService)
-                .canReadEvaluationFormTemplate(any(Employee.class), any(Employee.class));
+                .canReadEvaluationFormTemplate(any(Employee.class), any(Employee.class),
+                        any(EvaluationFormTemplate.class), any(Appraisal.class));
 
         MvcResult result = mockMvc.perform(
                 get(String.format(EMPLOYEES_ID_APPRAISALS_ID_FORMS_ID_URL,
@@ -416,11 +421,10 @@ public class AppraisalsControllerFormsTest extends BaseControllerTest {
 
         verify(employeeService, times(1)).getLoggedInUser();
         verify(employeeService, times(1)).getById(anyInt());
-        verify(appraisalService, never()).getById(anyInt());
-        verify(employeeEvaluationFormService, never())
-                .findByEmployeeAndAppraisal(any(Employee.class), any(Appraisal.class));
+        verify(appraisalService, times(1)).getById(anyInt());
         verify(securityService, times(1))
-                .canReadEvaluationFormTemplate(any(Employee.class), any(Employee.class));
+                .canReadEvaluationFormTemplate(any(Employee.class), any(Employee.class),
+                        any(EvaluationFormTemplate.class), any(Appraisal.class));
 
         assertNotNull(response);
         assertEquals(Constants.ERROR, response.getMessage());
@@ -445,7 +449,8 @@ public class AppraisalsControllerFormsTest extends BaseControllerTest {
         verify(employeeEvaluationFormService, never())
                 .findByEmployeeAndAppraisal(any(Employee.class), any(Appraisal.class));
         verify(securityService, never())
-                .canReadEvaluationFormTemplate(any(Employee.class), any(Employee.class));
+                .canReadEvaluationFormTemplate(any(Employee.class), any(Employee.class),
+                        any(EvaluationFormTemplate.class), any(Appraisal.class));
 
         assertTrue(StringUtils.isEmpty(resultString));
     }
@@ -652,7 +657,8 @@ public class AppraisalsControllerFormsTest extends BaseControllerTest {
         verify(employeeEvaluationFormService, times(1))
                 .findByEmployeeAndAppraisal(any(Employee.class), any(Appraisal.class));
         verify(securityService, times(1))
-                .canReadEvaluationFormTemplate(any(Employee.class), any(Employee.class));
+                .canReadEvaluationFormTemplate(any(Employee.class), any(Employee.class),
+                        any(EvaluationFormTemplate.class), any(Appraisal.class));
 
         assertNotNull(employeeEvaluationFormDTO);
     }
@@ -682,7 +688,8 @@ public class AppraisalsControllerFormsTest extends BaseControllerTest {
         verify(employeeEvaluationFormService, times(1))
                 .findByEmployeeAndAppraisal(any(Employee.class), any(Appraisal.class));
         verify(securityService, times(1))
-                .canReadEvaluationFormTemplate(any(Employee.class), any(Employee.class));
+                .canReadEvaluationFormTemplate(any(Employee.class), any(Employee.class),
+                        any(EvaluationFormTemplate.class), any(Appraisal.class));
 
         assertNotNull(employeeEvaluationFormDTO);
     }
@@ -693,8 +700,8 @@ public class AppraisalsControllerFormsTest extends BaseControllerTest {
 
         // We will simulate that employeePeer has nothing to do with the process
         doThrow(new AccessDeniedException("Employee[%d] can't read EvaluationFormTemplate[%d]"))
-                .when(securityService).canReadEvaluationFormTemplate(any(Employee.class),
-                any(Employee.class));
+                .when(securityService).canReadEvaluationFormTemplate(any(Employee.class), any(Employee.class),
+                any(EvaluationFormTemplate.class), any(Appraisal.class));
 
         MvcResult result = mockMvc.perform(
                 get(String.format(ME_APPRAISALS_ID_FORMS_ID_URL,
@@ -709,11 +716,10 @@ public class AppraisalsControllerFormsTest extends BaseControllerTest {
 
         verify(employeeService, times(1)).getLoggedInUser();
         verify(employeeService, times(1)).getById(anyInt());
-        verify(appraisalService, never()).getById(anyInt());
-        verify(employeeEvaluationFormService, never())
-                .findByEmployeeAndAppraisal(any(Employee.class), any(Appraisal.class));
+        verify(appraisalService, times(1)).getById(anyInt());
         verify(securityService, times(1))
-                .canReadEvaluationFormTemplate(any(Employee.class), any(Employee.class));
+                .canReadEvaluationFormTemplate(any(Employee.class), any(Employee.class),
+                        any(EvaluationFormTemplate.class), any(Appraisal.class));
 
         assertNotNull(response);
         assertEquals(Constants.ERROR, response.getMessage());
@@ -738,10 +744,9 @@ public class AppraisalsControllerFormsTest extends BaseControllerTest {
         verify(employeeService, times(1)).getLoggedInUser();
         verify(employeeService, times(1)).getById(anyInt());
         verify(appraisalService, times(1)).getById(anyInt());
-        verify(employeeEvaluationFormService, never())
-                .findByEmployeeAndAppraisal(any(Employee.class), any(Appraisal.class));
-        verify(securityService, times(1))
-                .canReadEvaluationFormTemplate(any(Employee.class), any(Employee.class));
+        verify(securityService, never())
+                .canReadEvaluationFormTemplate(any(Employee.class), any(Employee.class),
+                        any(EvaluationFormTemplate.class), any(Appraisal.class));
 
         assertNotNull(response);
         assertEquals(Constants.ERROR, response.getMessage());
@@ -765,10 +770,9 @@ public class AppraisalsControllerFormsTest extends BaseControllerTest {
         verify(employeeService, times(1)).getLoggedInUser();
         verify(employeeService, times(1)).getById(anyInt());
         verify(appraisalService, never()).getById(anyInt());
-        verify(employeeEvaluationFormService, never())
-                .findByEmployeeAndAppraisal(any(Employee.class), any(Appraisal.class));
         verify(securityService, never())
-                .canReadEvaluationFormTemplate(any(Employee.class), any(Employee.class));
+                .canReadEvaluationFormTemplate(any(Employee.class), any(Employee.class),
+                        any(EvaluationFormTemplate.class), any(Appraisal.class));
 
         assertNotNull(response);
         assertEquals(Constants.ERROR, response.getMessage());
@@ -792,7 +796,8 @@ public class AppraisalsControllerFormsTest extends BaseControllerTest {
         verify(employeeEvaluationFormService, never())
                 .findByEmployeeAndAppraisal(any(Employee.class), any(Appraisal.class));
         verify(securityService, never())
-                .canReadEvaluationFormTemplate(any(Employee.class), any(Employee.class));
+                .canReadEvaluationFormTemplate(any(Employee.class), any(Employee.class),
+                        any(EvaluationFormTemplate.class), any(Appraisal.class));
 
         assertTrue(StringUtils.isEmpty(resultString));
     }

@@ -1,13 +1,8 @@
 package com.gft.employeeappraisal.service.impl;
 
 import com.gft.employeeappraisal.exception.AccessDeniedException;
-import com.gft.employeeappraisal.model.Appraisal;
-import com.gft.employeeappraisal.model.Employee;
-import com.gft.employeeappraisal.model.EmployeeEvaluationForm;
-import com.gft.employeeappraisal.model.RelationshipName;
-import com.gft.employeeappraisal.service.EmployeeRelationshipService;
-import com.gft.employeeappraisal.service.EmployeeService;
-import com.gft.employeeappraisal.service.SecurityService;
+import com.gft.employeeappraisal.model.*;
+import com.gft.employeeappraisal.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -24,6 +19,8 @@ import java.util.Optional;
 public class SecurityServiceImpl implements SecurityService {
 
     private final int maxMenteeReferences;
+    private final EvaluationFormTemplateService evaluationFormTemplateService;
+    private final EmployeeEvaluationFormService employeeEvaluationFormService;
     private final EmployeeRelationshipService employeeRelationshipService;
     private final EmployeeService employeeService;
 
@@ -38,10 +35,14 @@ public class SecurityServiceImpl implements SecurityService {
     public SecurityServiceImpl(
             @Value("${com.gft.businessRules.maxMenteeReferences}") Integer maxMenteeReferences,
             EmployeeRelationshipService employeeRelationshipService,
-            EmployeeService employeeService) {
+            EmployeeService employeeService,
+            EmployeeEvaluationFormService employeeEvaluationFormService,
+            EvaluationFormTemplateService evaluationFormTemplateService) {
         this.maxMenteeReferences = maxMenteeReferences;
         this.employeeRelationshipService = employeeRelationshipService;
         this.employeeService = employeeService;
+        this.employeeEvaluationFormService = employeeEvaluationFormService;
+        this.evaluationFormTemplateService = evaluationFormTemplateService;
     }
 
     /**
@@ -100,13 +101,21 @@ public class SecurityServiceImpl implements SecurityService {
      * {@inheritDoc}
      */
     @Override
-    public void canReadEvaluationFormTemplate(Employee reader, Employee employee) throws AccessDeniedException {
-        if (!reader.equals(employee)) {
-            throw new AccessDeniedException(String.format(
-                    "Employee[%d] can't read Employee[%d] EvaluationFormTemplate",
-                    reader.getId(),
-                    employee.getId()));
-        }
+    public void canReadEvaluationFormTemplate(Employee reader, Employee employee,
+                                              EvaluationFormTemplate evaluationFormTemplate, Appraisal appraisal) throws AccessDeniedException {
+
+        employeeEvaluationFormService
+                .findByEmployeeAndFilledByEmployeeAndAppraisal(reader, employee, appraisal)
+                .orElseThrow(() -> new AccessDeniedException(String.format("Employee[%d] can't read Employee's [%d] EvaluationFormTemplate",
+                        reader.getId(),
+                        employee.getId())));
+
+        evaluationFormTemplateService
+                .findByIdAndFilledByEmployeeAndAppraisal(evaluationFormTemplate.getId(), employee, appraisal)
+                .orElseThrow(() -> new AccessDeniedException(String.format("Employee[%d] can't read [%d] EvaluationFormTemplate",
+                        employee.getId(),
+                        evaluationFormTemplate.getId())));
+
     }
 
     /**

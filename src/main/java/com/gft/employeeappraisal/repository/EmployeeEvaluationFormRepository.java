@@ -29,10 +29,11 @@ public interface EmployeeEvaluationFormRepository extends JpaRepository<Employee
             "FROM EmployeeEvaluationForm AS employeeEvaluationForm " +
             "JOIN FETCH employeeEvaluationForm.appraisalXEvaluationFormTemplate appraisalXEvaluationFormTemplate " +
             "WHERE employeeEvaluationForm.employee = :employee " +
-            "AND employeeEvaluationForm.filledByEmployee = :employee " +
+            "AND employeeEvaluationForm.filledByEmployee = :filledByEmployee " +
             "AND appraisalXEvaluationFormTemplate.appraisal = :appraisal")
-    EmployeeEvaluationForm findSelfByEmployeeAndAppraisal(
+    EmployeeEvaluationForm findByEmployeeAndFilledByEmployeeAndAppraisal(
             @Param("employee") Employee employee,
+            @Param("filledByEmployee") Employee filledByEmployee,
             @Param("appraisal") Appraisal appraisal);
 
     @Query("SELECT employeeEvaluationForm " +

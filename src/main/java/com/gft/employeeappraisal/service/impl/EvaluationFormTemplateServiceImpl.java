@@ -1,5 +1,8 @@
 package com.gft.employeeappraisal.service.impl;
 
+import com.gft.employeeappraisal.exception.NotFoundException;
+import com.gft.employeeappraisal.model.Appraisal;
+import com.gft.employeeappraisal.model.Employee;
 import com.gft.employeeappraisal.model.EvaluationFormTemplate;
 import com.gft.employeeappraisal.repository.EvaluationFormTemplateRepository;
 import com.gft.employeeappraisal.service.EvaluationFormTemplateService;
@@ -22,6 +25,35 @@ public class EvaluationFormTemplateServiceImpl implements EvaluationFormTemplate
     public EvaluationFormTemplateServiceImpl(
             EvaluationFormTemplateRepository evaluationFormTemplateRepository) {
         this.evaluationFormTemplateRepository = evaluationFormTemplateRepository;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    @Override
+    public EvaluationFormTemplate getById(Integer id) throws NotFoundException {
+        return this.findById(id).orElseThrow(() -> new NotFoundException(String.format(
+                "EvaluationFormTemplate[%d] couldn't be found",
+                id)));
+    }
+
+    /**
+     * @inheritDoc
+     */
+    @Override
+    public Optional<EvaluationFormTemplate> findById(Integer id) {
+        return Optional.ofNullable(evaluationFormTemplateRepository.findOne(id));
+    }
+
+    /**
+     * @inheritDoc
+     */
+    @Override
+    public Optional<EvaluationFormTemplate> findByIdAndFilledByEmployeeAndAppraisal(Integer id,
+                                                                                    Employee filledByEmployee,
+                                                                                    Appraisal appraisal) {
+        return Optional.ofNullable(evaluationFormTemplateRepository
+                .findByIdAndFilledByEmployeeAndAppraisal(id, filledByEmployee, appraisal));
     }
 
     /**

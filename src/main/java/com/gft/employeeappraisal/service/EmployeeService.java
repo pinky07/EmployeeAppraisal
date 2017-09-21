@@ -53,6 +53,7 @@ public interface EmployeeService {
      *
      * @param id Internal lookup Id for the employee.
      * @return Employee entity.
+     * @throws NotFoundException if the provided ID does not match to an existing record.
      */
     Employee getById(Integer id) throws NotFoundException;
 
@@ -61,6 +62,7 @@ public interface EmployeeService {
      *
      * @param menteeId Internal lookup Id for the employee.
      * @return An Optional object that may or may not contain the employee's current mentor.
+     * @throws NotFoundException if the provided ID does not match to an existing record.
      */
     Optional<Employee> findCurrentMentorById(int menteeId) throws NotFoundException;
 

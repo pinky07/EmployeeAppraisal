@@ -5,10 +5,7 @@ import com.gft.employeeappraisal.converter.employeeevaluationform.EmployeeEvalua
 import com.gft.employeeappraisal.converter.evaluationformtemplate.EvaluationFormTemplateDTOConverter;
 import com.gft.employeeappraisal.exception.NotFoundException;
 import com.gft.employeeappraisal.model.*;
-import com.gft.employeeappraisal.service.AppraisalService;
-import com.gft.employeeappraisal.service.EmployeeEvaluationFormService;
-import com.gft.employeeappraisal.service.EmployeeService;
-import com.gft.employeeappraisal.service.SecurityService;
+import com.gft.employeeappraisal.service.*;
 import com.gft.swagger.employees.api.AppraisalApi;
 import com.gft.swagger.employees.model.AppraisalDTO;
 import com.gft.swagger.employees.model.EmployeeEvaluationFormDTO;
@@ -39,6 +36,7 @@ public class AppraisalsController implements AppraisalApi {
     private final AppraisalService appraisalService;
     private final EmployeeService employeeService;
     private final EmployeeEvaluationFormService employeeEvaluationFormService;
+    private final EvaluationFormTemplateService evaluationFormTemplateService;
     private final SecurityService securityService;
 
     // DTO converters
@@ -61,6 +59,7 @@ public class AppraisalsController implements AppraisalApi {
             AppraisalService appraisalService,
             EmployeeService employeeService,
             EmployeeEvaluationFormService employeeEvaluationFormService,
+            EvaluationFormTemplateService evaluationFormTemplateService,
             SecurityService securityService,
             AppraisalDTOConverter appraisalDTOConverter,
             EmployeeEvaluationFormDTOConverter employeeEvaluationFormDTOConverter,
@@ -68,6 +67,7 @@ public class AppraisalsController implements AppraisalApi {
         this.appraisalService = appraisalService;
         this.employeeService = employeeService;
         this.employeeEvaluationFormService = employeeEvaluationFormService;
+        this.evaluationFormTemplateService = evaluationFormTemplateService;
         this.securityService = securityService;
         this.appraisalDTOConverter = appraisalDTOConverter;
         this.employeeEvaluationFormDTOConverter = employeeEvaluationFormDTOConverter;
@@ -273,7 +273,10 @@ public class AppraisalsController implements AppraisalApi {
                 .collect(Collectors.toList());
 
         // Security check
-        employeeEvaluationFormList.forEach(employeeEvaluationForm -> this.securityService.canReadEmployeeEvaluationForm(loggedInUser, employeeEvaluationForm));
+        // If the check fails, flow is interrupted
+        for (EmployeeEvaluationForm employeeEvaluationForm : employeeEvaluationFormList) {
+            this.securityService.canReadEmployeeEvaluationForm(loggedInUser, employeeEvaluationForm);
+        }
 
         // Get DTOs
         List<EmployeeEvaluationFormDTO> result = employeeEvaluationFormList
@@ -304,29 +307,18 @@ public class AppraisalsController implements AppraisalApi {
         // Get Employee
         Employee employee = employeeService.getById(employeeId);
 
-        // Security check
-        this.securityService.canReadEvaluationFormTemplate(loggedInUser, employee);
+        // Get EvaluationFormTemplate
+        EvaluationFormTemplate evaluationFormTemplate = evaluationFormTemplateService.getById(formId);
 
         // Get Appraisal
         Appraisal appraisal = appraisalService.getById(appraisalId);
 
-        // TODO The following code should be improved by implementing a query that fetches exactly the record needed.
-
-        // Get EmployeeEvaluationForm list
-        EvaluationFormTemplate evaluationFormTemplate = this.employeeEvaluationFormService
-                .findByEmployeeAndAppraisal(employee, appraisal)
-                .map(EmployeeEvaluationForm::getAppraisalXEvaluationFormTemplate)
-                .map(AppraisalXEvaluationFormTemplate::getEvaluationFormTemplate)
-                .filter(evaluationFormTemplateFilter -> evaluationFormTemplateFilter.getId() == formId)
-                .findFirst()
-                .orElseThrow(() -> new NotFoundException(String.format(
-                        "EvaluationFormTemplate[%d] was not found or doesn't belong to Employee[%d] in Appraisal[%d]",
-                        formId,
-                        employeeId,
-                        appraisalId)));
+        // Security check
+        this.securityService.canReadEvaluationFormTemplate(loggedInUser, employee, evaluationFormTemplate, appraisal);
 
         // Get DTO
-        EvaluationFormTemplateDTO evaluationFormTemplateDTO = evaluationFormTemplateDTOConverter.convert(evaluationFormTemplate);
+        EvaluationFormTemplateDTO evaluationFormTemplateDTO =
+                evaluationFormTemplateDTOConverter.convert(evaluationFormTemplate);
 
         return new ResponseEntity<>(evaluationFormTemplateDTO, HttpStatus.OK);
     }
