@@ -1,7 +1,7 @@
 INSERT INTO Appraisal (id, name, description, startDate, endDate)
 VALUES  (1, 'Appraisal 2017', 'Appraisal 2017 Description', '2017-12-01 00:00:00-06', '2018-01-31 00:00:00-06'),
-        (2, 'Appraisal 2016', 'Appraisal 2017 Description', '2016-12-01 00:00:00-06', '2017-01-31 00:00:00-06'),
-        (3, 'Appraisal 2015', 'Appraisal 2017 Description', '2015-12-01 00:00:00-06', '2016-01-31 00:00:00-06');
+        (2, 'Appraisal 2016', 'Appraisal 2016 Description', '2016-12-01 00:00:00-06', '2017-01-31 00:00:00-06'),
+        (3, 'Appraisal 2015', 'Appraisal 2015 Description', '2015-12-01 00:00:00-06', '2016-01-31 00:00:00-06');
 
 INSERT INTO EvaluationForm (id, name, description)
 VALUES
@@ -581,24 +581,8 @@ VALUES
         -- Rubén Jiménez (id 2) - Self Evaluation
         (1, 1, 2, 'PENDING'),
 
-        -- Rubén Jiménez (id 2) - Reference Evaluation
-        (2, 2, 31, 'PENDING'),
-        (3, 2, 32, 'PENDING'),
-        (4, 2, 33, 'PENDING'),
-
-        -- Rubén Jiménez (id 2) - Mentor Evaluation
-        (5, 3, 12, 'PENDING'),
-
         -- Manuel Yépez (id 3) - Self Evaluation
-        (6, 1, 3, 'PENDING'),
-
-        -- Manuel Yépez (id 3) - Reference Evaluation
-        (7, 2, 34, 'PENDING'),
-        (8, 2, 35, 'PENDING'),
-        (9, 2, 36, 'PENDING'),
-
-        -- Manuel Yépez (id 3) - Mentor Evaluation
-        (10, 3, 13, 'PENDING');
+        (2, 1, 3, 'PENDING');
 
 
 INSERT INTO EvaluationFormXSectionXQuestion (evaluationFormId, evaluationFormSectionId, evaluationFormQuestionId)
