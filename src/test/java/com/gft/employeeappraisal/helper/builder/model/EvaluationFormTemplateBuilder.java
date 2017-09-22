@@ -2,6 +2,11 @@ package com.gft.employeeappraisal.helper.builder.model;
 
 import com.gft.employeeappraisal.helper.builder.ObjectBuilder;
 import com.gft.employeeappraisal.model.EvaluationFormTemplate;
+import com.gft.employeeappraisal.model.EvaluationFormTemplateXSectionXQuestion;
+
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
 
 
 /**
@@ -14,10 +19,12 @@ public class EvaluationFormTemplateBuilder implements ObjectBuilder<EvaluationFo
     private int id;
     private String name;
     private String description;
+    private Set<EvaluationFormTemplateXSectionXQuestion> evaluationFormTemplateXSectionXQuestionSet;
 
     private boolean idSet;
     private boolean nameSet;
     private boolean descriptionSet;
+    private boolean questionsSet;
 
     public EvaluationFormTemplateBuilder id(int id) {
         this.id = id;
@@ -37,12 +44,19 @@ public class EvaluationFormTemplateBuilder implements ObjectBuilder<EvaluationFo
         return this;
     }
 
+    public EvaluationFormTemplateBuilder questions(Set<EvaluationFormTemplateXSectionXQuestion> questionSet) {
+        this.evaluationFormTemplateXSectionXQuestionSet = questionSet;
+        this.questionsSet = true;
+        return this;
+    }
+
     @Override
     public EvaluationFormTemplate build() {
         EvaluationFormTemplate obj = new EvaluationFormTemplate();
         obj.setId(this.id);
         obj.setName(this.name);
         obj.setDescription(this.description);
+        obj.setEvaluationFormXSectionXQuestionSet(this.evaluationFormTemplateXSectionXQuestionSet);
         return obj;
     }
 
@@ -52,6 +66,11 @@ public class EvaluationFormTemplateBuilder implements ObjectBuilder<EvaluationFo
         if (this.idSet) obj.setId(this.id);
         obj.setName(this.nameSet ? this.name : "Name");
         obj.setDescription(this.descriptionSet ? this.description : "Description");
+        obj.setEvaluationFormXSectionXQuestionSet(this.questionsSet ?
+                this.evaluationFormTemplateXSectionXQuestionSet :
+                new HashSet<>(Collections
+                        .singletonList(new EvaluationFormTemplateXSectionXQuestionBuilder(obj)
+                                .buildWithDefaults())));
         return obj;
     }
 }

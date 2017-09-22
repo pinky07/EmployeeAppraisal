@@ -7,9 +7,9 @@ import com.gft.employeeappraisal.exception.NotFoundException;
 import com.gft.employeeappraisal.helper.builder.model.*;
 import com.gft.employeeappraisal.model.*;
 import com.gft.swagger.employees.model.EmployeeEvaluationFormDTO;
+import com.gft.swagger.employees.model.EvaluationFormTemplateDTO;
 import com.gft.swagger.employees.model.OperationResultDTO;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -40,6 +40,7 @@ public class AppraisalsControllerFormsTest extends BaseControllerTest {
     private Employee user;
     private Employee employeePeer;
     private Appraisal appraisal;
+    private EvaluationFormTemplate evaluationFormTemplate;
 
     private EmployeeEvaluationForm selfEmployeeEvaluationForm;
     private EmployeeEvaluationForm peerEmployeeEvaluationForm;
@@ -76,6 +77,8 @@ public class AppraisalsControllerFormsTest extends BaseControllerTest {
                 .jobLevel(jobLevel)
                 .applicationRole(applicationRole)
                 .buildWithDefaults();
+
+        evaluationFormTemplate = new EvaluationFormTemplateBuilder().buildWithDefaults();
 
         // Test EmployeeEvaluationForm
         this.selfEmployeeEvaluationForm = new EmployeeEvaluationFormBuilder()
@@ -278,67 +281,65 @@ public class AppraisalsControllerFormsTest extends BaseControllerTest {
      * @throws Exception If an error occurs
      */
     @Test
-    @Ignore
     public void employeesIdAppraisalsIdFormsIdGet() throws Exception {
         when(employeeService.getById(anyInt())).thenReturn(user);
         when(appraisalService.getById(anyInt())).thenReturn(appraisal);
-        when(employeeEvaluationFormService.findByEmployeeAndAppraisal(any(Employee.class), any(Appraisal.class)))
-                .thenReturn(Stream.of(selfEmployeeEvaluationForm, peerEmployeeEvaluationForm));
+        when(evaluationFormTemplateService.getById(anyInt())).thenReturn(evaluationFormTemplate);
 
         MvcResult result = mockMvc.perform(
                 get(String.format(EMPLOYEES_ID_APPRAISALS_ID_FORMS_ID_URL,
                         user.getId(),
                         appraisal.getId(),
-                        selfEmployeeEvaluationForm.getId()))
+                        evaluationFormTemplate.getId()))
                         .with(csrf()))
                 .andExpect(status().isOk())
                 .andReturn();
 
-        EmployeeEvaluationFormDTO employeeEvaluationFormDTO = objectMapper
-                .readValue(result.getResponse().getContentAsString(), EmployeeEvaluationFormDTO.class);
+        EvaluationFormTemplateDTO evaluationFormTemplateDTO = objectMapper
+                .readValue(result.getResponse().getContentAsString(), EvaluationFormTemplateDTO.class);
 
         verify(employeeService, times(1)).getLoggedInUser();
         verify(employeeService, times(1)).getById(anyInt());
         verify(appraisalService, times(1)).getById(anyInt());
-        verify(employeeEvaluationFormService, times(1))
-                .findByEmployeeAndAppraisal(any(Employee.class), any(Appraisal.class));
+        verify(evaluationFormTemplateService, times(1)).getById(anyInt());
         verify(securityService, times(1))
                 .canReadEvaluationFormTemplate(any(Employee.class), any(Employee.class),
                         any(EvaluationFormTemplate.class), any(Appraisal.class));
 
-        assertNotNull(employeeEvaluationFormDTO);
+        assertNotNull(evaluationFormTemplateDTO);
+        assertEquals(evaluationFormTemplate.getName(), evaluationFormTemplateDTO.getName());
+        assertEquals(evaluationFormTemplate.getDescription(), evaluationFormTemplateDTO.getDescription());
     }
 
     @Test
-    @Ignore
     public void employeesIdAppraisalsIdFormsIdGet_notFoundForm() throws Exception {
         when(employeeService.getById(anyInt())).thenReturn(user);
-        when(appraisalService.getById(anyInt())).thenReturn(appraisal);
-        when(employeeEvaluationFormService.findByEmployeeAndAppraisal(any(Employee.class), any(Appraisal.class)))
-                .thenReturn(Stream.empty());
+        when(evaluationFormTemplateService.getById(anyInt()))
+                .thenThrow(new NotFoundException("Evaluation Form not found"));
 
         MvcResult result = mockMvc.perform(
                 get(String.format(EMPLOYEES_ID_APPRAISALS_ID_FORMS_ID_URL,
                         user.getId(),
                         appraisal.getId(),
-                        selfEmployeeEvaluationForm.getId()))
+                        evaluationFormTemplate.getId()))
                         .with(csrf()))
                 .andExpect(status().isNotFound())
                 .andReturn();
 
-        EmployeeEvaluationFormDTO employeeEvaluationFormDTO = objectMapper
-                .readValue(result.getResponse().getContentAsString(), EmployeeEvaluationFormDTO.class);
+        OperationResultDTO resultDTO = objectMapper
+                .readValue(result.getResponse().getContentAsString(), OperationResultDTO.class);
 
         verify(employeeService, times(1)).getLoggedInUser();
         verify(employeeService, times(1)).getById(anyInt());
-        verify(appraisalService, times(1)).getById(anyInt());
-        verify(employeeEvaluationFormService, times(1))
-                .findByEmployeeAndAppraisal(any(Employee.class), any(Appraisal.class));
-        verify(securityService, times(1))
+        verify(appraisalService, never()).getById(anyInt());
+        verify(evaluationFormTemplateService, times(1))
+                .getById(anyInt());
+        verify(securityService, never())
                 .canReadEvaluationFormTemplate(any(Employee.class), any(Employee.class),
                         any(EvaluationFormTemplate.class), any(Appraisal.class));
 
-        assertNotNull(employeeEvaluationFormDTO); /// ??? returns a DTO with null values, not an OperationResultDTO
+        assertNotNull(resultDTO);
+        assertEquals(Constants.ERROR, resultDTO.getMessage());
     }
 
     @Test
@@ -361,8 +362,6 @@ public class AppraisalsControllerFormsTest extends BaseControllerTest {
         verify(employeeService, times(1)).getLoggedInUser();
         verify(employeeService, times(1)).getById(anyInt());
         verify(appraisalService, times(1)).getById(anyInt());
-        verify(employeeEvaluationFormService, never())
-                .findByEmployeeAndAppraisal(any(Employee.class), any(Appraisal.class));
         verify(securityService, never())
                 .canReadEvaluationFormTemplate(any(Employee.class), any(Employee.class),
                         any(EvaluationFormTemplate.class), any(Appraisal.class));
@@ -403,6 +402,7 @@ public class AppraisalsControllerFormsTest extends BaseControllerTest {
     @Test
     public void employeesIdAppraisalsIdFormsIdGet_securityCheckFailed() throws Exception {
         when(employeeService.getById(anyInt())).thenReturn(user);
+        when(appraisalService.getById(anyInt())).thenReturn(appraisal);
         doThrow(new AccessDeniedException("Access Denied")).when(securityService)
                 .canReadEvaluationFormTemplate(any(Employee.class), any(Employee.class),
                         any(EvaluationFormTemplate.class), any(Appraisal.class));
@@ -633,71 +633,69 @@ public class AppraisalsControllerFormsTest extends BaseControllerTest {
      * @throws Exception If an error occurs
      */
     @Test
-    @Ignore
     public void meAppraisalsIdFormsIdGet() throws Exception {
         when(employeeService.getById(anyInt())).thenReturn(user);
         when(appraisalService.getById(anyInt())).thenReturn(appraisal);
-        when(employeeEvaluationFormService.findByEmployeeAndAppraisal(any(Employee.class), any(Appraisal.class)))
-                .thenReturn(Stream.of(selfEmployeeEvaluationForm, peerEmployeeEvaluationForm));
+        when(evaluationFormTemplateService.getById(anyInt())).thenReturn(evaluationFormTemplate);
 
         MvcResult result = mockMvc.perform(
                 get(String.format(ME_APPRAISALS_ID_FORMS_ID_URL,
                         appraisal.getId(),
-                        selfEmployeeEvaluationForm.getId()))
+                        evaluationFormTemplate.getId()))
                         .with(csrf()))
                 .andExpect(status().isOk())
                 .andReturn();
 
-        EmployeeEvaluationFormDTO employeeEvaluationFormDTO = objectMapper
-                .readValue(result.getResponse().getContentAsString(), EmployeeEvaluationFormDTO.class);
+        EvaluationFormTemplateDTO evaluationFormTemplateDTO = objectMapper
+                .readValue(result.getResponse().getContentAsString(), EvaluationFormTemplateDTO.class);
 
         verify(employeeService, times(1)).getLoggedInUser();
         verify(employeeService, times(1)).getById(anyInt());
         verify(appraisalService, times(1)).getById(anyInt());
-        verify(employeeEvaluationFormService, times(1))
-                .findByEmployeeAndAppraisal(any(Employee.class), any(Appraisal.class));
+        verify(evaluationFormTemplateService, times(1)).getById(anyInt());
         verify(securityService, times(1))
                 .canReadEvaluationFormTemplate(any(Employee.class), any(Employee.class),
                         any(EvaluationFormTemplate.class), any(Appraisal.class));
 
-        assertNotNull(employeeEvaluationFormDTO);
+        assertNotNull(evaluationFormTemplateDTO);
+        assertEquals(evaluationFormTemplate.getName(), evaluationFormTemplateDTO.getName());
+        assertEquals(evaluationFormTemplate.getDescription(), evaluationFormTemplateDTO.getDescription());
     }
 
     @Test
-    @Ignore
-    public void meAppraisalsIdFormsIdGet_empty() throws Exception {
+    public void meAppraisalsIdFormsIdGet_formNotFound() throws Exception {
         when(employeeService.getById(anyInt())).thenReturn(user);
-        when(appraisalService.getById(anyInt())).thenReturn(appraisal);
-        when(employeeEvaluationFormService.findByEmployeeAndAppraisal(any(Employee.class), any(Appraisal.class)))
-                .thenReturn(Stream.empty());
+        when(evaluationFormTemplateService.getById(anyInt()))
+                .thenThrow(new NotFoundException("Evaluation Form not found"));
 
         MvcResult result = mockMvc.perform(
                 get(String.format(ME_APPRAISALS_ID_FORMS_ID_URL,
                         appraisal.getId(),
-                        selfEmployeeEvaluationForm.getId()))
+                        evaluationFormTemplate.getId()))
                         .with(csrf()))
                 .andExpect(status().isNotFound())
                 .andReturn();
 
-        EmployeeEvaluationFormDTO employeeEvaluationFormDTO = objectMapper
-                .readValue(result.getResponse().getContentAsString(), EmployeeEvaluationFormDTO.class);
+        OperationResultDTO resultDTO = objectMapper
+                .readValue(result.getResponse().getContentAsString(), OperationResultDTO.class);
 
         verify(employeeService, times(1)).getLoggedInUser();
         verify(employeeService, times(1)).getById(anyInt());
-        verify(appraisalService, times(1)).getById(anyInt());
-        verify(employeeEvaluationFormService, times(1))
-                .findByEmployeeAndAppraisal(any(Employee.class), any(Appraisal.class));
-        verify(securityService, times(1))
+        verify(appraisalService, never()).getById(anyInt());
+        verify(evaluationFormTemplateService, times(1))
+                .getById(anyInt());
+        verify(securityService, never())
                 .canReadEvaluationFormTemplate(any(Employee.class), any(Employee.class),
                         any(EvaluationFormTemplate.class), any(Appraisal.class));
 
-        assertNotNull(employeeEvaluationFormDTO);
+        assertNotNull(resultDTO);
+        assertEquals(Constants.ERROR, resultDTO.getMessage());
     }
 
     @Test
     public void meAppraisalsIdFormsIdGet_securityCheckFailed() throws Exception {
         when(employeeService.getById(anyInt())).thenReturn(user);
-
+        when(appraisalService.getById(anyInt())).thenReturn(appraisal);
         // We will simulate that employeePeer has nothing to do with the process
         doThrow(new AccessDeniedException("Employee[%d] can't read EvaluationFormTemplate[%d]"))
                 .when(securityService).canReadEvaluationFormTemplate(any(Employee.class), any(Employee.class),
