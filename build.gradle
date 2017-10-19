@@ -9,7 +9,7 @@ buildscript {
 }
 
 plugins {
-    id 'org.springframework.boot' version '1.5.7.RELEASE'
+    id 'org.springframework.boot' version '1.5.8.RELEASE'
     id 'org.detoeuf.swagger-codegen' version '1.7.4'
 }
 
@@ -62,11 +62,11 @@ ext {
     flywayVersion = '4.2.0'
     postgresqlVersion = '42.1.4'
     springFoxSwaggerVersion = '2.7.0'
-    jacksonVersion = '2.9.1'
-    jsr310Version = '2.9.1'
-    orikaVersion = '1.5.1'
-    springCloudVersion = 'Dalston.SR3'
-    gradleWrapperVersion = '4.2'
+    jacksonVersion = '2.9.2'
+    jsr310Version = '2.9.2'
+    orikaVersion = '1.5.2'
+    springCloudVersion = 'Dalston.SR4'
+    gradleWrapperVersion = '4.2.1'
 }
 
 dependencies {
