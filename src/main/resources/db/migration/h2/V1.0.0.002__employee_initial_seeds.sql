@@ -114,7 +114,9 @@ VALUES
         (21, 45, 2, 'Pablo.Gonzalez@gft.com', 'Pablo', 'González', 'POGZ'),
         (22, 45, 2, 'Ricardo.Aguero@gft.com', 'Ricardo', 'Aguero', 'ROAR'),
         (23, 46, 2, 'sebastian.estrada@gft.com', 'Sebastián', 'Estrada', 'SNEA'),
-        (24, 55, 2, 'Luberth.Morera@gft.com', 'Luberth', 'Morera', 'LHMA');
+        (24, 55, 2, 'Luberth.Morera@gft.com', 'Luberth', 'Morera', 'LHMA'),
+        (25, 45, 1, 'Meenu.Juneja@gft.com', 'Meenu', 'Juneja', 'MUJA'),
+        (26, 45, 2, 'Pinky.Agrawal@gft.com', 'Pinky', 'Agrawal', 'PIAL');
 
 -- Relationship
 INSERT INTO Relationship (id, name, description)
@@ -185,4 +187,19 @@ VALUES
 
         -- Manuel Yepez mentees
         (44, 3, 6, 3, '2017-01-01 00:00:00-06', null),
-        (45, 6, 24, 2, '2017-01-01 00:00:00-06', null);
+        (45, 6, 24, 2, '2017-01-01 00:00:00-06', null),
+
+        -- Meenu Changes for self and mentee
+         (46, 25, 25, 1, '2017-01-01 00:00:00-06', null),
+         (47, 26, 26, 1, '2017-01-01 00:00:00-06', null),
+         (48, 25, 26, 3, '2017-01-01 00:00:00-06', null),
+
+         -- Meenu Changes for references
+         (49, 25, 11, 2, '2017-01-01 00:00:00-06', null),
+         (50, 25, 20, 4, '2017-01-01 00:00:00-06', null),
+
+         -- Eduardo Changes for references
+         (51, 5, 7, 2, '2017-01-01 00:00:00-06', null),
+         (52, 5, 21, 4, '2017-01-01 00:00:00-06', null);
+
+
