@@ -116,7 +116,13 @@ VALUES
         (23, 46, 2, 'sebastian.estrada@gft.com', 'Sebastián', 'Estrada', 'SNEA'),
         (24, 55, 2, 'Luberth.Morera@gft.com', 'Luberth', 'Morera', 'LHMA'),
         (25, 45, 1, 'Meenu.Juneja@gft.com', 'Meenu', 'Juneja', 'MUJA'),
-        (26, 45, 2, 'Pinky.Agrawal@gft.com', 'Pinky', 'Agrawal', 'PIAL');
+        (26, 45, 2, 'Pinky.Agrawal@gft.com', 'Pinky', 'Agrawal', 'PIAL'),
+        (27, 23, 2, 'Diana.Campos@gft.com', 'Diana', 'Campos', 'DACS'),
+        (28, 24, 2, 'irene.leer@gft.com', 'Irene', 'Leer', 'IELR'),
+        (29, 22, 2, 'Sara.Jimenez@gft.com', 'Sara', 'Jimenez', 'SAJI'),
+        (30, 24, 2, 'susy.gonzalez@gft.com', 'Susy', 'Gonzalez', 'SYGE'),
+        (31, 23, 2, 'adriana.astua@gft.com', 'Adriana', 'Astua', 'ANAU'),
+        (32, 25, 2, 'Sussan.Cordero@gft.com', 'Sussan', 'Cordero', 'SNCO');
 
 -- Relationship
 INSERT INTO Relationship (id, name, description)
@@ -200,4 +206,12 @@ VALUES
 
         -- Eduardo Changes for references
          (51, 5, 7, 2, '2017-01-01 00:00:00-06', null),
-         (52, 5, 21, 4, '2017-01-01 00:00:00-06', null);
+         (52, 5, 21, 4, '2017-01-01 00:00:00-06', null),
+
+         -- Sussan Changes for mentee
+        (56, 32, 27, 3, '2017-01-01 00:00:00-06', null),
+        (57, 32, 28, 3, '2017-01-01 00:00:00-06', null),
+        (58, 32, 29, 3, '2017-01-01 00:00:00-06', null),
+        (59, 32, 30, 3, '2017-01-01 00:00:00-06', null),
+        (60, 32, 31, 3, '2017-01-01 00:00:00-06', null);
+
