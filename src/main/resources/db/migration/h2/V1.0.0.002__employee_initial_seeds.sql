@@ -207,6 +207,12 @@ VALUES
          -- Eduardo Changes for references
          (51, 5, 7, 2, '2017-01-01 00:00:00-06', null),
          (52, 5, 21, 4, '2017-01-01 00:00:00-06', null),
+          -- Pinky Changes for mentee
+         (53, 26, 3, 3, '2017-01-01 00:00:00-06', null),
+
+         -- Pinky Changes for references
+         (54, 26, 12, 2, '2017-01-01 00:00:00-06', null),
+         (55, 26, 13, 4, '2017-01-01 00:00:00-06', null),
 
          -- Sussan Changes for mentee
         (56, 32, 27, 3, '2017-01-01 00:00:00-06', null),

@@ -931,6 +931,59 @@ paths:
           description: |
             Employee, Appraisal or EvaluationForm not found in the system.
 
+
+    ###########
+    # PUT #####
+    ###########
+
+    put:
+      tags:
+      - Appraisal
+      summary: |
+         Registers or updates an `Employee on `EvaluationForm` of a specific appraisal for the specified user.
+      description: |
+       Registers or updates an `Employee on `EvaluationForm` belonging to the specified user.
+      operationId: employeesIdAppraisalsIdFormsIdPut
+      produces:
+        - application/json
+      parameters:
+        - in: path
+          name: employeeId
+          type: integer
+          required: true
+          description: |
+            `Employee` Id.
+        - in: path
+          name: appraisalId
+          type: integer
+          required: true
+          description: |
+            `Appraisal` Id.
+        - in: path
+          name: formId
+          type: integer
+          required: true
+          description: |
+            `Form` Id.
+      responses:
+        '200':
+          description: |
+            Successful.
+          schema:
+            $ref: '#/definitions/EvaluationFormTemplateDTO'
+        '400':
+          description: |
+            Input was malformed.
+          schema:
+            $ref: '#/definitions/EvaluationFormTemplateDTO'
+        '403':
+          description: |
+            The user isn't authenticated or authorized to perform this action.
+        '404':
+          description: |
+            Employee, Appraisal or EvaluationForm not found in the system.
+
+
 ########################################################################################################################
 # /employees/:id/relationships #########################################################################################
 ########################################################################################################################
