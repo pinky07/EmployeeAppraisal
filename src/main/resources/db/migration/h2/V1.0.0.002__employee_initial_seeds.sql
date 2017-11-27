@@ -123,7 +123,6 @@ VALUES
         (30, 24, 2, 'susy.gonzalez@gft.com', 'Susy', 'Gonzalez', 'SYGE'),
         (31, 23, 2, 'adriana.astua@gft.com', 'Adriana', 'Astua', 'ANAU'),
         (32, 25, 2, 'Sussan.Cordero@gft.com', 'Sussan', 'Cordero', 'SNCO');
-
 -- Relationship
 INSERT INTO Relationship (id, name, description)
 VALUES  (1, 'SELF', 'Self relationship'),
@@ -208,12 +207,17 @@ VALUES
          (51, 5, 7, 2, '2017-01-01 00:00:00-06', null),
          (52, 5, 21, 4, '2017-01-01 00:00:00-06', null),
 
-         -- Sussan Changes for mentee
+        -- Pinky Changes for mentee
+         (53, 26, 3, 3, '2017-01-01 00:00:00-06', null),
+
+         -- Pinky Changes for references
+         (54, 26, 12, 2, '2017-01-01 00:00:00-06', null),
+         (55, 26, 13, 4, '2017-01-01 00:00:00-06', null),
+
+          -- Sussan Changes for mentee
         (56, 32, 27, 3, '2017-01-01 00:00:00-06', null),
         (57, 32, 28, 3, '2017-01-01 00:00:00-06', null),
         (58, 32, 29, 3, '2017-01-01 00:00:00-06', null),
         (59, 32, 30, 3, '2017-01-01 00:00:00-06', null),
         (60, 32, 31, 3, '2017-01-01 00:00:00-06', null);
-
-
 
