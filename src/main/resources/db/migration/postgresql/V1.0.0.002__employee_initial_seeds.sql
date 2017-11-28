@@ -103,7 +103,7 @@ VALUES
         (10, 46, 2, 'Elias.Segura@gft.com', 'Elías', 'Segura', 'ESSA'),
         (11, 45, 2, 'Erick.Chavarria@gft.com', 'Erick', 'Chavarría', 'EKCA'),
         (12, 45, 2, 'Esteban.Ramirez@gft.com', 'Esteban', 'Ramirez', 'ENRZ'),
-        (13, 47, 2, 'Henry.Smith@gft.com', 'Henry'git , 'Smith', 'HYSO'),
+        (13, 47, 2, 'Henry.Smith@gft.com', 'Henry', 'Smith', 'HYSO'),
         (14, 45, 2, 'Imad.Marmoud@gft.com', 'Imad', 'Marmoud', 'IDMD'),
         (15, 45, 2, 'Fabio.Bermudez@gft.com', 'José Fabio', 'Bermúdez', 'JEBZ'),
         (16, 46, 2, 'Jose.Moraga@gft.com', 'José', 'Moraga', 'JEMG'),

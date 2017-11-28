@@ -128,17 +128,18 @@ public class AppraisalsController implements AppraisalApi {
                 appraisalId, formId);
         return this.employeesIdAppraisalsIdFormsIdGet(user, employeeId, appraisalId, formId);
     }
-@Override
-public ResponseEntity<EvaluationFormTemplateDTO> employeesIdAppraisalsIdFormsIdPut(
-        @PathVariable("employeeId") Integer employeeId,
-        @PathVariable("appraisalId") Integer appraisalId,
-        @PathVariable("formId") Integer formId) {
-    // Get logged in user
-    Employee user = this.employeeService.getLoggedInUser();
-    logger.debug("{} called endpoint: GET /employees/{}/appraisals/{}/forms/{}", user.getEmail(), employeeId,
-            appraisalId, formId);
-    return this.employeesIdAppraisalsIdFormsIdPut(user, employeeId, appraisalId, formId);
-}
+
+    @Override
+    public ResponseEntity<EvaluationFormTemplateDTO> employeesIdAppraisalsIdFormsIdPut(
+            @PathVariable("employeeId") Integer employeeId,
+            @PathVariable("appraisalId") Integer appraisalId,
+            @PathVariable("formId") Integer formId) {
+        // Get logged in user
+        Employee user = this.employeeService.getLoggedInUser();
+        logger.debug("{} called endpoint: GET /employees/{}/appraisals/{}/forms/{}", user.getEmail(), employeeId,
+                appraisalId, formId);
+        return this.employeesIdAppraisalsIdFormsIdPut(user, employeeId, appraisalId, formId);
+    }
     /**
      * Returns an {@link AppraisalDTO} if the {@link Employee} participated in the given {@link Appraisal}.
      * GET /employees/:id/appraisals/:id
