@@ -131,7 +131,12 @@ INSERT INTO EmployeeEvaluationForm (appraisalXEvaluationFormTemplateId, employee
     (1, 5, 7, 6, '2017-01-01 00:00:00-06', null),
 
     -- Eduardo Herrera (id 5) - Mentor Evaluation
-    (1, 5, 6, 6, '2017-01-01 00:00:00-06', null);
+    (1, 5, 6, 6, '2017-01-01 00:00:00-06', null),
+
+    --  Pinky Agrawal(id 26) - Reference Evaluation
+     (1, 26, 26, 3, '2017-01-01 00:00:00-06', null)
+    (1, 26, 4, 3, '2017-01-01 00:00:00-06', null);
+
 
 
 INSERT INTO EvaluationFormTemplateXSectionXQuestion (evaluationFormTemplateId, sectionId, questionId) VALUES
