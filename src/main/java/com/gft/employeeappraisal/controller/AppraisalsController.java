@@ -21,6 +21,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -42,6 +43,7 @@ public class AppraisalsController implements AppraisalApi {
     private final AppraisalXEvaluationFormTemplateRepository appraisalXEvaluationFormTemplateRepository;
     private final EvaluationFormTemplateXSectionXQuestionRepository evaluationFormTemplateXSectionXQuestionRepository;
     private final SectionRepository sectionRepository;
+    private final ScoreTypeRepository scoreTypeRepository;
     // DTO converters
     private final AppraisalDTOConverter appraisalDTOConverter;
     private final EmployeeEvaluationFormDTOConverter employeeEvaluationFormDTOConverter;
@@ -60,12 +62,14 @@ public class AppraisalsController implements AppraisalApi {
             EvaluationFormTemplateDTOConverter evaluationFormTemplateDTOConverter,
             ScoreValueService scoreValueService,
             AppraisalXEvaluationFormTemplateService appraisalXEvaluationFormTemplateService,
+            EvaluationFormTemplateXSectionXQuestionService evaluationFormTemplateXSectionXQuestionService,
             EmployeeEvaluationFormAnswerService employeeEvaluationFormAnswerService,
             ScoreValueRepository scoreValueRepository,
             AppraisalXEvaluationFormTemplateRepository appraisalXEvaluationFormTemplateRepository,
             EvaluationFormTemplateXSectionXQuestionRepository evaluationFormTemplateXSectionXQuestionRepository,
             EmployeeEvaluationFormAnswerRepository employeeEvaluationFormAnswerRepository,
-            SectionRepository sectionRepository) {
+            SectionRepository sectionRepository,
+            ScoreTypeRepository scoreTypeRepository) {
         this.appraisalService = appraisalService;
         this.employeeService = employeeService;
         this.employeeEvaluationFormService = employeeEvaluationFormService;
@@ -80,6 +84,7 @@ public class AppraisalsController implements AppraisalApi {
         this.scoreValueRepository = scoreValueRepository;
         this.appraisalXEvaluationFormTemplateRepository = appraisalXEvaluationFormTemplateRepository;
         this.sectionRepository=sectionRepository;
+        this.scoreTypeRepository =scoreTypeRepository;
 
     }
 
@@ -269,26 +274,58 @@ public class AppraisalsController implements AppraisalApi {
             int formId) {
 
         EvaluationFormTemplate template ;
-        ScoreValue scoreValue ;
-        Section section;
-        ScoreType scoreType;
-        EvaluationFormTemplateXSectionXQuestion evaluationFormTemplateXSectionXQuestion = new EvaluationFormTemplateXSectionXQuestion();
+
+        Section section= new Section();
+        ScoreType scoreType ;
         Employee employee = employeeService.getById(employeeId);
         Question question;
+        ScoreValue scoreValue = new ScoreValue();
+        //get templateID, template-->1:m--->EvaluationFormTemplateXSectionXQuestion-->m:1-->Section-->M:1--->ScoreType---1:M--ScoreValue
         EvaluationFormTemplate evaluationFormTemplate = evaluationFormTemplateService.getById(formId);
+
+        //get evaluationFormTemplate---1:M-->EvaluationFormTemplateXSectionXQuestion
+        Set<EvaluationFormTemplateXSectionXQuestion> evaluationFormXSectionXQuestionSet= evaluationFormTemplate.getEvaluationFormXSectionXQuestionSet();
+
+        //get Section from, EvaluationFormTemplateXSectionXQuestion--M:1--->section
+        //get Question from EvaluationFormTemplateXSectionXQuestion--M:1--->Question
+        for(EvaluationFormTemplateXSectionXQuestion evaluationFormTemplateXSectionXQuestion:evaluationFormXSectionXQuestionSet){
+            section = evaluationFormTemplateXSectionXQuestion.getSection();
+            question =evaluationFormTemplateXSectionXQuestion.getQuestion();
+            //get ScoreType, from section
+            scoreType =  section.getScoreType();
+
+            //get ScoreValue, from ScoreType
+            scoreType.getScoreValueSet();
+            //we need to set value for ScoreValue, bullet button table
+            scoreType.setDefinition("test123");
+            section.setScoreType(scoreType);
+            scoreTypeRepository.save(scoreType);
+        }
+
+
+
         Appraisal appraisal = appraisalService.getById(appraisalId);
         Set <AppraisalXEvaluationFormTemplate> appraisalXEvaluationFormTemplates =appraisal.getAppraisalXEvaluationFormTemplateSet();
         appraisalXEvaluationFormTemplateRepository.save(appraisalXEvaluationFormTemplates);
-        Set<EvaluationFormTemplateXSectionXQuestion> evaluationFormXSectionXQuestionSet= evaluationFormTemplate.getEvaluationFormXSectionXQuestionSet();
+
         evaluationFormTemplateXSectionXQuestionRepository.save(evaluationFormXSectionXQuestionSet);
-        section =  evaluationFormTemplateXSectionXQuestion.getSection();
 
-        question =  evaluationFormTemplateXSectionXQuestion.getQuestion();
 
-        scoreType=  section.getScoreType();
-        Set<ScoreValue> scoreValues =scoreType.getScoreValueSet();
-        scoreValueRepository.save(scoreValues);
-        sectionRepository.save(section);
+
+//        scoreValue.setValue("212121212");
+//        scoreValue.setDescription("test123");
+//        Set<ScoreValue> scoreValueSet = new HashSet<ScoreValue>();
+//        scoreValueSet.add(scoreValue);
+//        scoreType.setScoreValueSet(scoreValueSet);
+//        //section.setScoreType(scoreType);
+//        Set<Section> sectionSet = new HashSet<>();
+//        section.setScoreType(scoreType);
+//        sectionSet.add(section);
+//        scoreType.setSectionSet(sectionSet);
+//
+//        //section.setEvaluationFormXSectionXQuestionSet();
+//        scoreValueRepository.save(scoreValue);
+//        sectionRepository.save(section);
         // Get DTO
         EvaluationFormTemplateDTO evaluationFormTemplateDTO =
                 evaluationFormTemplateDTOConverter.convert(evaluationFormTemplate);
