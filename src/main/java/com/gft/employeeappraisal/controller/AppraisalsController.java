@@ -8,9 +8,8 @@ import com.gft.employeeappraisal.model.*;
 import com.gft.employeeappraisal.repository.*;
 import com.gft.employeeappraisal.service.*;
 import com.gft.swagger.employees.api.AppraisalApi;
-import com.gft.swagger.employees.model.AppraisalDTO;
-import com.gft.swagger.employees.model.EmployeeEvaluationFormDTO;
-import com.gft.swagger.employees.model.EvaluationFormTemplateDTO;
+import com.gft.swagger.employees.model.*;
+import io.swagger.annotations.ApiParam;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -21,8 +20,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 
+import javax.validation.Valid;
+import java.time.OffsetDateTime;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -44,6 +46,7 @@ public class AppraisalsController implements AppraisalApi {
     private final EvaluationFormTemplateXSectionXQuestionRepository evaluationFormTemplateXSectionXQuestionRepository;
     private final SectionRepository sectionRepository;
     private final ScoreTypeRepository scoreTypeRepository;
+    private final EmployeeEvaluationFormRepository employeeEvaluationFormRepository;
     // DTO converters
     private final AppraisalDTOConverter appraisalDTOConverter;
     private final EmployeeEvaluationFormDTOConverter employeeEvaluationFormDTOConverter;
@@ -69,7 +72,8 @@ public class AppraisalsController implements AppraisalApi {
             EvaluationFormTemplateXSectionXQuestionRepository evaluationFormTemplateXSectionXQuestionRepository,
             EmployeeEvaluationFormAnswerRepository employeeEvaluationFormAnswerRepository,
             SectionRepository sectionRepository,
-            ScoreTypeRepository scoreTypeRepository) {
+            ScoreTypeRepository scoreTypeRepository,
+            EmployeeEvaluationFormRepository employeeEvaluationFormRepository) {
         this.appraisalService = appraisalService;
         this.employeeService = employeeService;
         this.employeeEvaluationFormService = employeeEvaluationFormService;
@@ -85,10 +89,55 @@ public class AppraisalsController implements AppraisalApi {
         this.appraisalXEvaluationFormTemplateRepository = appraisalXEvaluationFormTemplateRepository;
         this.sectionRepository=sectionRepository;
         this.scoreTypeRepository =scoreTypeRepository;
+        this.employeeEvaluationFormRepository= employeeEvaluationFormRepository;
 
     }
 
+ @Override
+ public ResponseEntity<EmployeeEvaluationFormDTO> employeesIdAppraisalsIdFormsPut(
+         @PathVariable Integer employeeId,
+         @PathVariable Integer appraisalId,
+         @RequestBody EmployeeEvaluationFormDTO evaluationFormBody) {
+        EmployeeEvaluationForm employeeEvaluationForm = new EmployeeEvaluationForm();
+     HttpStatus httpStatus;
+     EmployeeEvaluationFormDTO response = new EmployeeEvaluationFormDTO();
+        if(evaluationFormBody.getSubmitDate()==null){
+            //call here saveAndContinue()
+        }
+        if(evaluationFormBody.getSubmitDate()!=null)
+        {// call here saveAndContinue()
+            employeeEvaluationForm.setSubmitDate(evaluationFormBody.getSubmitDate());
+            employeeEvaluationForm= employeeEvaluationFormDTOConverter.convertBack(evaluationFormBody);
+            OffsetDateTime submitday = OffsetDateTime.now();
+            employeeEvaluationForm.setSubmitDate(submitday);
+            employeeEvaluationFormRepository.saveAndFlush(employeeEvaluationForm);
+         //employeeEvaluationFormService.saveAndFlush(employeeEvaluationForm);
+        }
+     return new ResponseEntity<EmployeeEvaluationFormDTO>(HttpStatus.OK);
+ }
 
+
+ //here need to set scorevalue and comment
+ @Override
+    public ResponseEntity<EvaluationFormTemplateDTO> employeesIdAppraisalsIdFormsIdPut(
+            @PathVariable("employeeId") Integer employeeId,
+            @PathVariable("appraisalId") Integer appraisalId,
+            @PathVariable("formId") Integer formId,
+         @Valid @RequestBody EvaluationFormTemplateDTO evaluationFormBody) {
+     List<SectionDTO>sectionDTOS =evaluationFormBody.getSections();
+     for(SectionDTO sectionDTO:sectionDTOS){
+         List<ScoreValueDTO> scoreValueDTOS= sectionDTO.getScoreType().getScoreValues();
+         for(ScoreValueDTO scoreValueDTO:scoreValueDTOS){
+             ScoreValue scoreValue = new ScoreValue();
+             scoreValue.setValue(scoreValueDTO.getValue());
+            System.out.println("name="+scoreValue.getValue());
+             scoreValueRepository.save(scoreValue);
+         }
+
+     }
+        // do some magic!
+        return new ResponseEntity<EvaluationFormTemplateDTO>(HttpStatus.OK);
+    }
     @Override
     public ResponseEntity<List<AppraisalDTO>> employeesIdAppraisalsGet(
             @PathVariable Integer employeeId) {
@@ -121,17 +170,6 @@ public class AppraisalsController implements AppraisalApi {
         return this.employeesIdAppraisalsIdFormsIdGet(user, employeeId, appraisalId, formId);
     }
 
-    @Override
-    public ResponseEntity<EvaluationFormTemplateDTO> employeesIdAppraisalsIdFormsIdPut(
-            @PathVariable("employeeId") Integer employeeId,
-            @PathVariable("appraisalId") Integer appraisalId,
-            @PathVariable("formId") Integer formId) {
-        // Get logged in user
-        Employee user = this.employeeService.getLoggedInUser();
-        logger.debug("{} called endpoint: GET /employees/{}/appraisals/{}/forms/{}", user.getEmail(), employeeId,
-                appraisalId, formId);
-        return this.employeesIdAppraisalsIdFormsIdPut(user, employeeId, appraisalId, formId);
-    }
 
     @Override
     public ResponseEntity<AppraisalDTO> employeesIdAppraisalsIdGet(
@@ -266,72 +304,7 @@ public class AppraisalsController implements AppraisalApi {
 
         return new ResponseEntity<>(evaluationFormTemplateDTO, HttpStatus.OK);
     }
-//wip
-    private ResponseEntity<EvaluationFormTemplateDTO> employeesIdAppraisalsIdFormsIdPut(
-            Employee loggedInUser,
-            int employeeId,
-            int appraisalId,
-            int formId) {
 
-        EvaluationFormTemplate template ;
-
-        Section section= new Section();
-        ScoreType scoreType ;
-        Employee employee = employeeService.getById(employeeId);
-        Question question;
-        ScoreValue scoreValue = new ScoreValue();
-        //get templateID, template-->1:m--->EvaluationFormTemplateXSectionXQuestion-->m:1-->Section-->M:1--->ScoreType---1:M--ScoreValue
-        EvaluationFormTemplate evaluationFormTemplate = evaluationFormTemplateService.getById(formId);
-
-        //get evaluationFormTemplate---1:M-->EvaluationFormTemplateXSectionXQuestion
-        Set<EvaluationFormTemplateXSectionXQuestion> evaluationFormXSectionXQuestionSet= evaluationFormTemplate.getEvaluationFormXSectionXQuestionSet();
-
-        //get Section from, EvaluationFormTemplateXSectionXQuestion--M:1--->section
-        //get Question from EvaluationFormTemplateXSectionXQuestion--M:1--->Question
-        for(EvaluationFormTemplateXSectionXQuestion evaluationFormTemplateXSectionXQuestion:evaluationFormXSectionXQuestionSet){
-            section = evaluationFormTemplateXSectionXQuestion.getSection();
-            question =evaluationFormTemplateXSectionXQuestion.getQuestion();
-            //get ScoreType, from section
-            scoreType =  section.getScoreType();
-
-            //get ScoreValue, from ScoreType
-            scoreType.getScoreValueSet();
-            //we need to set value for ScoreValue, bullet button table
-            scoreType.setDefinition("test123");
-            section.setScoreType(scoreType);
-            scoreTypeRepository.save(scoreType);
-        }
-
-
-
-        Appraisal appraisal = appraisalService.getById(appraisalId);
-        Set <AppraisalXEvaluationFormTemplate> appraisalXEvaluationFormTemplates =appraisal.getAppraisalXEvaluationFormTemplateSet();
-        appraisalXEvaluationFormTemplateRepository.save(appraisalXEvaluationFormTemplates);
-
-        evaluationFormTemplateXSectionXQuestionRepository.save(evaluationFormXSectionXQuestionSet);
-
-
-
-//        scoreValue.setValue("212121212");
-//        scoreValue.setDescription("test123");
-//        Set<ScoreValue> scoreValueSet = new HashSet<ScoreValue>();
-//        scoreValueSet.add(scoreValue);
-//        scoreType.setScoreValueSet(scoreValueSet);
-//        //section.setScoreType(scoreType);
-//        Set<Section> sectionSet = new HashSet<>();
-//        section.setScoreType(scoreType);
-//        sectionSet.add(section);
-//        scoreType.setSectionSet(sectionSet);
-//
-//        //section.setEvaluationFormXSectionXQuestionSet();
-//        scoreValueRepository.save(scoreValue);
-//        sectionRepository.save(section);
-        // Get DTO
-        EvaluationFormTemplateDTO evaluationFormTemplateDTO =
-                evaluationFormTemplateDTOConverter.convert(evaluationFormTemplate);
-
-        return new ResponseEntity<>(evaluationFormTemplateDTO, HttpStatus.OK);
-    }
 
     private ResponseEntity<AppraisalDTO> employeesIdAppraisalsIdGet(
             Employee loggedInUser,

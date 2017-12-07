@@ -878,6 +878,58 @@ paths:
         '404':
           description: |
             Employee or Appraisal not found in the system.
+    ###########
+    # PUT #####
+    ###########
+
+    put:
+      tags:
+      - Appraisal
+      summary: |
+         Registers or updates an `Employee on `EvaluationForm` of a specific appraisal for the specified user.
+      description: |
+       Registers or updates an `Employee on `EvaluationForm` belonging to the specified user.
+      operationId: employeesIdAppraisalsIdFormsPut
+      produces:
+        - application/json
+      parameters:
+        - in: path
+          name: employeeId
+          type: integer
+          required: true
+          description: |
+            `Employee` Id.
+        - in: path
+          name: appraisalId
+          type: integer
+          required: true
+          description: |
+            `Appraisal` Id.
+        - in: body
+          name: employee
+          schema:
+            $ref: '#/definitions/EmployeeEvaluationFormDTO'
+          required: true
+          description: |
+           `Employee` to create or update.
+
+      responses:
+        '200':
+          description: |
+            Successful.
+          schema:
+            $ref: '#/definitions/EmployeeEvaluationFormDTO'
+        '400':
+          description: |
+            Input was malformed.
+          schema:
+            $ref: '#/definitions/EmployeeEvaluationFormDTO'
+        '403':
+          description: |
+            The user isn't authenticated or authorized to perform this action.
+        '404':
+          description: |
+            Employee, Appraisal or EvaluationForm not found in the system.
 
 ########################################################################################################################
 # /employees/:id/appraisals/:id/forms/:id ##############################################################################
@@ -965,6 +1017,13 @@ paths:
           required: true
           description: |
             `Form` Id.
+        - in: body
+          name: employee
+          schema:
+              $ref: '#/definitions/EvaluationFormTemplateDTO'
+          required: true
+          description: |
+              `Employee` to create or update.
       responses:
         '200':
           description: |
