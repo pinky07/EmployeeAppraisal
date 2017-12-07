@@ -1,5 +1,6 @@
 package com.gft.employeeappraisal.service.impl;
 
+import com.gft.employeeappraisal.exception.NotFoundException;
 import com.gft.employeeappraisal.model.Appraisal;
 import com.gft.employeeappraisal.model.Employee;
 import com.gft.employeeappraisal.model.EmployeeEvaluationForm;
@@ -30,7 +31,17 @@ public class EmployeeEvaluationFormServiceImpl implements EmployeeEvaluationForm
         this.employeeEvaluationFormRepository = employeeEvaluationFormRepository;
     }
 
-    /**
+	/**
+	 * @inheritDoc
+	 */
+	@Override
+	public EmployeeEvaluationForm getById(int id) throws NotFoundException {
+		return this.findById(id).orElseThrow(() -> new NotFoundException(String.format(
+				"EmployeeEvaluationForm [%d] couldn't be found",
+				id)));
+	}
+
+	/**
      * @inheritDoc
      */
     @Override
