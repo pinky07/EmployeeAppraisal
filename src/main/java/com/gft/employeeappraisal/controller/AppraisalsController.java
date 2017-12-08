@@ -1,8 +1,10 @@
 package com.gft.employeeappraisal.controller;
 
+import com.gft.employeeappraisal.Validation.EmployeeEvaluationFormDateValidate;
 import com.gft.employeeappraisal.converter.appraisal.AppraisalDTOConverter;
 import com.gft.employeeappraisal.converter.employeeevaluationform.EmployeeEvaluationFormDTOConverter;
 import com.gft.employeeappraisal.converter.evaluationformtemplate.EvaluationFormTemplateDTOConverter;
+import com.gft.employeeappraisal.exception.EmployeeAppraisalMicroserviceException;
 import com.gft.employeeappraisal.exception.NotFoundException;
 import com.gft.employeeappraisal.model.*;
 import com.gft.employeeappraisal.repository.*;
@@ -41,6 +43,8 @@ public class AppraisalsController implements AppraisalApi {
 	private final EvaluationFormTemplateXSectionXQuestionRepository evaluationFormTemplateXSectionXQuestionRepository;
 	private final SectionRepository sectionRepository;
 	private final ScoreTypeRepository scoreTypeRepository;
+	private final  ValidationService validationService;
+
 	// DTO converters
 	private final AppraisalDTOConverter appraisalDTOConverter;
 	private final EmployeeEvaluationFormDTOConverter employeeEvaluationFormDTOConverter;
@@ -66,7 +70,10 @@ public class AppraisalsController implements AppraisalApi {
 			EvaluationFormTemplateXSectionXQuestionRepository evaluationFormTemplateXSectionXQuestionRepository,
 			EmployeeEvaluationFormAnswerRepository employeeEvaluationFormAnswerRepository,
 			SectionRepository sectionRepository,
-			ScoreTypeRepository scoreTypeRepository) {
+			ScoreTypeRepository scoreTypeRepository,
+			ValidationService validationService
+
+		) {
 		this.appraisalService = appraisalService;
 		this.employeeService = employeeService;
 		this.employeeEvaluationFormService = employeeEvaluationFormService;
@@ -82,6 +89,7 @@ public class AppraisalsController implements AppraisalApi {
 		this.appraisalXEvaluationFormTemplateRepository = appraisalXEvaluationFormTemplateRepository;
 		this.sectionRepository = sectionRepository;
 		this.scoreTypeRepository = scoreTypeRepository;
+		this.validationService=validationService;
 
 	}
 
@@ -90,34 +98,40 @@ public class AppraisalsController implements AppraisalApi {
 			@PathVariable Integer employeeId,
 			@PathVariable Integer appraisalId,
 			@RequestBody EmployeeEvaluationFormDTO evaluationFormBody) {
+
+		logger.debug("{} called endpoint: employees/{employeeid}/appraisals/{appraisalId}/forms", employeeId,appraisalId);
 		EmployeeEvaluationForm employeeEvaluationForm = new EmployeeEvaluationForm();
-		HttpStatus httpStatus;
 		EmployeeEvaluationFormDTO response = new EmployeeEvaluationFormDTO();
 
-		// TODO: create and add a validator
+		this.validationService.validate(response);
 
-		// TODO: find employee
+		Employee employee = this.employeeService.getById(employeeId);
 
-		// TODO: find appraisal
-
-		// TODO: find the employee evaluation form to update, by id. if it has a submit date, throw an error
+		Appraisal appraisal = this.appraisalService.getById(appraisalId);
 
 
-		if (evaluationFormBody.getSubmitDate() == null) {
-			//call here saveAndContinue()
-		} else {// call here saveAndSubmit()
+		if (evaluationFormBody.getSubmitDate().equals("")||evaluationFormBody.getSubmitDate() == null) {
+
+			//call here saveAndContinue(), user can continue any time,so not saving date
+		}// TODO: find the employee evaluation form to update, by id. if it has a submit date, throw an error
+		else {// call here saveAndSubmit(),user click saveAndSubmit,then system capture current datetime
 			employeeEvaluationForm = employeeEvaluationFormDTOConverter.convertBack(evaluationFormBody);
-			// TODO add validation: the submit date cannot be prior to the create date and cannot be superior to
-			// OffsetDateTime.now()
-			OffsetDateTime submitday = OffsetDateTime.now();
-			employeeEvaluationForm.setSubmitDate(submitday);
-			employeeEvaluationFormService.saveAndFlush(employeeEvaluationForm);
+			int dateValidate = evaluationFormBody.getCreateDate().compareTo(evaluationFormBody.getSubmitDate());
+			 boolean dateValidateIfequal = evaluationFormBody.getSubmitDate().equals(evaluationFormBody.getCreateDate());
+
+			EmployeeEvaluationFormDateValidate.validateDate(dateValidate);
+			if(dateValidate==0||dateValidateIfequal==true||dateValidate==1)
+			{
+				OffsetDateTime submitDay = OffsetDateTime.now();
+				employeeEvaluationForm.setSubmitDate(submitDay);
+				employeeEvaluationFormService.saveAndFlush(employeeEvaluationForm);
+			}
 		}
 		return new ResponseEntity<EmployeeEvaluationFormDTO>(HttpStatus.OK);
 	}
 
 
-	//here need to set scorevalue and comment
+	// todo: here need to set scorevalue and comment for EmployeeEvaluationForm
 	@Override
 	public ResponseEntity<EvaluationFormTemplateDTO> employeesIdAppraisalsIdFormsIdPut(
 			@PathVariable("employeeId") Integer employeeId,
@@ -130,12 +144,10 @@ public class AppraisalsController implements AppraisalApi {
 			for (ScoreValueDTO scoreValueDTO : scoreValueDTOS) {
 				ScoreValue scoreValue = new ScoreValue();
 				scoreValue.setValue(scoreValueDTO.getValue());
-				System.out.println("name=" + scoreValue.getValue());
 				scoreValueRepository.save(scoreValue);
 			}
 
 		}
-		// do some magic!
 		return new ResponseEntity<EvaluationFormTemplateDTO>(HttpStatus.OK);
 	}
 
