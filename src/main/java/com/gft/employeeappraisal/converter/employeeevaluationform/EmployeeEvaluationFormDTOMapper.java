@@ -53,5 +53,6 @@ public class EmployeeEvaluationFormDTOMapper extends CustomMapper<EmployeeEvalua
         employeeEvaluationForm.setSubmitDate(employeeEvaluationFormDTO.getSubmitDate());
         employeeEvaluationForm.setAppraisalXEvaluationFormTemplate(employeeEvaluationFormService
 				.getById(employeeEvaluationFormDTO.getId()).getAppraisalXEvaluationFormTemplate());
+       // employeeEvaluationForm.setEmployeeEvaluationFormAnswerSet(employeeEvaluationFormService.getById(employeeEvaluationFormDTO.getId()).getEmployeeEvaluationFormAnswerSet());
     }
 }

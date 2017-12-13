@@ -21,7 +21,6 @@ public class EmployeeEvaluationFormDTOBuilder implements ObjectBuilder<EmployeeE
 {
 
     private Integer id;
-
     private EmployeeDTO employee;
 
     private EmployeeDTO filledByEmployee;
@@ -33,4 +32,65 @@ public class EmployeeEvaluationFormDTOBuilder implements ObjectBuilder<EmployeeE
     private OffsetDateTime submitDate;
 
     private Integer evaluationFormId;
+
+    public EmployeeEvaluationFormDTOBuilder setId(Integer id)
+    {
+        this.id = id;
+        return this;
+    }
+
+    public EmployeeEvaluationFormDTOBuilder setEmployee(EmployeeDTO employee)
+    {
+        this.employee = employee;
+        return this;
+    }
+
+    public EmployeeEvaluationFormDTOBuilder setFilledByEmployee(EmployeeDTO filledByEmployee)
+    {
+        this.filledByEmployee = filledByEmployee;
+        return this;
+    }
+
+    public EmployeeEvaluationFormDTOBuilder setMentor(EmployeeDTO mentor)
+    {
+        this.mentor = mentor;
+        return this;
+    }
+
+    public EmployeeEvaluationFormDTOBuilder setCreateDate(OffsetDateTime createDate)
+    {
+        this.createDate = createDate;
+        return this;
+    }
+
+    public EmployeeEvaluationFormDTOBuilder setSubmitDate(OffsetDateTime submitDate)
+    {
+        this.submitDate = submitDate;
+        return this;
+    }
+
+    public EmployeeEvaluationFormDTOBuilder setEvaluationFormId(Integer evaluationFormId)
+    {
+        this.evaluationFormId = evaluationFormId;
+        return this;
+    }
+
+    @Override public EmployeeEvaluationFormDTO build()
+    {
+        EmployeeEvaluationFormDTO dto = new EmployeeEvaluationFormDTO();
+        dto.setId(this.id);
+        dto.setSubmitDate(this.submitDate);
+        dto.setCreateDate(this.createDate);
+        dto.setEmployee(this.employee);
+        dto.setEvaluationFormId(this.evaluationFormId);
+        dto.setFilledByEmployee(this.filledByEmployee);
+        dto.setMentor(this.mentor);
+        return dto;
+
+    }
+//do not understand why use this method
+    @Override public EmployeeEvaluationFormDTO buildWithDefaults()
+    {
+        return null;
+    }
 }

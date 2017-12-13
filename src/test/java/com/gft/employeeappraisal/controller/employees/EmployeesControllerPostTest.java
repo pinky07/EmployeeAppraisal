@@ -150,6 +150,8 @@ public class EmployeesControllerPostTest extends BaseControllerTest {
                 .gftIdentifier("MLYZ")
                 .email("manuel.yepez@gft.com")
                 .applicationRole(mockApplicationRole().get())
+
+
                 .jobLevel(mockJobLevel().get())
                 .build();
     }
