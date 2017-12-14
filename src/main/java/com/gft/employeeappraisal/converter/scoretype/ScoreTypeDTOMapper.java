@@ -31,6 +31,9 @@ public class ScoreTypeDTOMapper extends CustomMapper<ScoreType, ScoreTypeDTO> {
     @Override
     public void mapBtoA(ScoreTypeDTO scoreTypeDTO, ScoreType scoreType, MappingContext context) {
         // TODO Implement this method!
+        scoreType.setId(scoreTypeDTO.getId());
+        scoreType.setDefinition(scoreTypeDTO.getDefinition());
+      //  scoreType.setSectionSet(scoreTypeDTO.getScoreValues());
         throw new NotImplementedException();
     }
 }
