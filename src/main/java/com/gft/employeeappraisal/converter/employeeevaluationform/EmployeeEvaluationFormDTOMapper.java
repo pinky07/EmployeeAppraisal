@@ -1,6 +1,7 @@
 package com.gft.employeeappraisal.converter.employeeevaluationform;
 
 import com.gft.employeeappraisal.model.EmployeeEvaluationForm;
+import com.gft.employeeappraisal.service.EmployeeEvaluationFormAnswerService;
 import com.gft.employeeappraisal.service.EmployeeEvaluationFormService;
 import com.gft.employeeappraisal.service.EmployeeService;
 import com.gft.swagger.employees.model.EmployeeDTO;
@@ -20,13 +21,17 @@ public class EmployeeEvaluationFormDTOMapper extends CustomMapper<EmployeeEvalua
 
     private final EmployeeService employeeService;
     private final EmployeeEvaluationFormService employeeEvaluationFormService;
+    private final EmployeeEvaluationFormAnswerService employeeEvaluationFormAnswerService;
 
     @Autowired
     public EmployeeEvaluationFormDTOMapper(
             EmployeeService employeeService,
-			EmployeeEvaluationFormService employeeEvaluationFormService) {
+			EmployeeEvaluationFormService employeeEvaluationFormService,
+            EmployeeEvaluationFormAnswerService employeeEvaluationFormAnswerService) {
         this.employeeService = employeeService;
         this.employeeEvaluationFormService = employeeEvaluationFormService;
+        this.employeeEvaluationFormAnswerService =employeeEvaluationFormAnswerService;
+
     }
 
     @Override
@@ -53,6 +58,8 @@ public class EmployeeEvaluationFormDTOMapper extends CustomMapper<EmployeeEvalua
         employeeEvaluationForm.setSubmitDate(employeeEvaluationFormDTO.getSubmitDate());
         employeeEvaluationForm.setAppraisalXEvaluationFormTemplate(employeeEvaluationFormService
 				.getById(employeeEvaluationFormDTO.getId()).getAppraisalXEvaluationFormTemplate());
+//        employeeEvaluationForm.setEmployeeEvaluationFormAnswerSet
+//                (employeeEvaluationFormAnswerService.findByEmployeeEvaluationFormId(employeeEvaluationForm ));
        employeeEvaluationForm.setEmployeeEvaluationFormAnswerSet(employeeEvaluationFormService.getById(employeeEvaluationFormDTO.getId()).getEmployeeEvaluationFormAnswerSet());
     }
 

@@ -158,7 +158,8 @@ public class AppraisalsController implements AppraisalApi {
 		EvaluationFormTemplate template = new EvaluationFormTemplate();
 		template = evaluationFormTemplateDTOConverter.convertBack(evaluationFormBody);
 		List<SectionDTO> sectionDTOS = evaluationFormBody.getSections();
-		evaluationFormTemplateService.saveAndFlush(template);
+	//	template.getEvaluationFormXSectionXQuestionSet().
+		this.evaluationFormTemplateService.saveAndFlush(template);
 //		for (SectionDTO sectionDTO : sectionDTOS) {
 //			List<ScoreValueDTO> scoreValueDTOS = sectionDTO.getScoreType().getScoreValues();
 //			for (ScoreValueDTO scoreValueDTO : scoreValueDTOS) {

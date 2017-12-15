@@ -65,6 +65,39 @@ paths:
             The user is authenticated, but is not yet registered in the system.
 
 ########################################################################################################################
+# /me ##################################################################################################################
+########################################################################################################################
+
+  '/me':
+
+    ###########
+    # GET #####
+    ###########
+
+    get:
+      tags:
+      - Me
+      summary: |
+        Provides information about the authenticated user.
+      description: |
+        Returns an `Employee` with information about the authenticated user.
+      operationId: meGet
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: |
+            Successful.
+          schema:
+            $ref: '#/definitions/EmployeeDTO'
+        '403':
+          description: |
+            The user isn't authenticated or authorized to perform this action.
+        '404':
+          description: |
+            The user is authenticated, but is not yet registered in the system.
+
+########################################################################################################################
 # /me/appraisals #######################################################################################################
 ########################################################################################################################
 
