@@ -66,7 +66,6 @@ public class EvaluationFormTemplateDTOMapper extends CustomMapper<EvaluationForm
         // We might need to implement an special logic to handle this scenarios. But it will be better to first encounter
         // one of such scenarios to decide how to implement this method.
         evaluationFormTemplate.setId(evaluationFormDTO.getId());
-         int evaluationFormTemplate1 = evaluationFormTemplate.getId();
         evaluationFormTemplate.setName(evaluationFormDTO.getName());
         evaluationFormTemplate.setDescription(evaluationFormDTO.getDescription());
         List<SectionDTO> sectionDTOS =evaluationFormDTO.getSections();
@@ -79,6 +78,6 @@ public class EvaluationFormTemplateDTOMapper extends CustomMapper<EvaluationForm
 
         Set<AppraisalXEvaluationFormTemplate> appraisalXEvaluationFormTemplateSet = new HashSet <AppraisalXEvaluationFormTemplate>();
         evaluationFormTemplate.setAppraisalXEvaluationFormTemplateSet(appraisalXEvaluationFormTemplateSet);
-        throw new NotImplementedException();
+//        throw new NotImplementedException();
     }
 }

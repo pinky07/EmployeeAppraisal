@@ -30,6 +30,6 @@ public class QuestionDTOMapper extends CustomMapper<Question, QuestionDTO> {
          question.setId(evaluationFormQuestionDTO.getId());
          question.setDescription(evaluationFormQuestionDTO.getDescription());
          question.setName(evaluationFormQuestionDTO.getName());
-//        throw new NotImplementedException();
+        throw new NotImplementedException();
     }
 }

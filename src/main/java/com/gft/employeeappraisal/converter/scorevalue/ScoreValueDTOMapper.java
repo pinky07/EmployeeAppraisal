@@ -36,6 +36,6 @@ public ScoreValueDTOMapper(EmployeeEvaluationFormAnswerService employeeEvaluatio
         scoreValue.setDescription(scoreValueDTO.getDescription());
         scoreValue.setId(scoreValueDTO.getId());
 //        scoreValue.setEmployeeEvaluationFormAnswerSet(employeeEvaluationFormAnswerService.getById(scoreValueDTO.getId()).);
-//        throw new NotImplementedException();
+        throw new NotImplementedException();
     }
 }

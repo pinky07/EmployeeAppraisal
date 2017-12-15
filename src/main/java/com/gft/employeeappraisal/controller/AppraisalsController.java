@@ -152,16 +152,22 @@ public class AppraisalsController implements AppraisalApi {
 			@PathVariable("appraisalId") Integer appraisalId,
 			@PathVariable("formId") Integer formId,
 			@Valid @RequestBody EvaluationFormTemplateDTO evaluationFormBody) {
-		List<SectionDTO> sectionDTOS = evaluationFormBody.getSections();
-		for (SectionDTO sectionDTO : sectionDTOS) {
-			List<ScoreValueDTO> scoreValueDTOS = sectionDTO.getScoreType().getScoreValues();
-			for (ScoreValueDTO scoreValueDTO : scoreValueDTOS) {
-				ScoreValue scoreValue = new ScoreValue();
-				scoreValue.setValue(scoreValueDTO.getValue());
-				//scoreValueRepository.save(scoreValue);
-			}
+		EvaluationFormTemplateDTO response = new EvaluationFormTemplateDTO();
 
-		}
+		this.validationService.validate(response);
+		EvaluationFormTemplate template = new EvaluationFormTemplate();
+		template = evaluationFormTemplateDTOConverter.convertBack(evaluationFormBody);
+		List<SectionDTO> sectionDTOS = evaluationFormBody.getSections();
+		evaluationFormTemplateService.saveAndFlush(template);
+//		for (SectionDTO sectionDTO : sectionDTOS) {
+//			List<ScoreValueDTO> scoreValueDTOS = sectionDTO.getScoreType().getScoreValues();
+//			for (ScoreValueDTO scoreValueDTO : scoreValueDTOS) {
+//				ScoreValue scoreValue = new ScoreValue();
+//				scoreValue.setValue(scoreValueDTO.getValue());
+//				scoreValueRepository.save(scoreValue);
+//			}
+//
+//		}
 		return new ResponseEntity<EvaluationFormTemplateDTO>(HttpStatus.OK);
 	}
 
