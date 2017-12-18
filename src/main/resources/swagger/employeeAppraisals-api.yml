@@ -30,6 +30,38 @@ security:
 
 # Endpoints
 paths:
+########################################################################################################################
+# /test ##################################################################################################################
+########################################################################################################################
+
+  '/test':
+
+    ###########
+    # GET #####
+    ###########
+
+    get:
+      tags:
+      - Me
+      summary: |
+        Provides information about the authenticated user.
+      description: |
+        Returns an `Employee` with information about the authenticated user.
+      operationId: meTest
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: |
+            Successful.
+          schema:
+            $ref: '#/definitions/EmployeeDTO'
+        '403':
+          description: |
+            The user isn't authenticated or authorized to perform this action.
+        '404':
+          description: |
+            The user is authenticated, but is not yet registered in the system.
 
 ########################################################################################################################
 # /me ##################################################################################################################
@@ -1358,14 +1390,14 @@ definitions:
       properties:
         id:
           type: integer
+        evaluationFormTemplateXSectionXQuestion:
+          $ref: '#/definitions/EvaluationFormTemplateXSectionXQuestionDTO'
         scoreValues:
           $ref: '#/definitions/ScoreValueDTO'
         comment:
           type: string
       required:
         - id
-
-
 
   EmployeeDTO:
     type: object
@@ -1413,7 +1445,21 @@ definitions:
       answers:
         type: array
         items:
-         $ref: '#/definitions/AnswerDTO'
+        $ref: '#/definitions/AnswerDTO'
+
+  EvaluationFormTemplateXSectionXQuestionDTO:
+    type: object
+    properties:
+      id:
+        type: integer
+      Evaluationtemplate:
+        $ref: '#/definitions/EvaluationFormTemplateDTO'
+      section:
+        $ref: '#/definitions/SectionDTO'
+      question:
+        $ref: '#/definitions/QuestionDTO'
+#      Answer:
+#        $ref: '#/definitions/AnswerDTO'
 
   EmployeeRelationshipDTO:
     type: object
