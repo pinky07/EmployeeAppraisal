@@ -4,6 +4,7 @@ import com.gft.employeeappraisal.exception.NotFoundException;
 import com.gft.employeeappraisal.model.EmployeeEvaluationForm;
 import com.gft.employeeappraisal.model.EmployeeEvaluationFormAnswer;
 import com.gft.employeeappraisal.repository.EmployeeEvaluationFormAnswerRepository;
+import com.gft.employeeappraisal.repository.EmployeeEvaluationFormRepository;
 import com.gft.employeeappraisal.service.EmployeeEvaluationFormAnswerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,13 +17,17 @@ public class EmployeeEvaluationFormAnswerServiceImpl implements EmployeeEvaluati
 {
 
     private final EmployeeEvaluationFormAnswerRepository employeeEvaluationFormAnswerRepository;
+    private final EmployeeEvaluationFormRepository employeeEvaluationFormRepository;
+
 
     /**
      * @inheritDoc
      */
     @Autowired
-    public EmployeeEvaluationFormAnswerServiceImpl(EmployeeEvaluationFormAnswerRepository employeeEvaluationFormAnswerRepository) {
+    public EmployeeEvaluationFormAnswerServiceImpl(EmployeeEvaluationFormAnswerRepository employeeEvaluationFormAnswerRepository,
+   EmployeeEvaluationFormRepository employeeEvaluationFormRepository) {
         this.employeeEvaluationFormAnswerRepository = employeeEvaluationFormAnswerRepository;
+        this.employeeEvaluationFormRepository=employeeEvaluationFormRepository;
     }
 
     @Override public Optional<EmployeeEvaluationFormAnswer> findById(int id)
@@ -45,6 +50,7 @@ public class EmployeeEvaluationFormAnswerServiceImpl implements EmployeeEvaluati
     @Override
     public Stream<EmployeeEvaluationFormAnswer> findByEmployeeEvaluationFormId(EmployeeEvaluationForm evaluationFormId)
     {
+
         return this.employeeEvaluationFormAnswerRepository.findByEmployeeEvaluationFormId(evaluationFormId).stream();
     }
 }

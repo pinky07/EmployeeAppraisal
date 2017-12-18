@@ -14,11 +14,11 @@ import java.util.List;
 @Repository
 @Transactional
 public interface EmployeeEvaluationFormAnswerRepository extends JpaRepository<EmployeeEvaluationFormAnswer, Integer> {
-//	@Query("SELECT employeeEvaluationFormAnswer "+
-//			"JOIN FETCH employeeEvaluationFormAnswer.employeeEvaluationFormId formid"+
-//			"FROM  EmployeeEvaluationFormAnswer employeeEvaluationFormAnswer "+
-//			"WHERE employeeEvaluationFormAnswer.employeeEvaluationFormId = :evaluationFormId "
-//	)
+	@Query("SELECT  elfa.*  " +
+			 "from  EmployeeEvaluationFormAnswer elfa ,EmployeeEvaluationForm ef "+
+			"WHERE elfa.employeeevaluationformid = ef.id "+
+			"AND ef.id = :evaluationFormId "
+			)
 
 	List<EmployeeEvaluationFormAnswer> findByEmployeeEvaluationFormId(@Param ("employeeEvaluationForm") EmployeeEvaluationForm evaluationFormId);
 }

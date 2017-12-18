@@ -1445,7 +1445,7 @@ definitions:
       answers:
         type: array
         items:
-        $ref: '#/definitions/AnswerDTO'
+         $ref: '#/definitions/AnswerDTO'
 
   EvaluationFormTemplateXSectionXQuestionDTO:
     type: object
@@ -1609,6 +1609,12 @@ definitions:
         type: string
       description:
         type: string
+      scoreType:
+         type: array
+         items:
+          $ref: '#/definitions/ScoreTypeDTO'
+
+
 
   SectionDTO:
    type: object
