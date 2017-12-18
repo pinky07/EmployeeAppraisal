@@ -11,6 +11,7 @@ import com.gft.employeeappraisal.repository.*;
 import com.gft.employeeappraisal.service.*;
 import com.gft.swagger.employees.api.AppraisalApi;
 import com.gft.swagger.employees.model.*;
+import io.swagger.annotations.ApiParam;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +20,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.validation.Valid;
 import java.time.OffsetDateTime;
@@ -93,6 +96,16 @@ public class AppraisalsController implements AppraisalApi {
 		this.validationService=validationService;
 
 	}
+
+//	@RequestMapping(value = "/employees/{employeeId}/appraisals/{appraisalId}/forms",
+//			produces = { "application/json" },
+//			method = RequestMethod.PUT)
+//	default ResponseEntity<EmployeeEvaluationFormDTO> employeesIdAppraisalsIdFormsPut(
+//			@PathVariable("employeeId") Integer employeeId, @PathVariable("appraisalId") Integer appraisalId,  @Valid @RequestBody EmployeeEvaluationFormDTO employee) {
+//		// do some magic!
+//		return new ResponseEntity<EmployeeEvaluationFormDTO>(HttpStatus.OK);
+//	}
+
 
 	@Override
 	public ResponseEntity<EmployeeEvaluationFormDTO> employeesIdAppraisalsIdFormsPut(
