@@ -116,11 +116,10 @@ public class AppraisalsController implements AppraisalApi {
 
 
 		if (evaluationFormBody.getSubmitDate().equals("")||evaluationFormBody.getSubmitDate() == null) {
-			//TODO : NEED TO CREATE METHOD, THAT WILL SAVE SCORE VALUE AND COMMENT BOX
+
 			employeeEvaluationForm = employeeEvaluationFormDTOConverter.convertBack(evaluationFormBody);
-			//updateEmployeeEvalutionForm(employeeEvaluationForm);
 			//call here saveAndContinue(), user can continue any time,so not saving date
-		}// TODO: find the employee evaluation form to update, by id. if it has a submit date, throw an error
+		}
 		else {// call here saveAndSubmit(),user click saveAndSubmit,then system capture current datetime
 			employeeEvaluationForm = employeeEvaluationFormDTOConverter.convertBack(evaluationFormBody);
 			int dateValidate = evaluationFormBody.getCreateDate().compareTo(evaluationFormBody.getSubmitDate());
@@ -129,25 +128,15 @@ public class AppraisalsController implements AppraisalApi {
 			EmployeeEvaluationFormDateValidate.validateDate(dateValidate);
 			if(dateValidate==0||dateValidateIfequal==true||dateValidate==1)
 			{
-				//updateEmployeeEvalutionForm(employeeEvaluationForm);
 				OffsetDateTime submitDay = OffsetDateTime.now();
 				employeeEvaluationForm.setSubmitDate(submitDay);
 				employeeEvaluationFormService.saveAndFlush(employeeEvaluationForm);
 			}
 		}
+		employeeEvaluationFormService.saveAndFlush(employeeEvaluationForm);
 		return new ResponseEntity<EmployeeEvaluationFormDTO>(HttpStatus.OK);
 	}
-//	// todo: here need to set scorevalue and comment for EmployeeEvaluationForm
-//	private void updateEmployeeEvalutionForm(EmployeeEvaluationForm employeeEvaluationForm)
-//	{
-//		Set<EmployeeEvaluationFormAnswer>employeeEvaluationFormAnswers =employeeEvaluationForm.getEmployeeEvaluationFormAnswerSet();
-//		for(EmployeeEvaluationFormAnswer employeeevaluationformanswer:employeeEvaluationFormAnswers){
-//			ScoreValue scoreValue =employeeevaluationformanswer.getScoreValue();
-//			employeeevaluationformanswer.setScoreValue(scoreValue);
-//			scoreValueRepository.save(scoreValue);
-//		}
-//
-//	}
+
 
 	// todo: here need to set scorevalue and comment for EmployeeEvaluationForm
 	@Override
@@ -161,18 +150,7 @@ public class AppraisalsController implements AppraisalApi {
 		this.validationService.validate(response);
 		EvaluationFormTemplate template = new EvaluationFormTemplate();
 		template = evaluationFormTemplateDTOConverter.convertBack(evaluationFormBody);
-		List<SectionDTO> sectionDTOS = evaluationFormBody.getSections();
-	//	template.getEvaluationFormXSectionXQuestionSet().
 		this.evaluationFormTemplateService.saveAndFlush(template);
-//		for (SectionDTO sectionDTO : sectionDTOS) {
-//			List<ScoreValueDTO> scoreValueDTOS = sectionDTO.getScoreType().getScoreValues();
-//			for (ScoreValueDTO scoreValueDTO : scoreValueDTOS) {
-//				ScoreValue scoreValue = new ScoreValue();
-//				scoreValue.setValue(scoreValueDTO.getValue());
-//				scoreValueRepository.save(scoreValue);
-//			}
-//
-//		}
 		return new ResponseEntity<EvaluationFormTemplateDTO>(HttpStatus.OK);
 	}
 

@@ -1440,6 +1440,8 @@ definitions:
       submitDate:
         type: string
         format: 'date-time'
+      comments:
+         type: string
       evaluationFormId:
         type: integer
       answers:

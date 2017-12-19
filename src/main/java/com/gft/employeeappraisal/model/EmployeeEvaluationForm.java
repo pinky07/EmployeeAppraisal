@@ -49,6 +49,20 @@ public class EmployeeEvaluationForm {
     @OneToMany(mappedBy = "employeeEvaluationForm", fetch = FetchType.LAZY)
     private Set<EmployeeEvaluationFormAnswer> employeeEvaluationFormAnswerSet;
 
+    public String getComments()
+    {
+        return comments;
+    }
+
+    public void setComments(String comments)
+    {
+        this.comments = comments;
+    }
+
+    @NotNull
+    @Column(name = "comments",  nullable = false)
+    private String  comments;
+
     public int getId() {
         return id;
     }
@@ -145,6 +159,7 @@ public class EmployeeEvaluationForm {
                 ", mentor=" + mentor +
                 ", createDate=" + createDate +
                 ", submitDate=" + submitDate +
+                ",comments="+comments+
                 '}';
     }
 }
