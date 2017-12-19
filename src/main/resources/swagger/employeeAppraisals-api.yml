@@ -1392,7 +1392,7 @@ definitions:
           type: integer
         evaluationFormTemplateXSectionXQuestion:
           $ref: '#/definitions/EvaluationFormTemplateXSectionXQuestionDTO'
-        scoreValues:
+        scoreValue:
           $ref: '#/definitions/ScoreValueDTO'
         comment:
           type: string
@@ -1452,7 +1452,7 @@ definitions:
     properties:
       id:
         type: integer
-      Evaluationtemplate:
+      evaluationTemplate:
         $ref: '#/definitions/EvaluationFormTemplateDTO'
       section:
         $ref: '#/definitions/SectionDTO'

@@ -4,14 +4,15 @@ import com.gft.employeeappraisal.Validation.EmployeeEvaluationFormDateValidate;
 import com.gft.employeeappraisal.converter.appraisal.AppraisalDTOConverter;
 import com.gft.employeeappraisal.converter.employeeevaluationform.EmployeeEvaluationFormDTOConverter;
 import com.gft.employeeappraisal.converter.evaluationformtemplate.EvaluationFormTemplateDTOConverter;
-import com.gft.employeeappraisal.exception.EmployeeAppraisalMicroserviceException;
 import com.gft.employeeappraisal.exception.NotFoundException;
 import com.gft.employeeappraisal.model.*;
 import com.gft.employeeappraisal.repository.*;
 import com.gft.employeeappraisal.service.*;
 import com.gft.swagger.employees.api.AppraisalApi;
-import com.gft.swagger.employees.model.*;
-import io.swagger.annotations.ApiParam;
+import com.gft.swagger.employees.model.AppraisalDTO;
+import com.gft.swagger.employees.model.EmployeeEvaluationFormDTO;
+import com.gft.swagger.employees.model.EvaluationFormTemplateDTO;
+import com.gft.swagger.employees.model.SectionDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,13 +21,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.validation.Valid;
 import java.time.OffsetDateTime;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 @Controller
@@ -143,9 +141,9 @@ public class AppraisalsController implements AppraisalApi {
 //	private void updateEmployeeEvalutionForm(EmployeeEvaluationForm employeeEvaluationForm)
 //	{
 //		Set<EmployeeEvaluationFormAnswer>employeeEvaluationFormAnswers =employeeEvaluationForm.getEmployeeEvaluationFormAnswerSet();
-//		for(EmployeeEvaluationFormAnswer employeeEvaluationFormAnswer:employeeEvaluationFormAnswers){
-//			ScoreValue scoreValue =employeeEvaluationFormAnswer.getScoreValue();
-//			employeeEvaluationFormAnswer.setScoreValue(scoreValue);
+//		for(EmployeeEvaluationFormAnswer employeeevaluationformanswer:employeeEvaluationFormAnswers){
+//			ScoreValue scoreValue =employeeevaluationformanswer.getScoreValue();
+//			employeeevaluationformanswer.setScoreValue(scoreValue);
 //			scoreValueRepository.save(scoreValue);
 //		}
 //
