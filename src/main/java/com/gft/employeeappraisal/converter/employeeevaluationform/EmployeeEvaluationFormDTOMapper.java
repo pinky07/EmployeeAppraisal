@@ -45,7 +45,8 @@ public class EmployeeEvaluationFormDTOMapper extends CustomMapper<EmployeeEvalua
         employeeEvaluationFormDTO.setMentor(mapperFacade.map(employeeEvaluationForm.getMentor(), EmployeeDTO.class));
         employeeEvaluationFormDTO.setCreateDate(employeeEvaluationForm.getCreateDate());
         employeeEvaluationFormDTO.setSubmitDate(employeeEvaluationForm.getSubmitDate());
-        employeeEvaluationFormDTO.setComments(employeeEvaluationForm.getComments());
+        employeeEvaluationFormDTO.setComments(employeeEvaluationForm.
+                getComments());
         employeeEvaluationFormDTO.setEvaluationFormId(employeeEvaluationForm
                 .getAppraisalXEvaluationFormTemplate()
                 .getEvaluationFormTemplate()
@@ -53,20 +54,14 @@ public class EmployeeEvaluationFormDTOMapper extends CustomMapper<EmployeeEvalua
 
 
         Set<EmployeeEvaluationFormAnswer>  answerSets =employeeEvaluationForm.getEmployeeEvaluationFormAnswerSet();
-        Set<EmployeeEvaluationFormAnswer> answerSet1 =employeeEvaluationForm.getEmployeeEvaluationFormAnswerSet();
-
-        EvaluationFormTemplateXSectionXQuestion evaluationFormTemplateXSectionXQuestion;
         Set<EvaluationFormTemplateXSectionXQuestion> evaluationFormXSectionXQuestionSet = new HashSet<>();
 
         for(EmployeeEvaluationFormAnswer answerSet:answerSets){
-
             EvaluationFormTemplateXSectionXQuestion questionAnswer = answerSet.getEvaluationFormTemplateXSectionXQuestion();
-            Set<EmployeeEvaluationFormAnswer> answerSet2=questionAnswer.getEmployeeEvaluationFormAnswerSet();
             evaluationFormXSectionXQuestionSet.add(questionAnswer);
             Question question =questionAnswer.getQuestion();
-            question=questionService.getById(question.getId());
             question.setEvaluationFormXSectionXQuestionSet(evaluationFormXSectionXQuestionSet);
-
+            questionAnswer.setQuestion(question);
         }
 
         employeeEvaluationFormDTO.setAnswers(employeeEvaluationForm
@@ -76,7 +71,24 @@ public class EmployeeEvaluationFormDTOMapper extends CustomMapper<EmployeeEvalua
                     AnswerDTO answerDTO = mapperFacade.map(employeeEvaluationFormAnswer, AnswerDTO.class);
                     answerDTO.setScoreValue(mapperFacade.map(employeeEvaluationFormAnswer.getScoreValue(), ScoreValueDTO.class));
                     answerDTO.setComment(employeeEvaluationFormAnswer.getComment());
-                    answerDTO.setEvaluationFormTemplateXSectionXQuestionDTO(mapperFacade.map(employeeEvaluationFormAnswer.getEvaluationFormTemplateXSectionXQuestion(),EvaluationFormTemplateXSectionXQuestionDTO.class));
+
+                    EvaluationFormTemplateXSectionXQuestion xSectionXQuestion = employeeEvaluationFormAnswer.getEvaluationFormTemplateXSectionXQuestion();
+
+                    Question question = xSectionXQuestion.getQuestion();
+
+                    //EvaluationFormTemplateXSectionXQuestionDTO xSectionXQuestionDTO = mapperFacade.map(xSectionXQuestion,EvaluationFormTemplateXSectionXQuestionDTO.class);
+
+                    EvaluationFormTemplateXSectionXQuestionDTO xSectionXQuestionDTO = new EvaluationFormTemplateXSectionXQuestionDTO();
+                    xSectionXQuestionDTO.setId(xSectionXQuestion.getId());
+
+                    QuestionDTO questionDTO = new QuestionDTO();
+                    questionDTO.setId(question.getId());
+                    questionDTO.setName(question.getName());
+                    questionDTO.setDescription(question.getDescription());
+                    questionDTO.setPosition(question.getPosition());
+                    xSectionXQuestionDTO.addQuestionItem(questionDTO);
+
+                    answerDTO.setEvaluationFormTemplateXSectionXQuestionDTO(xSectionXQuestionDTO);
 
                     // Omitted for brevity, every answer doesn't need this information
                     /*answerDTO.setEvaluationFormTemplateXSectionXQuestion(mapperFacade.map(employeeEvaluationFormAnswer
