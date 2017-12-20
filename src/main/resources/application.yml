@@ -1,6 +1,6 @@
 spring:
   profiles:
-    active: default,swagger-ui,oauth2,local-h2
+    active: default,swagger-ui,oauth2,local-postgresql
   application:
     name: employeeAppraisals-v1
   jackson:

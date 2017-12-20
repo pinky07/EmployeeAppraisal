@@ -1390,7 +1390,7 @@ definitions:
       properties:
         id:
           type: integer
-        evaluationFormTemplateXSectionXQuestion:
+        evaluationFormTemplateXSectionXQuestionDTO:
           $ref: '#/definitions/EvaluationFormTemplateXSectionXQuestionDTO'
         scoreValue:
           $ref: '#/definitions/ScoreValueDTO'
@@ -1440,6 +1440,8 @@ definitions:
       submitDate:
         type: string
         format: 'date-time'
+      comments:
+        type: string
       evaluationFormId:
         type: integer
       answers:
@@ -1452,14 +1454,17 @@ definitions:
     properties:
       id:
         type: integer
-      evaluationTemplate:
-        $ref: '#/definitions/EvaluationFormTemplateDTO'
-      section:
-        $ref: '#/definitions/SectionDTO'
+#      evaluationTemplate:
+#        $ref: '#/definitions/EvaluationFormTemplateDTO'
+#      section:
+#        $ref: '#/definitions/SectionDTO'
       question:
-        $ref: '#/definitions/QuestionDTO'
-#      Answer:
-#        $ref: '#/definitions/AnswerDTO'
+       type: array
+       items:
+         $ref: '#/definitions/QuestionDTO'
+    required:
+      - id
+
 
   EmployeeRelationshipDTO:
     type: object

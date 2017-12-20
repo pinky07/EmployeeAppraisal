@@ -28,6 +28,7 @@ ALTER TABLE EmployeeEvaluationForm ADD COLUMN filledByEmployeeId INTEGER;
 ALTER TABLE EmployeeEvaluationForm ADD COLUMN mentorId INTEGER;
 ALTER TABLE EmployeeEvaluationForm ADD COLUMN createDate TIMESTAMP WITH TIME ZONE;
 ALTER TABLE EmployeeEvaluationForm ADD COLUMN submitDate TIMESTAMP WITH TIME ZONE;
+ ALTER TABLE EmployeeEvaluationForm ADD COLUMN  comments VARCHAR(50);
 ALTER TABLE Section ADD COLUMN scoreTypeId INTEGER;
 ALTER TABLE Section ADD COLUMN position INTEGER;
 ALTER TABLE Question ADD COLUMN position INTEGER;

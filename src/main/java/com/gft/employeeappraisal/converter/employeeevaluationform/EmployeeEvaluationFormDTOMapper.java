@@ -1,17 +1,16 @@
 package com.gft.employeeappraisal.converter.employeeevaluationform;
 
-import com.gft.employeeappraisal.model.EmployeeEvaluationForm;
+import com.gft.employeeappraisal.model.*;
 import com.gft.employeeappraisal.service.EmployeeEvaluationFormService;
 import com.gft.employeeappraisal.service.EmployeeService;
-import com.gft.swagger.employees.model.AnswerDTO;
-import com.gft.swagger.employees.model.EmployeeDTO;
-import com.gft.swagger.employees.model.EmployeeEvaluationFormDTO;
-import com.gft.swagger.employees.model.ScoreValueDTO;
+import com.gft.employeeappraisal.service.QuestionService;
+import com.gft.swagger.employees.model.*;
 import ma.glasnost.orika.CustomMapper;
 import ma.glasnost.orika.MappingContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -25,13 +24,16 @@ public class EmployeeEvaluationFormDTOMapper extends CustomMapper<EmployeeEvalua
 
     private final EmployeeService employeeService;
     private final EmployeeEvaluationFormService employeeEvaluationFormService;
+    private final QuestionService questionService;
 
     @Autowired
     public EmployeeEvaluationFormDTOMapper(
             EmployeeService employeeService,
-            EmployeeEvaluationFormService employeeEvaluationFormService) {
+            EmployeeEvaluationFormService employeeEvaluationFormService,
+            QuestionService questionService) {
         this.employeeService = employeeService;
         this.employeeEvaluationFormService = employeeEvaluationFormService;
+        this.questionService = questionService;
 
     }
 
@@ -43,10 +45,30 @@ public class EmployeeEvaluationFormDTOMapper extends CustomMapper<EmployeeEvalua
         employeeEvaluationFormDTO.setMentor(mapperFacade.map(employeeEvaluationForm.getMentor(), EmployeeDTO.class));
         employeeEvaluationFormDTO.setCreateDate(employeeEvaluationForm.getCreateDate());
         employeeEvaluationFormDTO.setSubmitDate(employeeEvaluationForm.getSubmitDate());
+        employeeEvaluationFormDTO.setComments(employeeEvaluationForm.getComments());
         employeeEvaluationFormDTO.setEvaluationFormId(employeeEvaluationForm
                 .getAppraisalXEvaluationFormTemplate()
                 .getEvaluationFormTemplate()
                 .getId());
+
+
+        Set<EmployeeEvaluationFormAnswer>  answerSets =employeeEvaluationForm.getEmployeeEvaluationFormAnswerSet();
+        Set<EmployeeEvaluationFormAnswer> answerSet1 =employeeEvaluationForm.getEmployeeEvaluationFormAnswerSet();
+
+        EvaluationFormTemplateXSectionXQuestion evaluationFormTemplateXSectionXQuestion;
+        Set<EvaluationFormTemplateXSectionXQuestion> evaluationFormXSectionXQuestionSet = new HashSet<>();
+
+        for(EmployeeEvaluationFormAnswer answerSet:answerSets){
+
+            EvaluationFormTemplateXSectionXQuestion questionAnswer = answerSet.getEvaluationFormTemplateXSectionXQuestion();
+            Set<EmployeeEvaluationFormAnswer> answerSet2=questionAnswer.getEmployeeEvaluationFormAnswerSet();
+            evaluationFormXSectionXQuestionSet.add(questionAnswer);
+            Question question =questionAnswer.getQuestion();
+            question=questionService.getById(question.getId());
+            question.setEvaluationFormXSectionXQuestionSet(evaluationFormXSectionXQuestionSet);
+
+        }
+
         employeeEvaluationFormDTO.setAnswers(employeeEvaluationForm
                 .getEmployeeEvaluationFormAnswerSet()
                 .stream()
@@ -54,6 +76,8 @@ public class EmployeeEvaluationFormDTOMapper extends CustomMapper<EmployeeEvalua
                     AnswerDTO answerDTO = mapperFacade.map(employeeEvaluationFormAnswer, AnswerDTO.class);
                     answerDTO.setScoreValue(mapperFacade.map(employeeEvaluationFormAnswer.getScoreValue(), ScoreValueDTO.class));
                     answerDTO.setComment(employeeEvaluationFormAnswer.getComment());
+                    answerDTO.setEvaluationFormTemplateXSectionXQuestionDTO(mapperFacade.map(employeeEvaluationFormAnswer.getEvaluationFormTemplateXSectionXQuestion(),EvaluationFormTemplateXSectionXQuestionDTO.class));
+
                     // Omitted for brevity, every answer doesn't need this information
                     /*answerDTO.setEvaluationFormTemplateXSectionXQuestion(mapperFacade.map(employeeEvaluationFormAnswer
                             .getEvaluationFormTemplateXSectionXQuestion(), EvaluationFormTemplateXSectionXQuestionDTO.class));*/
@@ -69,11 +93,26 @@ public class EmployeeEvaluationFormDTOMapper extends CustomMapper<EmployeeEvalua
         employeeEvaluationForm.setMentor(employeeService.getById(employeeEvaluationFormDTO.getMentor().getId()));
         employeeEvaluationForm.setCreateDate(employeeEvaluationFormDTO.getCreateDate());
         employeeEvaluationForm.setSubmitDate(employeeEvaluationFormDTO.getSubmitDate());
+        employeeEvaluationForm.setComments(employeeEvaluationFormDTO.getComments());
         EmployeeEvaluationForm evaluationForm = employeeEvaluationFormService
                 .getById(employeeEvaluationFormDTO.getId());
+
         employeeEvaluationForm.setAppraisalXEvaluationFormTemplate(evaluationForm.getAppraisalXEvaluationFormTemplate());
         // TODO: Iterate the answers on the DTO after validating they are correctly formed, create a Set and overwrite the existing answer set
-        //employeeEvaluationForm.setEmployeeEvaluationFormAnswerSet(evaluationForm.getEmployeeEvaluationFormAnswerSet());
+        List<AnswerDTO> answerDTOS = new ArrayList<>();
+        Set<EmployeeEvaluationFormAnswer> employeeEvaluationFormAnswerSet = new HashSet<EmployeeEvaluationFormAnswer>();
+        for(EmployeeEvaluationFormAnswer answerSet:employeeEvaluationFormAnswerSet){
+
+        }
+        answerDTOS = employeeEvaluationFormDTO.getAnswers();
+        for(AnswerDTO answerDTO:answerDTOS){
+            answerDTO.getComment();
+            answerDTO.getScoreValue();
+
+        }
+//       employeeEvaluationForm.setEmployeeEvaluationFormAnswerSet(evaluationForm.setEmployeeEvaluationFormAnswerSet(););
+//        employeeEvaluationFormDTO.getAnswers();
+//        employeeEvaluationForm.setEmployeeEvaluationFormAnswerSet(evaluationForm.getEmployeeEvaluationFormAnswerSet());
     }
 
 }
