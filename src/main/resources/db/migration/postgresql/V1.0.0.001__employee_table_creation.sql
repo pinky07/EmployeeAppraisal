@@ -46,6 +46,7 @@ CREATE TABLE EmployeeRelationship (
     relationshipId INT,
     startDate TIMESTAMP,
     endDate TIMESTAMP,
+    comments VARCHAR(50),
     FOREIGN KEY (sourceEmployeeId) REFERENCES Employee(id),
     FOREIGN KEY (targetEmployeeId) REFERENCES Employee(id),
     FOREIGN KEY (relationshipId) REFERENCES Relationship(id)

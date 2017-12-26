@@ -46,7 +46,8 @@ public class EmployeeEvaluationForm {
     @Column(name = "submitDate", columnDefinition = "TIMESTAMP", nullable = false)
     private OffsetDateTime submitDate;
 
-    @OneToMany(mappedBy = "employeeEvaluationForm", fetch = FetchType.LAZY)
+
+    @OneToMany(mappedBy = "employeeEvaluationForm", fetch = FetchType.LAZY, cascade=CascadeType.MERGE)
     private Set<EmployeeEvaluationFormAnswer> employeeEvaluationFormAnswerSet;
 
     public String getComments()

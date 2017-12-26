@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import javax.validation.Valid;
 import java.time.OffsetDateTime;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Controller
@@ -46,6 +47,7 @@ public class AppraisalsController implements AppraisalApi {
 	private final SectionRepository sectionRepository;
 	private final ScoreTypeRepository scoreTypeRepository;
 	private final  ValidationService validationService;
+	private final EmployeeEvaluationFormAnswerService employeeEvaluationFormAnswerService;
 
 	// DTO converters
 	private final AppraisalDTOConverter appraisalDTOConverter;
@@ -66,14 +68,15 @@ public class AppraisalsController implements AppraisalApi {
 			ScoreValueService scoreValueService,
 			AppraisalXEvaluationFormTemplateService appraisalXEvaluationFormTemplateService,
 			EvaluationFormTemplateXSectionXQuestionService evaluationFormTemplateXSectionXQuestionService,
-			EmployeeEvaluationFormAnswerService employeeEvaluationFormAnswerService,
+
 			ScoreValueRepository scoreValueRepository,
 			AppraisalXEvaluationFormTemplateRepository appraisalXEvaluationFormTemplateRepository,
 			EvaluationFormTemplateXSectionXQuestionRepository evaluationFormTemplateXSectionXQuestionRepository,
 			EmployeeEvaluationFormAnswerRepository employeeEvaluationFormAnswerRepository,
 			SectionRepository sectionRepository,
 			ScoreTypeRepository scoreTypeRepository,
-			ValidationService validationService
+			ValidationService validationService,
+			EmployeeEvaluationFormAnswerService employeeEvaluationFormAnswerService
 
 		) {
 		this.appraisalService = appraisalService;
@@ -92,6 +95,7 @@ public class AppraisalsController implements AppraisalApi {
 		this.sectionRepository = sectionRepository;
 		this.scoreTypeRepository = scoreTypeRepository;
 		this.validationService=validationService;
+		this.employeeEvaluationFormAnswerService =employeeEvaluationFormAnswerService;
 
 	}
 
@@ -135,22 +139,12 @@ public class AppraisalsController implements AppraisalApi {
 				employeeEvaluationFormService.saveAndFlush(employeeEvaluationForm);
 			}
 		}
+		Set<EmployeeEvaluationFormAnswer> answerSet =employeeEvaluationForm.getEmployeeEvaluationFormAnswerSet();
 		employeeEvaluationFormService.saveAndFlush(employeeEvaluationForm);
+
 		return new ResponseEntity<EmployeeEvaluationFormDTO>(HttpStatus.OK);
 	}
-//	// todo: here need to set scorevalue and comment for EmployeeEvaluationForm
-//	private void updateEmployeeEvalutionForm(EmployeeEvaluationForm employeeEvaluationForm)
-//	{
-//		Set<EmployeeEvaluationFormAnswer>employeeEvaluationFormAnswers =employeeEvaluationForm.getEmployeeEvaluationFormAnswerSet();
-//		for(EmployeeEvaluationFormAnswer employeeevaluationformanswer:employeeEvaluationFormAnswers){
-//			ScoreValue scoreValue =employeeevaluationformanswer.getScoreValue();
-//			employeeevaluationformanswer.setScoreValue(scoreValue);
-//			scoreValueRepository.save(scoreValue);
-//		}
-//
-//	}
 
-	// todo: here need to set scorevalue and comment for EmployeeEvaluationForm
 	@Override
 	public ResponseEntity<EvaluationFormTemplateDTO> employeesIdAppraisalsIdFormsIdPut(
 			@PathVariable("employeeId") Integer employeeId,
@@ -163,17 +157,7 @@ public class AppraisalsController implements AppraisalApi {
 		EvaluationFormTemplate template = new EvaluationFormTemplate();
 		template = evaluationFormTemplateDTOConverter.convertBack(evaluationFormBody);
 		List<SectionDTO> sectionDTOS = evaluationFormBody.getSections();
-	//	template.getEvaluationFormXSectionXQuestionSet().
 		this.evaluationFormTemplateService.saveAndFlush(template);
-//		for (SectionDTO sectionDTO : sectionDTOS) {
-//			List<ScoreValueDTO> scoreValueDTOS = sectionDTO.getScoreType().getScoreValues();
-//			for (ScoreValueDTO scoreValueDTO : scoreValueDTOS) {
-//				ScoreValue scoreValue = new ScoreValue();
-//				scoreValue.setValue(scoreValueDTO.getValue());
-//				scoreValueRepository.save(scoreValue);
-//			}
-//
-//		}
 		return new ResponseEntity<EvaluationFormTemplateDTO>(HttpStatus.OK);
 	}
 

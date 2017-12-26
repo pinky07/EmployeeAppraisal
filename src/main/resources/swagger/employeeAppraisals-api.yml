@@ -1141,9 +1141,15 @@ paths:
           type: array
           collectionFormat: csv
           items:
-            type: string
+          type: string
           description: |
             Filters out the specified relationship types. Separated by coma values.
+        - in: query
+          name: comments
+          required: false
+          type: integer
+          description: |
+             Filters out relationships subsequent to the specified comments.
         - in: query
           name: startDate
           required: false
@@ -1165,6 +1171,7 @@ paths:
           allowEmptyValue: true
           description: |
             Filters out historic relationships. StartDate and EndDate have precedence over this parameter.
+
       responses:
         '200':
           description: |
@@ -1454,10 +1461,6 @@ definitions:
     properties:
       id:
         type: integer
-#      evaluationTemplate:
-#        $ref: '#/definitions/EvaluationFormTemplateDTO'
-#      section:
-#        $ref: '#/definitions/SectionDTO'
       question:
        type: array
        items:
@@ -1479,6 +1482,8 @@ definitions:
       endDate:
         type: string
         format: 'date-time'
+      comments:
+         type: string
       relationshipType:
         $ref: '#/definitions/RelationshipTypeDTO'
     required:
