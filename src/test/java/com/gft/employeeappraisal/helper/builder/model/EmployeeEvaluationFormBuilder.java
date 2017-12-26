@@ -4,8 +4,12 @@ import com.gft.employeeappraisal.helper.builder.ObjectBuilder;
 import com.gft.employeeappraisal.model.AppraisalXEvaluationFormTemplate;
 import com.gft.employeeappraisal.model.Employee;
 import com.gft.employeeappraisal.model.EmployeeEvaluationForm;
+import com.gft.employeeappraisal.model.EmployeeEvaluationFormAnswer;
 
 import java.time.OffsetDateTime;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Builder object for the {@link EmployeeEvaluationForm} object.
@@ -22,6 +26,7 @@ public class EmployeeEvaluationFormBuilder implements ObjectBuilder<EmployeeEval
     private Employee mentor;
     private OffsetDateTime createDate;
     private OffsetDateTime submitDate;
+    private Set<EmployeeEvaluationFormAnswer> employeeEvaluationFormAnswerSet;
 
     private boolean idSet;
     private boolean appraisalXEvaluationFormSet;
@@ -30,6 +35,7 @@ public class EmployeeEvaluationFormBuilder implements ObjectBuilder<EmployeeEval
     private boolean mentorSet;
     private boolean createDateSet;
     private boolean submitDateSet;
+    private boolean answersSet;
 
     public EmployeeEvaluationFormBuilder id(int id) {
         this.id = id;
@@ -74,6 +80,12 @@ public class EmployeeEvaluationFormBuilder implements ObjectBuilder<EmployeeEval
         return this;
     }
 
+    public EmployeeEvaluationFormBuilder answers(Set<EmployeeEvaluationFormAnswer> answers) {
+        this.employeeEvaluationFormAnswerSet = answers;
+        this.answersSet = true;
+        return this;
+    }
+
     @Override
     public EmployeeEvaluationForm build() {
         EmployeeEvaluationForm obj = new EmployeeEvaluationForm();
@@ -84,6 +96,7 @@ public class EmployeeEvaluationFormBuilder implements ObjectBuilder<EmployeeEval
         obj.setMentor(this.mentor);
         obj.setCreateDate(this.createDate);
         obj.setSubmitDate(this.submitDate);
+        obj.setEmployeeEvaluationFormAnswerSet(this.employeeEvaluationFormAnswerSet);
         return obj;
     }
 
@@ -98,6 +111,9 @@ public class EmployeeEvaluationFormBuilder implements ObjectBuilder<EmployeeEval
         if (this.mentorSet) obj.setMentor(this.mentor);
         obj.setCreateDate(this.createDateSet ? this.createDate : OffsetDateTime.now());
         obj.setSubmitDate(this.submitDateSet ? this.submitDate : OffsetDateTime.now().plusDays(1));
+        obj.setEmployeeEvaluationFormAnswerSet(this.answersSet ? this.employeeEvaluationFormAnswerSet :
+            new HashSet<>(Collections.singletonList(new EmployeeEvaluationFormAnswerBuilder(obj).buildWithDefaults()))
+        );
         return obj;
     }
 }

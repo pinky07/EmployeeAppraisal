@@ -26,6 +26,10 @@ public class QuestionDTOMapper extends CustomMapper<Question, QuestionDTO> {
     @Override
     public void mapBtoA(QuestionDTO evaluationFormQuestionDTO, Question question, MappingContext context) {
         // TODO Implement this method!
+        // question.setEvaluationFormXSectionXQuestionSet(evaluationFormQuestionDTO.set);
+         question.setId(evaluationFormQuestionDTO.getId());
+         question.setDescription(evaluationFormQuestionDTO.getDescription());
+         question.setName(evaluationFormQuestionDTO.getName());
         throw new NotImplementedException();
     }
 }

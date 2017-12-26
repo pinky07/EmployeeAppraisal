@@ -1,9 +1,6 @@
 package com.gft.employeeappraisal.converter.evaluationformtemplate;
 
-import com.gft.employeeappraisal.model.EvaluationFormTemplate;
-import com.gft.employeeappraisal.model.EvaluationFormTemplateXSectionXQuestion;
-import com.gft.employeeappraisal.model.Question;
-import com.gft.employeeappraisal.model.Section;
+import com.gft.employeeappraisal.model.*;
 import com.gft.swagger.employees.model.EvaluationFormTemplateDTO;
 import com.gft.swagger.employees.model.QuestionDTO;
 import com.gft.swagger.employees.model.SectionDTO;
@@ -68,6 +65,19 @@ public class EvaluationFormTemplateDTOMapper extends CustomMapper<EvaluationForm
         // This conversion might not be trivial since every Evaluation Form will have many sections and questions.
         // We might need to implement an special logic to handle this scenarios. But it will be better to first encounter
         // one of such scenarios to decide how to implement this method.
-        throw new NotImplementedException();
+        evaluationFormTemplate.setId(evaluationFormDTO.getId());
+        evaluationFormTemplate.setName(evaluationFormDTO.getName());
+        evaluationFormTemplate.setDescription(evaluationFormDTO.getDescription());
+        List<SectionDTO> sectionDTOS =evaluationFormDTO.getSections();
+        for(SectionDTO sectionDTO:sectionDTOS){
+            List<QuestionDTO> questions=sectionDTO.getQuestions();
+            for(QuestionDTO questionDTO:questions){
+                questionDTO.getPosition();
+            }
+        }
+
+        Set<AppraisalXEvaluationFormTemplate> appraisalXEvaluationFormTemplateSet = new HashSet <AppraisalXEvaluationFormTemplate>();
+        evaluationFormTemplate.setAppraisalXEvaluationFormTemplateSet(appraisalXEvaluationFormTemplateSet);
+//        throw new NotImplementedException();
     }
 }

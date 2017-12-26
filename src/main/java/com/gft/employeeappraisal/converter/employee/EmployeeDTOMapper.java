@@ -58,5 +58,6 @@ public class EmployeeDTOMapper extends CustomMapper<Employee, EmployeeDTO> {
 
         employee.setApplicationRole(mapperFacade.map(employeeDTO.getApplicationRole(), ApplicationRole.class));
         employee.setJobLevel(mapperFacade.map(employeeDTO.getJobLevel(), JobLevel.class));
+
     }
 }

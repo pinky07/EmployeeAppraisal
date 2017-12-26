@@ -30,6 +30,71 @@ security:
 
 # Endpoints
 paths:
+########################################################################################################################
+# /test ##################################################################################################################
+########################################################################################################################
+
+  '/test':
+
+    ###########
+    # GET #####
+    ###########
+
+    get:
+      tags:
+      - Me
+      summary: |
+        Provides information about the authenticated user.
+      description: |
+        Returns an `Employee` with information about the authenticated user.
+      operationId: meTest
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: |
+            Successful.
+          schema:
+            $ref: '#/definitions/EmployeeDTO'
+        '403':
+          description: |
+            The user isn't authenticated or authorized to perform this action.
+        '404':
+          description: |
+            The user is authenticated, but is not yet registered in the system.
+
+########################################################################################################################
+# /me ##################################################################################################################
+########################################################################################################################
+
+  '/me':
+
+    ###########
+    # GET #####
+    ###########
+
+    get:
+      tags:
+      - Me
+      summary: |
+        Provides information about the authenticated user.
+      description: |
+        Returns an `Employee` with information about the authenticated user.
+      operationId: meGet
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: |
+            Successful.
+          schema:
+            $ref: '#/definitions/EmployeeDTO'
+        '403':
+          description: |
+            The user isn't authenticated or authorized to perform this action.
+        '404':
+          description: |
+            The user is authenticated, but is not yet registered in the system.
 
 ########################################################################################################################
 # /me ##################################################################################################################
@@ -878,6 +943,58 @@ paths:
         '404':
           description: |
             Employee or Appraisal not found in the system.
+    ###########
+    # PUT #####
+    ###########
+
+    put:
+      tags:
+      - Appraisal
+      summary: |
+         Registers or updates an `Employee on `EvaluationForm` of a specific appraisal for the specified user.
+      description: |
+       Registers or updates an `Employee on `EvaluationForm` belonging to the specified user.
+      operationId: employeesIdAppraisalsIdFormsPut
+      produces:
+        - application/json
+      parameters:
+        - in: path
+          name: employeeId
+          type: integer
+          required: true
+          description: |
+            `Employee` Id.
+        - in: path
+          name: appraisalId
+          type: integer
+          required: true
+          description: |
+            `Appraisal` Id.
+        - in: body
+          name: employee
+          schema:
+            $ref: '#/definitions/EmployeeEvaluationFormDTO'
+          required: true
+          description: |
+           `Employee` to create or update.
+
+      responses:
+        '200':
+          description: |
+            Successful.
+          schema:
+            $ref: '#/definitions/EmployeeEvaluationFormDTO'
+        '400':
+          description: |
+            Input was malformed.
+          schema:
+            $ref: '#/definitions/EmployeeEvaluationFormDTO'
+        '403':
+          description: |
+            The user isn't authenticated or authorized to perform this action.
+        '404':
+          description: |
+            Employee, Appraisal or EvaluationForm not found in the system.
 
 ########################################################################################################################
 # /employees/:id/appraisals/:id/forms/:id ##############################################################################
@@ -965,6 +1082,13 @@ paths:
           required: true
           description: |
             `Form` Id.
+        - in: body
+          name: employee
+          schema:
+              $ref: '#/definitions/EvaluationFormTemplateDTO'
+          required: true
+          description: |
+              `Employee` to create or update.
       responses:
         '200':
           description: |
@@ -1261,6 +1385,20 @@ definitions:
         type: string
         format: 'date-time'
 
+  AnswerDTO:
+      type: object
+      properties:
+        id:
+          type: integer
+        evaluationFormTemplateXSectionXQuestion:
+          $ref: '#/definitions/EvaluationFormTemplateXSectionXQuestionDTO'
+        scoreValue:
+          $ref: '#/definitions/ScoreValueDTO'
+        comment:
+          type: string
+      required:
+        - id
+
   EmployeeDTO:
     type: object
     properties:
@@ -1302,8 +1440,28 @@ definitions:
       submitDate:
         type: string
         format: 'date-time'
+      comments:
+         type: string
       evaluationFormId:
         type: integer
+      answers:
+        type: array
+        items:
+         $ref: '#/definitions/AnswerDTO'
+
+  EvaluationFormTemplateXSectionXQuestionDTO:
+    type: object
+    properties:
+      id:
+        type: integer
+      evaluationTemplate:
+        $ref: '#/definitions/EvaluationFormTemplateDTO'
+      section:
+        $ref: '#/definitions/SectionDTO'
+      question:
+        $ref: '#/definitions/QuestionDTO'
+#      Answer:
+#        $ref: '#/definitions/AnswerDTO'
 
   EmployeeRelationshipDTO:
     type: object
@@ -1453,6 +1611,12 @@ definitions:
         type: string
       description:
         type: string
+      scoreType:
+         type: array
+         items:
+          $ref: '#/definitions/ScoreTypeDTO'
+
+
 
   SectionDTO:
    type: object

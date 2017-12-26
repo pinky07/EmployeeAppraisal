@@ -106,7 +106,7 @@ public abstract class BaseControllerTest {
     protected EvaluationFormTemplateService evaluationFormTemplateService;
 
     @MockBean
-    protected EvaluationFormXSectionXQuestionService evaluationFormXSectionXQuestionService;
+    protected EvaluationFormTemplateXSectionXQuestionService evaluationFormXSectionXQuestionService;
 
     @MockBean
     protected JobFamilyService jobFamilyService;

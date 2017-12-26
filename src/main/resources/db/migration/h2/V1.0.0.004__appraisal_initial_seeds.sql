@@ -582,7 +582,10 @@ VALUES
         (1, 1, 2, 'PENDING'),
 
         -- Manuel Yépez (id 3) - Self Evaluation
-        (2, 1, 3, 'PENDING');
+        (2, 1, 3, 'PENDING'),
+
+          -- Pinky Agrawal (id 26) - Self Evaluation
+        (3, 1,  26,'PENDING');
 
 
 INSERT INTO EvaluationFormXSectionXQuestion (evaluationFormId, evaluationFormSectionId, evaluationFormQuestionId)

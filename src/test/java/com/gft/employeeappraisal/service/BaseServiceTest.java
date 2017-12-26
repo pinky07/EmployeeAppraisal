@@ -45,7 +45,7 @@ public class BaseServiceTest {
     protected EvaluationFormTemplateRepository evaluationFormTemplateRepository;
 
     @Autowired
-    protected EvaluationFormXSectionXQuestionRepository evaluationFormXSectionXQuestionRepository;
+    protected EvaluationFormTemplateXSectionXQuestionRepository evaluationFormXSectionXQuestionRepository;
 
     @Autowired
     protected JobFamilyRepository jobFamilyRepository;
@@ -82,7 +82,7 @@ public class BaseServiceTest {
     protected EvaluationFormTemplateService evaluationFormTemplateService;
 
     @Mock
-    protected EvaluationFormXSectionXQuestionService evaluationFormXSectionXQuestionService;
+    protected EvaluationFormTemplateXSectionXQuestionService evaluationFormXSectionXQuestionService;
 
     @Mock
     protected JobFamilyService jobFamilyService;

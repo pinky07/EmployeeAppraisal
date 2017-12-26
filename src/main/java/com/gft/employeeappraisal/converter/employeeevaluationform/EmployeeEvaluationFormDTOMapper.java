@@ -1,6 +1,8 @@
 package com.gft.employeeappraisal.converter.employeeevaluationform;
 
 import com.gft.employeeappraisal.model.EmployeeEvaluationForm;
+import com.gft.employeeappraisal.service.EmployeeEvaluationFormAnswerService;
+import com.gft.employeeappraisal.service.EmployeeEvaluationFormService;
 import com.gft.employeeappraisal.service.EmployeeService;
 import com.gft.swagger.employees.model.EmployeeDTO;
 import com.gft.swagger.employees.model.EmployeeEvaluationFormDTO;
@@ -18,11 +20,18 @@ import org.springframework.stereotype.Component;
 public class EmployeeEvaluationFormDTOMapper extends CustomMapper<EmployeeEvaluationForm, EmployeeEvaluationFormDTO> {
 
     private final EmployeeService employeeService;
+    private final EmployeeEvaluationFormService employeeEvaluationFormService;
+    private final EmployeeEvaluationFormAnswerService employeeEvaluationFormAnswerService;
 
     @Autowired
     public EmployeeEvaluationFormDTOMapper(
-            EmployeeService employeeService) {
+            EmployeeService employeeService,
+			EmployeeEvaluationFormService employeeEvaluationFormService,
+            EmployeeEvaluationFormAnswerService employeeEvaluationFormAnswerService) {
         this.employeeService = employeeService;
+        this.employeeEvaluationFormService = employeeEvaluationFormService;
+        this.employeeEvaluationFormAnswerService =employeeEvaluationFormAnswerService;
+
     }
 
     @Override
@@ -37,6 +46,8 @@ public class EmployeeEvaluationFormDTOMapper extends CustomMapper<EmployeeEvalua
                 .getAppraisalXEvaluationFormTemplate()
                 .getEvaluationFormTemplate()
                 .getId());
+        employeeEvaluationFormDTO.setComments(employeeEvaluationForm.getComments());
+
     }
 
     @Override
@@ -47,5 +58,12 @@ public class EmployeeEvaluationFormDTOMapper extends CustomMapper<EmployeeEvalua
         employeeEvaluationForm.setMentor(employeeService.getById(employeeEvaluationFormDTO.getMentor().getId()));
         employeeEvaluationForm.setCreateDate(employeeEvaluationFormDTO.getCreateDate());
         employeeEvaluationForm.setSubmitDate(employeeEvaluationFormDTO.getSubmitDate());
+        employeeEvaluationForm.setComments(employeeEvaluationFormDTO.getComments());
+        employeeEvaluationForm.setAppraisalXEvaluationFormTemplate(employeeEvaluationFormService
+				.getById(employeeEvaluationFormDTO.getId()).getAppraisalXEvaluationFormTemplate());
+//        employeeEvaluationForm.setEmployeeEvaluationFormAnswerSet
+//                (employeeEvaluationFormAnswerService.findByEmployeeEvaluationFormId(employeeEvaluationForm ));
+       employeeEvaluationForm.setEmployeeEvaluationFormAnswerSet(employeeEvaluationFormService.getById(employeeEvaluationFormDTO.getId()).getEmployeeEvaluationFormAnswerSet());
     }
+
 }

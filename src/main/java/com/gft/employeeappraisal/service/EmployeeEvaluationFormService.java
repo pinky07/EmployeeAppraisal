@@ -1,5 +1,6 @@
 package com.gft.employeeappraisal.service;
 
+import com.gft.employeeappraisal.exception.NotFoundException;
 import com.gft.employeeappraisal.model.Appraisal;
 import com.gft.employeeappraisal.model.Employee;
 import com.gft.employeeappraisal.model.EmployeeEvaluationForm;
@@ -14,6 +15,15 @@ import java.util.stream.Stream;
  * @author Manuel Yepez
  */
 public interface EmployeeEvaluationFormService {
+
+	/**
+	 * Given an employee evaluation form Id, looks up an employee evaluation form and returns it.
+	 * If it doesn't exist, it throws an exception.
+	 * @param id Internal lookup Id for the employee evaluation form.
+	 * @return {@link EmployeeEvaluationForm} entity
+	 * @throws NotFoundException if the provided ID does not match to an existing record.
+	 */
+    EmployeeEvaluationForm getById(int id) throws NotFoundException;
 
     /**
      * Looks up an {@link EmployeeEvaluationForm} entity with the given Id.
