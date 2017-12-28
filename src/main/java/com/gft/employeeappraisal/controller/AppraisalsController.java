@@ -39,7 +39,6 @@ public class AppraisalsController implements AppraisalApi {
 	private final EmployeeEvaluationFormService employeeEvaluationFormService;
 	private final EvaluationFormTemplateService evaluationFormTemplateService;
 	private final SecurityService securityService;
-	private final ScoreValueService scoreValueService;
 	private final ScoreValueRepository scoreValueRepository;
 	private final AppraisalXEvaluationFormTemplateService appraisalXEvaluationFormTemplateService;
 	private final AppraisalXEvaluationFormTemplateRepository appraisalXEvaluationFormTemplateRepository;
@@ -48,6 +47,8 @@ public class AppraisalsController implements AppraisalApi {
 	private final ScoreTypeRepository scoreTypeRepository;
 	private final  ValidationService validationService;
 	private final EmployeeEvaluationFormAnswerService employeeEvaluationFormAnswerService;
+	private final ScoreValueService scoreValueService;
+	private final SectionService sectionService;
 
 	// DTO converters
 	private final AppraisalDTOConverter appraisalDTOConverter;
@@ -68,6 +69,7 @@ public class AppraisalsController implements AppraisalApi {
 			ScoreValueService scoreValueService,
 			AppraisalXEvaluationFormTemplateService appraisalXEvaluationFormTemplateService,
 			EvaluationFormTemplateXSectionXQuestionService evaluationFormTemplateXSectionXQuestionService,
+			SectionService sectionService,
 
 			ScoreValueRepository scoreValueRepository,
 			AppraisalXEvaluationFormTemplateRepository appraisalXEvaluationFormTemplateRepository,
@@ -96,6 +98,7 @@ public class AppraisalsController implements AppraisalApi {
 		this.scoreTypeRepository = scoreTypeRepository;
 		this.validationService=validationService;
 		this.employeeEvaluationFormAnswerService =employeeEvaluationFormAnswerService;
+		this.sectionService =sectionService;
 
 	}
 
@@ -103,10 +106,8 @@ public class AppraisalsController implements AppraisalApi {
 
 
 	@Override
-	public ResponseEntity<EmployeeEvaluationFormDTO> employeesIdAppraisalsIdFormsPut(
-			@PathVariable Integer employeeId,
-			@PathVariable Integer appraisalId,
-			@RequestBody EmployeeEvaluationFormDTO evaluationFormBody) {
+	public ResponseEntity<EmployeeEvaluationFormDTO> employeesIdAppraisalsIdFormsPut(@PathVariable Integer employeeId,
+			@PathVariable Integer appraisalId, @RequestBody EmployeeEvaluationFormDTO evaluationFormBody) {
 
 		logger.debug("{} called endpoint: employees/{employeeid}/appraisals/{appraisalId}/forms", employeeId,appraisalId);
 		EmployeeEvaluationForm employeeEvaluationForm = new EmployeeEvaluationForm();
@@ -120,11 +121,11 @@ public class AppraisalsController implements AppraisalApi {
 
 
 		if (evaluationFormBody.getSubmitDate().equals("")||evaluationFormBody.getSubmitDate() == null) {
-			//TODO : NEED TO CREATE METHOD, THAT WILL SAVE SCORE VALUE AND COMMENT BOX
+
 			employeeEvaluationForm = employeeEvaluationFormDTOConverter.convertBack(evaluationFormBody);
-			//updateEmployeeEvalutionForm(employeeEvaluationForm);
+
 			//call here saveAndContinue(), user can continue any time,so not saving date
-		}// TODO: find the employee evaluation form to update, by id. if it has a submit date, throw an error
+		}
 		else {// call here saveAndSubmit(),user click saveAndSubmit,then system capture current datetime
 			employeeEvaluationForm = employeeEvaluationFormDTOConverter.convertBack(evaluationFormBody);
 			int dateValidate = evaluationFormBody.getCreateDate().compareTo(evaluationFormBody.getSubmitDate());
@@ -133,24 +134,33 @@ public class AppraisalsController implements AppraisalApi {
 			EmployeeEvaluationFormDateValidate.validateDate(dateValidate);
 			if(dateValidate==0||dateValidateIfequal==true||dateValidate==1)
 			{
-				//updateEmployeeEvalutionForm(employeeEvaluationForm);
 				OffsetDateTime submitDay = OffsetDateTime.now();
 				employeeEvaluationForm.setSubmitDate(submitDay);
+
+				Set<EmployeeEvaluationFormAnswer> answerSet=employeeEvaluationForm.getEmployeeEvaluationFormAnswerSet();
+				for(EmployeeEvaluationFormAnswer answer:answerSet){
+					employeeEvaluationFormAnswerService.saveAndFlush(answer);
+					ScoreValue scoreValue =employeeEvaluationFormAnswerService.getById(answer.getId()).getScoreValue();
+				int scoreTypeId =employeeEvaluationFormAnswerService.getById(answer.getId()).getScoreValue().getScoreType().getId();
+				System.out.println("id=="+scoreTypeId);
+					Set<Section> sectionSet = employeeEvaluationFormAnswerService.getById(answer.getId()).getScoreValue().getScoreType().getSectionSet();
+					for(Section section:sectionSet){
+						this.sectionService.saveAndFlush(section);
+					}
+					this.scoreValueService.saveAndFlush(scoreValue);
+				}
 				employeeEvaluationFormService.saveAndFlush(employeeEvaluationForm);
+
+
 			}
 		}
-		Set<EmployeeEvaluationFormAnswer> answerSet =employeeEvaluationForm.getEmployeeEvaluationFormAnswerSet();
-		employeeEvaluationFormService.saveAndFlush(employeeEvaluationForm);
-
 		return new ResponseEntity<EmployeeEvaluationFormDTO>(HttpStatus.OK);
 	}
 
 	@Override
 	public ResponseEntity<EvaluationFormTemplateDTO> employeesIdAppraisalsIdFormsIdPut(
-			@PathVariable("employeeId") Integer employeeId,
-			@PathVariable("appraisalId") Integer appraisalId,
-			@PathVariable("formId") Integer formId,
-			@Valid @RequestBody EvaluationFormTemplateDTO evaluationFormBody) {
+			@PathVariable("employeeId") Integer employeeId, @PathVariable("appraisalId") Integer appraisalId,
+			@PathVariable("formId") Integer formId, @Valid @RequestBody EvaluationFormTemplateDTO evaluationFormBody) {
 		EvaluationFormTemplateDTO response = new EvaluationFormTemplateDTO();
 
 		this.validationService.validate(response);

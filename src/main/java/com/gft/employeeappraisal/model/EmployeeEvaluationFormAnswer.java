@@ -27,7 +27,7 @@ public class EmployeeEvaluationFormAnswer {
     @JoinColumn(name = "employeeEvaluationFormId", nullable = false)
     private EmployeeEvaluationForm employeeEvaluationForm;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne()//fetch = FetchType.LAZY
     @JoinColumn(name = "scoreValueId")
     private ScoreValue scoreValue;
 

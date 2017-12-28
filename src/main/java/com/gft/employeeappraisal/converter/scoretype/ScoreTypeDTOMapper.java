@@ -22,10 +22,10 @@ public class ScoreTypeDTOMapper extends CustomMapper<ScoreType, ScoreTypeDTO> {
     public void mapAtoB(ScoreType scoreType, ScoreTypeDTO scoreTypeDTO, MappingContext context) {
         scoreTypeDTO.setId(scoreType.getId());
         scoreTypeDTO.setDefinition(scoreType.getDefinition());
-        scoreTypeDTO.setScoreValues(scoreType.getScoreValueSet()
-                .stream()
-                .map(scoreValue -> mapperFacade.map(scoreValue, ScoreValueDTO.class))
-                .collect(Collectors.toList()));
+//        scoreTypeDTO.setScoreValues(scoreType.getScoreValueSet()
+//                .stream()
+//                .map(scoreValue -> mapperFacade.map(scoreValue, ScoreValueDTO.class))
+//                .collect(Collectors.toList()));
     }
 
     @Override

@@ -1605,10 +1605,10 @@ definitions:
         type: integer
       definition:
         type: string
-      scoreValues:
-        type: array
-        items:
-          $ref: '#/definitions/ScoreValueDTO'
+#      scoreValues:
+#        type: array
+#        items:
+#          $ref: '#/definitions/ScoreValueDTO'
 
   ScoreValueDTO:
     type: object
@@ -1623,6 +1623,16 @@ definitions:
          type: array
          items:
           $ref: '#/definitions/ScoreTypeDTO'
+
+  ScoreValueIdDTO:
+    type: object
+    properties:
+      id:
+        type: integer
+      scoreType:
+          type: array
+          items:
+           $ref: '#/definitions/ScoreTypeDTO'
 
 
 

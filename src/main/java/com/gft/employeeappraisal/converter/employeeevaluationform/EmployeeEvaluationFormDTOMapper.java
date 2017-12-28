@@ -69,14 +69,21 @@ public class EmployeeEvaluationFormDTOMapper extends CustomMapper<EmployeeEvalua
 
                     EvaluationFormTemplateXSectionXQuestionDTO xSectionXQuestionDTO = new EvaluationFormTemplateXSectionXQuestionDTO();
                     xSectionXQuestionDTO.setId(xSectionXQuestion.getId());
-
+                    ScoreType scoreType =employeeEvaluationFormAnswerService.getById(answerDTO.getId()).getScoreValue().getScoreType();
+                    ScoreValueDTO scoreValueDTO = new ScoreValueDTO();
+                    List<ScoreTypeDTO> scoreTypeDTOS = new ArrayList<>();
+                    ScoreTypeDTO scoreTypeDTO = new ScoreTypeDTO();
+                    scoreTypeDTO.setId(scoreType.getId());
+                    scoreTypeDTO.setDefinition(scoreType.getDefinition());
+                    scoreTypeDTOS.add(scoreTypeDTO);
+                    scoreValueDTO.setScoreType(scoreTypeDTOS);
                     QuestionDTO questionDTO = new QuestionDTO();
                     questionDTO.setId(question.getId());
                     questionDTO.setName(question.getName());
                     questionDTO.setDescription(question.getDescription());
                     questionDTO.setPosition(question.getPosition());
                     xSectionXQuestionDTO.addQuestionItem(questionDTO);
-
+                    answerDTO.setScoreValue(scoreValueDTO);
                     answerDTO.setEvaluationFormTemplateXSectionXQuestionDTO(xSectionXQuestionDTO);
 
                     // Omitted for brevity, every answer doesn't need this information
