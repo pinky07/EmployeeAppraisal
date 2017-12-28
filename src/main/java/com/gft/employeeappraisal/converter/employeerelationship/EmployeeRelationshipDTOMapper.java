@@ -36,6 +36,7 @@ public class EmployeeRelationshipDTOMapper extends CustomMapper<EmployeeRelation
     public void mapAtoB(EmployeeRelationship employeeRelationship, EmployeeRelationshipDTO employeeRelationshipDTO,
                         MappingContext context) {
         employeeRelationshipDTO.setId(employeeRelationship.getId());
+        employeeRelationshipDTO.setComments(employeeRelationship.getComments());
         employeeRelationshipDTO.setStartDate(employeeRelationship.getStartDate());
         if (employeeRelationship.getEndDate() != null) {
             employeeRelationshipDTO.setEndDate(employeeRelationship.getEndDate());
@@ -58,6 +59,7 @@ public class EmployeeRelationshipDTOMapper extends CustomMapper<EmployeeRelation
         if (Objects.nonNull(employeeRelationshipDTO.getEndDate())) {
             employeeRelationship.setEndDate(employeeRelationshipDTO.getEndDate());
         }
+        employeeRelationship.setComments(employeeRelationshipDTO.getComments());
         employeeRelationship.setRelationshipType(this.relationshipTypeService.getById(employeeRelationshipDTO.getRelationshipType().getId()));
         // Remember that the DTO doesn't have a Source Employee equivalent field.
         // This responsability is left for whoever is using the mapper.

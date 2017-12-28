@@ -16,6 +16,7 @@ import java.time.OffsetDateTime;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -155,6 +156,23 @@ public class EmployeeRelationshipServiceImpl implements EmployeeRelationshipServ
                 mentor,
                 mentee,
                 relationshipTypeService.findByName(RelationshipName.MENTOR));
+
+
+    }
+
+    @Override
+    public void changeMentor(Employee mentor, Employee mentee,EmployeeRelationship employeeRelationship) {
+        if (hasMentor(mentee)) {
+            removeMentor(mentee); // If I'm _changing_ mentor, there's nothing wrong with it not having a mentor.
+        }
+
+        // Start a new MENTOR Relationship
+        startEmployeeRelationship(
+                mentor,
+                mentee,
+                relationshipTypeService.findByName(RelationshipName.MENTOR),employeeRelationship);
+
+
     }
 
     @Override
@@ -182,6 +200,14 @@ public class EmployeeRelationshipServiceImpl implements EmployeeRelationshipServ
                 relationshipTypeService.findByName(RelationshipName.PEER));
     }
 
+    @Override
+    public void addPeer(Employee employee, Employee peer,EmployeeRelationship employeeRelationship) {
+        startEmployeeRelationship(
+                employee,
+                peer,
+                relationshipTypeService.findByName(RelationshipName.PEER),employeeRelationship);
+    }
+
     /**
      * {@inheritDoc}
      */
@@ -197,9 +223,23 @@ public class EmployeeRelationshipServiceImpl implements EmployeeRelationshipServ
     public Optional<EmployeeRelationship> startEmployeeRelationship(Employee sourceEmployee, Employee targetEmployee, RelationshipType relationshipType) {
         EmployeeRelationship employeeRelationship = new EmployeeRelationship();
         employeeRelationship.setSourceEmployee(sourceEmployee);
+        sourceEmployee.getEmployeeRelationshipsAsSourceSet();
         employeeRelationship.setTargetEmployee(targetEmployee);
         employeeRelationship.setRelationshipType(relationshipType);
         employeeRelationship.setStartDate(OffsetDateTime.now());
+        employeeRelationship.setEndDate(null);
+        return this.saveAndFlush(employeeRelationship);
+    }
+
+    @Override
+    public Optional<EmployeeRelationship> startEmployeeRelationship(Employee sourceEmployee, Employee targetEmployee, RelationshipType relationshipType,EmployeeRelationship employeeRelationship1) {
+        EmployeeRelationship employeeRelationship = new EmployeeRelationship();
+        employeeRelationship.setSourceEmployee(sourceEmployee);
+        sourceEmployee.getEmployeeRelationshipsAsSourceSet();
+        employeeRelationship.setTargetEmployee(targetEmployee);
+        employeeRelationship.setRelationshipType(relationshipType);
+        employeeRelationship.setStartDate(OffsetDateTime.now());
+        employeeRelationship.setComments(employeeRelationship1.getComments());
         employeeRelationship.setEndDate(null);
         return this.saveAndFlush(employeeRelationship);
     }
