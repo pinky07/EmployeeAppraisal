@@ -70,9 +70,16 @@ public class EmployeeEvaluationFormDTOMapper extends CustomMapper<EmployeeEvalua
                     EvaluationFormTemplateXSectionXQuestionDTO xSectionXQuestionDTO = new EvaluationFormTemplateXSectionXQuestionDTO();
                     xSectionXQuestionDTO.setId(xSectionXQuestion.getId());
                     ScoreType scoreType =employeeEvaluationFormAnswerService.getById(answerDTO.getId()).getScoreValue().getScoreType();
+
                     ScoreValueDTO scoreValueDTO = new ScoreValueDTO();
-                    List<ScoreTypeDTO> scoreTypeDTOS = new ArrayList<>();
                     ScoreTypeDTO scoreTypeDTO = new ScoreTypeDTO();
+                    List<ScoreTypeDTO> scoreTypeDTOS = new ArrayList<>();
+
+                    ScoreValue scoreValue =employeeEvaluationFormAnswerService.getById(answerDTO.getId()).getScoreValue();
+
+                    scoreValueDTO.setId(scoreValue.getId());
+                   scoreValueDTO.setValue(scoreValue.getValue());
+                   scoreValueDTO.setDescription(scoreValue.getDescription());
                     scoreTypeDTO.setId(scoreType.getId());
                     scoreTypeDTO.setDefinition(scoreType.getDefinition());
                     scoreTypeDTOS.add(scoreTypeDTO);
