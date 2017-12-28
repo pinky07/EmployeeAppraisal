@@ -325,9 +325,6 @@ public class EmployeesController implements EmployeeApi {
         // Create Result DTO
         OperationResultDTO response = new OperationResultDTO();
         response.setMessage(Constants.SUCCESS);
-//        int id =createdEmployeeRelationship.getId();
-//        EmployeeRelationship commentbox =employeeRelationshipService.getById(id);
-//        employeeRelationshipService.saveAndFlush(commentbox);
         response.setData(this.employeeRelationshipDTOConverter.convert(createdEmployeeRelationship));
 
         return new ResponseEntity<>(response, HttpStatus.CREATED);
