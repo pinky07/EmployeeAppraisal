@@ -221,6 +221,7 @@ public class EmployeesController implements EmployeeApi {
     public ResponseEntity<List<EmployeeRelationshipDTO>> employeesIdRelationshipsGet(
             @PathVariable("employeeId") Integer employeeId,
             @RequestParam(value = "exclude", required = false) List<String> exclude,
+            @RequestParam(value = "comments", required = false) String comments,
             @RequestParam(value = "startDate", required = false) String startDate,
             @RequestParam(value = "endDate", required = false) String endDate,
             @RequestParam(value = "current", required = false) Boolean current) {
@@ -313,7 +314,8 @@ public class EmployeesController implements EmployeeApi {
         EmployeeRelationship createdEmployeeRelationship = this.employeeRelationshipService.startEmployeeRelationship( // <-- This creates a new EmployeeRelationship and could be improved!
                 sourceEmployee,
                 employeeRelationship.getTargetEmployee(),
-                employeeRelationship.getRelationshipType())
+                employeeRelationship.getRelationshipType(), employeeRelationship
+                )
                 .orElseThrow(() -> new EmployeeAppraisalMicroserviceException(String.format(
                         "EmployeeRelationship between Employee[%d] -> Employee[%d] of type %s",
                         sourceEmployee.getId(),

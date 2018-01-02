@@ -1145,6 +1145,12 @@ paths:
           description: |
             Filters out the specified relationship types. Separated by coma values.
         - in: query
+          name: Comments
+          required: false
+          type: string
+          description: |
+              Filters out relationships prior to the specified comments.
+        - in: query
           name: startDate
           required: false
           type: string
@@ -1470,6 +1476,8 @@ definitions:
         type: integer
       referred:
         $ref: '#/definitions/EmployeeDTO'
+      comments:
+        type: string
       startDate:
         type: string
         format: 'date-time'

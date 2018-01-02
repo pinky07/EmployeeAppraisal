@@ -104,7 +104,7 @@ public class EmployeesControllerRelationshipsTest extends BaseControllerTest {
     }
 
     /**
-     * Tests {@link EmployeesController#employeesIdRelationshipsGet(Integer, List, String, String, Boolean)}
+     * Tests {@link EmployeesController# employeesIdRelationshipsGet(Integer, List, String, String, Boolean)}
      *
      * @throws Exception If an errors occurs
      */
@@ -146,7 +146,7 @@ public class EmployeesControllerRelationshipsTest extends BaseControllerTest {
     }
 
     /**
-     * Tests {@link EmployeesController#employeesIdRelationshipsGet(Integer, List, String, String, Boolean)}
+     * Tests {@link EmployeesController# employeesIdRelationshipsGet(Integer, List, String, String, Boolean)}
      *
      * @throws Exception If an errors occurs
      */
@@ -181,7 +181,7 @@ public class EmployeesControllerRelationshipsTest extends BaseControllerTest {
     }
 
     /**
-     * Tests {@link EmployeesController#employeesIdRelationshipsGet(Integer, List, String, String, Boolean)}
+     * Tests {@link EmployeesController# employeesIdRelationshipsGet(Integer, List, String, String, Boolean)}
      *
      * @throws Exception If an errors occurs
      */
@@ -618,7 +618,7 @@ public class EmployeesControllerRelationshipsTest extends BaseControllerTest {
         when(employeeService.getById(mentorMock.getId())).thenReturn(mentorMock);
         when(relationshipTypeService.getById(anyInt())).thenReturn(testRelationship());
         when(employeeRelationshipService
-                .startEmployeeRelationship(any(Employee.class), any(Employee.class), any(RelationshipType.class)))
+                .startEmployeeRelationship(any(Employee.class), any(Employee.class), any(RelationshipType.class),any(EmployeeRelationship.class)))
                 .thenReturn(Optional.of(testEmployeeRelationship(false)));
 
         // Execution
@@ -642,7 +642,7 @@ public class EmployeesControllerRelationshipsTest extends BaseControllerTest {
         verify(securityService, times(1))
                 .canWriteEmployeeRelationship(any(Employee.class), any(Employee.class), any(Employee.class));
         verify(employeeRelationshipService, times(1))
-                .startEmployeeRelationship(any(Employee.class), any(Employee.class), any(RelationshipType.class));
+                .startEmployeeRelationship(any(Employee.class), any(Employee.class), any(RelationshipType.class), any(EmployeeRelationship.class));
 
         assertNotNull(resultDTO);
         assertEquals(Constants.SUCCESS, resultDTO.getMessage());
@@ -684,7 +684,7 @@ public class EmployeesControllerRelationshipsTest extends BaseControllerTest {
         verify(securityService, never())
                 .canWriteEmployeeRelationship(any(Employee.class), any(Employee.class), any(Employee.class));
         verify(employeeRelationshipService, never())
-                .startEmployeeRelationship(any(Employee.class), any(Employee.class), any(RelationshipType.class));
+                .startEmployeeRelationship(any(Employee.class), any(Employee.class), any(RelationshipType.class),any(EmployeeRelationship.class));
 
         assertNotNull(resultDTO);
         assertEquals(Constants.ERROR, resultDTO.getMessage());
@@ -716,7 +716,7 @@ public class EmployeesControllerRelationshipsTest extends BaseControllerTest {
         verify(securityService, never())
                 .canWriteEmployeeRelationship(any(Employee.class), any(Employee.class), any(Employee.class));
         verify(employeeRelationshipService, never())
-                .startEmployeeRelationship(any(Employee.class), any(Employee.class), any(RelationshipType.class));
+                .startEmployeeRelationship(any(Employee.class), any(Employee.class), any(RelationshipType.class),any(EmployeeRelationship.class));
 
         assertNotNull(resultDTO);
         assertEquals(Constants.ERROR, resultDTO.getMessage());
@@ -751,7 +751,7 @@ public class EmployeesControllerRelationshipsTest extends BaseControllerTest {
         verify(securityService, times(1))
                 .canWriteEmployeeRelationship(any(Employee.class), any(Employee.class), any(Employee.class));
         verify(employeeRelationshipService, never())
-                .startEmployeeRelationship(any(Employee.class), any(Employee.class), any(RelationshipType.class));
+                .startEmployeeRelationship(any(Employee.class), any(Employee.class), any(RelationshipType.class), any(EmployeeRelationship.class));
 
         assertNotNull(resultDTO);
         assertEquals(Constants.ERROR, resultDTO.getMessage());
@@ -764,7 +764,7 @@ public class EmployeesControllerRelationshipsTest extends BaseControllerTest {
         when(employeeService.getById(mentorMock.getId())).thenReturn(mentorMock);
         when(relationshipTypeService.getById(anyInt())).thenReturn(testRelationship());
         when(employeeRelationshipService
-                .startEmployeeRelationship(any(Employee.class), any(Employee.class), any(RelationshipType.class)))
+                .startEmployeeRelationship(any(Employee.class), any(Employee.class), any(RelationshipType.class), any(EmployeeRelationship.class)))
                 .thenReturn(Optional.empty());
 
         // Execution
@@ -788,7 +788,7 @@ public class EmployeesControllerRelationshipsTest extends BaseControllerTest {
         verify(securityService, times(1))
                 .canWriteEmployeeRelationship(any(Employee.class), any(Employee.class), any(Employee.class));
         verify(employeeRelationshipService, times(1))
-                .startEmployeeRelationship(any(Employee.class), any(Employee.class), any(RelationshipType.class));
+                .startEmployeeRelationship(any(Employee.class), any(Employee.class), any(RelationshipType.class), any(EmployeeRelationship.class));
 
         assertNotNull(resultDTO);
         assertEquals(Constants.ERROR, resultDTO.getMessage());
@@ -816,7 +816,7 @@ public class EmployeesControllerRelationshipsTest extends BaseControllerTest {
         verify(securityService, never())
                 .canWriteEmployeeRelationship(any(Employee.class), any(Employee.class), any(Employee.class));
         verify(employeeRelationshipService, never())
-                .startEmployeeRelationship(any(Employee.class), any(Employee.class), any(RelationshipType.class));
+                .startEmployeeRelationship(any(Employee.class), any(Employee.class), any(RelationshipType.class), any(EmployeeRelationship.class));
     }
 
     private EmployeeRelationshipDTO testEmployeeRelationshipDTO() {

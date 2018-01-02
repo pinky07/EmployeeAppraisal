@@ -39,6 +39,19 @@ public class EmployeeRelationship {
     @JoinColumn(name = "relationshipTypeId", nullable = false)
     private RelationshipType relationshipType;
 
+    public String getComments()
+    {
+        return comments;
+    }
+
+    public void setComments(String comments)
+    {
+        this.comments = comments;
+    }
+
+    @Column(name="comments")
+    private String comments;
+
     public int getId() {
         return id;
     }
