@@ -2,6 +2,7 @@ package com.gft.employeeappraisal.model;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.time.OffsetDateTime;
 import java.util.Set;
 
@@ -50,19 +51,9 @@ public class EmployeeEvaluationForm {
     @OneToMany(mappedBy = "employeeEvaluationForm", fetch = FetchType.LAZY, cascade=CascadeType.MERGE)
     private Set<EmployeeEvaluationFormAnswer> employeeEvaluationFormAnswerSet;
 
-    public String getComments()
-    {
-        return comments;
-    }
-
-    public void setComments(String comments)
-    {
-        this.comments = comments;
-    }
-
-    @NotNull
-    @Column(name = "comments",  nullable = false)
-    private String  comments;
+    @Size(max = 1000)
+    @Column(name = "comments", length = 1000)
+    private String comments;
 
     public int getId() {
         return id;
@@ -128,6 +119,16 @@ public class EmployeeEvaluationForm {
         this.employeeEvaluationFormAnswerSet = employeeEvaluationFormAnswerSet;
     }
 
+    public String getComments()
+    {
+        return comments;
+    }
+
+    public void setComments(String comments)
+    {
+        this.comments = comments;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -160,6 +161,7 @@ public class EmployeeEvaluationForm {
                 ", mentor=" + mentor +
                 ", createDate=" + createDate +
                 ", submitDate=" + submitDate +
+                ",comments="+comments+
                 '}';
     }
 }

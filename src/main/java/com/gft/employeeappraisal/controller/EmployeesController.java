@@ -221,13 +221,11 @@ public class EmployeesController implements EmployeeApi {
     @Override
     public ResponseEntity<List<EmployeeRelationshipDTO>> employeesIdRelationshipsGet(
             @PathVariable("employeeId") Integer employeeId,
-            @RequestParam(value = "exclude", required = false) String exclude,
-            @RequestParam(value = "comments", required = false) Integer comments,
+            @RequestParam(value = "exclude", required = false) List<String> exclude,
+            @RequestParam(value = "comments", required = false) String comments,
             @RequestParam(value = "startDate", required = false) String startDate,
             @RequestParam(value = "endDate", required = false) String endDate,
-            @RequestParam(value = "current", required = false) Boolean current)
-
-    {
+            @RequestParam(value = "current", required = false) Boolean current) {
 
         // Get the logged in Employee
         Employee user = this.employeeService.getLoggedInUser();
@@ -317,8 +315,8 @@ public class EmployeesController implements EmployeeApi {
         EmployeeRelationship createdEmployeeRelationship = this.employeeRelationshipService.startEmployeeRelationship( // <-- This creates a new EmployeeRelationship and could be improved!
                 sourceEmployee,
                 employeeRelationship.getTargetEmployee(),
-                employeeRelationship.getRelationshipType(),
-                employeeRelationship.getComments())
+                employeeRelationship.getRelationshipType(), employeeRelationship
+                )
                 .orElseThrow(() -> new EmployeeAppraisalMicroserviceException(String.format(
                         "EmployeeRelationship between Employee[%d] -> Employee[%d] of type %s",
                         sourceEmployee.getId(),
@@ -328,7 +326,8 @@ public class EmployeesController implements EmployeeApi {
         // Create Result DTO
         OperationResultDTO response = new OperationResultDTO();
         response.setMessage(Constants.SUCCESS);
-//        response.setData(this.employeeRelationshipDTOConverter.convert(createdEmployeeRelationship));
+        response.setData(this.employeeRelationshipDTOConverter.convert(createdEmployeeRelationship));
+
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 

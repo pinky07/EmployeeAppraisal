@@ -112,6 +112,8 @@ public interface EmployeeRelationshipService {
      */
     void changeMentor(Employee mentor, Employee mentee,String comments);
 
+    void changeMentor(Employee mentor, Employee mentee,EmployeeRelationship employeeRelationship);
+
     /**
      * Ends the current MENTOR relationship of a Mentee.
      *
@@ -126,7 +128,8 @@ public interface EmployeeRelationshipService {
      * @param employee Employee
      * @param peer     Peer to be associated
      */
-    void addPeer(Employee employee, Employee peer,String comments);
+    void addPeer(Employee employee, Employee peer);
+    void addPeer(Employee employee, Employee peer, EmployeeRelationship employeeRelationship);
 
     /**
      * Starts a new PEER relationship from Employee to each Peer in the list.
@@ -148,6 +151,8 @@ public interface EmployeeRelationshipService {
      * @param relationshipType Relationship that should be read from left to right
      */
     Optional<EmployeeRelationship> startEmployeeRelationship(Employee sourceEmployee, Employee targetEmployee, RelationshipType relationshipType,String comments);
+
+    Optional<EmployeeRelationship> startEmployeeRelationship(Employee sourceEmployee, Employee targetEmployee, RelationshipType relationshipType,EmployeeRelationship employeeRelationship);
 
     /**
      * Relationships shouldn't be deleted, rather it should be marked with an end date as this method does.

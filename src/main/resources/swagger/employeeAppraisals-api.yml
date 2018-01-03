@@ -1141,15 +1141,15 @@ paths:
           type: array
           collectionFormat: csv
           items:
-          type: string
+            type: string
           description: |
             Filters out the specified relationship types. Separated by coma values.
         - in: query
-          name: comments
+          name: Comments
           required: false
-          type: integer
+          type: string
           description: |
-             Filters out relationships subsequent to the specified comments.
+              Filters out relationships prior to the specified comments.
         - in: query
           name: startDate
           required: false
@@ -1401,8 +1401,6 @@ definitions:
           $ref: '#/definitions/EvaluationFormTemplateXSectionXQuestionDTO'
         scoreValue:
           $ref: '#/definitions/ScoreValueDTO'
-#        SectionDescription:
-#          $ref: '#/definitions/SectionDescriptionDTO'
         comment:
           type: string
       required:
@@ -1478,14 +1476,14 @@ definitions:
         type: integer
       referred:
         $ref: '#/definitions/EmployeeDTO'
+      comments:
+        type: string
       startDate:
         type: string
         format: 'date-time'
       endDate:
         type: string
         format: 'date-time'
-      comments:
-         type: string
       relationshipType:
         $ref: '#/definitions/RelationshipTypeDTO'
     required:

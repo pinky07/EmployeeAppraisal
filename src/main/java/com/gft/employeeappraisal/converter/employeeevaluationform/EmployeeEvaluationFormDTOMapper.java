@@ -16,7 +16,6 @@ import java.util.stream.Collectors;
  * Defines a mapping structure to be used by {@link EmployeeEvaluationFormDTOConverter}.
  *
  * @author Rubén Jiménez
- * @author Manuel Yepez
  */
 @Component
 public class EmployeeEvaluationFormDTOMapper extends CustomMapper<EmployeeEvaluationForm, EmployeeEvaluationFormDTO>

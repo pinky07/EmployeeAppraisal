@@ -161,8 +161,10 @@ public class AppraisalsController implements AppraisalApi {
 
 			}
 		}
+		employeeEvaluationFormService.saveAndFlush(employeeEvaluationForm);
 		return new ResponseEntity<EmployeeEvaluationFormDTO>(HttpStatus.OK);
 	}
+
 
 	@Override
 	public ResponseEntity<EvaluationFormTemplateDTO> employeesIdAppraisalsIdFormsIdPut(
