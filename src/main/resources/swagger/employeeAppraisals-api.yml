@@ -1401,6 +1401,8 @@ definitions:
           $ref: '#/definitions/EvaluationFormTemplateXSectionXQuestionDTO'
         scoreValue:
           $ref: '#/definitions/ScoreValueDTO'
+#        SectionDescription:
+#          $ref: '#/definitions/SectionDescriptionDTO'
         comment:
           type: string
       required:
@@ -1605,10 +1607,12 @@ definitions:
         type: integer
       definition:
         type: string
-#      scoreValues:
-#        type: array
-#        items:
-#          $ref: '#/definitions/ScoreValueDTO'
+      scoreValues:
+        type: array
+        items:
+          $ref: '#/definitions/ScoreValueDTO'
+      SectionDescription:
+          $ref: '#/definitions/SectionDescriptionDTO'
 
   ScoreValueDTO:
     type: object
@@ -1654,6 +1658,15 @@ definitions:
         items:
           $ref: '#/definitions/QuestionDTO'
 
+  SectionDescriptionDTO:
+   type: object
+   properties:
+      id:
+        type: integer
+      name:
+        type: string
+      description:
+        type: string
 ########################################################################################################################
 # Tags #################################################################################################################
 ########################################################################################################################
@@ -1665,3 +1678,4 @@ tags:
     description: Part of the Employee controller
   - name: Appraisal
     description: Part of the Appraisal controller
+

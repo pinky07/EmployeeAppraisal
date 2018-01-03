@@ -4,6 +4,8 @@ import com.gft.employeeappraisal.Validation.EmployeeEvaluationFormDateValidate;
 import com.gft.employeeappraisal.converter.appraisal.AppraisalDTOConverter;
 import com.gft.employeeappraisal.converter.employeeevaluationform.EmployeeEvaluationFormDTOConverter;
 import com.gft.employeeappraisal.converter.evaluationformtemplate.EvaluationFormTemplateDTOConverter;
+import com.gft.employeeappraisal.converter.scoretype.ScoreTypeDTOConverter;
+import com.gft.employeeappraisal.converter.scoretype.ScoreTypeDTOMapper;
 import com.gft.employeeappraisal.exception.NotFoundException;
 import com.gft.employeeappraisal.model.*;
 import com.gft.employeeappraisal.repository.*;
@@ -47,6 +49,7 @@ public class AppraisalsController implements AppraisalApi {
 	private final ScoreTypeRepository scoreTypeRepository;
 	private final  ValidationService validationService;
 	private final EmployeeEvaluationFormAnswerService employeeEvaluationFormAnswerService;
+	private final ScoreTypeDTOConverter scoreTypeDTOConverter;
 	private final ScoreValueService scoreValueService;
 	private final SectionService sectionService;
 
@@ -70,6 +73,7 @@ public class AppraisalsController implements AppraisalApi {
 			AppraisalXEvaluationFormTemplateService appraisalXEvaluationFormTemplateService,
 			EvaluationFormTemplateXSectionXQuestionService evaluationFormTemplateXSectionXQuestionService,
 			SectionService sectionService,
+			ScoreTypeDTOConverter scoreTypeDTOConverter,
 
 			ScoreValueRepository scoreValueRepository,
 			AppraisalXEvaluationFormTemplateRepository appraisalXEvaluationFormTemplateRepository,
@@ -79,6 +83,7 @@ public class AppraisalsController implements AppraisalApi {
 			ScoreTypeRepository scoreTypeRepository,
 			ValidationService validationService,
 			EmployeeEvaluationFormAnswerService employeeEvaluationFormAnswerService
+
 
 		) {
 		this.appraisalService = appraisalService;
@@ -99,6 +104,7 @@ public class AppraisalsController implements AppraisalApi {
 		this.validationService=validationService;
 		this.employeeEvaluationFormAnswerService =employeeEvaluationFormAnswerService;
 		this.sectionService =sectionService;
+		this.scoreTypeDTOConverter =scoreTypeDTOConverter;
 
 	}
 
@@ -141,8 +147,9 @@ public class AppraisalsController implements AppraisalApi {
 				for(EmployeeEvaluationFormAnswer answer:answerSet){
 					employeeEvaluationFormAnswerService.saveAndFlush(answer);
 					ScoreValue scoreValue =employeeEvaluationFormAnswerService.getById(answer.getId()).getScoreValue();
+//					scoreTypeDTOConverter.convertBack(scoreValue);
 				int scoreTypeId =employeeEvaluationFormAnswerService.getById(answer.getId()).getScoreValue().getScoreType().getId();
-				System.out.println("id=="+scoreTypeId);
+
 					Set<Section> sectionSet = employeeEvaluationFormAnswerService.getById(answer.getId()).getScoreValue().getScoreType().getSectionSet();
 					for(Section section:sectionSet){
 						this.sectionService.saveAndFlush(section);
