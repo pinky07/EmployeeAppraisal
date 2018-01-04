@@ -21,7 +21,7 @@ public class ScoreValue {
     private int id;
 
     @NotNull
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne()//fetch = FetchType.LAZY
     @JoinColumn(name = "scoreTypeId", nullable = false)
     private ScoreType scoreType;
 
@@ -35,7 +35,7 @@ public class ScoreValue {
     @Column(name = "description", nullable = false, length = 40)
     private String description;
 
-    @OneToMany(mappedBy = "scoreValue", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "scoreValue") //fetch = FetchType.LAZY
     private Set<EmployeeEvaluationFormAnswer> employeeEvaluationFormAnswerSet;
 
     public int getId() {

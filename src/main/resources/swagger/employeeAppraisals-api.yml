@@ -1171,6 +1171,7 @@ paths:
           allowEmptyValue: true
           description: |
             Filters out historic relationships. StartDate and EndDate have precedence over this parameter.
+
       responses:
         '200':
           description: |
@@ -1396,7 +1397,7 @@ definitions:
       properties:
         id:
           type: integer
-        evaluationFormTemplateXSectionXQuestion:
+        evaluationFormTemplateXSectionXQuestionDTO:
           $ref: '#/definitions/EvaluationFormTemplateXSectionXQuestionDTO'
         scoreValue:
           $ref: '#/definitions/ScoreValueDTO'
@@ -1447,7 +1448,7 @@ definitions:
         type: string
         format: 'date-time'
       comments:
-         type: string
+        type: string
       evaluationFormId:
         type: integer
       answers:
@@ -1460,14 +1461,13 @@ definitions:
     properties:
       id:
         type: integer
-      evaluationTemplate:
-        $ref: '#/definitions/EvaluationFormTemplateDTO'
-      section:
-        $ref: '#/definitions/SectionDTO'
       question:
-        $ref: '#/definitions/QuestionDTO'
-#      Answer:
-#        $ref: '#/definitions/AnswerDTO'
+       type: array
+       items:
+         $ref: '#/definitions/QuestionDTO'
+    required:
+      - id
+
 
   EmployeeRelationshipDTO:
     type: object
@@ -1619,12 +1619,12 @@ definitions:
         type: string
       description:
         type: string
+      descriptionOfAboveFourOption:
+         type: string
       scoreType:
          type: array
          items:
           $ref: '#/definitions/ScoreTypeDTO'
-
-
 
   SectionDTO:
    type: object
@@ -1644,6 +1644,15 @@ definitions:
         items:
           $ref: '#/definitions/QuestionDTO'
 
+  SectionDescriptionDTO:
+   type: object
+   properties:
+      id:
+        type: integer
+      name:
+        type: string
+      description:
+        type: string
 ########################################################################################################################
 # Tags #################################################################################################################
 ########################################################################################################################
@@ -1655,3 +1664,4 @@ tags:
     description: Part of the Employee controller
   - name: Appraisal
     description: Part of the Appraisal controller
+
