@@ -238,7 +238,9 @@ public class EmployeesControllerRelationshipsTest extends BaseControllerTest {
     public void relationshipsGet() throws Exception {
         when(relationshipTypeService.findRelationshipsByNames(RelationshipName.LEAD,
                 RelationshipName.PEER,
-                RelationshipName.OTHER))
+                RelationshipName.OTHER,
+                RelationshipName.TEAM_MEMBER,
+                RelationshipName.EXTERNAL))
                 .thenReturn(Stream.of(testRelationship()));
 
         MvcResult result = mockMvc.perform(
@@ -258,7 +260,9 @@ public class EmployeesControllerRelationshipsTest extends BaseControllerTest {
         verify(relationshipTypeService, times(1))
                 .findRelationshipsByNames(RelationshipName.LEAD,
                         RelationshipName.PEER,
-                        RelationshipName.OTHER);
+                        RelationshipName.OTHER,
+                        RelationshipName.TEAM_MEMBER,
+                        RelationshipName.EXTERNAL);
 
         assertEquals(testRelationship().getDescription(), relationshipDTOList.get(0).getDescription());
     }
@@ -267,7 +271,9 @@ public class EmployeesControllerRelationshipsTest extends BaseControllerTest {
     public void relationshipsGet_emptyList() throws Exception {
         when(relationshipTypeService.findRelationshipsByNames(RelationshipName.LEAD,
                 RelationshipName.PEER,
-                RelationshipName.OTHER))
+                RelationshipName.OTHER,
+                RelationshipName.TEAM_MEMBER,
+                RelationshipName.EXTERNAL))
                 .thenReturn(Stream.empty());
 
         MvcResult result = mockMvc.perform(
@@ -287,7 +293,9 @@ public class EmployeesControllerRelationshipsTest extends BaseControllerTest {
         verify(relationshipTypeService, times(1))
                 .findRelationshipsByNames(RelationshipName.LEAD,
                         RelationshipName.PEER,
-                        RelationshipName.OTHER);
+                        RelationshipName.OTHER,
+                        RelationshipName.TEAM_MEMBER,
+                        RelationshipName.EXTERNAL);
     }
 
     @Test

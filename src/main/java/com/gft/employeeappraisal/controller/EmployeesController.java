@@ -382,7 +382,9 @@ public class EmployeesController implements EmployeeApi {
         // We will omit other relationship types for now. Plus this might require a filter.
         relationshipTypeService.findRelationshipsByNames(RelationshipName.LEAD,
                 RelationshipName.PEER,
-                RelationshipName.OTHER)
+                RelationshipName.OTHER,
+                RelationshipName.TEAM_MEMBER,
+                RelationshipName.EXTERNAL)
                 .forEach(r -> relationshipDTOList.add(relationshipTypeDTOConverter.convert(r)));
 
         return new ResponseEntity<>(relationshipDTOList, HttpStatus.OK);

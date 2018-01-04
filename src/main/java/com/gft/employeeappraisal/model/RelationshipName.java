@@ -14,7 +14,9 @@ public enum RelationshipName {
     PEER(2),
     MENTOR(3),
     LEAD(4),
-    OTHER(5);
+    OTHER(5),
+    TEAM_MEMBER(6),
+    EXTERNAL(7);
 
     private final int id;
 

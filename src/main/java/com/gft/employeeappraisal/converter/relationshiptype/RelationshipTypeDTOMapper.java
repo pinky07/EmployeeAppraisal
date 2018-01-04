@@ -17,7 +17,8 @@ public class RelationshipTypeDTOMapper extends CustomMapper<RelationshipType, Re
     @Override
     public void mapAtoB(RelationshipType relationshipType, RelationshipTypeDTO relationshipDTO, MappingContext context) {
         relationshipDTO.setId(relationshipType.getId());
-        relationshipDTO.setName(relationshipType.getName());
+        // replacing done to support TEAM_MEMBER => TEAM MEMBER for select options
+        relationshipDTO.setName(relationshipType.getName().replace('_', ' '));
         relationshipDTO.setDescription(relationshipType.getDescription());
     }
 

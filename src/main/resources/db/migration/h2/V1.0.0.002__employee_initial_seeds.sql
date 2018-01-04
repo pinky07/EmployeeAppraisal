@@ -130,7 +130,9 @@ VALUES  (1, 'SELF', 'Self relationship'),
         (2, 'PEER', 'Peer relationship'),
         (3, 'MENTOR', 'Mentor relationship'),
         (4, 'LEAD', 'Lead relationship'),
-        (5, 'OTHER', 'Other relationship');
+        (5, 'OTHER', 'Other relationship'),
+        (6, 'TEAM_MEMBER', 'Team member relationship'),
+        (7, 'EXTERNAL', 'External relationship');
 
 -- EmployeeRelationship
 INSERT INTO EmployeeRelationship (id, sourceEmployeeId, targetEmployeeId, relationshipId, startDate, endDate)
