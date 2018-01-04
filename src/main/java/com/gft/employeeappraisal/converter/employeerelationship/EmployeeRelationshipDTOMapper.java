@@ -38,6 +38,7 @@ public class EmployeeRelationshipDTOMapper extends CustomMapper<EmployeeRelation
         employeeRelationshipDTO.setId(employeeRelationship.getId());
         employeeRelationshipDTO.setComments(employeeRelationship.getComments());
         employeeRelationshipDTO.setStartDate(employeeRelationship.getStartDate());
+        employeeRelationshipDTO.setComments(employeeRelationship.getComments());
         if (employeeRelationship.getEndDate() != null) {
             employeeRelationshipDTO.setEndDate(employeeRelationship.getEndDate());
         }
@@ -64,5 +65,6 @@ public class EmployeeRelationshipDTOMapper extends CustomMapper<EmployeeRelation
         // Remember that the DTO doesn't have a Source Employee equivalent field.
         // This responsability is left for whoever is using the mapper.
         employeeRelationship.setTargetEmployee(this.employeeService.getById(employeeRelationshipDTO.getReferred().getId()));
+        employeeRelationship.setComments(employeeRelationshipDTO.getComments());
     }
 }

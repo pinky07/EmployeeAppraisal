@@ -21,7 +21,7 @@ public class Section {
     private int id;
 
     @NotNull
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne()//fetch = FetchType.LAZY
     @JoinColumn(name = "scoreTypeId", nullable = false)
     private ScoreType scoreType;
 

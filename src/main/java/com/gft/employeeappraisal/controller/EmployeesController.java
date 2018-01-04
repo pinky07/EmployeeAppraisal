@@ -315,7 +315,7 @@ public class EmployeesController implements EmployeeApi {
                 sourceEmployee,
                 employeeRelationship.getTargetEmployee(),
                 employeeRelationship.getRelationshipType(), employeeRelationship
-                )
+        )
                 .orElseThrow(() -> new EmployeeAppraisalMicroserviceException(String.format(
                         "EmployeeRelationship between Employee[%d] -> Employee[%d] of type %s",
                         sourceEmployee.getId(),

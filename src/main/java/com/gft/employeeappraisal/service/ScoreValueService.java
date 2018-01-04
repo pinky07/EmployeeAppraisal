@@ -10,7 +10,11 @@ import java.util.stream.Stream;
 
 public interface ScoreValueService
 {
+	Optional<ScoreValue> findById(Integer id);
 
+	ScoreValue getById(Integer id) throws NotFoundException;
+
+	Optional<ScoreValue> saveAndFlush(ScoreValue scoreValue);
 
    
 }

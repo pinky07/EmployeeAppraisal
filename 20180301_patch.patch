@@ -1,0 +1,169 @@
+Index: src/main/java/com/gft/employeeappraisal/converter/employeeevaluationform/EmployeeEvaluationFormDTOMapper.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- src/main/java/com/gft/employeeappraisal/converter/employeeevaluationform/EmployeeEvaluationFormDTOMapper.java	(revision 2b9c678cf4e9eb5e4358efc7b40778ccda7fe59f)
++++ src/main/java/com/gft/employeeappraisal/converter/employeeevaluationform/EmployeeEvaluationFormDTOMapper.java	(revision )
+@@ -87,15 +87,27 @@
+                    scoreValueDTO.setDescription(scoreValue.getDescription());
+ 
+                        Set<Section> sectionSet =scoreType.getSectionSet();
+-                       for(Section section:sectionSet){
+-                           section.setId(employeeEvaluationFormAnswerService.getById(answerDTO.getId()).getScoreValue().getScoreType().getId());
+-                           section=sectionService.getById(section.getId());
+-                           sectionDescriptionDTO.setId(section.getId());
+-                           sectionDescriptionDTO.setDescription(section.getDescription());
+-
+-                           sectionDTO.setDescription(section.getDescription());
+-                           scoreTypeDTO.setSectionDescription(sectionDescriptionDTO);
+-                       }
++                       set<>
++                       //if scoretype id is one then need to iterate section
++                    if(scoreType.getId()==1){
++                        Set<Section> sectionSet1=scoreType.getSectionSet();
++                        for(Section section:sectionSet1){
++                            sectionDescriptionDTO.setId(section.getId());
++                            sectionDescriptionDTO.setName(section.getName());
++                            sectionDescriptionDTO.setDescription(section.getDescription());
++                        }
++                    }
++                    scoreTypeDTO.setSectionDescription(sectionDescriptionDTO);
++
++//                       for(Section section:sectionSet){
++//                           section.setId(employeeEvaluationFormAnswerService.getById(answerDTO.getId()).getScoreValue().getScoreType().getId());
++//                           section=sectionService.getById(section.getId());
++//                           sectionDescriptionDTO.setId(section.getId());
++//                           sectionDescriptionDTO.setDescription(section.getDescription());
++//
++//                           sectionDTO.setDescription(section.getDescription());
++//                           scoreTypeDTO.setSectionDescription(sectionDescriptionDTO);
++//                       }
+                     scoreTypeDTO.setId(scoreType.getId());
+                     scoreTypeDTO.setDefinition(scoreType.getDefinition());
+                     scoreTypeDTOS.add(scoreTypeDTO);
+Index: src/main/resources/db/migration/postgresql/V1.0.0.003__appraisal_table_creation.sql
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- src/main/resources/db/migration/postgresql/V1.0.0.003__appraisal_table_creation.sql	(revision 2b9c678cf4e9eb5e4358efc7b40778ccda7fe59f)
++++ src/main/resources/db/migration/postgresql/V1.0.0.003__appraisal_table_creation.sql	(revision )
+@@ -28,6 +28,7 @@
+     scoreTypeId INT,
+     value VARCHAR(40),
+     description VARCHAR(500) NOT NULL,
++    descriptionOfAboveFourOption VARCHAR(500),
+     FOREIGN KEY (scoreTypeId) REFERENCES ScoreType(id)
+ );
+ 
+Index: src/main/resources/db/migration/h2/V1.0.0.003__appraisal_table_creation.sql
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- src/main/resources/db/migration/h2/V1.0.0.003__appraisal_table_creation.sql	(revision 2b9c678cf4e9eb5e4358efc7b40778ccda7fe59f)
++++ src/main/resources/db/migration/h2/V1.0.0.003__appraisal_table_creation.sql	(revision )
+@@ -28,6 +28,7 @@
+     scoreTypeId INT,
+     value VARCHAR(40),
+     description VARCHAR(500) NOT NULL,
++     descriptionOfAboveFourOption VARCHAR(500),
+     FOREIGN KEY (scoreTypeId) REFERENCES ScoreType(id)
+ );
+ 
+Index: src/main/resources/db/migration/postgresql/V1.0.0.004__appraisal_initial_seeds.sql
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- src/main/resources/db/migration/postgresql/V1.0.0.004__appraisal_initial_seeds.sql	(revision 2b9c678cf4e9eb5e4358efc7b40778ccda7fe59f)
++++ src/main/resources/db/migration/postgresql/V1.0.0.004__appraisal_initial_seeds.sql	(revision )
+@@ -701,4 +701,4 @@
+         (3, 8, 36);
+ 
+ -- INSERT INTO EmployeeEvaluationFormAnswer (id, evaluationFormXSectionXQuestionId, appraisalXEvaluationFormXEmployeeRelationshipId, scoreValueId, comment)
+--- VALUES  ();
++-- VALUES  (1,79,24,9,'test');
+Index: src/main/java/com/gft/employeeappraisal/model/ScoreValue.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- src/main/java/com/gft/employeeappraisal/model/ScoreValue.java	(revision 2b9c678cf4e9eb5e4358efc7b40778ccda7fe59f)
++++ src/main/java/com/gft/employeeappraisal/model/ScoreValue.java	(revision )
+@@ -35,6 +35,20 @@
+     @Column(name = "description", nullable = false, length = 40)
+     private String description;
+ 
++    public String getDescriptionOfAboveFourOption()
++    {
++        return descriptionOfAboveFourOption;
++    }
++
++    public void setDescriptionOfAboveFourOption(String descriptionOfAboveFourOption)
++    {
++        this.descriptionOfAboveFourOption = descriptionOfAboveFourOption;
++    }
++
++    @Size(max = 500)
++    @Column(name = "descriptionOfAboveFourOption",  length = 100)
++    private String descriptionOfAboveFourOption;
++
+     @OneToMany(mappedBy = "scoreValue") //fetch = FetchType.LAZY
+     private Set<EmployeeEvaluationFormAnswer> employeeEvaluationFormAnswerSet;
+ 
+Index: src/main/resources/swagger/employeeAppraisals-api.yml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- src/main/resources/swagger/employeeAppraisals-api.yml	(revision 2b9c678cf4e9eb5e4358efc7b40778ccda7fe59f)
++++ src/main/resources/swagger/employeeAppraisals-api.yml	(revision )
+@@ -1623,6 +1623,8 @@
+         type: string
+       description:
+         type: string
++      descriptionOfAboveFourOption:
++         type: string
+       scoreType:
+          type: array
+          items:
+Index: src/main/resources/db/migration/postgresql/V2.0.0.002__appraisal_seeds.sql
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- src/main/resources/db/migration/postgresql/V2.0.0.002__appraisal_seeds.sql	(revision 2b9c678cf4e9eb5e4358efc7b40778ccda7fe59f)
++++ src/main/resources/db/migration/postgresql/V2.0.0.002__appraisal_seeds.sql	(revision )
+@@ -34,6 +34,7 @@
+     (2, '4', 'Agree'),
+     (2, '5', 'Strongly agree');
+ 
++
+ INSERT INTO Section (id, position, scoreTypeId, name, description) VALUES
+     (1, 1, 2, 'Core Values', '-'),
+     (2, 2, 2, 'Qualities', '-'),
+Index: src/main/java/com/gft/employeeappraisal/converter/scorevalue/ScoreValueDTOMapper.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- src/main/java/com/gft/employeeappraisal/converter/scorevalue/ScoreValueDTOMapper.java	(revision 2b9c678cf4e9eb5e4358efc7b40778ccda7fe59f)
++++ src/main/java/com/gft/employeeappraisal/converter/scorevalue/ScoreValueDTOMapper.java	(revision )
+@@ -27,6 +27,7 @@
+         scoreValueDTO.setId(scoreValue.getId());
+         scoreValueDTO.setValue(scoreValue.getValue());
+         scoreValueDTO.setDescription(scoreValue.getDescription());
++        scoreValueDTO.setDescriptionOfAboveFourOption(scoreValue.getDescriptionOfAboveFourOption());
+     }
+ 
+     @Override
+@@ -35,6 +36,7 @@
+         scoreValue.setValue(scoreValueDTO.getValue());
+         scoreValue.setDescription(scoreValueDTO.getDescription());
+         scoreValue.setId(scoreValueDTO.getId());
++        scoreValue.setDescriptionOfAboveFourOption(scoreValueDTO.getDescriptionOfAboveFourOption());
+ //        scoreValue.setEmployeeEvaluationFormAnswerSet(employeeEvaluationFormAnswerService.getById(scoreValueDTO.getId()).);
+         throw new NotImplementedException();
+     }

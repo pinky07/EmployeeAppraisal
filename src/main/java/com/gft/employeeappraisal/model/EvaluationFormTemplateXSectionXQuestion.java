@@ -28,7 +28,7 @@ public class EvaluationFormTemplateXSectionXQuestion {
     private Section section;
 
     @NotNull
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY) //fetch = FetchType.LAZY
     @JoinColumn(name = "questionId", nullable = false)
     private Question question;
 
