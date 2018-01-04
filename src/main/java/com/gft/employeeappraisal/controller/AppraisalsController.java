@@ -4,8 +4,6 @@ import com.gft.employeeappraisal.Validation.EmployeeEvaluationFormDateValidate;
 import com.gft.employeeappraisal.converter.appraisal.AppraisalDTOConverter;
 import com.gft.employeeappraisal.converter.employeeevaluationform.EmployeeEvaluationFormDTOConverter;
 import com.gft.employeeappraisal.converter.evaluationformtemplate.EvaluationFormTemplateDTOConverter;
-import com.gft.employeeappraisal.converter.scoretype.ScoreTypeDTOConverter;
-import com.gft.employeeappraisal.converter.scoretype.ScoreTypeDTOMapper;
 import com.gft.employeeappraisal.exception.NotFoundException;
 import com.gft.employeeappraisal.model.*;
 import com.gft.employeeappraisal.repository.*;
@@ -49,7 +47,6 @@ public class AppraisalsController implements AppraisalApi {
 	private final ScoreTypeRepository scoreTypeRepository;
 	private final  ValidationService validationService;
 	private final EmployeeEvaluationFormAnswerService employeeEvaluationFormAnswerService;
-	private final ScoreTypeDTOConverter scoreTypeDTOConverter;
 	private final ScoreValueService scoreValueService;
 	private final SectionService sectionService;
 
@@ -73,7 +70,6 @@ public class AppraisalsController implements AppraisalApi {
 			AppraisalXEvaluationFormTemplateService appraisalXEvaluationFormTemplateService,
 			EvaluationFormTemplateXSectionXQuestionService evaluationFormTemplateXSectionXQuestionService,
 			SectionService sectionService,
-			ScoreTypeDTOConverter scoreTypeDTOConverter,
 
 			ScoreValueRepository scoreValueRepository,
 			AppraisalXEvaluationFormTemplateRepository appraisalXEvaluationFormTemplateRepository,
@@ -84,8 +80,7 @@ public class AppraisalsController implements AppraisalApi {
 			ValidationService validationService,
 			EmployeeEvaluationFormAnswerService employeeEvaluationFormAnswerService
 
-
-		) {
+	) {
 		this.appraisalService = appraisalService;
 		this.employeeService = employeeService;
 		this.employeeEvaluationFormService = employeeEvaluationFormService;
@@ -104,7 +99,6 @@ public class AppraisalsController implements AppraisalApi {
 		this.validationService=validationService;
 		this.employeeEvaluationFormAnswerService =employeeEvaluationFormAnswerService;
 		this.sectionService =sectionService;
-		this.scoreTypeDTOConverter =scoreTypeDTOConverter;
 
 	}
 
@@ -129,39 +123,23 @@ public class AppraisalsController implements AppraisalApi {
 		if (evaluationFormBody.getSubmitDate().equals("")||evaluationFormBody.getSubmitDate() == null) {
 
 			employeeEvaluationForm = employeeEvaluationFormDTOConverter.convertBack(evaluationFormBody);
-
+			employeeEvaluationFormService.saveAndFlush(employeeEvaluationForm);
 			//call here saveAndContinue(), user can continue any time,so not saving date
 		}
 		else {// call here saveAndSubmit(),user click saveAndSubmit,then system capture current datetime
+
 			employeeEvaluationForm = employeeEvaluationFormDTOConverter.convertBack(evaluationFormBody);
 			int dateValidate = evaluationFormBody.getCreateDate().compareTo(evaluationFormBody.getSubmitDate());
-			 boolean dateValidateIfequal = evaluationFormBody.getSubmitDate().equals(evaluationFormBody.getCreateDate());
+			boolean dateValidateIfequal = evaluationFormBody.getSubmitDate().equals(evaluationFormBody.getCreateDate());
 
 			EmployeeEvaluationFormDateValidate.validateDate(dateValidate);
 			if(dateValidate==0||dateValidateIfequal==true||dateValidate==1)
 			{
 				OffsetDateTime submitDay = OffsetDateTime.now();
 				employeeEvaluationForm.setSubmitDate(submitDay);
-
-				Set<EmployeeEvaluationFormAnswer> answerSet=employeeEvaluationForm.getEmployeeEvaluationFormAnswerSet();
-				for(EmployeeEvaluationFormAnswer answer:answerSet){
-					employeeEvaluationFormAnswerService.saveAndFlush(answer);
-					ScoreValue scoreValue =employeeEvaluationFormAnswerService.getById(answer.getId()).getScoreValue();
-//					scoreTypeDTOConverter.convertBack(scoreValue);
-				int scoreTypeId =employeeEvaluationFormAnswerService.getById(answer.getId()).getScoreValue().getScoreType().getId();
-
-					Set<Section> sectionSet = employeeEvaluationFormAnswerService.getById(answer.getId()).getScoreValue().getScoreType().getSectionSet();
-					for(Section section:sectionSet){
-						this.sectionService.saveAndFlush(section);
-					}
-					this.scoreValueService.saveAndFlush(scoreValue);
-				}
 				employeeEvaluationFormService.saveAndFlush(employeeEvaluationForm);
-
-
 			}
 		}
-		employeeEvaluationFormService.saveAndFlush(employeeEvaluationForm);
 		return new ResponseEntity<EmployeeEvaluationFormDTO>(HttpStatus.OK);
 	}
 

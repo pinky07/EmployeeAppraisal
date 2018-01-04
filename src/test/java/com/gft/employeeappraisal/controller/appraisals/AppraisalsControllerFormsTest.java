@@ -17,7 +17,9 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.util.StringUtils;
 
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Stream;
 
 import static org.junit.Assert.*;
@@ -41,6 +43,7 @@ public class AppraisalsControllerFormsTest extends BaseControllerTest {
     private Employee employeePeer;
     private Appraisal appraisal;
     private EvaluationFormTemplate evaluationFormTemplate;
+    private EmployeeEvaluationFormAnswer answer;
 
     private EmployeeEvaluationForm selfEmployeeEvaluationForm;
     private EmployeeEvaluationForm peerEmployeeEvaluationForm;
@@ -63,7 +66,7 @@ public class AppraisalsControllerFormsTest extends BaseControllerTest {
                 .jobLevel(jobLevel)
                 .applicationRole(applicationRole)
                 .buildWithDefaults();
-
+        Set<EmployeeEvaluationFormAnswer> answers= new HashSet<>();
         this.appraisal = new AppraisalBuilder().buildWithDefaults();
 
         employeePeer = new EmployeeBuilder()
@@ -80,18 +83,24 @@ public class AppraisalsControllerFormsTest extends BaseControllerTest {
 
         evaluationFormTemplate = new EvaluationFormTemplateBuilder().buildWithDefaults();
 
+
+
+
         // Test EmployeeEvaluationForm
         this.selfEmployeeEvaluationForm = new EmployeeEvaluationFormBuilder()
                 .employee(user)
                 .filledByEmployee(user)
+                .answers(answers)
                 .mentor(employeeMentor)
                 .buildWithDefaults();
         this.peerEmployeeEvaluationForm = new EmployeeEvaluationFormBuilder()
                 .employee(user)
                 .filledByEmployee(employeePeer)
                 .mentor(employeeMentor)
+                .answers(answers)
                 .buildWithDefaults();
 
+        this.answer = new EmployeeEvaluationFormAnswerBuilder(peerEmployeeEvaluationForm).buildWithDefaults();
         when(employeeService.getLoggedInUser()).thenReturn(this.user);
     }
 

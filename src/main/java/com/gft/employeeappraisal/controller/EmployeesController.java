@@ -16,7 +16,6 @@ import com.gft.swagger.employees.model.EmployeeDTO;
 import com.gft.swagger.employees.model.EmployeeRelationshipDTO;
 import com.gft.swagger.employees.model.OperationResultDTO;
 import com.gft.swagger.employees.model.RelationshipTypeDTO;
-import io.swagger.annotations.ApiParam;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -175,7 +174,7 @@ public class EmployeesController implements EmployeeApi {
 
         // Validate parameters
         this.validationService.validate(newMentorDTO);
-        String comments =newMentorDTO.getFirstName();
+
         // Find Employee
         Employee employee = this.employeeService.getById(employeeId);
 
@@ -183,7 +182,7 @@ public class EmployeesController implements EmployeeApi {
         Employee newMentor = this.employeeService.getById(newMentorDTO.getId());
 
         // Change Mentor
-        employeeRelationshipService.changeMentor(newMentor, employee, comments);
+        employeeRelationshipService.changeMentor(newMentor, employee);
 
         // Return response
         response.setMessage(Constants.SUCCESS);
@@ -316,7 +315,7 @@ public class EmployeesController implements EmployeeApi {
                 sourceEmployee,
                 employeeRelationship.getTargetEmployee(),
                 employeeRelationship.getRelationshipType(), employeeRelationship
-                )
+        )
                 .orElseThrow(() -> new EmployeeAppraisalMicroserviceException(String.format(
                         "EmployeeRelationship between Employee[%d] -> Employee[%d] of type %s",
                         sourceEmployee.getId(),

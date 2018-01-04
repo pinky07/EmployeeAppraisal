@@ -110,7 +110,7 @@ public interface EmployeeRelationshipService {
      * @param mentor Mentor to be
      * @param mentee Mentee to be
      */
-    void changeMentor(Employee mentor, Employee mentee,String comments);
+    void changeMentor(Employee mentor, Employee mentee);
 
     void changeMentor(Employee mentor, Employee mentee,EmployeeRelationship employeeRelationship);
 
@@ -137,7 +137,7 @@ public interface EmployeeRelationshipService {
      * @param employee Employee
      * @param peers    Peers to be associated
      */
-    void addPeers(Employee employee, List<Employee> peers,String comments);
+    void addPeers(Employee employee, List<Employee> peers);
 
     /**
      * Creates a new Employee Relationship between two Employees. The relationship is started on the current
@@ -150,7 +150,7 @@ public interface EmployeeRelationshipService {
      * @param targetEmployee   Right side of the relationship
      * @param relationshipType Relationship that should be read from left to right
      */
-    Optional<EmployeeRelationship> startEmployeeRelationship(Employee sourceEmployee, Employee targetEmployee, RelationshipType relationshipType,String comments);
+    Optional<EmployeeRelationship> startEmployeeRelationship(Employee sourceEmployee, Employee targetEmployee, RelationshipType relationshipType);
 
     Optional<EmployeeRelationship> startEmployeeRelationship(Employee sourceEmployee, Employee targetEmployee, RelationshipType relationshipType,EmployeeRelationship employeeRelationship);
 

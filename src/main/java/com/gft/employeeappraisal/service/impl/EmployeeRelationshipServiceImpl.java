@@ -146,7 +146,7 @@ public class EmployeeRelationshipServiceImpl implements EmployeeRelationshipServ
      * {@inheritDoc}
      */
     @Override
-    public void changeMentor(Employee mentor, Employee mentee,String comments) {
+    public void changeMentor(Employee mentor, Employee mentee) {
         if (hasMentor(mentee)) {
             removeMentor(mentee); // If I'm _changing_ mentor, there's nothing wrong with it not having a mentor.
         }
@@ -193,11 +193,11 @@ public class EmployeeRelationshipServiceImpl implements EmployeeRelationshipServ
      * {@inheritDoc}
      */
     @Override
-    public void addPeer(Employee employee, Employee peer,String comments) {
+    public void addPeer(Employee employee, Employee peer) {
         startEmployeeRelationship(
                 employee,
                 peer,
-                relationshipTypeService.findByName(RelationshipName.PEER), comments);
+                relationshipTypeService.findByName(RelationshipName.PEER));
     }
 
     @Override
@@ -212,18 +212,17 @@ public class EmployeeRelationshipServiceImpl implements EmployeeRelationshipServ
      * {@inheritDoc}
      */
     @Override
-    public void addPeers(Employee employee, List<Employee> peers,String comments) {
-        peers.forEach(peer -> addPeer(employee, peer,comments));
+    public void addPeers(Employee employee, List<Employee> peers) {
+        peers.forEach(peer -> addPeer(employee, peer));
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public Optional<EmployeeRelationship> startEmployeeRelationship(Employee sourceEmployee, Employee targetEmployee, RelationshipType relationshipType,String comments) {
+    public Optional<EmployeeRelationship> startEmployeeRelationship(Employee sourceEmployee, Employee targetEmployee, RelationshipType relationshipType) {
         EmployeeRelationship employeeRelationship = new EmployeeRelationship();
         employeeRelationship.setSourceEmployee(sourceEmployee);
-        employeeRelationship.setComments(comments);
         sourceEmployee.getEmployeeRelationshipsAsSourceSet();
         employeeRelationship.setTargetEmployee(targetEmployee);
         employeeRelationship.setRelationshipType(relationshipType);

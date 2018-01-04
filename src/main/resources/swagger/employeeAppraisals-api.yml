@@ -1609,8 +1609,6 @@ definitions:
         type: array
         items:
           $ref: '#/definitions/ScoreValueDTO'
-      SectionDescription:
-          $ref: '#/definitions/SectionDescriptionDTO'
 
   ScoreValueDTO:
     type: object
@@ -1621,22 +1619,12 @@ definitions:
         type: string
       description:
         type: string
+      descriptionOfAboveFourOption:
+         type: string
       scoreType:
          type: array
          items:
           $ref: '#/definitions/ScoreTypeDTO'
-
-  ScoreValueIdDTO:
-    type: object
-    properties:
-      id:
-        type: integer
-      scoreType:
-          type: array
-          items:
-           $ref: '#/definitions/ScoreTypeDTO'
-
-
 
   SectionDTO:
    type: object

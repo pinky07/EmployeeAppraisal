@@ -34,19 +34,6 @@ public class EmployeeRelationship {
     @Column(name = "endDate", columnDefinition = "TIMESTAMP")
     private OffsetDateTime endDate;
 
-    public String getComments()
-    {
-        return comments;
-    }
-
-    public void setComments(String comments)
-    {
-        this.comments = comments;
-    }
-
-    @Column(name="comments")
-    private String comments;
-
     @NotNull
     @ManyToOne
     @JoinColumn(name = "relationshipTypeId", nullable = false)
@@ -130,7 +117,6 @@ public class EmployeeRelationship {
         int result = getId();
         result = 31 * result + getStartDate().hashCode();
         result = 31 * result + getEndDate().hashCode();
-        result = 31 * result + getComments().hashCode();
         return result;
     }
 
