@@ -21,7 +21,7 @@ securityDefinitions:
     type: oauth2
     flow: accessCode
     authorizationUrl: http://localhost:8888/uaa/oauth/authorize
-    tokenUrl: http:/localhost:8888/uaa/oauth/token
+    tokenUrl: http://localhost:8888/uaa/oauth/token
     scopes:
       employee: Employee access
       appraisal: Appraisal access

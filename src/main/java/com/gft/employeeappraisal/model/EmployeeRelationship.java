@@ -2,6 +2,7 @@ package com.gft.employeeappraisal.model;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.time.OffsetDateTime;
 
 /**
@@ -39,17 +40,8 @@ public class EmployeeRelationship {
     @JoinColumn(name = "relationshipTypeId", nullable = false)
     private RelationshipType relationshipType;
 
-    public String getComments()
-    {
-        return comments;
-    }
-
-    public void setComments(String comments)
-    {
-        this.comments = comments;
-    }
-
-    @Column(name="comments")
+    @Size(max = 1000)
+    @Column(name = "comments", length = 1000)
     private String comments;
 
     public int getId() {
@@ -98,6 +90,16 @@ public class EmployeeRelationship {
 
     public void setRelationshipType(RelationshipType relationshipType) {
         this.relationshipType = relationshipType;
+    }
+
+    public String getComments()
+    {
+        return comments;
+    }
+
+    public void setComments(String comments)
+    {
+        this.comments = comments;
     }
 
     @Override
