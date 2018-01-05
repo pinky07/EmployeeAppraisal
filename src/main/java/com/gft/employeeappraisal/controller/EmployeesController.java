@@ -237,7 +237,8 @@ public class EmployeesController implements EmployeeApi {
 
         List<EmployeeRelationshipDTO> employeeRelationshipDTOList = new ArrayList<>();
         employeeService.findCurrentRelationshipsBySourceEmployee(employee,
-                RelationshipName.PEER, RelationshipName.LEAD, RelationshipName.OTHER)
+                RelationshipName.PEER, RelationshipName.LEAD, RelationshipName.OTHER,
+                RelationshipName.TEAM_MEMBER, RelationshipName.EXTERNAL)
                 .forEach(er -> employeeRelationshipDTOList.add(employeeRelationshipDTOConverter.convert(er)));
 
         return new ResponseEntity<>(employeeRelationshipDTOList, HttpStatus.OK);
