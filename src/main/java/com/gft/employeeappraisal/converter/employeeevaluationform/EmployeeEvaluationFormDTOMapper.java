@@ -1,17 +1,20 @@
 package com.gft.employeeappraisal.converter.employeeevaluationform;
 
-import com.gft.employeeappraisal.converter.scoretype.ScoreTypeDTOConverter;
-import com.gft.employeeappraisal.converter.section.SectionDTOConverter;
 import com.gft.employeeappraisal.model.*;
-import com.gft.employeeappraisal.service.*;
+import com.gft.employeeappraisal.service.EmployeeEvaluationFormAnswerService;
+import com.gft.employeeappraisal.service.EmployeeEvaluationFormService;
+import com.gft.employeeappraisal.service.EmployeeService;
+import com.gft.employeeappraisal.service.EvaluationFormTemplateXSectionXQuestionService;
 import com.gft.swagger.employees.model.*;
 import ma.glasnost.orika.CustomMapper;
 import ma.glasnost.orika.MappingContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.*;
-import java.util.stream.Collector;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -27,29 +30,21 @@ public class EmployeeEvaluationFormDTOMapper extends CustomMapper<EmployeeEvalua
 
     private final EmployeeEvaluationFormService employeeEvaluationFormService;
 
-    private final QuestionService questionService;
     private final EmployeeEvaluationFormAnswerService employeeEvaluationFormAnswerService;
     private final EvaluationFormTemplateXSectionXQuestionService evaluationFormTemplateXSectionXQuestionService;
-    private final ScoreValueService scoreValueService;
-    private final SectionService sectionService;
 //    private final SectionDTOConverter sectionDTOConverter;
 //    private final ScoreTypeDTOConverter scoreTypeDTOConverter;
     @Autowired
     public EmployeeEvaluationFormDTOMapper(EmployeeService employeeService,
-            EmployeeEvaluationFormService employeeEvaluationFormService, QuestionService questionService,
+            EmployeeEvaluationFormService employeeEvaluationFormService,
             EmployeeEvaluationFormAnswerService employeeEvaluationFormAnswerService,
-            EvaluationFormTemplateXSectionXQuestionService evaluationFormTemplateXSectionXQuestionService,
-            ScoreValueService scoreValueService,
-            SectionService sectionService
+            EvaluationFormTemplateXSectionXQuestionService evaluationFormTemplateXSectionXQuestionService
             )
     {
         this.employeeService = employeeService;
         this.employeeEvaluationFormService = employeeEvaluationFormService;
-        this.questionService = questionService;
         this.employeeEvaluationFormAnswerService =employeeEvaluationFormAnswerService;
         this.evaluationFormTemplateXSectionXQuestionService =evaluationFormTemplateXSectionXQuestionService;
-        this.scoreValueService =scoreValueService;
-        this.sectionService =sectionService;
 //        this.sectionDTOConverter=sectionDTOConverter;
 //        this.scoreTypeDTOConverter=scoreTypeDTOConverter;
 
@@ -126,8 +121,9 @@ public class EmployeeEvaluationFormDTOMapper extends CustomMapper<EmployeeEvalua
                     questionDTO.setDescription(question.getDescription());
                     questionDTO.setPosition(question.getPosition());
                     xSectionXQuestionDTO.addQuestionItem(questionDTO);
+                    answerDTO.setEmployeeEvaluationFormId(employeeEvaluationForm.getId());
                     answerDTO.setScoreValue(scoreValueDTO);
-                    answerDTO.setEvaluationFormTemplateXSectionXQuestionDTO(xSectionXQuestionDTO);
+                    answerDTO.setEvaluationFormTemplateXSectionXQuestionId(xSectionXQuestionDTO.getId());
 
                     // Omitted for brevity, every answer doesn't need this information
                     /*answerDTO.setEvaluationFormTemplateXSectionXQuestion(mapperFacade.map(employeeEvaluationFormAnswer
@@ -149,48 +145,21 @@ public class EmployeeEvaluationFormDTOMapper extends CustomMapper<EmployeeEvalua
         employeeEvaluationForm.setComments(employeeEvaluationFormDTO.getComments());
         EmployeeEvaluationForm evaluationForm = employeeEvaluationFormService .getById(employeeEvaluationFormDTO.getId());
         employeeEvaluationForm.setAppraisalXEvaluationFormTemplate(evaluationForm.getAppraisalXEvaluationFormTemplate());
-        List<AnswerDTO> answerDTOS = employeeEvaluationFormDTO.getAnswers();
-        EmployeeEvaluationFormAnswer answer = new EmployeeEvaluationFormAnswer();
-        answer.setEmployeeEvaluationForm(evaluationForm);
-        Set<EmployeeEvaluationFormAnswer> answerSet = new HashSet<>();
-        ScoreValueDTO scoreValueDTO;
-        ScoreValue scoreValue = new ScoreValue();
-        ScoreType scoreType = new ScoreType();
-        Question question = new Question();
-        EvaluationFormTemplateXSectionXQuestion questionSection;
 
-        for (AnswerDTO answerDTO : answerDTOS)
-        {//getting value from AnswerDTO
-            EvaluationFormTemplateXSectionXQuestionDTO questionSectionDto = answerDTO.getEvaluationFormTemplateXSectionXQuestionDTO();
-            scoreValueDTO = answerDTO.getScoreValue();
-            questionSection= evaluationFormTemplateXSectionXQuestionService.getById(questionSectionDto.getId());
-            List<QuestionDTO> questionSectionDTOS = questionSectionDto.getQuestion();
-            for(QuestionDTO questionDTO1:questionSectionDTOS)
-            {
-                //get value from questionDTO
-                question.setId(questionDTO1.getId());
-                question.setPosition(questionDTO1.getPosition());
-                question.setName(questionDTO1.getName());
-                questionSection.setId(questionDTO1.getId());
-            }
-                 scoreValue.setScoreType(scoreType);
-                 questionSection.setEmployeeEvaluationFormAnswerSet(answerSet);
-                scoreValue.setId(scoreValueDTO.getId());
-                scoreValue.setValue(scoreValueDTO.getValue());
-                questionSection.setId(questionSectionDto.getId());
-                scoreValue.setScoreType(scoreType);
-                questionSection.setQuestion(question);
-                //setting answers
-                answer.setId(answerDTO.getId());
-                answer.setEvaluationFormTemplateXSectionXQuestion(questionSection);
-                answer.setScoreValue(scoreValue);
-                answer.setId(answerDTO.getId());
-                answer.setComment(answerDTO.getComment());
-                answer.setEmployeeEvaluationForm(evaluationForm);
-                answerSet.add(answer);
-                scoreValue.setScoreType(scoreType);
-                employeeEvaluationForm.setEmployeeEvaluationFormAnswerSet(answerSet);
-                employeeEvaluationFormAnswerService.saveAndFlush(answer);
+        Set<EmployeeEvaluationFormAnswer> answerSet = new HashSet<>();
+
+        List<AnswerDTO> answerDTOS = employeeEvaluationFormDTO.getAnswers();
+
+        for (AnswerDTO answerDTO : answerDTOS) {
+            EmployeeEvaluationFormAnswer answer = new EmployeeEvaluationFormAnswer();
+            answer.setId(answerDTO.getId());
+            answer.setEvaluationFormTemplateXSectionXQuestion(evaluationFormTemplateXSectionXQuestionService
+                    .getById(answerDTO.getEvaluationFormTemplateXSectionXQuestionId()));
+            answer.setComment(answerDTO.getComment());
+            answer.setEmployeeEvaluationForm(employeeEvaluationForm);
+            answer.setScoreValue(mapperFacade.map(answerDTO.getScoreValue(), ScoreValue.class));
+            answerSet.add(answer);
         }
+        employeeEvaluationForm.setEmployeeEvaluationFormAnswerSet(answerSet);
     }
 }

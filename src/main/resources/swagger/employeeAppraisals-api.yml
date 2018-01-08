@@ -1048,6 +1048,61 @@ paths:
           description: |
             Employee, Appraisal or EvaluationForm not found in the system.
 
+########################################################################################################################
+# /employees/:id/appraisals/:id/forms/:id/answers ######################################################################
+########################################################################################################################
+
+  '/employees/{employeeId}/appraisals/{appraisalId}/forms/{formId}/answers':
+
+    ###########
+    # GET #####
+    ###########
+
+    get:
+      tags:
+      - Appraisal
+      summary: |
+        Provides the list of answers an employee has provided for a specific `EmployeeEvaluationForm` on a specific
+        appraisal process.
+      description: |
+        Returns a list of answers from a `EmployeeEvaluationForm` belonging to the specified user.
+      operationId: employeesIdAppraisalsIdFormsIdAnswersGet
+      produces:
+        - application/json
+      parameters:
+        - in: path
+          name: employeeId
+          type: integer
+          required: true
+          description: |
+            `Employee` Id.
+        - in: path
+          name: appraisalId
+          type: integer
+          required: true
+          description: |
+            `Appraisal` Id.
+        - in: path
+          name: formId
+          type: integer
+          required: true
+          description: |
+            `Form` Id.
+      responses:
+        '200':
+          description: |
+            Successful.
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/AnswerDTO'
+        '403':
+          description: |
+            The user isn't authenticated or authorized to perform this action.
+        '404':
+          description: |
+            Employee, Appraisal or EvaluationForm not found in the system.
+
 
     ###########
     # PUT #####
@@ -1393,18 +1448,20 @@ definitions:
         format: 'date-time'
 
   AnswerDTO:
-      type: object
-      properties:
-        id:
-          type: integer
-        evaluationFormTemplateXSectionXQuestionDTO:
-          $ref: '#/definitions/EvaluationFormTemplateXSectionXQuestionDTO'
-        scoreValue:
-          $ref: '#/definitions/ScoreValueDTO'
-        comment:
-          type: string
-      required:
-        - id
+    type: object
+    properties:
+      id:
+        type: integer
+      employeeEvaluationFormId:
+        type: integer
+      evaluationFormTemplateXSectionXQuestionId:
+        type: integer
+      scoreValue:
+        $ref: '#/definitions/ScoreValueDTO'
+      comment:
+        type: string
+    required:
+      - id
 
   EmployeeDTO:
     type: object

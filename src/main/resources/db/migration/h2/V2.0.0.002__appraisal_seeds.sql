@@ -172,3 +172,11 @@ INSERT INTO EvaluationFormTemplateXSectionXQuestion (evaluationFormTemplateId, s
     (1, 6, 24),
     -- Career Goals
     (1, 7, 25);
+
+INSERT INTO EmployeeEvaluationFormAnswer (evaluationFormTemplatexSectionxQuestion, employeeEvaluationFormId,
+                                          scoreValueId, comment) VALUES
+    -- Question 1, with ScoreValue Neither Agree nor Disagree on Self form MY
+    (79, 9, 12, 'test comment MY'),
+
+    -- First question (subjective) on self form MY
+    (100, 9, 9, 'test subjective answer');

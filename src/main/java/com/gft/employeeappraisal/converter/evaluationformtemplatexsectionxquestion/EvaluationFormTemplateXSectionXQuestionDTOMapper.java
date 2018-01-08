@@ -1,24 +1,13 @@
-package com.gft.employeeappraisal.converter.evaluationFormTemplateXSectionXQuestion;
+package com.gft.employeeappraisal.converter.evaluationformtemplatexsectionxquestion;
 
 import com.gft.employeeappraisal.converter.employeeevaluationform.EmployeeEvaluationFormDTOConverter;
-import com.gft.employeeappraisal.model.EmployeeEvaluationForm;
-import com.gft.employeeappraisal.model.EmployeeEvaluationFormAnswer;
 import com.gft.employeeappraisal.model.EvaluationFormTemplateXSectionXQuestion;
-import com.gft.employeeappraisal.model.Question;
-import com.gft.employeeappraisal.service.EmployeeEvaluationFormService;
-import com.gft.employeeappraisal.service.EmployeeService;
 import com.gft.employeeappraisal.service.QuestionService;
-import com.gft.swagger.employees.model.*;
+import com.gft.swagger.employees.model.EvaluationFormTemplateXSectionXQuestionDTO;
 import ma.glasnost.orika.CustomMapper;
 import ma.glasnost.orika.MappingContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 /**
  * Defines a mapping structure to be used by {@link EmployeeEvaluationFormDTOConverter}.
@@ -27,12 +16,12 @@ import java.util.stream.Collectors;
  * @author Manuel Yepez
  */
 @Component
-public class evaluationFormTemplateXSectionXQuestionDTOMapper extends CustomMapper<EvaluationFormTemplateXSectionXQuestion, EvaluationFormTemplateXSectionXQuestionDTO>
+public class EvaluationFormTemplateXSectionXQuestionDTOMapper extends CustomMapper<EvaluationFormTemplateXSectionXQuestion, EvaluationFormTemplateXSectionXQuestionDTO>
 {
 
     private final QuestionService questionService;
 
-    @Autowired public evaluationFormTemplateXSectionXQuestionDTOMapper(QuestionService questionService)
+    @Autowired public EvaluationFormTemplateXSectionXQuestionDTOMapper(QuestionService questionService)
     { this.questionService=questionService;
     }
 
