@@ -3,16 +3,13 @@ package com.gft.employeeappraisal.controller;
 import com.gft.employeeappraisal.Validation.EmployeeEvaluationFormDateValidate;
 import com.gft.employeeappraisal.converter.appraisal.AppraisalDTOConverter;
 import com.gft.employeeappraisal.converter.employeeevaluationform.EmployeeEvaluationFormDTOConverter;
+import com.gft.employeeappraisal.converter.employeeevaluationformanswer.EmployeeEvaluationFormAnswerDTOConverter;
 import com.gft.employeeappraisal.converter.evaluationformtemplate.EvaluationFormTemplateDTOConverter;
 import com.gft.employeeappraisal.exception.NotFoundException;
 import com.gft.employeeappraisal.model.*;
-import com.gft.employeeappraisal.repository.*;
 import com.gft.employeeappraisal.service.*;
 import com.gft.swagger.employees.api.AppraisalApi;
-import com.gft.swagger.employees.model.AppraisalDTO;
-import com.gft.swagger.employees.model.EmployeeEvaluationFormDTO;
-import com.gft.swagger.employees.model.EvaluationFormTemplateDTO;
-import com.gft.swagger.employees.model.SectionDTO;
+import com.gft.swagger.employees.model.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +22,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import javax.validation.Valid;
 import java.time.OffsetDateTime;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 @Controller
@@ -39,22 +35,13 @@ public class AppraisalsController implements AppraisalApi {
 	private final EmployeeEvaluationFormService employeeEvaluationFormService;
 	private final EvaluationFormTemplateService evaluationFormTemplateService;
 	private final SecurityService securityService;
-	private final ScoreValueRepository scoreValueRepository;
-	private final AppraisalXEvaluationFormTemplateService appraisalXEvaluationFormTemplateService;
-	private final AppraisalXEvaluationFormTemplateRepository appraisalXEvaluationFormTemplateRepository;
-	private final EvaluationFormTemplateXSectionXQuestionRepository evaluationFormTemplateXSectionXQuestionRepository;
-	private final SectionRepository sectionRepository;
-	private final ScoreTypeRepository scoreTypeRepository;
 	private final  ValidationService validationService;
-	private final EmployeeEvaluationFormAnswerService employeeEvaluationFormAnswerService;
-	private final ScoreValueService scoreValueService;
-	private final SectionService sectionService;
 
 	// DTO converters
 	private final AppraisalDTOConverter appraisalDTOConverter;
 	private final EmployeeEvaluationFormDTOConverter employeeEvaluationFormDTOConverter;
 	private final EvaluationFormTemplateDTOConverter evaluationFormTemplateDTOConverter;
-
+	private final EmployeeEvaluationFormAnswerDTOConverter employeeEvaluationFormAnswerDTOConverter;
 
 	@Autowired
 	public AppraisalsController(
@@ -66,19 +53,8 @@ public class AppraisalsController implements AppraisalApi {
 			AppraisalDTOConverter appraisalDTOConverter,
 			EmployeeEvaluationFormDTOConverter employeeEvaluationFormDTOConverter,
 			EvaluationFormTemplateDTOConverter evaluationFormTemplateDTOConverter,
-			ScoreValueService scoreValueService,
-			AppraisalXEvaluationFormTemplateService appraisalXEvaluationFormTemplateService,
-			EvaluationFormTemplateXSectionXQuestionService evaluationFormTemplateXSectionXQuestionService,
-			SectionService sectionService,
-
-			ScoreValueRepository scoreValueRepository,
-			AppraisalXEvaluationFormTemplateRepository appraisalXEvaluationFormTemplateRepository,
-			EvaluationFormTemplateXSectionXQuestionRepository evaluationFormTemplateXSectionXQuestionRepository,
-			EmployeeEvaluationFormAnswerRepository employeeEvaluationFormAnswerRepository,
-			SectionRepository sectionRepository,
-			ScoreTypeRepository scoreTypeRepository,
-			ValidationService validationService,
-			EmployeeEvaluationFormAnswerService employeeEvaluationFormAnswerService
+			EmployeeEvaluationFormAnswerDTOConverter employeeEvaluationFormAnswerDTOConverter,
+			ValidationService validationService
 
 	) {
 		this.appraisalService = appraisalService;
@@ -89,17 +65,8 @@ public class AppraisalsController implements AppraisalApi {
 		this.appraisalDTOConverter = appraisalDTOConverter;
 		this.employeeEvaluationFormDTOConverter = employeeEvaluationFormDTOConverter;
 		this.evaluationFormTemplateDTOConverter = evaluationFormTemplateDTOConverter;
-		this.scoreValueService = scoreValueService;
-		this.appraisalXEvaluationFormTemplateService = appraisalXEvaluationFormTemplateService;
-		this.evaluationFormTemplateXSectionXQuestionRepository = evaluationFormTemplateXSectionXQuestionRepository;
-		this.scoreValueRepository = scoreValueRepository;
-		this.appraisalXEvaluationFormTemplateRepository = appraisalXEvaluationFormTemplateRepository;
-		this.sectionRepository = sectionRepository;
-		this.scoreTypeRepository = scoreTypeRepository;
+		this.employeeEvaluationFormAnswerDTOConverter = employeeEvaluationFormAnswerDTOConverter;
 		this.validationService=validationService;
-		this.employeeEvaluationFormAnswerService =employeeEvaluationFormAnswerService;
-		this.sectionService =sectionService;
-
 	}
 
 
@@ -140,7 +107,7 @@ public class AppraisalsController implements AppraisalApi {
 				employeeEvaluationFormService.saveAndFlush(employeeEvaluationForm);
 			}
 		}
-		return new ResponseEntity<EmployeeEvaluationFormDTO>(HttpStatus.OK);
+		return new ResponseEntity<>(HttpStatus.OK);
 	}
 
 
@@ -155,7 +122,7 @@ public class AppraisalsController implements AppraisalApi {
 		template = evaluationFormTemplateDTOConverter.convertBack(evaluationFormBody);
 		List<SectionDTO> sectionDTOS = evaluationFormBody.getSections();
 		this.evaluationFormTemplateService.saveAndFlush(template);
-		return new ResponseEntity<EvaluationFormTemplateDTO>(HttpStatus.OK);
+		return new ResponseEntity<>(HttpStatus.OK);
 	}
 
 	@Override
@@ -352,4 +319,44 @@ public class AppraisalsController implements AppraisalApi {
 		return new ResponseEntity<>(appraisalDTOConverter.convert(appraisal), HttpStatus.OK);
 	}
 
+	@Override
+	public ResponseEntity<List<AnswerDTO>> employeesIdAppraisalsIdFormsIdAnswersGet(
+			@PathVariable("employeeId") Integer employeeId,
+			@PathVariable("appraisalId") Integer appraisalId,
+			@PathVariable("formId") Integer formId) {
+		Employee user = this.employeeService.getLoggedInUser();
+		logger.debug("{} called endpoint: GET /employees/{}/appraisals/{}/forms/{}/answers", user.getEmail(), employeeId,
+				appraisalId, formId);
+		return this.employeesIdAppraisalsIdFormsIdAnswersGet(user, employeeId, appraisalId, formId);
+	}
+
+	private ResponseEntity<List<AnswerDTO>> employeesIdAppraisalsIdFormsIdAnswersGet(
+			Employee loggedInUser,
+			Integer employeeId,
+			Integer appraisalId,
+			Integer formId
+	) {
+		// Get Employee
+		Employee employee = employeeService.getById(employeeId);
+
+		// Get Appraisal
+		Appraisal appraisal = appraisalService.getById(appraisalId);
+
+		// Security check
+		this.securityService.canReadAppraisal(loggedInUser, employee, appraisal);
+
+		EmployeeEvaluationForm employeeEvaluationForm = employeeEvaluationFormService
+				.findByEmployeeAndFilledByEmployeeAndAppraisal(loggedInUser, employee, appraisal)
+				.orElseThrow(() -> new NotFoundException(String.format(
+						"EmployeeEvaluationForm not found for Employee [%d] and Appraisal[%d]",
+						employeeId,
+						appraisalId)));
+
+		List<AnswerDTO> answerDTOList = employeeEvaluationForm.getEmployeeEvaluationFormAnswerSet()
+				.stream()
+				.map(employeeEvaluationFormAnswerDTOConverter::convert)
+				.collect(Collectors.toList());
+
+		return new ResponseEntity<>(answerDTOList, HttpStatus.OK);
+	}
 }

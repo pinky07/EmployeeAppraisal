@@ -114,7 +114,8 @@ public class EmployeesControllerRelationshipsTest extends BaseControllerTest {
         when(employeeService.getById(userMock.getId())).thenReturn(userMock);
         doReturn(Stream.of(testEmployeeRelationship(false)))
                 .when(employeeService).findCurrentRelationshipsBySourceEmployee(userMock,
-                RelationshipName.PEER, RelationshipName.LEAD, RelationshipName.OTHER);
+                RelationshipName.PEER, RelationshipName.LEAD, RelationshipName.OTHER,
+                RelationshipName.TEAM_MEMBER, RelationshipName.EXTERNAL);
 
         // Execution
         MvcResult result = mockMvc.perform(
@@ -135,7 +136,8 @@ public class EmployeesControllerRelationshipsTest extends BaseControllerTest {
         verify(employeeService, times(1)).getLoggedInUser();
         verify(employeeService, times(1)).getById(anyInt());
         verify(employeeService, times(1)).findCurrentRelationshipsBySourceEmployee(userMock,
-                RelationshipName.PEER, RelationshipName.LEAD, RelationshipName.OTHER);
+                RelationshipName.PEER, RelationshipName.LEAD, RelationshipName.OTHER, RelationshipName.TEAM_MEMBER,
+                RelationshipName.EXTERNAL);
         EmployeeRelationshipDTO employeeRelationshipDTO = employeeRelationshipDTOList.get(0);
         assertNotNull(employeeRelationshipDTO.getReferred());
         assertNotNull(employeeRelationshipDTO.getRelationshipType());
@@ -156,7 +158,8 @@ public class EmployeesControllerRelationshipsTest extends BaseControllerTest {
         when(employeeService.getById(userMock.getId())).thenReturn(userMock);
         doReturn(Stream.empty())
                 .when(employeeService).findCurrentRelationshipsBySourceEmployee(userMock,
-                RelationshipName.PEER, RelationshipName.LEAD, RelationshipName.OTHER);
+                RelationshipName.PEER, RelationshipName.LEAD, RelationshipName.OTHER,
+                RelationshipName.TEAM_MEMBER, RelationshipName.EXTERNAL);
 
         // Execution
         MvcResult result = mockMvc.perform(
@@ -177,7 +180,8 @@ public class EmployeesControllerRelationshipsTest extends BaseControllerTest {
         verify(employeeService, times(1)).getLoggedInUser();
         verify(employeeService, times(1)).getById(anyInt());
         verify(employeeService, times(1)).findCurrentRelationshipsBySourceEmployee(userMock,
-                RelationshipName.PEER, RelationshipName.LEAD, RelationshipName.OTHER);
+                RelationshipName.PEER, RelationshipName.LEAD, RelationshipName.OTHER, RelationshipName.TEAM_MEMBER,
+                RelationshipName.EXTERNAL);
     }
 
     /**
@@ -210,7 +214,8 @@ public class EmployeesControllerRelationshipsTest extends BaseControllerTest {
         verify(employeeService, times(1)).getById(anyInt());
         verify(securityService, never()).canReadEmployee(any(Employee.class), any(Employee.class));
         verify(employeeService, never()).findCurrentRelationshipsBySourceEmployee(userMock,
-                RelationshipName.PEER, RelationshipName.LEAD, RelationshipName.OTHER);
+                RelationshipName.PEER, RelationshipName.LEAD, RelationshipName.OTHER, RelationshipName.TEAM_MEMBER,
+                RelationshipName.EXTERNAL);
     }
 
     @Test
@@ -231,7 +236,8 @@ public class EmployeesControllerRelationshipsTest extends BaseControllerTest {
         verify(employeeService, never()).getLoggedInUser();
         verify(employeeService, never()).findById(anyInt());
         verify(employeeService, never()).findCurrentRelationshipsBySourceEmployee(userMock,
-                RelationshipName.PEER, RelationshipName.LEAD, RelationshipName.OTHER);
+                RelationshipName.PEER, RelationshipName.LEAD, RelationshipName.OTHER, RelationshipName.TEAM_MEMBER,
+                RelationshipName.EXTERNAL);
     }
 
     @Test
