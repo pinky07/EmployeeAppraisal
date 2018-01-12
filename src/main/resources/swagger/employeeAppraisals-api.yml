@@ -1749,6 +1749,10 @@ definitions:
         type: string
       description:
         type: string
+      employeeName:
+        type: string
+      mentorName:
+        type: string
       sections:
         type: array
         items:
