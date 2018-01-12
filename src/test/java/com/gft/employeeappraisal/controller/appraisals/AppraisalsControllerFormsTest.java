@@ -83,17 +83,14 @@ public class AppraisalsControllerFormsTest extends BaseControllerTest {
 
         evaluationFormTemplate = new EvaluationFormTemplateBuilder().buildWithDefaults();
 
-
-
-
         // Test EmployeeEvaluationForm
-        this.selfEmployeeEvaluationForm = new EmployeeEvaluationFormBuilder()
+        this.selfEmployeeEvaluationForm = new EmployeeEvaluationFormBuilder(appraisal, evaluationFormTemplate)
                 .employee(user)
                 .filledByEmployee(user)
                 .answers(answers)
                 .mentor(employeeMentor)
                 .buildWithDefaults();
-        this.peerEmployeeEvaluationForm = new EmployeeEvaluationFormBuilder()
+        this.peerEmployeeEvaluationForm = new EmployeeEvaluationFormBuilder(appraisal, evaluationFormTemplate)
                 .employee(user)
                 .filledByEmployee(employeePeer)
                 .mentor(employeeMentor)

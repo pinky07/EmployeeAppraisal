@@ -66,15 +66,11 @@ public class AppraisalsControllerTest extends BaseControllerTest {
                 .applicationRole(applicationRole)
                 .buildWithDefaults();
 
-        this.appraisal = new AppraisalBuilder()
-                .buildWithDefaults();
+        this.appraisal = new AppraisalBuilder().buildWithDefaults();
 
-        AppraisalXEvaluationFormTemplate appraisalXEvaluationFormTemplate = new AppraisalXEvaluationFormTemplateBuilder()
-                .appraisal(this.appraisal)
-                .buildWithDefaults();
+        EvaluationFormTemplate evaluationFormTemplate = new EvaluationFormTemplateBuilder().buildWithDefaults();
 
-        this.employeeEvaluationForm = new EmployeeEvaluationFormBuilder()
-                .appraisalXEvaluationFormTemplate(appraisalXEvaluationFormTemplate)
+        this.employeeEvaluationForm = new EmployeeEvaluationFormBuilder(appraisal, evaluationFormTemplate)
                 .buildWithDefaults();
 
         when(employeeService.getLoggedInUser()).thenReturn(this.user);
@@ -504,7 +500,7 @@ public class AppraisalsControllerTest extends BaseControllerTest {
         // Execution
         MvcResult result = mockMvc.perform(get(String.format(
                 ME_APPRAISALS_ID_URL,
-                (Object) null))
+                (Integer) null))
                 .with(csrf())
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest())

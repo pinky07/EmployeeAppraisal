@@ -119,8 +119,10 @@ public class SecurityServiceTest extends BaseServiceTest {
     public void canReadEmployeeEvaluationForm() {
         // Set up
         Employee employee = new EmployeeBuilder().id(1).buildWithDefaults();
+        Appraisal appraisal = new AppraisalBuilder().id(1).buildWithDefaults();
+        EvaluationFormTemplate evaluationFormTemplate = new EvaluationFormTemplateBuilder().id(1).buildWithDefaults();
 
-        EmployeeEvaluationForm employeeEvaluationForm = new EmployeeEvaluationFormBuilder()
+        EmployeeEvaluationForm employeeEvaluationForm = new EmployeeEvaluationFormBuilder(appraisal, evaluationFormTemplate)
                 .employee(employee)
                 .buildWithDefaults();
 
@@ -144,7 +146,10 @@ public class SecurityServiceTest extends BaseServiceTest {
         Employee employee = new EmployeeBuilder().id(1).buildWithDefaults();
         Employee another = new EmployeeBuilder().id(2).buildWithDefaults();
 
-        EmployeeEvaluationForm employeeEvaluationForm = new EmployeeEvaluationFormBuilder()
+        Appraisal appraisal = new AppraisalBuilder().id(1).buildWithDefaults();
+        EvaluationFormTemplate evaluationFormTemplate = new EvaluationFormTemplateBuilder().id(1).buildWithDefaults();
+
+        EmployeeEvaluationForm employeeEvaluationForm = new EmployeeEvaluationFormBuilder(appraisal, evaluationFormTemplate)
                 .employee(employee)
                 .buildWithDefaults();
 
@@ -161,7 +166,7 @@ public class SecurityServiceTest extends BaseServiceTest {
 
         Appraisal appraisal = new AppraisalBuilder().buildWithDefaults();
 
-        EmployeeEvaluationForm employeeEvaluationForm = new EmployeeEvaluationFormBuilder()
+        EmployeeEvaluationForm employeeEvaluationForm = new EmployeeEvaluationFormBuilder(appraisal, evaluationFormTemplate)
                 .employee(employee)
                 .buildWithDefaults();
 
@@ -192,7 +197,7 @@ public class SecurityServiceTest extends BaseServiceTest {
 
         Appraisal appraisal = new AppraisalBuilder().buildWithDefaults();
 
-        EmployeeEvaluationForm employeeEvaluationForm = new EmployeeEvaluationFormBuilder()
+        EmployeeEvaluationForm employeeEvaluationForm = new EmployeeEvaluationFormBuilder(appraisal, evaluationFormTemplate)
                 .employee(employee)
                 .buildWithDefaults();
 

@@ -1,10 +1,7 @@
 package com.gft.employeeappraisal.helper.builder.model;
 
 import com.gft.employeeappraisal.helper.builder.ObjectBuilder;
-import com.gft.employeeappraisal.model.AppraisalXEvaluationFormTemplate;
-import com.gft.employeeappraisal.model.Employee;
-import com.gft.employeeappraisal.model.EmployeeEvaluationForm;
-import com.gft.employeeappraisal.model.EmployeeEvaluationFormAnswer;
+import com.gft.employeeappraisal.model.*;
 
 import java.time.OffsetDateTime;
 import java.util.Collections;
@@ -20,33 +17,35 @@ import java.util.Set;
 public class EmployeeEvaluationFormBuilder implements ObjectBuilder<EmployeeEvaluationForm> {
 
     private int id;
-    private AppraisalXEvaluationFormTemplate appraisalXEvaluationFormTemplate;
     private Employee employee;
     private Employee filledByEmployee;
     private Employee mentor;
+    private Appraisal appraisal;
+    private EvaluationFormTemplate evaluationFormTemplate;
     private OffsetDateTime createDate;
     private OffsetDateTime submitDate;
     private Set<EmployeeEvaluationFormAnswer> employeeEvaluationFormAnswerSet;
 
     private boolean idSet;
-    private boolean appraisalXEvaluationFormSet;
     private boolean employeeSet;
     private boolean filledByEmployeeSet;
     private boolean mentorSet;
+    private boolean appraisalSet;
+    private boolean evaluationFormTemplateSet;
     private boolean createDateSet;
     private boolean submitDateSet;
     private boolean answersSet;
 
+    public EmployeeEvaluationFormBuilder(Appraisal appraisal, EvaluationFormTemplate evaluationFormTemplate) {
+        this.appraisal = appraisal;
+        this.appraisalSet = true;
+        this.evaluationFormTemplate = evaluationFormTemplate;
+        this.evaluationFormTemplateSet = true;
+    }
+
     public EmployeeEvaluationFormBuilder id(int id) {
         this.id = id;
         this.idSet = true;
-        return this;
-    }
-
-    public EmployeeEvaluationFormBuilder appraisalXEvaluationFormTemplate(AppraisalXEvaluationFormTemplate
-                                                                                  appraisalXEvaluationFormTemplate) {
-        this.appraisalXEvaluationFormTemplate = appraisalXEvaluationFormTemplate;
-        this.appraisalXEvaluationFormSet = true;
         return this;
     }
 
@@ -65,6 +64,18 @@ public class EmployeeEvaluationFormBuilder implements ObjectBuilder<EmployeeEval
     public EmployeeEvaluationFormBuilder mentor(Employee mentor) {
         this.mentor = mentor;
         this.mentorSet = true;
+        return this;
+    }
+
+    public EmployeeEvaluationFormBuilder appraisal(Appraisal appraisal) {
+        this.appraisal = appraisal;
+        this.appraisalSet = true;
+        return this;
+    }
+
+    public EmployeeEvaluationFormBuilder evaluationFormTemplate(EvaluationFormTemplate evaluationFormTemplate) {
+        this.evaluationFormTemplate = evaluationFormTemplate;
+        this.evaluationFormTemplateSet = true;
         return this;
     }
 
@@ -90,10 +101,11 @@ public class EmployeeEvaluationFormBuilder implements ObjectBuilder<EmployeeEval
     public EmployeeEvaluationForm build() {
         EmployeeEvaluationForm obj = new EmployeeEvaluationForm();
         obj.setId(this.id);
-        obj.setAppraisalXEvaluationFormTemplate(this.appraisalXEvaluationFormTemplate);
         obj.setEmployee(this.employee);
         obj.setFilledByEmployee(this.filledByEmployee);
         obj.setMentor(this.mentor);
+        obj.setAppraisal(this.appraisal);
+        obj.setEvaluationFormTemplate(this.evaluationFormTemplate);
         obj.setCreateDate(this.createDate);
         obj.setSubmitDate(this.submitDate);
         obj.setEmployeeEvaluationFormAnswerSet(this.employeeEvaluationFormAnswerSet);
@@ -104,11 +116,12 @@ public class EmployeeEvaluationFormBuilder implements ObjectBuilder<EmployeeEval
     public EmployeeEvaluationForm buildWithDefaults() {
         EmployeeEvaluationForm obj = new EmployeeEvaluationForm();
         if (this.idSet) obj.setId(this.id);
-        obj.setAppraisalXEvaluationFormTemplate(this.appraisalXEvaluationFormSet ? this.appraisalXEvaluationFormTemplate :
-                new AppraisalXEvaluationFormTemplateBuilder().buildWithDefaults());
         if (this.employeeSet) obj.setEmployee(this.employee);
         if (this.filledByEmployeeSet) obj.setFilledByEmployee(this.filledByEmployee);
         if (this.mentorSet) obj.setMentor(this.mentor);
+        obj.setAppraisal(this.appraisalSet ? this.appraisal : new AppraisalBuilder().buildWithDefaults());
+        obj.setEvaluationFormTemplate(this.evaluationFormTemplateSet ? this.evaluationFormTemplate :
+            new EvaluationFormTemplateBuilder().buildWithDefaults());
         obj.setCreateDate(this.createDateSet ? this.createDate : OffsetDateTime.now());
         obj.setSubmitDate(this.submitDateSet ? this.submitDate : OffsetDateTime.now().plusDays(1));
         obj.setEmployeeEvaluationFormAnswerSet(this.answersSet ? this.employeeEvaluationFormAnswerSet :

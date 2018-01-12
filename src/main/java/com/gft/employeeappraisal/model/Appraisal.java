@@ -40,7 +40,7 @@ public class Appraisal {
     private OffsetDateTime endDate;
 
     @OneToMany(mappedBy = "appraisal", fetch = FetchType.LAZY)
-    private Set<AppraisalXEvaluationFormTemplate> appraisalXEvaluationFormTemplateSet;
+    private Set<EmployeeEvaluationForm> employeeEvaluationFormSet;
 
     public int getId() {
         return id;
@@ -82,12 +82,12 @@ public class Appraisal {
         this.endDate = endDate;
     }
 
-    public Set<AppraisalXEvaluationFormTemplate> getAppraisalXEvaluationFormTemplateSet() {
-        return appraisalXEvaluationFormTemplateSet;
+    public Set<EmployeeEvaluationForm> getEmployeeEvaluationFormSet() {
+        return employeeEvaluationFormSet;
     }
 
-    public void setAppraisalXEvaluationFormTemplateSet(Set<AppraisalXEvaluationFormTemplate> appraisalXEvaluationFormTemplateSet) {
-        this.appraisalXEvaluationFormTemplateSet = appraisalXEvaluationFormTemplateSet;
+    public void setEmployeeEvaluationFormSet(Set<EmployeeEvaluationForm> employeeEvaluationFormSet) {
+        this.employeeEvaluationFormSet = employeeEvaluationFormSet;
     }
 
     @Override

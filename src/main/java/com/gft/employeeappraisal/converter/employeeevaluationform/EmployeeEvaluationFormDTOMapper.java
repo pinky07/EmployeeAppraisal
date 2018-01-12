@@ -23,8 +23,7 @@ import java.util.stream.Collectors;
  * @author Rubén Jiménez
  */
 @Component
-public class EmployeeEvaluationFormDTOMapper extends CustomMapper<EmployeeEvaluationForm, EmployeeEvaluationFormDTO>
-{
+public class EmployeeEvaluationFormDTOMapper extends CustomMapper<EmployeeEvaluationForm, EmployeeEvaluationFormDTO> {
 
     private final EmployeeService employeeService;
 
@@ -32,27 +31,26 @@ public class EmployeeEvaluationFormDTOMapper extends CustomMapper<EmployeeEvalua
 
     private final EmployeeEvaluationFormAnswerService employeeEvaluationFormAnswerService;
     private final EvaluationFormTemplateXSectionXQuestionService evaluationFormTemplateXSectionXQuestionService;
-//    private final SectionDTOConverter sectionDTOConverter;
+
+    //    private final SectionDTOConverter sectionDTOConverter;
 //    private final ScoreTypeDTOConverter scoreTypeDTOConverter;
     @Autowired
     public EmployeeEvaluationFormDTOMapper(EmployeeService employeeService,
-            EmployeeEvaluationFormService employeeEvaluationFormService,
-            EmployeeEvaluationFormAnswerService employeeEvaluationFormAnswerService,
-            EvaluationFormTemplateXSectionXQuestionService evaluationFormTemplateXSectionXQuestionService
-            )
-    {
+                                           EmployeeEvaluationFormService employeeEvaluationFormService,
+                                           EmployeeEvaluationFormAnswerService employeeEvaluationFormAnswerService,
+                                           EvaluationFormTemplateXSectionXQuestionService evaluationFormTemplateXSectionXQuestionService
+    ) {
         this.employeeService = employeeService;
         this.employeeEvaluationFormService = employeeEvaluationFormService;
-        this.employeeEvaluationFormAnswerService =employeeEvaluationFormAnswerService;
-        this.evaluationFormTemplateXSectionXQuestionService =evaluationFormTemplateXSectionXQuestionService;
+        this.employeeEvaluationFormAnswerService = employeeEvaluationFormAnswerService;
+        this.evaluationFormTemplateXSectionXQuestionService = evaluationFormTemplateXSectionXQuestionService;
 //        this.sectionDTOConverter=sectionDTOConverter;
 //        this.scoreTypeDTOConverter=scoreTypeDTOConverter;
 
     }
 
     @Override
-    public void mapAtoB(EmployeeEvaluationForm employeeEvaluationForm, EmployeeEvaluationFormDTO employeeEvaluationFormDTO, MappingContext context)
-    {
+    public void mapAtoB(EmployeeEvaluationForm employeeEvaluationForm, EmployeeEvaluationFormDTO employeeEvaluationFormDTO, MappingContext context) {
         employeeEvaluationFormDTO.setId(employeeEvaluationForm.getId());
         employeeEvaluationFormDTO.setEmployee(mapperFacade.map(employeeEvaluationForm.getEmployee(), EmployeeDTO.class));
         employeeEvaluationFormDTO.setFilledByEmployee(mapperFacade.map(employeeEvaluationForm.getFilledByEmployee(), EmployeeDTO.class));
@@ -60,7 +58,7 @@ public class EmployeeEvaluationFormDTOMapper extends CustomMapper<EmployeeEvalua
         employeeEvaluationFormDTO.setCreateDate(employeeEvaluationForm.getCreateDate());
         employeeEvaluationFormDTO.setSubmitDate(employeeEvaluationForm.getSubmitDate());
         employeeEvaluationFormDTO.setComments(employeeEvaluationForm.getComments());
-        employeeEvaluationFormDTO.setEvaluationFormId(employeeEvaluationForm.getAppraisalXEvaluationFormTemplate().getEvaluationFormTemplate().getId());
+        employeeEvaluationFormDTO.setEvaluationFormId(employeeEvaluationForm.getEvaluationFormTemplate().getId());
 
         employeeEvaluationFormDTO.setAnswers(employeeEvaluationForm.getEmployeeEvaluationFormAnswerSet().stream()
                 .map(employeeEvaluationFormAnswer -> {
@@ -72,7 +70,7 @@ public class EmployeeEvaluationFormDTOMapper extends CustomMapper<EmployeeEvalua
 
                     EvaluationFormTemplateXSectionXQuestionDTO xSectionXQuestionDTO = new EvaluationFormTemplateXSectionXQuestionDTO();
                     xSectionXQuestionDTO.setId(xSectionXQuestion.getId());
-                    ScoreType scoreType =employeeEvaluationFormAnswerService.getById(answerDTO.getId()).getScoreValue().getScoreType();
+                    ScoreType scoreType = employeeEvaluationFormAnswerService.getById(answerDTO.getId()).getScoreValue().getScoreType();
 
                     ScoreValueDTO scoreValueDTO = new ScoreValueDTO();
                     ScoreTypeDTO scoreTypeDTO = new ScoreTypeDTO();
@@ -81,19 +79,19 @@ public class EmployeeEvaluationFormDTOMapper extends CustomMapper<EmployeeEvalua
                     SectionDescriptionDTO sectionDescriptionDTO = new SectionDescriptionDTO();
 
 
-                    ScoreValue scoreValue =employeeEvaluationFormAnswerService.getById(answerDTO.getId()).getScoreValue();
+                    ScoreValue scoreValue = employeeEvaluationFormAnswerService.getById(answerDTO.getId()).getScoreValue();
 
                     scoreValueDTO.setId(scoreValue.getId());
-                   scoreValueDTO.setValue(scoreValue.getValue());
-                   scoreValueDTO.setDescription(scoreValue.getDescription());
+                    scoreValueDTO.setValue(scoreValue.getValue());
+                    scoreValueDTO.setDescription(scoreValue.getDescription());
 
-                       Set<Section> sectionSet =scoreType.getSectionSet();
+                    Set<Section> sectionSet = scoreType.getSectionSet();
 //                    scoreTypeDTOConverter.convertBack(scoreTypeDTO);
-                      List<SectionDescriptionDTO> sectionDescriptionDTOList = new ArrayList<SectionDescriptionDTO>();
-                       //if scoretype id is one then need to iterate section
-                    if(scoreType.getId()==1){
-                        Set<Section> sectionSet1=scoreType.getSectionSet();
-                        for(Section section:sectionSet1){
+                    List<SectionDescriptionDTO> sectionDescriptionDTOList = new ArrayList<SectionDescriptionDTO>();
+                    //if scoretype id is one then need to iterate section
+                    if (scoreType.getId() == 1) {
+                        Set<Section> sectionSet1 = scoreType.getSectionSet();
+                        for (Section section : sectionSet1) {
                             sectionDTO.setId(section.getId());
                             sectionDTO.setDescription(section.getDescription());
                             sectionDTO.setName(section.getName());
@@ -133,8 +131,7 @@ public class EmployeeEvaluationFormDTOMapper extends CustomMapper<EmployeeEvalua
     }
 
     @Override
-    public void mapBtoA(EmployeeEvaluationFormDTO employeeEvaluationFormDTO, EmployeeEvaluationForm employeeEvaluationForm, MappingContext context)
-    {
+    public void mapBtoA(EmployeeEvaluationFormDTO employeeEvaluationFormDTO, EmployeeEvaluationForm employeeEvaluationForm, MappingContext context) {
         employeeEvaluationForm.setId(employeeEvaluationFormDTO.getId());
         employeeEvaluationForm.setEmployee(employeeService.getById(employeeEvaluationFormDTO.getEmployee().getId()));
         employeeEvaluationForm
@@ -143,8 +140,8 @@ public class EmployeeEvaluationFormDTOMapper extends CustomMapper<EmployeeEvalua
         employeeEvaluationForm.setCreateDate(employeeEvaluationFormDTO.getCreateDate());
         employeeEvaluationForm.setSubmitDate(employeeEvaluationFormDTO.getSubmitDate());
         employeeEvaluationForm.setComments(employeeEvaluationFormDTO.getComments());
-        EmployeeEvaluationForm evaluationForm = employeeEvaluationFormService .getById(employeeEvaluationFormDTO.getId());
-        employeeEvaluationForm.setAppraisalXEvaluationFormTemplate(evaluationForm.getAppraisalXEvaluationFormTemplate());
+        EmployeeEvaluationForm evaluationForm = employeeEvaluationFormService.getById(employeeEvaluationFormDTO.getId());
+        employeeEvaluationForm.setEvaluationFormTemplate(evaluationForm.getEvaluationFormTemplate());
 
         Set<EmployeeEvaluationFormAnswer> answerSet = new HashSet<>();
 

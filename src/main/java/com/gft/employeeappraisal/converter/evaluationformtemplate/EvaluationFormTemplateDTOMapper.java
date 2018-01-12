@@ -1,12 +1,14 @@
 package com.gft.employeeappraisal.converter.evaluationformtemplate;
 
-import com.gft.employeeappraisal.model.*;
+import com.gft.employeeappraisal.model.EvaluationFormTemplate;
+import com.gft.employeeappraisal.model.EvaluationFormTemplateXSectionXQuestion;
+import com.gft.employeeappraisal.model.Question;
+import com.gft.employeeappraisal.model.Section;
 import com.gft.swagger.employees.model.EvaluationFormTemplateDTO;
 import com.gft.swagger.employees.model.QuestionDTO;
 import com.gft.swagger.employees.model.SectionDTO;
 import ma.glasnost.orika.CustomMapper;
 import ma.glasnost.orika.MappingContext;
-import org.apache.commons.lang.NotImplementedException;
 import org.springframework.stereotype.Component;
 
 import java.util.*;
@@ -76,8 +78,8 @@ public class EvaluationFormTemplateDTOMapper extends CustomMapper<EvaluationForm
             }
         }
 
-        Set<AppraisalXEvaluationFormTemplate> appraisalXEvaluationFormTemplateSet = new HashSet <AppraisalXEvaluationFormTemplate>();
-        evaluationFormTemplate.setAppraisalXEvaluationFormTemplateSet(appraisalXEvaluationFormTemplateSet);
+        /*Set<AppraisalXEvaluationFormTemplate> appraisalXEvaluationFormTemplateSet = new HashSet <AppraisalXEvaluationFormTemplate>();
+        evaluationFormTemplate.setAppraisalXEvaluationFormTemplateSet(appraisalXEvaluationFormTemplateSet);*/
 //        throw new NotImplementedException();
     }
 }

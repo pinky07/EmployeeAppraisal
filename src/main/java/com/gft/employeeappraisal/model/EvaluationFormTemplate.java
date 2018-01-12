@@ -30,7 +30,7 @@ public class EvaluationFormTemplate {
     private String description;
 
     @OneToMany(mappedBy = "evaluationFormTemplate", fetch = FetchType.LAZY)
-    private Set<AppraisalXEvaluationFormTemplate> appraisalXEvaluationFormTemplateSet;
+    private Set<EmployeeEvaluationForm> employeeEvaluationFormSet;
 
     @OneToMany(mappedBy = "evaluationFormTemplate", fetch = FetchType.LAZY)
     private Set<EvaluationFormTemplateXJobLevel> evaluationFormTemplateXJobLevelSet;
@@ -62,12 +62,12 @@ public class EvaluationFormTemplate {
         this.description = description;
     }
 
-    public Set<AppraisalXEvaluationFormTemplate> getAppraisalXEvaluationFormTemplateSet() {
-        return appraisalXEvaluationFormTemplateSet;
+    public Set<EmployeeEvaluationForm> getEmployeeEvaluationFormSet() {
+        return employeeEvaluationFormSet;
     }
 
-    public void setAppraisalXEvaluationFormTemplateSet(Set<AppraisalXEvaluationFormTemplate> appraisalXEvaluationFormTemplateSet) {
-        this.appraisalXEvaluationFormTemplateSet = appraisalXEvaluationFormTemplateSet;
+    public void setEmployeeEvaluationFormSet(Set<EmployeeEvaluationForm> employeeEvaluationFormSet) {
+        this.employeeEvaluationFormSet = employeeEvaluationFormSet;
     }
 
     public Set<EvaluationFormTemplateXJobLevel> getEvaluationFormTemplateXJobLevelSet() {

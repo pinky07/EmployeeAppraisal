@@ -20,10 +20,9 @@ public interface EvaluationFormTemplateRepository extends JpaRepository<Evaluati
 
     @Query("SELECT evaluationFormTemplate " +
             "FROM EvaluationFormTemplate evaluationFormTemplate " +
-            "JOIN FETCH evaluationFormTemplate.appraisalXEvaluationFormTemplateSet appraisalXEvaluationForms " +
-            "JOIN FETCH appraisalXEvaluationForms.employeeEvaluationFormSet employeeEvaluationForms " +
+            "JOIN FETCH evaluationFormTemplate.employeeEvaluationFormSet employeeEvaluationForms " +
             "WHERE evaluationFormTemplate.id = :id " +
-            "AND appraisalXEvaluationForms.appraisal = :appraisal "+
+            "AND employeeEvaluationForms.appraisal = :appraisal "+
             "AND employeeEvaluationForms.filledByEmployee = :employee")
     EvaluationFormTemplate findByIdAndFilledByEmployeeAndAppraisal(
             @Param("id") Integer id,

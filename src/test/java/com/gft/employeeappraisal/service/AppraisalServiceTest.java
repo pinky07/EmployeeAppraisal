@@ -28,6 +28,7 @@ public class AppraisalServiceTest extends BaseServiceTest {
     // Test Fixtures
     private Appraisal appraisal;
     private Employee employeeA;
+    private EvaluationFormTemplate evaluationFormTemplate;
 
     @Before
     public void setUp() throws Exception {
@@ -57,6 +58,8 @@ public class AppraisalServiceTest extends BaseServiceTest {
                 .buildWithDefaults());
 
         this.appraisal = this.appraisalRepository.saveAndFlush(new AppraisalBuilder().buildWithDefaults());
+        this.evaluationFormTemplate = this.evaluationFormTemplateRepository
+                .saveAndFlush(new EvaluationFormTemplateBuilder().buildWithDefaults());
     }
 
     @Test
@@ -113,8 +116,6 @@ public class AppraisalServiceTest extends BaseServiceTest {
     }
 
     private EmployeeEvaluationForm testEmployeeEvaluationForm() {
-        return new EmployeeEvaluationFormBuilder()
-                .appraisalXEvaluationFormTemplate(new AppraisalXEvaluationFormTemplateBuilder()
-                        .appraisal(appraisal).buildWithDefaults()).buildWithDefaults();
+        return new EmployeeEvaluationFormBuilder(appraisal, evaluationFormTemplate).buildWithDefaults();
     }
 }

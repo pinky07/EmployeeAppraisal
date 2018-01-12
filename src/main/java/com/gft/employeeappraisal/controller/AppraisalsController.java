@@ -6,7 +6,10 @@ import com.gft.employeeappraisal.converter.employeeevaluationform.EmployeeEvalua
 import com.gft.employeeappraisal.converter.employeeevaluationformanswer.EmployeeEvaluationFormAnswerDTOConverter;
 import com.gft.employeeappraisal.converter.evaluationformtemplate.EvaluationFormTemplateDTOConverter;
 import com.gft.employeeappraisal.exception.NotFoundException;
-import com.gft.employeeappraisal.model.*;
+import com.gft.employeeappraisal.model.Appraisal;
+import com.gft.employeeappraisal.model.Employee;
+import com.gft.employeeappraisal.model.EmployeeEvaluationForm;
+import com.gft.employeeappraisal.model.EvaluationFormTemplate;
 import com.gft.employeeappraisal.service.*;
 import com.gft.swagger.employees.api.AppraisalApi;
 import com.gft.swagger.employees.model.*;
@@ -217,8 +220,7 @@ public class AppraisalsController implements AppraisalApi {
 		// Get Appraisals
 		List<Appraisal> appraisalList = this.employeeEvaluationFormService
 				.findSelfByEmployee(employee)
-				.map(EmployeeEvaluationForm::getAppraisalXEvaluationFormTemplate)
-				.map(AppraisalXEvaluationFormTemplate::getAppraisal)
+				.map(EmployeeEvaluationForm::getAppraisal)
 				.collect(Collectors.toList());
 
 		// Security check

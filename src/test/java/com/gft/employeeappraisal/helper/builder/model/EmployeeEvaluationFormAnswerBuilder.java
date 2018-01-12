@@ -74,7 +74,7 @@ public class EmployeeEvaluationFormAnswerBuilder implements ObjectBuilder<Employ
         obj.setEvaluationFormTemplateXSectionXQuestion(this.evaluationFormTemplateSet ?
                 this.evaluationFormTemplateXSectionXQuestion :
                 new EvaluationFormTemplateXSectionXQuestionBuilder(obj.getEmployeeEvaluationForm()
-                        .getAppraisalXEvaluationFormTemplate().getEvaluationFormTemplate()).buildWithDefaults());
+                        .getEvaluationFormTemplate()).buildWithDefaults());
         if (this.scoreValueSet) obj.setScoreValue(this.scoreValue);
         obj.setComment(this.commentSet ? this.comment : "Test Comment");
         return obj;

@@ -30,9 +30,6 @@ public class BaseServiceTest {
     protected AppraisalRepository appraisalRepository;
 
     @Autowired
-    protected AppraisalXEvaluationFormTemplateRepository appraisalXEvaluationFormTemplateRepository;
-
-    @Autowired
     protected EmployeeEvaluationFormRepository employeeEvaluationFormRepository;
 
     @Autowired
@@ -65,9 +62,6 @@ public class BaseServiceTest {
 
     @Mock
     protected AppraisalService appraisalService;
-
-    @Mock
-    protected AppraisalXEvaluationFormTemplateService appraisalXEvaluationFormTemplateService;
 
     @Mock
     protected EmployeeEvaluationFormService employeeEvaluationFormService;

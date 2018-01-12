@@ -91,9 +91,6 @@ public abstract class BaseControllerTest {
     protected AppraisalService appraisalService;
 
     @MockBean
-    protected AppraisalXEvaluationFormTemplateService appraisalXEvaluationFormTemplateService;
-
-    @MockBean
     protected EmployeeEvaluationFormService employeeEvaluationFormService;
 
     @MockBean

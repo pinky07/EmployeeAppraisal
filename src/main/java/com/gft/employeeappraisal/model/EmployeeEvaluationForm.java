@@ -21,8 +21,13 @@ public class EmployeeEvaluationForm {
 
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "appraisalXEvaluationFormTemplateId", nullable = false)
-    private AppraisalXEvaluationFormTemplate appraisalXEvaluationFormTemplate;
+    @JoinColumn(name = "appraisalId", nullable = false)
+    private Appraisal appraisal;
+
+    @NotNull
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "evaluationFormTemplateId", nullable = false)
+    private EvaluationFormTemplate evaluationFormTemplate;
 
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY)
@@ -47,7 +52,6 @@ public class EmployeeEvaluationForm {
     @Column(name = "submitDate", columnDefinition = "TIMESTAMP", nullable = false)
     private OffsetDateTime submitDate;
 
-
     @OneToMany(mappedBy = "employeeEvaluationForm", fetch = FetchType.LAZY, cascade=CascadeType.MERGE)
     private Set<EmployeeEvaluationFormAnswer> employeeEvaluationFormAnswerSet;
 
@@ -63,12 +67,20 @@ public class EmployeeEvaluationForm {
         this.id = id;
     }
 
-    public AppraisalXEvaluationFormTemplate getAppraisalXEvaluationFormTemplate() {
-        return appraisalXEvaluationFormTemplate;
+    public Appraisal getAppraisal() {
+        return appraisal;
     }
 
-    public void setAppraisalXEvaluationFormTemplate(AppraisalXEvaluationFormTemplate appraisalXEvaluationFormTemplate) {
-        this.appraisalXEvaluationFormTemplate = appraisalXEvaluationFormTemplate;
+    public void setAppraisal(Appraisal appraisal) {
+        this.appraisal = appraisal;
+    }
+
+    public EvaluationFormTemplate getEvaluationFormTemplate() {
+        return evaluationFormTemplate;
+    }
+
+    public void setEvaluationFormTemplate(EvaluationFormTemplate evaluationFormTemplate) {
+        this.evaluationFormTemplate = evaluationFormTemplate;
     }
 
     public Employee getEmployee() {
@@ -136,19 +148,27 @@ public class EmployeeEvaluationForm {
 
         EmployeeEvaluationForm that = (EmployeeEvaluationForm) o;
 
-        if (getId() != that.getId()) return false;
-        if (!getAppraisalXEvaluationFormTemplate().equals(that.getAppraisalXEvaluationFormTemplate())) return false;
-        if (!getEmployee().equals(that.getEmployee())) return false;
-        return getFilledByEmployee().equals(that.getFilledByEmployee()) && getMentor().equals(that.getMentor());
+        return id == that.id && (appraisal != null ? appraisal.equals(that.appraisal) : that.appraisal == null) &&
+                (evaluationFormTemplate != null ? evaluationFormTemplate.equals(that.evaluationFormTemplate) : that.evaluationFormTemplate == null) &&
+                (employee != null ? employee.equals(that.employee) : that.employee == null) &&
+                (filledByEmployee != null ? filledByEmployee.equals(that.filledByEmployee) : that.filledByEmployee == null) &&
+                (mentor != null ? mentor.equals(that.mentor) : that.mentor == null) &&
+                (createDate != null ? createDate.equals(that.createDate) : that.createDate == null) &&
+                (submitDate != null ? submitDate.equals(that.submitDate) : that.submitDate == null) &&
+                (comments != null ? comments.equals(that.comments) : that.comments == null);
     }
 
     @Override
     public int hashCode() {
-        int result = getId();
-        result = 31 * result + getAppraisalXEvaluationFormTemplate().hashCode();
-        result = 31 * result + getEmployee().hashCode();
-        result = 31 * result + getFilledByEmployee().hashCode();
-        result = 31 * result + getMentor().hashCode();
+        int result = id;
+        result = 31 * result + (appraisal != null ? appraisal.hashCode() : 0);
+        result = 31 * result + (evaluationFormTemplate != null ? evaluationFormTemplate.hashCode() : 0);
+        result = 31 * result + (employee != null ? employee.hashCode() : 0);
+        result = 31 * result + (filledByEmployee != null ? filledByEmployee.hashCode() : 0);
+        result = 31 * result + (mentor != null ? mentor.hashCode() : 0);
+        result = 31 * result + (createDate != null ? createDate.hashCode() : 0);
+        result = 31 * result + (submitDate != null ? submitDate.hashCode() : 0);
+        result = 31 * result + (comments != null ? comments.hashCode() : 0);
         return result;
     }
 

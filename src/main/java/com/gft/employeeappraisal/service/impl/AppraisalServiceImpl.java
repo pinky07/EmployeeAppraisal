@@ -2,7 +2,6 @@ package com.gft.employeeappraisal.service.impl;
 
 import com.gft.employeeappraisal.exception.NotFoundException;
 import com.gft.employeeappraisal.model.Appraisal;
-import com.gft.employeeappraisal.model.AppraisalXEvaluationFormTemplate;
 import com.gft.employeeappraisal.model.Employee;
 import com.gft.employeeappraisal.model.EmployeeEvaluationForm;
 import com.gft.employeeappraisal.repository.AppraisalRepository;
@@ -57,8 +56,7 @@ public class AppraisalServiceImpl implements AppraisalService {
     public Stream<Appraisal> findEmployeeAppraisals(Employee employee) {
         return employeeEvaluationFormService
                 .findSelfByEmployee(employee)
-                .map(EmployeeEvaluationForm::getAppraisalXEvaluationFormTemplate)
-                .map(AppraisalXEvaluationFormTemplate::getAppraisal);
+                .map(EmployeeEvaluationForm::getAppraisal);
     }
 
     /**

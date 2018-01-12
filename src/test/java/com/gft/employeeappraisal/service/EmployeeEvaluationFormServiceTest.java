@@ -29,6 +29,7 @@ public class EmployeeEvaluationFormServiceTest extends BaseServiceTest {
     // Test fixtures
     private Appraisal appraisal;
     private ApplicationRole userApplicationRole;
+    private EvaluationFormTemplate evaluationFormTemplate;
     private JobLevel jobLevel;
     private Employee employee;
     private Employee employeePeer;
@@ -38,8 +39,6 @@ public class EmployeeEvaluationFormServiceTest extends BaseServiceTest {
     private EmployeeEvaluationForm leadEmployeeEvaluationForm;
     private EmployeeEvaluationForm otherEmployeeEvaluationForm;
     private EmployeeEvaluationForm mentorEmployeeEvaluationForm;
-
-    private AppraisalXEvaluationFormTemplate appraisalXEvaluationFormTemplate;
 
     /**
      * Set up. Objects that need to be reinitialized.
@@ -68,14 +67,7 @@ public class EmployeeEvaluationFormServiceTest extends BaseServiceTest {
                 .buildWithDefaults());
 
         // Test Evaluation Form
-        EvaluationFormTemplate evaluationFormTemplate = this.evaluationFormTemplateRepository.saveAndFlush(new EvaluationFormTemplateBuilder()
-                .buildWithDefaults());
-
-        // Test
-        appraisalXEvaluationFormTemplate =
-                this.appraisalXEvaluationFormTemplateRepository.saveAndFlush(new AppraisalXEvaluationFormTemplateBuilder()
-                .appraisal(this.appraisal)
-                .evaluationFormTemplate(evaluationFormTemplate)
+        this.evaluationFormTemplate = this.evaluationFormTemplateRepository.saveAndFlush(new EvaluationFormTemplateBuilder()
                 .buildWithDefaults());
 
         // Test Employees
@@ -106,32 +98,32 @@ public class EmployeeEvaluationFormServiceTest extends BaseServiceTest {
                 .buildWithDefaults());
 
         // Test EmployeeEvaluationForm
-        this.selfEmployeeEvaluationForm = this.employeeEvaluationFormRepository.saveAndFlush(new EmployeeEvaluationFormBuilder()
-                .appraisalXEvaluationFormTemplate(appraisalXEvaluationFormTemplate)
+        this.selfEmployeeEvaluationForm = this.employeeEvaluationFormRepository.saveAndFlush(new
+                EmployeeEvaluationFormBuilder(this.appraisal, evaluationFormTemplate)
                 .employee(employee)
                 .filledByEmployee(employee)
                 .mentor(employeeMentor)
                 .buildWithDefaults());
-        this.peerfEmployeeEvaluationForm = this.employeeEvaluationFormRepository.saveAndFlush(new EmployeeEvaluationFormBuilder()
-                .appraisalXEvaluationFormTemplate(appraisalXEvaluationFormTemplate)
+        this.peerfEmployeeEvaluationForm = this.employeeEvaluationFormRepository.saveAndFlush(new
+                EmployeeEvaluationFormBuilder(this.appraisal, evaluationFormTemplate)
                 .employee(employee)
                 .filledByEmployee(employeePeer)
                 .mentor(employeeMentor)
                 .buildWithDefaults());
-        this.leadEmployeeEvaluationForm = this.employeeEvaluationFormRepository.saveAndFlush(new EmployeeEvaluationFormBuilder()
-                .appraisalXEvaluationFormTemplate(appraisalXEvaluationFormTemplate)
+        this.leadEmployeeEvaluationForm = this.employeeEvaluationFormRepository.saveAndFlush(new
+                EmployeeEvaluationFormBuilder(this.appraisal, evaluationFormTemplate)
                 .employee(employee)
                 .filledByEmployee(employeeLead)
                 .mentor(employeeMentor)
                 .buildWithDefaults());
-        this.otherEmployeeEvaluationForm = this.employeeEvaluationFormRepository.saveAndFlush(new EmployeeEvaluationFormBuilder()
-                .appraisalXEvaluationFormTemplate(appraisalXEvaluationFormTemplate)
+        this.otherEmployeeEvaluationForm = this.employeeEvaluationFormRepository.saveAndFlush(new
+                EmployeeEvaluationFormBuilder(this.appraisal, evaluationFormTemplate)
                 .employee(employee)
                 .filledByEmployee(employeeOther)
                 .mentor(employeeMentor)
                 .buildWithDefaults());
-        this.mentorEmployeeEvaluationForm = this.employeeEvaluationFormRepository.saveAndFlush(new EmployeeEvaluationFormBuilder()
-                .appraisalXEvaluationFormTemplate(appraisalXEvaluationFormTemplate)
+        this.mentorEmployeeEvaluationForm = this.employeeEvaluationFormRepository.saveAndFlush(new
+                EmployeeEvaluationFormBuilder(this.appraisal, evaluationFormTemplate)
                 .employee(employee)
                 .filledByEmployee(employeeMentor)
                 .mentor(employeeMentor)
@@ -306,9 +298,8 @@ public class EmployeeEvaluationFormServiceTest extends BaseServiceTest {
                 .applicationRole(userApplicationRole)
                 .buildWithDefaults());
 
-        EmployeeEvaluationForm newEmployeeEvaluationForm = new EmployeeEvaluationFormBuilder()
+        EmployeeEvaluationForm newEmployeeEvaluationForm = new EmployeeEvaluationFormBuilder(appraisal, evaluationFormTemplate)
                 .employee(employee)
-                .appraisalXEvaluationFormTemplate(appraisalXEvaluationFormTemplate)
                 .filledByEmployee(notFilled)
                 .mentor(employeeMentor)
                 .buildWithDefaults();
