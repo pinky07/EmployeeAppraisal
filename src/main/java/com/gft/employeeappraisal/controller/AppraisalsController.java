@@ -115,15 +115,14 @@ public class AppraisalsController implements AppraisalApi {
 
 
 	@Override
-	public ResponseEntity<EvaluationFormTemplateDTO> employeesIdAppraisalsIdFormsIdPut(
-			@PathVariable("employeeId") Integer employeeId, @PathVariable("appraisalId") Integer appraisalId,
-			@PathVariable("formId") Integer formId, @Valid @RequestBody EvaluationFormTemplateDTO evaluationFormBody) {
+	public ResponseEntity<EvaluationFormTemplateDTO> employeesIdAppraisalsIdFormsIdAnswersPut(@PathVariable("employeeId") Integer employeeId, @PathVariable("appraisalId") Integer appraisalId,
+																							  @PathVariable("formId") Integer formId, @Valid @RequestBody EvaluationFormTemplateDTO employee) {
 		EvaluationFormTemplateDTO response = new EvaluationFormTemplateDTO();
 
 		this.validationService.validate(response);
 		EvaluationFormTemplate template = new EvaluationFormTemplate();
-		template = evaluationFormTemplateDTOConverter.convertBack(evaluationFormBody);
-		List<SectionDTO> sectionDTOS = evaluationFormBody.getSections();
+		template = evaluationFormTemplateDTOConverter.convertBack(employee);
+		List<SectionDTO> sectionDTOS = employee.getSections();
 		this.evaluationFormTemplateService.saveAndFlush(template);
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
@@ -360,5 +359,10 @@ public class AppraisalsController implements AppraisalApi {
 				.collect(Collectors.toList());
 
 		return new ResponseEntity<>(answerDTOList, HttpStatus.OK);
+	}
+
+	@Override
+	public ResponseEntity<EvaluationFormDTO> evaluationFormIdGet(@PathVariable("formId") Integer formId) {
+		return null;
 	}
 }

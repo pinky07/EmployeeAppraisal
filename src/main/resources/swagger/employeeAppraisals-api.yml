@@ -30,6 +30,35 @@ security:
 
 # Endpoints
 paths:
+  # Evaluation form
+  '/evaluationForm/{formId}':
+    get:
+      tags:
+        - Appraisal
+      summary:
+        - Provides a specific "EvaluationForm" to be filled in
+      description:
+        - Returns a particular "EvaluationForm" belonging to the specified user.
+      operationId: evaluationFormIdGet
+      produces:
+        - application/json
+      parameters:
+        - in: path
+          name: formId
+          type: integer
+          required: true
+          description: The form id
+      responses:
+        '200':
+          description: Successful.
+          schema:
+            $ref: '#/definitions/EvaluationFormDTO'
+        '403':
+          description: The user isn't authenticated or authorized to perform this action.
+        '404':
+          description: Employee, Appraisal or EvaluationForm not found in the system.
+
+
 ########################################################################################################################
 # /test ##################################################################################################################
 ########################################################################################################################
@@ -1115,7 +1144,7 @@ paths:
          Registers or updates an `Employee on `EvaluationForm` of a specific appraisal for the specified user.
       description: |
        Registers or updates an `Employee on `EvaluationForm` belonging to the specified user.
-      operationId: employeesIdAppraisalsIdFormsIdPut
+      operationId: employeesIdAppraisalsIdFormsIdAnswersPut
       produces:
         - application/json
       parameters:
@@ -1710,6 +1739,57 @@ definitions:
         type: string
       description:
         type: string
+
+  EvaluationFormDTO:
+    type: object
+    properties:
+      id:
+        type: integer
+      name:
+        type: string
+      description:
+        type: string
+      sections:
+        type: array
+        items:
+          $ref: '#/definitions/FormSectionDTO'
+
+  FormSectionDTO:
+   type: object
+   properties:
+      id:
+        type: integer
+      scoreType:
+        $ref: '#/definitions/ScoreTypeDTO'
+      name:
+        type: string
+      description:
+        type: string
+      position:
+        type: integer
+      questions:
+        type: array
+        items:
+          $ref: '#/definitions/QuestionAndAnswerDTO'
+
+  QuestionAndAnswerDTO:
+    type: object
+    properties:
+      id:
+        type: integer
+      name:
+        type: string
+      description:
+        type: string
+      position:
+        type: integer
+      answerId:
+        type: integer
+      answerScoreValue:
+        type: string
+      answerComment:
+        type: string
+
 ########################################################################################################################
 # Tags #################################################################################################################
 ########################################################################################################################
