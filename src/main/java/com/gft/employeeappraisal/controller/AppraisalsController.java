@@ -4,6 +4,7 @@ import com.gft.employeeappraisal.Validation.EmployeeEvaluationFormDateValidate;
 import com.gft.employeeappraisal.converter.appraisal.AppraisalDTOConverter;
 import com.gft.employeeappraisal.converter.employeeevaluationform.EmployeeEvaluationFormDTOConverter;
 import com.gft.employeeappraisal.converter.employeeevaluationformanswer.EmployeeEvaluationFormAnswerDTOConverter;
+import com.gft.employeeappraisal.converter.evaluationform.EvaluationFormDTOConverter;
 import com.gft.employeeappraisal.converter.evaluationformtemplate.EvaluationFormTemplateDTOConverter;
 import com.gft.employeeappraisal.exception.NotFoundException;
 import com.gft.employeeappraisal.model.Appraisal;
@@ -38,11 +39,12 @@ public class AppraisalsController implements AppraisalApi {
 	private final EmployeeEvaluationFormService employeeEvaluationFormService;
 	private final EvaluationFormTemplateService evaluationFormTemplateService;
 	private final SecurityService securityService;
-	private final  ValidationService validationService;
+	private final ValidationService validationService;
 
 	// DTO converters
 	private final AppraisalDTOConverter appraisalDTOConverter;
 	private final EmployeeEvaluationFormDTOConverter employeeEvaluationFormDTOConverter;
+	private final EvaluationFormDTOConverter evaluationFormDTOConverter;
 	private final EvaluationFormTemplateDTOConverter evaluationFormTemplateDTOConverter;
 	private final EmployeeEvaluationFormAnswerDTOConverter employeeEvaluationFormAnswerDTOConverter;
 
@@ -57,6 +59,7 @@ public class AppraisalsController implements AppraisalApi {
 			EmployeeEvaluationFormDTOConverter employeeEvaluationFormDTOConverter,
 			EvaluationFormTemplateDTOConverter evaluationFormTemplateDTOConverter,
 			EmployeeEvaluationFormAnswerDTOConverter employeeEvaluationFormAnswerDTOConverter,
+            EvaluationFormDTOConverter evaluationFormDTOConverter,
 			ValidationService validationService
 
 	) {
@@ -69,6 +72,7 @@ public class AppraisalsController implements AppraisalApi {
 		this.employeeEvaluationFormDTOConverter = employeeEvaluationFormDTOConverter;
 		this.evaluationFormTemplateDTOConverter = evaluationFormTemplateDTOConverter;
 		this.employeeEvaluationFormAnswerDTOConverter = employeeEvaluationFormAnswerDTOConverter;
+		this.evaluationFormDTOConverter = evaluationFormDTOConverter;
 		this.validationService=validationService;
 	}
 
@@ -363,6 +367,14 @@ public class AppraisalsController implements AppraisalApi {
 
 	@Override
 	public ResponseEntity<EvaluationFormDTO> evaluationFormIdGet(@PathVariable("formId") Integer formId) {
-		return null;
+        ResponseEntity<EvaluationFormDTO> response;
+        this.logger.debug("Getting evaluation form #: "+formId);
+	    try {
+            EmployeeEvaluationForm evalForm = this.employeeEvaluationFormService.getById(formId.intValue());
+            response = new ResponseEntity<>(this.evaluationFormDTOConverter.convert(evalForm), HttpStatus.OK);
+        } catch (NotFoundException nfe){
+	        response = new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        return response;
 	}
 }
