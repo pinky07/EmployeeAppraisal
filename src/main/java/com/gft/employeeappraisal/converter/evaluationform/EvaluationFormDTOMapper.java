@@ -71,7 +71,15 @@ public class EvaluationFormDTOMapper extends CustomMapper<EmployeeEvaluationForm
             formSection.addQuestionsItem(questionAndAnswer);
             sectionsMap.put(sectionMapKey, formSection);
         }
-        evaluationFormDTO.setSections(new ArrayList<>(sectionsMap.values()));
+        // sort sections by position
+        List<FormSectionDTO> sectionDTOArrayList = new ArrayList<>(sectionsMap.values());
+        sectionDTOArrayList.sort(Comparator.comparing(FormSectionDTO::getPosition));
+
+        // sort questions
+        sectionDTOArrayList.forEach(section -> section.getQuestions()
+                .sort(Comparator.comparing(QuestionAndAnswerDTO::getPosition)));
+
+        evaluationFormDTO.setSections(sectionDTOArrayList);
     }
 
     @Override
