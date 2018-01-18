@@ -57,7 +57,33 @@ paths:
           description: The user isn't authenticated or authorized to perform this action.
         '404':
           description: Employee, Appraisal or EvaluationForm not found in the system.
-
+    put:
+      tags:
+        - Appraisal
+      summary:
+        - Updates the answers of an evaluation form
+      description:
+        - Updates the answers of an evaluation form
+      operationId: evaluationFormIdPut
+      produces:
+        - application/json
+      parameters:
+        - in: path
+          name: formId
+          type: integer
+          required: true
+          description: The form id
+        - in: body
+          name: EvaluationFormDTO
+          schema:
+            $ref: '#/definitions/EvaluationFormDTO'
+          required: true
+          description: The evaluation form
+      responses:
+        '200':
+          description: Successful.
+        '403':
+          description: The user isn't authenticated or authorized to perform this action.
 
 ########################################################################################################################
 # /test ##################################################################################################################

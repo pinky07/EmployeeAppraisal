@@ -4,6 +4,7 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.time.OffsetDateTime;
+import java.util.HashSet;
 import java.util.Set;
 
 /**
@@ -129,6 +130,17 @@ public class EmployeeEvaluationForm {
 
     public void setEmployeeEvaluationFormAnswerSet(Set<EmployeeEvaluationFormAnswer> employeeEvaluationFormAnswerSet) {
         this.employeeEvaluationFormAnswerSet = employeeEvaluationFormAnswerSet;
+    }
+
+    /**
+     * Add a <code>EmployeeEvaluationFormAnswer</code> to the internal set of answers.
+     * @param employeeEvaluationFormAnswer The <code>EmployeeEvaluationFormAnswer</code> to be added.
+     */
+    public void addEmployeeEvaluationFormAnswer(EmployeeEvaluationFormAnswer employeeEvaluationFormAnswer){
+        if(null == this.employeeEvaluationFormAnswerSet){
+            this.employeeEvaluationFormAnswerSet = new HashSet<>();
+        }
+        this.employeeEvaluationFormAnswerSet.add(employeeEvaluationFormAnswer);
     }
 
     public String getComments()

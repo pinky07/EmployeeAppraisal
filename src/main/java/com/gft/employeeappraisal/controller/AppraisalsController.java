@@ -367,14 +367,17 @@ public class AppraisalsController implements AppraisalApi {
 
 	@Override
 	public ResponseEntity<EvaluationFormDTO> evaluationFormIdGet(@PathVariable("formId") Integer formId) {
-        ResponseEntity<EvaluationFormDTO> response;
-        this.logger.debug("Getting evaluation form #: "+formId);
-	    try {
-            EmployeeEvaluationForm evalForm = this.employeeEvaluationFormService.getById(formId.intValue());
-            response = new ResponseEntity<>(this.evaluationFormDTOConverter.convert(evalForm), HttpStatus.OK);
-        } catch (NotFoundException nfe){
-	        response = new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-        return response;
+        this.logger.debug("GET evaluationFormIdGet(formId:"+formId+")");
+		EmployeeEvaluationForm evalForm = this.employeeEvaluationFormService.getById(formId.intValue());
+        return new ResponseEntity<>(this.evaluationFormDTOConverter.convert(evalForm), HttpStatus.OK);
+	}
+
+	@Override
+	public ResponseEntity<Void> evaluationFormIdPut(@PathVariable("formId") Integer formId, @Valid @RequestBody EvaluationFormDTO evaluationFormDTO) {
+		this.logger.debug("PUT evaluationFormIdGet(formId:"+formId+")");
+		EmployeeEvaluationForm employeeEvaluationForm = this.employeeEvaluationFormService.getById(formId);
+		this.evaluationFormDTOConverter.convertBack(evaluationFormDTO, employeeEvaluationForm);
+		this.employeeEvaluationFormService.saveAndFlush(employeeEvaluationForm);
+		return new ResponseEntity<>(HttpStatus.OK);
 	}
 }

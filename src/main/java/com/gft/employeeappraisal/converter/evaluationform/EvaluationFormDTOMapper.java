@@ -3,10 +3,11 @@ package com.gft.employeeappraisal.converter.evaluationform;
 import com.gft.employeeappraisal.model.EmployeeEvaluationForm;
 import com.gft.employeeappraisal.model.EmployeeEvaluationFormAnswer;
 import com.gft.employeeappraisal.model.EvaluationFormTemplateXSectionXQuestion;
-import com.gft.swagger.employees.model.EvaluationFormDTO;
-import com.gft.swagger.employees.model.FormSectionDTO;
-import com.gft.swagger.employees.model.QuestionAndAnswerDTO;
-import com.gft.swagger.employees.model.ScoreTypeDTO;
+import com.gft.employeeappraisal.model.ScoreValue;
+import com.gft.employeeappraisal.service.EmployeeEvaluationFormAnswerService;
+import com.gft.employeeappraisal.service.EmployeeEvaluationFormService;
+import com.gft.employeeappraisal.service.ScoreValueService;
+import com.gft.swagger.employees.model.*;
 import ma.glasnost.orika.CustomMapper;
 import ma.glasnost.orika.MappingContext;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,9 +21,13 @@ import java.util.stream.Stream;
 @Component
 public class EvaluationFormDTOMapper extends CustomMapper<EmployeeEvaluationForm, EvaluationFormDTO>{
 
-    @Autowired
-    public EvaluationFormDTOMapper(){
+    private ScoreValueService scoreValueService;
 
+    @Autowired
+    public EvaluationFormDTOMapper(
+            ScoreValueService scoreValueService
+    ){
+        this.scoreValueService = scoreValueService;
     }
 
     @Override
@@ -53,7 +58,7 @@ public class EvaluationFormDTOMapper extends CustomMapper<EmployeeEvaluationForm
             }
             // Now fill in the questions
             QuestionAndAnswerDTO questionAndAnswer = new QuestionAndAnswerDTO();
-            questionAndAnswer.setId(templateSectionQuestion.getQuestion().getId());
+            questionAndAnswer.setId(templateSectionQuestion.getId());
             questionAndAnswer.setName(templateSectionQuestion.getQuestion().getName());
             questionAndAnswer.setDescription(templateSectionQuestion.getQuestion().getDescription());
             questionAndAnswer.setPosition(templateSectionQuestion.getQuestion().getPosition());
@@ -84,6 +89,52 @@ public class EvaluationFormDTOMapper extends CustomMapper<EmployeeEvaluationForm
 
     @Override
     public void mapBtoA(EvaluationFormDTO evaluationFormDTO, EmployeeEvaluationForm employeeEvaluationForm, MappingContext context) {
-        super.mapBtoA(evaluationFormDTO, employeeEvaluationForm, context);
+        // Check received questions and answers and update accordingly
+        Supplier<Stream<EvaluationFormTemplateXSectionXQuestion>> templateSectionsQuestionsSupplier = () -> employeeEvaluationForm.getEvaluationFormTemplate().getEvaluationFormXSectionXQuestionSet().stream();
+        Supplier<Stream<EmployeeEvaluationFormAnswer>> formAnswersSupplier = () -> employeeEvaluationForm.getEmployeeEvaluationFormAnswerSet().stream();
+        // Iterate the sections and questions
+        for(FormSectionDTO formSection : evaluationFormDTO.getSections()){
+            for(QuestionAndAnswerDTO questionAndAnswer : formSection.getQuestions()){
+                if(null != questionAndAnswer.getAnswerId()) {
+                    EmployeeEvaluationFormAnswer formAnswer;
+                    // Check is answer already exist in DB
+                    List<EmployeeEvaluationFormAnswer> currentAnswers = formAnswersSupplier.get()
+                            .filter(answer -> answer.getEvaluationFormTemplateXSectionXQuestion().getId() == questionAndAnswer.getId())
+                            .limit(1)
+                            .collect(Collectors.toList());
+                    if (!currentAnswers.isEmpty()) {
+                        // An answer already exists, check if coming answer is different, if so, update it, otherwise nothing
+                        formAnswer = currentAnswers.get(0);
+                        if (questionAndAnswer.getAnswerId() != formAnswer.getScoreValue().getId()) {
+                            ScoreValue newScoreValue = this.scoreValueService.getById(questionAndAnswer.getAnswerId());
+                            formAnswer.setScoreValue(newScoreValue);
+                        }
+                        if (!questionAndAnswer.getAnswerComment().equals(formAnswer.getComment())) {
+                            formAnswer.setComment(questionAndAnswer.getAnswerComment());
+                        }
+                    } else {
+                        // No answer for question, add new answer
+                        formAnswer = new EmployeeEvaluationFormAnswer();
+                        // Set the EvaluationForm
+                        formAnswer.setEmployeeEvaluationForm(employeeEvaluationForm);
+                        // Set the proper templateXSectionXQuestion
+                        List<EvaluationFormTemplateXSectionXQuestion> templateXSectionXQuestions = templateSectionsQuestionsSupplier.get()
+                                .filter(templateSectionQuestion -> templateSectionQuestion.getId() == questionAndAnswer.getId())
+                                .limit(1)
+                                .collect(Collectors.toList());
+                        if (!templateXSectionXQuestions.isEmpty()) {
+                            formAnswer.setEvaluationFormTemplateXSectionXQuestion(templateXSectionXQuestions.get(0));
+                        }
+                        // Set the proper ScoreValue
+                        ScoreValue scoreValue = this.scoreValueService.getById(questionAndAnswer.getAnswerId());
+                        formAnswer.setScoreValue(scoreValue);
+                        // Set the comment
+                        formAnswer.setComment(questionAndAnswer.getAnswerComment());
+                    }
+                    // Adds the answer to the set of answers
+                    employeeEvaluationForm.addEmployeeEvaluationFormAnswer(formAnswer);
+                }
+            }
+        }
     }
 }
